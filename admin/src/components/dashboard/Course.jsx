@@ -4,11 +4,14 @@ function Course() {
   return (
     <div>
       <div>
-        <NavLink to="/add-course">Courses</NavLink>
+        <NavLink to="/get-course">Courses</NavLink>
       </div>
       <div>
-        <NavLink>Bundle Course</NavLink>
+        <NavLink to="/get-full-course">Full Course</NavLink>
       </div>
+      {/* <div>
+        <NavLink to="/get-full-course-subject">Full Course Subject</NavLink>
+      </div> */}
     </div>
   );
 }
