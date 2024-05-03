@@ -8,21 +8,21 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import AddCategory from "./AddCategory";
 
-const fetchCategory = async (dispatch) => {
-  try {
-    const response = await axios.get(
-      "http://localhost/PJCIDB/admin/category/get.php"
-    );
-
-    dispatch(setCategory(response.data.data));
-  } catch (error) {
-    console.error("Error fetching courses:", error);
-  }
-};
-
 function GetCategory() {
   const dispatch = useDispatch();
-  const courses = useSelector((state) => state.category.category);
+  const category = useSelector((state) => state.category.category);
+
+  const fetchCategory = async (dispatch) => {
+    try {
+      const response = await axios.get(
+        "http://localhost/PJCIDB/admin/category/get.php"
+      );
+
+      dispatch(setCategory(response.data.data));
+    } catch (error) {
+      console.error("Error fetching category:", error);
+    }
+  };
 
   useEffect(() => {
     fetchCategory(dispatch);
@@ -40,7 +40,7 @@ function GetCategory() {
       }
       fetchCategory(dispatch);
     } catch (error) {
-      console.error("Error fetching courses:", error);
+      console.error("Error fetching category:", error);
     }
   };
   return (
@@ -56,14 +56,14 @@ function GetCategory() {
           </tr>
         </thead>
         <tbody className="text-center">
-          {courses.map((item) => (
+          {category.map((item) => (
             <tr key={item.id}>
               <td className="border px-2 py-2">{item.id}</td>
               <td className="border px-2 py-2">{item.name}</td>
               <td className="border px-2 py-2">
                 <button
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  onClick={() => handleUpdate(item.name, item.id)}
+                  // onClick={() => handleUpdate(item.name, item.id)}
                 >
                   Update
                 </button>
