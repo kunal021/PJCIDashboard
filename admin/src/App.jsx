@@ -5,12 +5,13 @@ import Preview from "./components/Preview";
 import GetCategory from "./components/categories/GetCategory";
 import GetCourse from "./components/course/GetCourse";
 import GetFullCourse from "./components/course/GetFullCourse";
-import CourseCategoryWise from "./components/course/CourseCategoryWise";
+// import CourseCategoryWise from "./components/course/CourseCategoryWise";
 import GetFullCourseSubjects from "./components/course/GetFullCourseSubjects";
 import GetCourseCategoryWise from "./components/course/GetCourseCategoryWise";
 import GetTest from "./components/tests/GetTests";
 import GetQuestions from "./components/tests/GetQuestions";
 import AddTest from "./components/tests/AddTest";
+import Demo from "../public/Demo";
 // import Category from "./components/categories/Category";
 // import Navbar from "./components/Navbar";
 
@@ -28,10 +29,10 @@ function App() {
               path="/get-full-course-subject"
               element={<GetFullCourseSubjects />}
             />
-            <Route
+            {/* <Route
               path="/categorywise-course"
               element={<CourseCategoryWise />}
-            />
+            /> */}
             <Route
               path="/get-course-category-wise"
               element={<GetCourseCategoryWise />}
@@ -40,6 +41,8 @@ function App() {
             <Route path="/get-test" element={<GetTest />} />
             <Route path="/get-test-question" element={<GetQuestions />} />
             <Route path="/add-test" element={<AddTest />} />
+
+            <Route path="/demo" element={<Demo />} />
           </Routes>
         </div>
       </BrowserRouter>

@@ -27,15 +27,15 @@ const GetTest = () => {
     fetchCourse();
   }, [dispatch]);
   return (
-    <div className="container w-[80%] flex flex-col justify-center items-center">
-      <h1 className="text-3xl font-bold text-center my-10">Test List</h1>
+    <div className="container w-[85%] flex flex-col justify-center items-center mx-5">
+      <h1 className="text-3xl font-bold text-center my-5">Test List</h1>
       <Link
         to={"/add-test"}
-        className="px-3 py-2 text-lg font-bold text-white rounded-lg border-2 border-transparent bg-gray-900 hover:bg-gray-800 transition-all duration-300"
+        className="px-3 py-2 text-lg font-bold text-white rounded-lg border-2 border-transparent bg-blue-500 hover:bg-blue-700 transition-all duration-300"
       >
         Add Test
       </Link>
-      <table className="table-auto w-[70vw] m-10 border-2">
+      <table className="table-auto w-full m-5 border-2">
         <thead>
           <tr>
             <th className="p-2 text-sm">Test Id</th>
