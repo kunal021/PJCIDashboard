@@ -16,7 +16,7 @@ export const courseSlice = createSlice({
     },
     updateCourse: (state, action) => {
       const index = state.courses.findIndex(
-        (course) => course._id === action.payload._id
+        (course) => course.id === action.payload.id
       );
       if (index !== -1) {
         state.courses[index] = action.payload;
@@ -24,7 +24,7 @@ export const courseSlice = createSlice({
     },
     deleteCourse: (state, action) => {
       state.courses = state.courses.filter(
-        (course) => course._id !== action.payload
+        (course) => course.id !== action.payload
       );
     },
   },

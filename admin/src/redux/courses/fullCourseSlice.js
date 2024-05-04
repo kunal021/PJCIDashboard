@@ -16,7 +16,7 @@ export const fullCourseSlice = createSlice({
     },
     updateFullCourse: (state, action) => {
       const index = state.fullCourse.findIndex(
-        (course) => course._id === action.payload._id
+        (fullCourse) => fullCourse.id === action.payload.id
       );
       if (index !== -1) {
         state.fullCourse[index] = action.payload;
@@ -24,7 +24,7 @@ export const fullCourseSlice = createSlice({
     },
     deleteFullCourse: (state, action) => {
       state.fullCourse = state.fullCourse.filter(
-        (course) => course._id !== action.payload
+        (fullCourse) => fullCourse.id !== action.payload
       );
     },
   },

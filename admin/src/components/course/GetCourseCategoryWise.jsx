@@ -39,10 +39,10 @@ const GetCourseCategoryWise = () => {
       }
     };
 
-    // if (id) {
-    fetchCourse();
-    // }
-  }, [dispatch, id]);
+    if (id) {
+      fetchCourse();
+    }
+  }, [dispatch, id, searchParams]);
 
   return (
     <div className="container w-[80%]">

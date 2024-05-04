@@ -11,6 +11,7 @@ import GetCourseCategoryWise from "./components/course/GetCourseCategoryWise";
 import GetTest from "./components/tests/GetTests";
 import GetQuestions from "./components/tests/GetQuestions";
 import AddTest from "./components/tests/AddTest";
+// import Category from "./components/categories/Category";
 // import Navbar from "./components/Navbar";
 
 function App() {

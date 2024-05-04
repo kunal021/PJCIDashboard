@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Course from "./dashboard/Course";
 import Test from "./dashboard/Test";
 import Question from "./dashboard/Question";
 import Setting from "./Setting";
 import right from "../assests/arrowright.svg";
 import down from "../assests/arrowdown.svg";
+// import Category from "./categories/Category";
 
 function DashboardPreview() {
   const [courseOpen, setCourseOpen] = useState(false);
@@ -45,16 +46,9 @@ function DashboardPreview() {
               onClick={() => setCategoryOpen((prev) => !prev)}
             >
               Category{" "}
-              {/* <span className="pl-10">
-                {courseOpen ? (
-                  <img className="h-6 w-6" src={down} alt="-" />
-                ) : (
-                  <img className="h-6 w-6" src={right} alt="+" />
-                )}
-              </span> */}
             </p>
 
-            {categoryOpen && <Navigate to="/category" replace />}
+            {categoryOpen && <Link to={"/category"}>Category</Link>}
           </div>
 
           <div className="flex flex-col gap-4 cursor-pointer">

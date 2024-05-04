@@ -8,33 +8,32 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import AddCategory from "./AddCategory";
 
+const fetchCategory = async (dispatch) => {
+  try {
+    const response = await axios.get(
+      "http://localhost/PJCIDB/admin/category/get.php"
+    );
+
+    dispatch(setCategory(response.data.data));
+  } catch (error) {
+    console.error("Error fetching category:", error);
+  }
+};
+
 function GetCategory() {
   const dispatch = useDispatch();
   const category = useSelector((state) => state.category.category);
-
-  const fetchCategory = async (dispatch) => {
-    try {
-      const response = await axios.get(
-        "http://localhost/PJCIDB/admin/category/get.php"
-      );
-
-      dispatch(setCategory(response.data.data));
-    } catch (error) {
-      console.error("Error fetching category:", error);
-    }
-  };
 
   useEffect(() => {
     fetchCategory(dispatch);
   }, [dispatch]);
 
-  const handleDelete = async (courseName, courseId) => {
+  const handleDelete = async (courseId) => {
+    console.log("del");
     try {
       const response = await axios.delete(
         `http://localhost/PJCIDB/admin/category/delcategory.php?id=${courseId}`
       );
-      console.log("Response:", response.data);
-      console.log(courseName);
       if (courseId && response.data.success) {
         dispatch(deleteCategory(response.data));
       }
@@ -43,6 +42,7 @@ function GetCategory() {
       console.error("Error fetching category:", error);
     }
   };
+
   return (
     <div className="container w-[80%]">
       <h1 className="text-center text-3xl font-bold my-10">Category List</h1>
@@ -58,6 +58,7 @@ function GetCategory() {
         <tbody className="text-center">
           {category.map((item) => (
             <tr key={item.id}>
+              {console.log(item.id)}
               <td className="border px-2 py-2">{item.id}</td>
               <td className="border px-2 py-2">{item.name}</td>
               <td className="border px-2 py-2">
@@ -71,7 +72,7 @@ function GetCategory() {
               <td className="border px-2 py-2">
                 <button
                   className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                  onClick={() => handleDelete(item.name, item.id)}
+                  onClick={() => handleDelete(item.id)}
                 >
                   Delete
                 </button>

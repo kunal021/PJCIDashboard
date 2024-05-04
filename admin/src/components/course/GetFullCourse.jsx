@@ -1,13 +1,14 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setCourse } from "../../redux/courses/courseSlice";
+// import { setCourse } from "../../redux/courses/courseSlice";
+import { setFullCourse } from "../../redux/courses/fullCourseSlice";
 import axios from "axios";
 import { Link } from "react-router-dom";
 // import GetFullCourseSubjects from "./GetFullCourseSubjects";
 
 const GetFullCourse = () => {
   const dispatch = useDispatch();
-  const courses = useSelector((state) => state.courses.courses);
+  const fullCourse = useSelector((state) => state.fullCourse.fullCourse);
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -17,7 +18,7 @@ const GetFullCourse = () => {
         );
 
         console.log(response.data);
-        dispatch(setCourse(response.data.data_fullcourse));
+        dispatch(setFullCourse(response.data.data_fullcourse));
 
         // console.log(response);
       } catch (error) {
@@ -44,7 +45,7 @@ const GetFullCourse = () => {
           </tr>
         </thead>
         <tbody className="text-center">
-          {courses.map((course) => (
+          {fullCourse.map((course) => (
             <tr key={course.id}>
               <td className="border px-2 py-2">{course.id}</td>
               <td className="border px-2 py-2">
