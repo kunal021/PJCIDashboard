@@ -45,31 +45,31 @@ const GetQuestions = () => {
       <table className="table-auto w-[70vw] m-10 border-2">
         <thead>
           <tr>
-            <th className="px-4 py-2">Question Id</th>
-            <th className="px-4 py-2">Test Id</th>
-            <th className="px-4 py-2">Subject Id</th>
-            <th className="px-4 py-2">Question</th>
-            <th className="px-4 py-2">Option a</th>
-            <th className="px-4 py-2">Option b</th>
-            <th className="px-4 py-2">Option c</th>
-            <th className="px-4 py-2">Option d</th>
-            <th className="px-4 py-2">Option e</th>
-            <th className="px-4 py-2">Answer</th>
+            <th className="p-2 text-sm">Question Id</th>
+            <th className="p-2 text-sm">Test Id</th>
+            <th className="p-2 text-sm">Subject Id</th>
+            <th className="p-2 text-sm">Question</th>
+            <th className="p-2 text-sm">Option a</th>
+            <th className="p-2 text-sm">Option b</th>
+            <th className="p-2 text-sm">Option c</th>
+            <th className="p-2 text-sm">Option d</th>
+            <th className="p-2 text-sm">Option e</th>
+            <th className="p-2 text-sm">Answer</th>
           </tr>
         </thead>
         <tbody className="text-center">
           {question.map((question) => (
             <tr key={question.qnsid}>
-              <td className="border px-4 py-2">{question.qnsid}</td>
-              <td className="border px-4 py-2">{question.testid}</td>
-              <td className="border px-4 py-2">{question.subid}</td>
-              <td className="border px-4 py-2">{question.question_text}</td>
-              <td className="border px-4 py-2">{question.a}</td>
-              <td className="border px-4 py-2">{question.b}</td>
-              <td className="border px-4 py-2">{question.c}</td>
-              <td className="border px-4 py-2">{question.d}</td>
-              <td className="border px-4 py-2">{question.e}</td>
-              <td className="border px-4 py-2">{question.answer}</td>
+              <td className="border p-2 text-sm">{question.qnsid}</td>
+              <td className="border p-2 text-sm">{question.testid}</td>
+              <td className="border p-2 text-sm">{question.subid}</td>
+              <td className="border p-2 text-sm">{question.question_text}</td>
+              <td className="border p-2 text-sm">{question.a}</td>
+              <td className="border p-2 text-sm">{question.b}</td>
+              <td className="border p-2 text-sm">{question.c}</td>
+              <td className="border p-2 text-sm">{question.d}</td>
+              <td className="border p-2 text-sm">{question.e}</td>
+              <td className="border p-2 text-sm">{question.answer}</td>
             </tr>
           ))}
         </tbody>

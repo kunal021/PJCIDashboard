@@ -46,6 +46,13 @@ function DashboardPreview() {
               onClick={() => setCategoryOpen((prev) => !prev)}
             >
               Category{" "}
+              <span className="pl-10">
+                {categoryOpen ? (
+                  <img className="h-6 w-6" src={down} alt="-" />
+                ) : (
+                  <img className="h-6 w-6" src={right} alt="+" />
+                )}
+              </span>
             </p>
 
             {categoryOpen && <Link to={"/category"}>Category</Link>}

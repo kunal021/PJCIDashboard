@@ -49,19 +49,19 @@ function GetCategory() {
       <table className="table-auto w-[70vw] m-10 border-2">
         <thead>
           <tr>
-            <th className="px-2 py-2">Id</th>
-            <th className="px-2 py-2">Name</th>
-            <th className="px-2 py-2">Update</th>
-            <th className="px-2 py-2">Delete</th>
+            <th className="p-2 text-sm">Id</th>
+            <th className="p-2 text-sm">Name</th>
+            <th className="p-2 text-sm">Update</th>
+            <th className="p-2 text-sm">Delete</th>
           </tr>
         </thead>
         <tbody className="text-center">
           {category.map((item) => (
             <tr key={item.id}>
               {console.log(item.id)}
-              <td className="border px-2 py-2">{item.id}</td>
-              <td className="border px-2 py-2">{item.name}</td>
-              <td className="border px-2 py-2">
+              <td className="border p-2 text-sm">{item.id}</td>
+              <td className="border p-2 text-sm">{item.name}</td>
+              <td className="border p-2 text-sm">
                 <button
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                   // onClick={() => handleUpdate(item.name, item.id)}
@@ -69,7 +69,7 @@ function GetCategory() {
                   Update
                 </button>
               </td>
-              <td className="border px-2 py-2">
+              <td className="border p-2 text-sm">
                 <button
                   className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                   onClick={() => handleDelete(item.id)}
@@ -77,7 +77,7 @@ function GetCategory() {
                   Delete
                 </button>
               </td>
-              <td className="border px-2 py-2">
+              <td className="border p-2 text-sm">
                 <Link to={`/get-course-category-wise?id=${item.id}`}>
                   See all Course
                 </Link>

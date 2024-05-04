@@ -50,20 +50,20 @@ const GetCourseCategoryWise = () => {
       <table className="table-auto w-[70vw] m-10 border-2">
         <thead>
           <tr>
-            <th className="px-2 py-2">Id</th>
-            <th className="px-2 py-2">Image</th>
-            <th className="px-2 py-2">Course Name</th>
-            <th className="px-2 py-2">Description</th>
-            <th className="px-2 py-2">Price</th>
-            <th className="px-2 py-2">Duration</th>
-            <th className="px-2 py-2">Total Videos</th>
+            <th className="p-2 text-sm">Id</th>
+            <th className="p-2 text-sm">Image</th>
+            <th className="p-2 text-sm">Course Name</th>
+            <th className="p-2 text-sm">Description</th>
+            <th className="p-2 text-sm">Price</th>
+            <th className="p-2 text-sm">Duration</th>
+            <th className="p-2 text-sm">Total Videos</th>
           </tr>
         </thead>
         <tbody className="text-center">
           {courses.map((course) => (
             <tr key={course.id}>
               <td className="border px-4 py-2">{course.id}</td>
-              <td className="border px-2 py-2">
+              <td className="border p-2 text-sm">
                 <img
                   src={course.img_url}
                   alt={course.course_name}
@@ -72,11 +72,13 @@ const GetCourseCategoryWise = () => {
                   className="rounded-lg border-transparent"
                 />
               </td>
-              <td className="border px-2 py-2">{course.course_name}</td>
-              <td className="border px-2 py-2">{course.course_description}</td>
-              <td className="border px-2 py-2">{course.price}</td>
-              <td className="border px-2 py-2">{course.course_duration}</td>
-              <td className="border px-2 py-2">
+              <td className="border p-2 text-sm">{course.course_name}</td>
+              <td className="border p-2 text-sm">
+                {course.course_description}
+              </td>
+              <td className="border p-2 text-sm">{course.price}</td>
+              <td className="border p-2 text-sm">{course.course_duration}</td>
+              <td className="border p-2 text-sm">
                 {course.total_number_of_videos}
               </td>
             </tr>
