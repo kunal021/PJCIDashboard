@@ -1,22 +1,15 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCourse } from "../../redux/courses/courseSlice";
-// import { setCategory } from "../../redux/categories/categorySlice";
 import axios from "axios";
 
 import { useSearchParams } from "react-router-dom";
-
-// eslint-disable-next-line react/prop-types
 const GetCourseCategoryWise = () => {
   const dispatch = useDispatch();
   const courses = useSelector((state) => state.courses.courses);
 
-  // const location = useLocation();
-  // const id = new URLSearchParams(location.search).get("id");
-
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
-  // console.log(id);
 
   useEffect(() => {
     console.log(id);
@@ -29,11 +22,7 @@ const GetCourseCategoryWise = () => {
           formData,
           { headers: { "content-type": "multipart/form-data" } }
         );
-
-        console.log(response.data);
         dispatch(setCourse(response.data.data_course));
-
-        // console.log(response);
       } catch (error) {
         console.error("Error fetching courses:", error);
       }

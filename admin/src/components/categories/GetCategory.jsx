@@ -31,7 +31,6 @@ function GetCategory() {
   }, [dispatch]);
 
   const handleDelete = async (courseId) => {
-    console.log("del");
     try {
       const response = await axios.delete(
         `http://localhost/PJCIDB/admin/category/delcategory.php?id=${courseId}`

@@ -23,7 +23,7 @@ const GetFullCourseSubjects = () => {
         const response = await axios.post(
           "http://localhost/PJCIDB/admin/courses/getfullcoursesubjects.php",
           forData,
-          { headers: "content-type/form-data" }
+          { headers: { "content-type": "multipart/form-data" } }
         );
 
         console.log(response.data);

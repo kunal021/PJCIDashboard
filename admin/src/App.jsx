@@ -12,6 +12,7 @@ import GetTest from "./components/tests/GetTests";
 import GetQuestions from "./components/tests/GetQuestions";
 import AddTest from "./components/tests/AddTest";
 import Demo from "../public/Demo";
+import AddCourse from "./components/course/AddCourse";
 // import Category from "./components/categories/Category";
 // import Navbar from "./components/Navbar";
 
@@ -24,6 +25,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Preview />} />
             <Route path="/get-course" element={<GetCourse />} />
+            <Route path="/add-course" element={<AddCourse />} />
             <Route path="/get-full-course" element={<GetFullCourse />} />
             <Route
               path="/get-full-course-subject"

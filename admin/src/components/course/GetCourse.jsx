@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCourse } from "../../redux/courses/courseSlice";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const GetCourse = () => {
   const dispatch = useDispatch();
@@ -14,10 +15,7 @@ const GetCourse = () => {
           "http://localhost/PJCIDB/admin/courses/getallcourse.php"
         );
 
-        console.log(response.data);
         dispatch(setCourse(response.data.data_course));
-
-        // console.log(response);
       } catch (error) {
         console.error("Error fetching courses:", error);
       }
@@ -67,6 +65,12 @@ const GetCourse = () => {
           ))}
         </tbody>
       </table>
+      <Link
+        to={"/add-course"}
+        className="px-3 py-2 text-lg font-bold text-white rounded-md mb-5 border-2 border-transparent bg-blue-500 hover:bg-blue-700 transition-all duration-300"
+      >
+        Add Course
+      </Link>
     </div>
   );
 };

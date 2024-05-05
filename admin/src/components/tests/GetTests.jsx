@@ -15,10 +15,7 @@ const GetTest = () => {
           "http://localhost/PJCIDB/admin/test/getalltest.php"
         );
 
-        // console.log(response.data.data);
         dispatch(setTest(response.data.data));
-
-        // console.log(response);
       } catch (error) {
         console.error("Error fetching courses:", error);
       }
