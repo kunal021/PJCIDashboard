@@ -13,6 +13,7 @@ function AddCourse() {
     description: "",
     imgurl: "",
   });
+  const [success, setSuccess] = useState(false);
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
@@ -38,6 +39,7 @@ function AddCourse() {
         { headers: { "content-type": "multipart/form-data" } }
       );
       dispatch(addCourse(response.data));
+      setSuccess(true);
     } catch (error) {
       console.error("Error fetching courses:", error);
     }
