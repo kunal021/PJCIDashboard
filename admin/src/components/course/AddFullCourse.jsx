@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addCourse } from "../../redux/courses/courseSlice";
+import { addFullCourse } from "../../redux/courses/fullCourseSlice";
 import axios from "axios";
 import FormField from "../../utils/FormField";
 import { Link } from "react-router-dom";
 
-function AddCourse() {
+function AddFullCourse() {
   const [course, setCourse] = useState({
     name: "",
     price: "",
@@ -33,11 +33,11 @@ function AddCourse() {
       formData.append("description", course.description);
       formData.append("imgurl", course.imgurl);
       const response = await axios.post(
-        "http://localhost/PJCIDB/admin/courses/addcourse.php",
+        "http://localhost/PJCIDB/admin/courses/addfullcourse.php",
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );
-      dispatch(addCourse(response.data));
+      dispatch(addFullCourse(response.data));
     } catch (error) {
       console.error("Error fetching courses:", error);
     }
@@ -52,7 +52,7 @@ function AddCourse() {
 
   return (
     <div className="container w-[85%] flex flex-col justify-center items-center mx-5">
-      <h1 className="text-center my-5 text-3xl font-bold">Add Course</h1>
+      <h1 className="text-center my-5 text-3xl font-bold">Add Full Course</h1>
       <div className="flex flex-col justify-center items-center max-w-md lg:w-full mx-auto mt-5">
         <form
           onSubmit={handleSubmit}
@@ -120,13 +120,13 @@ function AddCourse() {
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
             >
-              Create Course
+              Create Full Course
             </button>
           </div>
         </form>
         <div className="flex items-center justify-between mb-4">
           <Link
-            to={"/get-course"}
+            to={"/get-full-course"}
             className="border-2 rounded-md bg-red-500 py-2 px-4 text-sm font-semibold border-transparent hover:bg-red-700 text-white transition-all duration-500 w-full md:w-auto"
           >
             Close
@@ -137,4 +137,4 @@ function AddCourse() {
   );
 }
 
-export default AddCourse;
+export default AddFullCourse;

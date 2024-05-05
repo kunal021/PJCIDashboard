@@ -8,10 +8,29 @@ import right from "../assests/arrowright.svg";
 import down from "../assests/arrowdown.svg";
 
 function DashboardPreview() {
-  const [courseOpen, setCourseOpen] = useState(false);
-  const [testOpen, setTestOpen] = useState(false);
-  const [questionOpen, setQuestionOpen] = useState(false);
-  const [settingOpen, setSettingOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState({
+    course: false,
+    test: false,
+    question: false,
+    setting: false,
+  });
+
+  const toggleOpen = (section) => {
+    setIsOpen((prevState) => ({
+      ...prevState,
+      [section]: !prevState[section],
+    }));
+  };
+
+  const renderSection = (section, Component) => {
+    return (
+      isOpen[section] && (
+        <div className="bg-white/20 rounded-md px-2 py-1 w-[80%]">
+          <Component />
+        </div>
+      )
+    );
+  };
 
   return (
     <div className="top-0 sticky h-full w-[15%] overflow-y-auto">
@@ -19,80 +38,41 @@ function DashboardPreview() {
         <Link to="/" className="text-white text-xl font-semibold">
           Dashboard
         </Link>
-        <div className="flex flex-col text-gray-400 gap-4 w-full">
+        <div className="flex flex-col text-gray-200 gap-4 w-full">
           <div className="flex flex-col gap-4 cursor-pointer">
             <p className="flex text-lg font-medium justify-between items-center">
               <Link to={"/category"}>Category</Link>
             </p>
           </div>
-          <div className="flex flex-col gap-4 cursor-pointer">
-            <p
-              className="flex text-lg font-medium justify-between items-center"
-              onClick={() => setCourseOpen((prev) => !prev)}
+          {["course", "test", "question", "setting"].map((section) => (
+            <div
+              key={section}
+              className="flex flex-col space-y-1 cursor-pointer"
             >
-              Course{" "}
-              <span className="pl-10">
-                {courseOpen ? (
-                  <img className="h-6 w-6" src={down} alt="-" />
-                ) : (
-                  <img className="h-6 w-6" src={right} alt="+" />
-                )}
-              </span>
-            </p>
-
-            {courseOpen && <Course />}
-          </div>
-
-          <div className="flex flex-col gap-4 cursor-pointer">
-            <p
-              className="flex text-lg font-medium justify-between "
-              onClick={() => setTestOpen((prev) => !prev)}
-            >
-              Test{" "}
-              <span className="pl-10">
-                {testOpen ? (
-                  <img className="h-6 w-6" src={down} alt="-" />
-                ) : (
-                  <img className="h-6 w-6" src={right} alt="+" />
-                )}
-              </span>
-            </p>
-            {testOpen && <Test />}
-          </div>
-
-          <div className="flex flex-col gap-4 cursor-pointer">
-            <p
-              className="flex text-lg font-medium justify-between "
-              onClick={() => setQuestionOpen((prev) => !prev)}
-            >
-              Question{" "}
-              <span className="pl-10">
-                {questionOpen ? (
-                  <img className="h-6 w-6" src={down} alt="-" />
-                ) : (
-                  <img className="h-6 w-6" src={right} alt="+" />
-                )}
-              </span>
-            </p>
-            {questionOpen && <Question />}
-          </div>
-
-          <div className="flex flex-col gap-4 cursor-pointer">
-            <p
-              className="flex text-lg font-medium justify-between "
-              onClick={() => setSettingOpen((prev) => !prev)}
-            >
-              Setting{" "}
-              <span className="pl-10">
-                {settingOpen ? (
-                  <img className="h-6 w-6" src={down} alt="-" />
-                ) : (
-                  <img className="h-6 w-6" src={right} alt="+" />
-                )}
-              </span>
-            </p>
-            {settingOpen && <Setting />}
-          </div>
+              <p
+                className="flex text-lg font-medium justify-between items-center"
+                onClick={() => toggleOpen(section)}
+              >
+                {section.charAt(0).toUpperCase() + section.slice(1)}{" "}
+                <span className="pl-10">
+                  {isOpen[section] ? (
+                    <img className="h-6 w-6" src={down} alt="-" />
+                  ) : (
+                    <img className="h-6 w-6" src={right} alt="+" />
+                  )}
+                </span>
+              </p>
+              {renderSection(
+                section,
+                {
+                  course: Course,
+                  test: Test,
+                  question: Question,
+                  setting: Setting,
+                }[section]
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </div>

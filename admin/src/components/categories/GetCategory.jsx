@@ -96,7 +96,7 @@ function GetCategory() {
         </table>
         <button
           onClick={() => setAddNewCategory((prev) => !prev)}
-          className="border-2 rounded-lg border-blue-500 p-2 text-sm font-semibold text-blue-500 hover:border-transparent hover:bg-blue-500 hover:text-white transition-all duration-500 w-full md:w-auto"
+          className="border-2 rounded-lg border-transparent bg-blue-500 p-2 text-sm font-semibold text-white hover:bg-blue-700 hover:text-white transition-all duration-500 w-full md:w-auto"
         >
           Add Category
         </button>

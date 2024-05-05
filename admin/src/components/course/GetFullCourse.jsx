@@ -16,11 +16,7 @@ const GetFullCourse = () => {
         const response = await axios.post(
           "http://localhost/PJCIDB/courses/getallcourse.php"
         );
-
-        console.log(response.data);
         dispatch(setFullCourse(response.data.data_fullcourse));
-
-        // console.log(response);
       } catch (error) {
         console.error("Error fetching courses:", error);
       }
@@ -75,6 +71,12 @@ const GetFullCourse = () => {
           ))}
         </tbody>
       </table>
+      <Link
+        to={"/add-full-course"}
+        className="px-3 py-2 text-lg font-bold text-white rounded-md mb-5 border-2 border-transparent bg-blue-500 hover:bg-blue-700 transition-all duration-300"
+      >
+        Add Full Course
+      </Link>
     </div>
   );
 };
