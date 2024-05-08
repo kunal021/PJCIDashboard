@@ -11,7 +11,9 @@ import GetQuestions from "./components/tests/GetQuestions";
 import AddTest from "./components/tests/AddTest";
 import AddCourse from "./components/course/AddCourse";
 import AddFullCourse from "./components/course/AddFullCourse";
-import AddQns from "./components/tests/AddQns";
+// import AddQns from "./components/tests/AddQns";
+// import QuestionForm from "./components/tests/QnsForm";
+import NewAddQns from "./components/tests/NewAddQns";
 
 function App() {
   return (
@@ -36,8 +38,10 @@ function App() {
             <Route path="/category" element={<GetCategory />} />
             <Route path="/get-test" element={<GetTest />} />
             <Route path="/get-test-question" element={<GetQuestions />} />
-            <Route path="/add-test-question" element={<AddQns />} />
+            <Route path="/add-test-question" element={<NewAddQns />} />
             <Route path="/add-test" element={<AddTest />} />
+            {/* <Route path="/demo" element={<QuestionForm />} /> */}
+            {/* <Route path="/demo1" element={<NewAddQns />} /> */}
           </Routes>
         </div>
       </BrowserRouter>

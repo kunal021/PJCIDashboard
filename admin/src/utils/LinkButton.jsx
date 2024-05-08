@@ -5,7 +5,7 @@ function LinkButton({ to, children, use }) {
     return (
         <Link
             to={to}
-            className={`px-3 py-2 text-lg font-bold text-white rounded-lg border-2 border-transparent ${use === "close" ? "bg-red-500 hover:bg-red-700" : "bg-blue-500 hover:bg-blue-700"} transition-all duration-300`}
+            className={`text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${use === "close" ? "bg-red-500 hover:bg-red-700" : "bg-blue-500 hover:bg-blue-700"} `}
         >
             {children}
         </Link>
