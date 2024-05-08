@@ -8,6 +8,7 @@
     background-color: #e2e8f0;
     border-radius: 50%;
     cursor: pointer;
+    padding: 10px;
 }
 
 .checkbox-label:hover {

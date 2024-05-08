@@ -81,12 +81,12 @@ function NewAddQns() {
     return (
         <div className="container w-[85%] flex flex-col justify-center items-center mx-5">
             <h1 className="text-center my-5 text-3xl font-bold">Add Question</h1>
-            <div className="flex flex-col justify-center items-center max-w-md lg:w-full mx-auto mt-5">
+            <div className="flex flex-col justify-center items-center max-w-md md:w-[28rem] mx-auto mt-5">
                 {questions.map((formData, index) => (
                     <form
                         key={index}
                         onSubmit={(e) => handleSubmit(e, index)}
-                        className="bg-white shadow-md px-8 py-4 mb-4 text-sm rounded-xl border-2 border-gray-900"
+                        className="bg-white shadow-md px-8 py-4 mb-4 w-full text-sm rounded-xl border-2 border-gray-900"
                     >
                         <FormField
                             htmlFor={`question${index}`}
@@ -99,7 +99,7 @@ function NewAddQns() {
                         >
                             Question {index + 1}
                         </FormField>
-                        <div className="flex flex-col md:flex-row md:space-x-6">
+                        <div className="flex flex-col justify-center items-center md:flex-row md:space-x-24">
                             <FormField
                                 htmlFor={`option_a${index}`}
                                 id={`option_a${index}`}
@@ -123,7 +123,7 @@ function NewAddQns() {
                                 A
                             </label>
                         </div>
-                        <div className="flex flex-col md:flex-row md:space-x-6">
+                        <div className="flex flex-col justify-center items-center md:flex-row md:space-x-24">
                             <FormField
                                 htmlFor={`option_b${index}`}
                                 id={`option_b${index}`}
@@ -147,7 +147,7 @@ function NewAddQns() {
                                 B
                             </label>
                         </div>
-                        <div className="flex flex-col md:flex-row md:space-x-6">
+                        <div className="flex flex-col justify-center items-center md:flex-row md:space-x-24">
                             <FormField
                                 htmlFor={`option_c${index}`}
                                 id={`option_c${index}`}
@@ -171,7 +171,7 @@ function NewAddQns() {
                                 C
                             </label>
                         </div>
-                        <div className="flex flex-col md:flex-row md:space-x-6">
+                        <div className="flex flex-col justify-center items-center md:flex-row md:space-x-24">
                             <FormField
                                 htmlFor={`option_d${index}`}
                                 id={`option_d${index}`}
@@ -195,7 +195,7 @@ function NewAddQns() {
                                 D
                             </label>
                         </div>
-                        <div className="flex flex-col md:flex-row md:space-x-6">
+                        <div className="flex flex-col justify-center items-center md:flex-row md:space-x-24">
                             <FormField
                                 htmlFor={`option_e${index}`}
                                 id={`option_e${index}`}
@@ -227,7 +227,7 @@ function NewAddQns() {
                                     onClick={handleAddQuestion}
                                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                 >
-                                    Add Question
+                                    Add Another Question
                                 </button>
                             </div>
                         )}
