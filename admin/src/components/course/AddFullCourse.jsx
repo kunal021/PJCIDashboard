@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { addFullCourse } from "../../redux/courses/fullCourseSlice";
 import axios from "axios";
 import FormField from "../../utils/FormField";
-import { Link } from "react-router-dom";
+import LinkButton from "../../utils/LinkButton";
 
 function AddFullCourse() {
   const [course, setCourse] = useState({
@@ -125,12 +125,7 @@ function AddFullCourse() {
           </div>
         </form>
         <div className="flex items-center justify-between mb-4">
-          <Link
-            to={"/get-full-course"}
-            className="border-2 rounded-md bg-red-500 py-2 px-4 text-sm font-semibold border-transparent hover:bg-red-700 text-white transition-all duration-500 w-full md:w-auto"
-          >
-            Close
-          </Link>
+          <LinkButton to={"/get-full-course"} use={"close"}>Close</LinkButton>
         </div>
       </div>
     </div>

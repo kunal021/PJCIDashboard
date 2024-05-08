@@ -2,10 +2,8 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCourse } from "../../redux/courses/courseSlice";
 import axios from "axios";
-
 import { useSearchParams } from "react-router-dom";
 
-// eslint-disable-next-line react/prop-types
 const GetFullCourseSubjects = () => {
   const dispatch = useDispatch();
   const courses = useSelector((state) => state.courses.courses);
@@ -25,11 +23,7 @@ const GetFullCourseSubjects = () => {
           forData,
           { headers: { "content-type": "multipart/form-data" } }
         );
-
-        console.log(response.data);
         dispatch(setCourse(response.data.data));
-
-        // console.log(response);
       } catch (error) {
         console.error("Error fetching courses:", error);
       }

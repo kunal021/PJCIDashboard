@@ -15,7 +15,6 @@ function AddCategory({ fetchCategory, setAddNewCategory }) {
         "http://localhost/PJCIDB/admin/category/add.php",
         { c_name: categoryName }
       );
-      console.log("Response:", response.data);
       dispatch(addCategory(response.data));
       fetchCategory();
     } catch (error) {

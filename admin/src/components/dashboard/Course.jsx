@@ -9,9 +9,6 @@ function Course() {
       <div>
         <NavLink to="/get-full-course">Full Course</NavLink>
       </div>
-      {/* <div>
-        <NavLink to="/get-full-course-subject">Full Course Subject</NavLink>
-      </div> */}
     </div>
   );
 }

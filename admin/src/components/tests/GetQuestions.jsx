@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setQuestion } from "../../redux/questions/questionSlice";
 import axios from "axios";
 import { useSearchParams } from "react-router-dom";
+import LinkButton from "../../utils/LinkButton";
 
 const GetQuestions = () => {
   const dispatch = useDispatch();
@@ -74,6 +75,7 @@ const GetQuestions = () => {
           ))}
         </tbody>
       </table>
+      <LinkButton to={`/add-test-question?id=${id}`}>Add Question</LinkButton>
     </div>
   );
 };

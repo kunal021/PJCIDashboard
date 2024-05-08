@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setTest } from "../../redux/tests/testSlice";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import LinkButton from "../../utils/LinkButton";
 
 const GetTest = () => {
   const dispatch = useDispatch();
@@ -26,12 +27,7 @@ const GetTest = () => {
   return (
     <div className="container w-[85%] flex flex-col justify-center items-center mx-5">
       <h1 className="text-3xl font-bold text-center my-5">Test List</h1>
-      <Link
-        to={"/add-test"}
-        className="px-3 py-2 text-lg font-bold text-white rounded-lg border-2 border-transparent bg-blue-500 hover:bg-blue-700 transition-all duration-300"
-      >
-        Add Test
-      </Link>
+      <LinkButton to={"/add-test"}>Add Test</LinkButton>
       <table className="table-auto w-full m-5 border-2">
         <thead>
           <tr>

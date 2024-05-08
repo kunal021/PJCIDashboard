@@ -1,10 +1,9 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import { setCourse } from "../../redux/courses/courseSlice";
 import { setFullCourse } from "../../redux/courses/fullCourseSlice";
 import axios from "axios";
 import { Link } from "react-router-dom";
-// import GetFullCourseSubjects from "./GetFullCourseSubjects";
+import LinkButton from "../../utils/LinkButton";
 
 const GetFullCourse = () => {
   const dispatch = useDispatch();
@@ -71,12 +70,7 @@ const GetFullCourse = () => {
           ))}
         </tbody>
       </table>
-      <Link
-        to={"/add-full-course"}
-        className="px-3 py-2 text-lg font-bold text-white rounded-md mb-5 border-2 border-transparent bg-blue-500 hover:bg-blue-700 transition-all duration-300"
-      >
-        Add Full Course
-      </Link>
+      <LinkButton to={"/add-full-course"}>Add Full Course</LinkButton>
     </div>
   );
 };

@@ -21,6 +21,7 @@ function FormField({
       {type === "textarea" ? (
         <textarea
           className={className}
+          required
           id={id}
           type={type}
           placeholder={placeholder}
@@ -31,6 +32,7 @@ function FormField({
       ) : (
         <input
           className={className}
+          required
           id={id}
           type={type}
           placeholder={placeholder}

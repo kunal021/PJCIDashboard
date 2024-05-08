@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addTest } from "../../redux/tests/testSlice";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import FormField from "../../utils/FormField";
+import LinkButton from "../../utils/LinkButton";
 
 function AddTest() {
   const [formData, setFormData] = useState({
@@ -234,12 +234,7 @@ function AddTest() {
           </div>
         </form>
         <div className="flex items-center justify-between mb-4">
-          <Link
-            to={"/get-test"}
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Close
-          </Link>
+          <LinkButton to={"/get-test"} use={"close"}>Close</LinkButton>
         </div>
       </div>
     </div>

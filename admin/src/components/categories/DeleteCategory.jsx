@@ -6,16 +6,13 @@ import axios from "axios";
 function DeleteCategory() {
   const [categoryName, setCategoryName] = useState("");
   const dispatch = useDispatch();
-  //   const category = useSelector((state) => state.category.category);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.delete(
         `http://localhost/PJCIDB/category/delcategory.php?c_name=${categoryName}`
-        // { c_name: categoryName }
       );
-      console.log("Response:", response.data);
       dispatch(deleteCategory(response.data));
     } catch (error) {
       console.error("Error fetching courses:", error);
