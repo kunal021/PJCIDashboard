@@ -1,31 +1,50 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setTest } from "../../redux/tests/testSlice";
+import { deleteTest } from "../../redux/tests/testSlice";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import LinkButton from "../../utils/LinkButton";
+
+
+const fetchTest = async (dispatch) => {
+  try {
+    const response = await axios.post(
+      "http://localhost/PJCIDB/admin/test/getalltest.php"
+    );
+
+    dispatch(setTest(response.data.data));
+  } catch (error) {
+    console.error("Error fetching courses:", error);
+  }
+};
 
 const GetTest = () => {
   const dispatch = useDispatch();
   const test = useSelector((state) => state.test.test);
 
   useEffect(() => {
-    const fetchCourse = async () => {
-      try {
-        const response = await axios.post(
-          "http://localhost/PJCIDB/admin/test/getalltest.php"
-        );
 
-        dispatch(setTest(response.data.data));
-      } catch (error) {
-        console.error("Error fetching courses:", error);
-      }
-    };
 
-    fetchCourse();
+    fetchTest(dispatch);
   }, [dispatch]);
+
+  const handleDelete = async (testId) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost/PJCIDB/admin/test/deletetest.php?testid=${testId}`
+      );
+      if (testId && response.data.success) {
+        dispatch(deleteTest(response.data));
+      }
+      fetchTest(dispatch);
+    } catch (error) {
+      console.error("Error fetching category:", error);
+    }
+  }
+
   return (
-    <div className="container w-[85%] flex flex-col justify-center items-center mx-5">
+    <div className="w-fit flex flex-col justify-center items-center mx-5">
       <h1 className="text-3xl font-bold text-center my-5">Test List</h1>
       <LinkButton to={"/add-test"}>Add Test</LinkButton>
       <table className="table-auto w-full m-5 border-2">
@@ -43,6 +62,8 @@ const GetTest = () => {
             <th className="p-2 text-sm">Mark Per Question</th>
             <th className="p-2 text-sm">Total Mark</th>
             <th className="p-2 text-sm">Negative Mark</th>
+            <th className="p-2 text-sm">Update</th>
+            <th className="p-2 text-sm">Delete</th>
             <th className="p-2 text-sm">See Questions</th>
           </tr>
         </thead>
@@ -61,6 +82,23 @@ const GetTest = () => {
               <td className="border p-2 text-sm">{test.mark_per_qns}</td>
               <td className="border p-2 text-sm">{test.total_mark}</td>
               <td className="border p-2 text-sm">{test.negative_mark}</td>
+              <td className="border p-2 text-sm">
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={() => handleDelete(item.id)}
+                >
+                  Update
+                </button>
+              </td>
+              <td className="border p-2 text-sm">
+                <button
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={() => handleDelete(test.test_id)}
+                >
+                  Delete
+                </button>
+              </td>
+
               <td className="border p-2 text-sm">
                 <Link to={`/get-test-question?id=${test.test_id}`}>
                   See Questions

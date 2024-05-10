@@ -44,7 +44,7 @@ function DashboardPreview() {
               <Link to={"/category"}>Category</Link>
             </p>
           </div>
-          {["course", "test", "question", "setting"].map((section) => (
+          {["course", "test", "setting"].map((section) => (
             <div
               key={section}
               className="flex flex-col space-y-1 cursor-pointer"

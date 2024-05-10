@@ -7,6 +7,7 @@ import {
 import axios from "axios";
 import { Link } from "react-router-dom";
 import AddCategory from "./AddCategory";
+import LinkButton from "../../utils/LinkButton";
 
 const fetchCategory = async (dispatch) => {
   try {
@@ -45,13 +46,12 @@ function GetCategory() {
   };
 
   return (
-    <div className="container w-[85%] flex flex-col justify-center items-center mx-5">
+    <div className="w-fit flex flex-col justify-center items-center mx-5">
       <div
-        className={`${
-          addNewCategory
-            ? "hidden"
-            : "container w-[85%] flex flex-col justify-center items-center mx-5"
-        } `}
+        className={`${addNewCategory
+          ? "hidden"
+          : "container w-[85%] flex flex-col justify-center items-center mx-5"
+          } `}
       >
         <h1 className="text-center text-3xl font-bold my-5">Category List</h1>
         <table className="table-auto w-full m-5 border-2">
@@ -70,12 +70,13 @@ function GetCategory() {
                 <td className="border p-2 text-sm">{item.id}</td>
                 <td className="border p-2 text-sm">{item.name}</td>
                 <td className="border p-2 text-sm">
-                  <button
+                  {/* <button
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                     // onClick={() => handleUpdate(item.name, item.id)}
                   >
                     Update
-                  </button>
+                  </button> */}
+                  <LinkButton to={`/update-category?id=${item.id}&name=${item.name}`} use={"update"}>Update</LinkButton>
                 </td>
                 <td className="border p-2 text-sm">
                   <button

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addCategory } from "../../redux/categories/categorySlice";
 import axios from "axios";
@@ -8,12 +8,17 @@ function AddCategory({ fetchCategory, setAddNewCategory }) {
   const [categoryName, setCategoryName] = useState("");
   const dispatch = useDispatch();
 
+  useEffect(() => {
+
+  })
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(
         "http://localhost/PJCIDB/admin/category/add.php",
-        { c_name: categoryName }
+        { c_name: categoryName },
+        { headers: { "content-type": "multipart/form-data" } }
       );
       dispatch(addCategory(response.data));
       fetchCategory();
@@ -29,7 +34,7 @@ function AddCategory({ fetchCategory, setAddNewCategory }) {
       <h1 className="text-center text-3xl font-bold">Add Category</h1>
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col justify-between items-center border-2 rounded-lg border-gray-900 p-3 w-full my-10 md:w-auto"
+        className="flex flex-col justify-between items-center border-2 rounded-lg border-gray-900 p-3 w-fit my-10 md:w-auto"
       >
         <input
           type="text"

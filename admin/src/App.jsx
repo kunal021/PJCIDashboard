@@ -14,6 +14,7 @@ import AddFullCourse from "./components/course/AddFullCourse";
 // import AddQns from "./components/tests/AddQns";
 // import QuestionForm from "./components/tests/QnsForm";
 import NewAddQns from "./components/tests/NewAddQns";
+import UpdateCategory from "./components/categories/UpdateCategory";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
               element={<GetCourseCategoryWise />}
             />
             <Route path="/category" element={<GetCategory />} />
+            <Route path="/update-category" element={<UpdateCategory />} />
             <Route path="/get-test" element={<GetTest />} />
             <Route path="/get-test-question" element={<GetQuestions />} />
             <Route path="/add-test-question" element={<NewAddQns />} />

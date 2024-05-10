@@ -34,7 +34,7 @@ const GetCourseCategoryWise = () => {
   }, [dispatch, id, searchParams]);
 
   return (
-    <div className="container w-[85%] flex flex-col justify-center items-center mx-5">
+    <div className="w-fit flex flex-col justify-center items-center mx-5">
       <h1 className="text-3xl font-bold text-center my-5">Course List</h1>
       <table className="table-auto w-full m-5 border-2">
         <thead>

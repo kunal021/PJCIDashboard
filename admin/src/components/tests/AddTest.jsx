@@ -87,7 +87,7 @@ function AddTest() {
     });
   };
   return (
-    <div className="container w-[85%] flex flex-col justify-center items-center mx-5">
+    <div className="w-fit flex flex-col justify-center items-center mx-5">
       <h1 className="text-center my-5 text-3xl font-bold">Add Test</h1>
       <div className="flex flex-col justify-center items-center max-w-md lg:w-full mx-auto mt-5">
         <form
