@@ -22,7 +22,7 @@ const fetchTest = async (dispatch) => {
 
 function GetTest() {
   const [updateTest, setUpdateTest] = useState(false)
-  const [updateTestData, setUpdateTestData] = useState(null)
+  const [updateTestData, setUpdateTestData] = useState({})
 
   const dispatch = useDispatch();
   const test = useSelector((state) => state.test.test);
