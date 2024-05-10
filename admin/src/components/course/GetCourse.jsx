@@ -31,16 +31,20 @@ function GetCourse() {
   }, [dispatch]);
 
   const handleDelete = async (courseId) => {
-    try {
-      const response = await axios.delete(
-        `http://localhost/PJCIDB/admin/courses/deletecourse.php?courseid=${courseId}`
-      );
-      if (courseId && response.data.success) {
-        dispatch(deleteCourse(response.data));
+    const deleteAlert = window.confirm("Do you want to delete this course?")
+    if (deleteAlert) {
+      try {
+        const response = await axios.delete(
+          `http://localhost/PJCIDB/admin/courses/deletecourse.php?courseid=${courseId}`
+        );
+        if (courseId && response.data.success) {
+          dispatch(deleteCourse(response.data));
+        }
+        fetchCourse(dispatch);
+      } catch (error) {
+        alert(error.response.data.massage)
+        // console.error("Error fetching category:", error.response.data);
       }
-      fetchCourse(dispatch);
-    } catch (error) {
-      console.error("Error fetching category:", error);
     }
   }
 

@@ -32,16 +32,20 @@ function GetTest() {
   }, [dispatch]);
 
   const handleDelete = async (testId) => {
-    try {
-      const response = await axios.delete(
-        `http://localhost/PJCIDB/admin/test/deletetest.php?testid=${testId}`
-      );
-      if (testId && response.data.success) {
-        dispatch(deleteTest(response.data));
+    const deleteAlert = window.confirm("Do you want to delete this test?");
+    if (deleteAlert) {
+      try {
+        const response = await axios.delete(
+          `http://localhost/PJCIDB/admin/test/deletetest.php?testid=${testId}`
+        );
+        if (testId && response.data.success) {
+          dispatch(deleteTest(response.data));
+        }
+        fetchTest(dispatch);
+      } catch (error) {
+        alert(error.response.data.massage)
+        // console.error("Error fetching category:", error);
       }
-      fetchTest(dispatch);
-    } catch (error) {
-      console.error("Error fetching category:", error);
     }
   }
 

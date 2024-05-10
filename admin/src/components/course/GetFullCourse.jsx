@@ -12,7 +12,6 @@ const fetchFullCourse = async (dispatch) => {
     const response = await axios.post(
       "http://localhost/PJCIDB/admin/courses/getallcourse.php"
     );
-    console.log(response.data.data_fullcourse)
     dispatch(setFullCourse(response.data.data_fullcourse));
   } catch (error) {
     console.error("Error fetching courses:", error);
@@ -30,17 +29,25 @@ function GetFullCourse() {
     fetchFullCourse(dispatch);
   }, [dispatch]);
 
+
+
   const handleDelete = async (courseId) => {
-    try {
-      const response = await axios.delete(
-        `http://localhost/PJCIDB/admin/courses/deletefullcourse.php?fullcourseid=${courseId}`
-      );
-      if (courseId && response.data.success) {
-        dispatch(deleteFullCourse(response.data));
+    const deleteAlert = window.confirm("Do you want to delete this course?");
+    if (deleteAlert) {
+      try {
+        const response = await axios.delete(
+          `http://localhost/PJCIDB/admin/courses/deletefullcourse.php?fullcourseid=${courseId}`
+        );
+
+        // console.log(response)
+        if (courseId && response.data.success) {
+          dispatch(deleteFullCourse(response.data));
+        }
+        fetchFullCourse(dispatch);
+      } catch (error) {
+        alert(error.response.data.massage)
+        // console.error("Error fetching category:", error);
       }
-      fetchFullCourse(dispatch);
-    } catch (error) {
-      console.error("Error fetching category:", error);
     }
   }
 
