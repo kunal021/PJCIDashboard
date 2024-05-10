@@ -50,7 +50,7 @@ function GetCategory() {
       <div
         className={`${addNewCategory
           ? "hidden"
-          : "container w-[85%] flex flex-col justify-center items-center mx-5"
+          : "w-fit flex flex-col justify-center items-center mx-5"
           } `}
       >
         <h1 className="text-center text-3xl font-bold my-5">Category List</h1>

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addCategory } from "../../redux/categories/categorySlice";
 import axios from "axios";
@@ -7,10 +7,6 @@ import axios from "axios";
 function AddCategory({ fetchCategory, setAddNewCategory }) {
   const [categoryName, setCategoryName] = useState("");
   const dispatch = useDispatch();
-
-  useEffect(() => {
-
-  })
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,7 +26,7 @@ function AddCategory({ fetchCategory, setAddNewCategory }) {
   };
 
   return (
-    <div className="container flex flex-col justify-center items-center">
+    <div className="w-[85vw] flex flex-col justify-center items-center">
       <h1 className="text-center text-3xl font-bold">Add Category</h1>
       <form
         onSubmit={handleSubmit}
