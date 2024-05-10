@@ -1,13 +1,13 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { updateCourse } from "../../redux/courses/courseSlice";
+import { updateFullCourse } from "../../redux/courses/fullCourseSlice";
 import axios from "axios";
 import FormField from "../../utils/FormField";
 
 
-function UpdateCourse({ fetchCourse, setUpdateCourse, updateCourseData }) {
-    // console.log(updateCourseData)
+function UpdateFullCourse({ fetchFullCourse, setUpdateCourse, updateCourseData }) {
+    console.log(updateCourseData)
     const [course, setCourse] = useState({
         name: updateCourseData.course_name,
         price: updateCourseData.price,
@@ -30,19 +30,19 @@ function UpdateCourse({ fetchCourse, setUpdateCourse, updateCourseData }) {
         e.preventDefault();
         try {
             const formData = new FormData();
-            formData.append("courseid", updateCourseData.id)
+            formData.append("fullcourseid", updateCourseData.id)
             formData.append("name", course.name);
             formData.append("price", course.price);
             formData.append("duration", course.duration);
             formData.append("description", course.description);
             formData.append("imgurl", course.imgurl);
             const response = await axios.post(
-                "http://localhost/PJCIDB/admin/courses/updatecourse.php",
+                "http://localhost/PJCIDB/admin/courses/updatefullcourse.php",
                 formData,
                 { headers: { "content-type": "multipart/form-data" } }
             );
-            dispatch(updateCourse(response.data));
-            fetchCourse()
+            dispatch(updateFullCourse(response.data));
+            fetchFullCourse()
         } catch (error) {
             console.error("Error fetching courses:", error);
         }
@@ -134,4 +134,4 @@ function UpdateCourse({ fetchCourse, setUpdateCourse, updateCourseData }) {
     );
 }
 
-export default UpdateCourse;
+export default UpdateFullCourse;
