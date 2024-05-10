@@ -42,7 +42,10 @@ const GetQuestions = () => {
   }, [dispatch, id]);
   return (
     <div className="w-fit flex flex-col justify-center items-center mx-auto">
-      <h1 className="text-3xl font-bold text-center my-5">Questions List</h1>
+      <div className="flex justify-center items-center space-x-10">
+        <h1 className="text-3xl font-bold text-center my-5">Questions List</h1>
+        <LinkButton to={`/add-test-question?id=${id}`}>Add Question</LinkButton>
+      </div>
       <table className="table-auto w-full m-5 border-2">
         <thead>
           <tr className="bg-gray-200">
@@ -75,7 +78,6 @@ const GetQuestions = () => {
           ))}
         </tbody>
       </table>
-      <LinkButton to={`/add-test-question?id=${id}`}>Add Question</LinkButton>
     </div>
   );
 };

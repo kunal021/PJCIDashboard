@@ -52,8 +52,10 @@ function GetTest() {
           : "w-fit flex flex-col justify-center items-center mx-auto"
           } `}
       >
-        <h1 className="text-3xl font-bold text-center my-5">Test List</h1>
-        <LinkButton to={"/add-test"}>Add Test</LinkButton>
+        <div className="flex justify-center items-center space-x-10">
+          <h1 className="text-3xl font-bold text-center my-5">Test List</h1>
+          <LinkButton to={"/add-test"}>Add Test</LinkButton>
+        </div>
         <table className="table-auto w-full m-5 border-collapse border-2">
           <thead>
             <tr className="bg-gray-200">

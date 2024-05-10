@@ -53,7 +53,15 @@ function GetCategory() {
           : "w-fit flex flex-col justify-center items-center mx-auto"
           } `}
       >
-        <h1 className="text-center text-3xl font-bold my-5">Category List</h1>
+        <div className="flex justify-center items-center space-x-10">
+          <h1 className="text-center text-3xl font-bold my-5">Category List</h1>
+          <button
+            onClick={() => setAddNewCategory((prev) => !prev)}
+            className="border-2 rounded-lg border-transparent bg-blue-500 p-2 text-sm font-semibold text-white hover:bg-blue-700 hover:text-white transition-all duration-500 w-full md:w-auto"
+          >
+            Add Category
+          </button>
+        </div>
         <table className="table-auto w-full m-5 border-2">
           <thead>
             <tr className="bg-gray-200">
@@ -98,12 +106,6 @@ function GetCategory() {
             ))}
           </tbody>
         </table>
-        <button
-          onClick={() => setAddNewCategory((prev) => !prev)}
-          className="border-2 rounded-lg border-transparent bg-blue-500 p-2 text-sm font-semibold text-white hover:bg-blue-700 hover:text-white transition-all duration-500 w-full md:w-auto"
-        >
-          Add Category
-        </button>
       </div>
       {addNewCategory && (
         <AddCategory

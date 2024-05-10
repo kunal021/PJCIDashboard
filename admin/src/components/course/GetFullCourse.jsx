@@ -26,7 +26,10 @@ const GetFullCourse = () => {
 
   return (
     <div className="w-fit flex flex-col justify-center items-center mx-auto">
-      <h1 className="text-3xl font-bold text-center my-5">Full Course List</h1>
+      <div className="flex justify-center items-center space-x-10">
+        <h1 className="text-3xl font-bold text-center my-5">Full Course List</h1>
+        <LinkButton to={"/add-full-course"}>Add Full Course</LinkButton>
+      </div>
       <table className="table-auto w-full m-5 border-2">
         <thead>
           <tr className="bg-gray-200">
@@ -73,7 +76,6 @@ const GetFullCourse = () => {
           ))}
         </tbody>
       </table>
-      <LinkButton to={"/add-full-course"}>Add Full Course</LinkButton>
     </div>
   );
 };
