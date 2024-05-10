@@ -25,11 +25,11 @@ const GetFullCourse = () => {
   }, [dispatch]);
 
   return (
-    <div className="w-fit flex flex-col justify-center items-center mx-5">
+    <div className="w-fit flex flex-col justify-center items-center mx-auto">
       <h1 className="text-3xl font-bold text-center my-5">Full Course List</h1>
       <table className="table-auto w-full m-5 border-2">
         <thead>
-          <tr>
+          <tr className="bg-gray-200">
             <th className="p-2 text-sm">Id</th>
             <th className="p-2 text-sm">Image</th>
             <th className="p-2 text-sm">Course Name</th>
@@ -37,11 +37,12 @@ const GetFullCourse = () => {
             <th className="p-2 text-sm">Price</th>
             <th className="p-2 text-sm">Duration</th>
             <th className="p-2 text-sm">Total Videos</th>
+            <th className="p-2 text-sm">See All Subject</th>
           </tr>
         </thead>
         <tbody className="text-center">
           {fullCourse.map((course) => (
-            <tr key={course.id}>
+            <tr key={course.id} className="bg-gray-100">
               <td className="border p-2 text-sm">{course.id}</td>
               <td className="border p-2 text-sm">
                 <img
@@ -63,7 +64,9 @@ const GetFullCourse = () => {
               </td>
               <td className="border p-2 text-sm">
                 <Link to={`/get-full-course-subject?id=${course.id}`}>
-                  See all subjects
+                  <button className="bg-green-500 hover:bg-green-700 text-white font-bold p-1 text-xs rounded">
+                    See All Subject
+                  </button>
                 </Link>
               </td>
             </tr>

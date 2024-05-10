@@ -46,27 +46,28 @@ function GetCategory() {
   };
 
   return (
-    <div className="w-fit flex flex-col justify-center items-center mx-5">
+    <div className="w-fit flex flex-col justify-center items-center mx-auto">
       <div
         className={`${addNewCategory
           ? "hidden"
-          : "w-fit flex flex-col justify-center items-center mx-5"
+          : "w-fit flex flex-col justify-center items-center mx-auto"
           } `}
       >
         <h1 className="text-center text-3xl font-bold my-5">Category List</h1>
         <table className="table-auto w-full m-5 border-2">
           <thead>
-            <tr>
+            <tr className="bg-gray-200">
               <th className="p-2 text-sm">Id</th>
               <th className="p-2 text-sm">Name</th>
               <th className="p-2 text-sm">Update</th>
               <th className="p-2 text-sm">Delete</th>
+              <th className="p-2 text-sm">See All Course</th>
             </tr>
           </thead>
           <tbody className="text-center">
             {category.map((item) => (
-              <tr key={item.id}>
-                {console.log(item.id)}
+              <tr key={item.id} className="bg-gray-100">
+                {/* {console.log(item.id)} */}
                 <td className="border p-2 text-sm">{item.id}</td>
                 <td className="border p-2 text-sm">{item.name}</td>
                 <td className="border p-2 text-sm">
@@ -88,7 +89,9 @@ function GetCategory() {
                 </td>
                 <td className="border p-2 text-sm">
                   <Link to={`/get-course-category-wise?id=${item.id}`}>
-                    See all Course
+                    <button className="bg-green-500 hover:bg-green-700 text-white font-bold p-1 text-xs rounded">
+                      See All Course
+                    </button>
                   </Link>
                 </td>
               </tr>

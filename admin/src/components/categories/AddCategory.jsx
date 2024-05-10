@@ -26,7 +26,7 @@ function AddCategory({ fetchCategory, setAddNewCategory }) {
   };
 
   return (
-    <div className="w-[85vw] flex flex-col justify-center items-center">
+    <div className="w-fit flex flex-col justify-center items-center mx-auto">
       <h1 className="text-center text-3xl font-bold">Add Category</h1>
       <form
         onSubmit={handleSubmit}

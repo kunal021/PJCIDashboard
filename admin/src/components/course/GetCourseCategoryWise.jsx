@@ -34,11 +34,11 @@ const GetCourseCategoryWise = () => {
   }, [dispatch, id, searchParams]);
 
   return (
-    <div className="w-fit flex flex-col justify-center items-center mx-5">
+    <div className="w-fit flex flex-col justify-center items-center mx-auto">
       <h1 className="text-3xl font-bold text-center my-5">Course List</h1>
       <table className="table-auto w-full m-5 border-2">
         <thead>
-          <tr>
+          <tr className="bg-gray-200">
             <th className="p-2 text-sm">Id</th>
             <th className="p-2 text-sm">Image</th>
             <th className="p-2 text-sm">Course Name</th>
@@ -50,7 +50,7 @@ const GetCourseCategoryWise = () => {
         </thead>
         <tbody className="text-center">
           {courses.map((course) => (
-            <tr key={course.id}>
+            <tr key={course.id} className="bg-gray-100">
               <td className="border px-4 py-2">{course.id}</td>
               <td className="border p-2 text-sm">
                 <img

@@ -79,7 +79,7 @@ function NewAddQns() {
     };
 
     return (
-        <div className="w-fit flex flex-col justify-center items-center mx-5">
+        <div className="w-fit flex flex-col justify-center items-center mx-auto">
             <h1 className="text-center my-5 text-3xl font-bold">Add Question</h1>
             <div className="flex flex-col justify-center items-center max-w-md md:w-[28rem] mx-auto mt-5">
                 {questions.map((formData, index) => (

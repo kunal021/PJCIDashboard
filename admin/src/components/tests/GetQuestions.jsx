@@ -41,11 +41,11 @@ const GetQuestions = () => {
     fetchCourse();
   }, [dispatch, id]);
   return (
-    <div className="w-fit flex flex-col justify-center items-center mx-5">
+    <div className="w-fit flex flex-col justify-center items-center mx-auto">
       <h1 className="text-3xl font-bold text-center my-5">Questions List</h1>
       <table className="table-auto w-full m-5 border-2">
         <thead>
-          <tr>
+          <tr className="bg-gray-200">
             <th className="p-2 text-sm">Question Id</th>
             <th className="p-2 text-sm">Test Id</th>
             <th className="p-2 text-sm">Subject Id</th>
@@ -60,7 +60,7 @@ const GetQuestions = () => {
         </thead>
         <tbody className="text-center">
           {question.map((question) => (
-            <tr key={question.qnsid}>
+            <tr key={question.qnsid} className="bg-gray-100">
               <td className="border p-2 text-sm">{question.qnsid}</td>
               <td className="border p-2 text-sm">{question.testid}</td>
               <td className="border p-2 text-sm">{question.subid}</td>

@@ -33,7 +33,7 @@ function DashboardPreview() {
   };
 
   return (
-    <div className="top-0 sticky h-full w-[15vw] overflow-y-auto">
+    <div className="hidden lg:block top-0 sticky h-full w-[15vw]">
       <div className="scrollbar flex flex-col justify-start items-start overflow-auto bg-gray-800 p-6 gap-6 w-full h-screen">
         <Link to="/" className="text-white text-xl font-semibold">
           Dashboard

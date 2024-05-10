@@ -32,7 +32,7 @@ function UpdateCategory() {
     };
 
     return (
-        <div className="container flex flex-col justify-center items-center">
+        <div className="w-fit flex flex-col justify-center items-center mx-auto">
             <h1 className="text-center text-3xl font-bold">Update Category</h1>
             <form
                 onSubmit={handleSubmit}
