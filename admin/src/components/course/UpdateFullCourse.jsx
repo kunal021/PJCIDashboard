@@ -9,10 +9,10 @@ import FormField from "../../utils/FormField";
 function UpdateFullCourse({ fetchFullCourse, setUpdateCourse, updateCourseData }) {
     console.log(updateCourseData)
     const [course, setCourse] = useState({
-        name: updateCourseData.course_name,
-        price: updateCourseData.price,
-        duration: updateCourseData.course_duration,
-        description: updateCourseData.course_description,
+        name: updateCourseData.full_course_name,
+        price: updateCourseData.full_course_price,
+        duration: updateCourseData.full_course_duration,
+        description: updateCourseData.full_course_description,
         imgurl: updateCourseData.img_url,
     });
     const dispatch = useDispatch();

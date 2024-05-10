@@ -10,8 +10,9 @@ import UpdateFullCourse from "./UpdateFullCourse";
 const fetchFullCourse = async (dispatch) => {
   try {
     const response = await axios.post(
-      "http://localhost/PJCIDB/courses/getallcourse.php"
+      "http://localhost/PJCIDB/admin/courses/getallcourse.php"
     );
+    console.log(response.data.data_fullcourse)
     dispatch(setFullCourse(response.data.data_fullcourse));
   } catch (error) {
     console.error("Error fetching courses:", error);
@@ -76,18 +77,18 @@ function GetFullCourse() {
                 <td className="border p-2 text-sm">
                   <img
                     src={course.img_url}
-                    alt={course.course_name}
+                    alt={course.full_course_name}
                     height={150}
                     width={150}
                     className="rounded-lg border-transparent"
                   />
                 </td>
-                <td className="border p-2 text-sm">{course.course_name}</td>
+                <td className="border p-2 text-sm">{course.full_course_name}</td>
                 <td className="border p-2 text-sm">
                   {course.course_description}
                 </td>
-                <td className="border p-2 text-sm">{course.price}</td>
-                <td className="border p-2 text-sm">{course.course_duration}</td>
+                <td className="border p-2 text-sm">{course.full_course_price}</td>
+                <td className="border p-2 text-sm">{course.full_course_duration}</td>
                 <td className="border p-2 text-sm">
                   {course.total_number_of_videos}
                 </td>
