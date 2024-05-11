@@ -75,7 +75,7 @@ function DashboardPreview() {
       <div className={`${navOpen ? "block" : "hidden"} top-0 sticky h-full w-[30vw] lg:w-[15vw]`}>
         <div className="scrollbar flex flex-col justify-start items-start overflow-auto bg-gray-800 p-6 gap-6 w-full h-screen">
           <img
-            src={"../../public/logo.jpg"}
+            src={"/logo.jpg"}
             alt="logo"
             className="text-white text-xl font-semibold h-14 w-14 rounded-md">
           </img>
