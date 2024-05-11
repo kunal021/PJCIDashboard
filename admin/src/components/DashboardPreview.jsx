@@ -73,11 +73,11 @@ function DashboardPreview() {
         }
       </div >
       <div className={`${navOpen ? "block" : "hidden"} top-0 sticky h-full w-[30vw] lg:w-[15vw]`}>
-        <div className="scrollbar flex flex-col justify-start items-start overflow-auto bg-gray-800 p-6 gap-6 w-full h-screen">
+        <div className="scrollbar flex flex-col justify-start items-center overflow-auto bg-gray-800 p-6 gap-6 w-full h-screen">
           <img
             src={"/logo.jpg"}
             alt="logo"
-            className="text-white text-xl font-semibold h-14 w-14 rounded-md">
+            className="flex justify-center items-center text-white text-xl font-semibold h-20 w-20 rounded-md">
           </img>
           <div className="flex flex-col text-gray-200 gap-4 w-full">
             <div className="flex flex-col gap-4 cursor-pointer">

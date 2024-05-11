@@ -2,11 +2,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { setUser } from "../../redux/users/userSlice";
 import axios from "axios";
+import "../../utils/toggleBtn.css"
 
 const getUsers = async (dispatch) => {
     try {
         const response = await axios.post("http://localhost/PJCIDB/admin/user/getallstudentlist.php");
-        console.log(response.data.data)
         dispatch(setUser(response.data.data))
     } catch (error) {
         console.log(error)
@@ -14,6 +14,7 @@ const getUsers = async (dispatch) => {
 }
 
 function GetAllUsers() {
+
     const dispatch = useDispatch()
     const user = useSelector((state) => state.user.user)
 
@@ -57,8 +58,7 @@ function GetAllUsers() {
                 <thead>
                     <tr className="bg-gray-200">
                         <th className="p-2 text-sm">Id</th>
-                        <th className="p-2 text-sm">First Name</th>
-                        <th className="p-2 text-sm">Last Name</th>
+                        <th className="p-2 text-sm">Name</th>
                         <th className="p-2 text-sm">Mobile No.</th>
                         <th className="p-2 text-sm">Active</th>
                         <th className="p-2 text-sm">Update</th>
@@ -69,14 +69,20 @@ function GetAllUsers() {
                     {user.map((user) => (
                         <tr key={user.id} className="bg-gray-100">
                             <td className="border p-2 text-sm">{user.id}</td>
-                            <td className="border p-2 text-sm">{user.firstname}</td>
-                            <td className="border p-2 text-sm">{user.Lastname}</td>
+                            <td className="border p-2 text-sm">{user.firstname}{" "}{user.Lastname}</td>
                             <td className="border p-2 text-sm">{user.mo_number}</td>
                             <td className="border p-2 text-sm flex justify-center items-center">
-                                {user.isactive === "1"
-                                    ? <p onClick={() => handleChangeStatus(user.id, user.isactive)} className="cursor-pointer h-5 w-5 rounded-full bg-green-500"></p>
-                                    : <p onClick={() => handleChangeStatus(user.id, user.isactive)} className="cursor-pointer h-5 w-5 rounded-full bg-red-500"></p>
-                                }
+                                <button
+                                    onClick={() => {
+                                        handleChangeStatus(user.id, user.isactive);
+                                    }}
+                                    className="toggle-switch scale-75"
+                                >
+                                    <input type="checkbox" checked={user.isactive === "1"} readOnly />
+                                    <div className="toggle-switch-background">
+                                        <div className="toggle-switch-handle"></div>
+                                    </div>
+                                </button>
                             </td>
                             <td className="border p-2 text-sm">
                                 <button
