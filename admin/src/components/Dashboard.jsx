@@ -1,11 +1,11 @@
 import DashboardPreview from "./DashboardPreview";
-import Preview from "./Preview";
+// import DashboardPreviewSmall from "./DashboardPreviewSmall";
 
 function Dashboard() {
   return (
-    <div className="flex">
+    <div>
       <DashboardPreview />
-      <Preview />
+      {/* <DashboardPreviewSmall /> */}
     </div>
   );
 }

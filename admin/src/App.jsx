@@ -1,6 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import DashboardPreview from "./components/DashboardPreview";
-import Preview from "./components/Preview";
 import GetCategory from "./components/categories/GetCategory";
 import GetCourse from "./components/course/GetCourse";
 import GetFullCourse from "./components/course/GetFullCourse";
@@ -11,19 +9,19 @@ import GetQuestions from "./components/tests/GetQuestions";
 import AddTest from "./components/tests/AddTest";
 import AddCourse from "./components/course/AddCourse";
 import AddFullCourse from "./components/course/AddFullCourse";
-// import AddQns from "./components/tests/AddQns";
-// import QuestionForm from "./components/tests/QnsForm";
 import NewAddQns from "./components/tests/NewAddQns";
 import UpdateCategory from "./components/categories/UpdateCategory";
+import Home from "./components/home/Home";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   return (
     <div>
       <BrowserRouter>
         <div className="flex">
-          <DashboardPreview />
+          <Dashboard />
           <Routes>
-            <Route path="/" element={<Preview />} />
+            <Route path="/" element={<Home />} />
             <Route path="/get-course" element={<GetCourse />} />
             <Route path="/add-course" element={<AddCourse />} />
             <Route path="/get-full-course" element={<GetFullCourse />} />
