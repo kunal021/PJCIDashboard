@@ -26,7 +26,7 @@ function Home() {
                 <p>Total Users</p>
                 <p>{count}</p>
                 <div className="scale-75">
-                    <LinkButton>See All Users</LinkButton>
+                    <LinkButton to={"/get-users"}>See All Users</LinkButton>
                 </div>
             </div>
         </div>
