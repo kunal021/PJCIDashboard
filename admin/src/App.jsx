@@ -13,6 +13,7 @@ import NewAddQns from "./components/tests/NewAddQns";
 import UpdateCategory from "./components/categories/UpdateCategory";
 import Home from "./components/home/Home";
 import Dashboard from "./components/Dashboard";
+import GetAllUsers from "./components/users/GetAllUsers";
 
 function App() {
   return (
@@ -40,7 +41,7 @@ function App() {
             <Route path="/get-test-question" element={<GetQuestions />} />
             <Route path="/add-test-question" element={<NewAddQns />} />
             <Route path="/add-test" element={<AddTest />} />
-            {/* <Route path="/demo" element={<QuestionForm />} /> */}
+            <Route path="/get-users" element={<GetAllUsers />} />
             {/* <Route path="/demo1" element={<NewAddQns />} /> */}
           </Routes>
         </div>

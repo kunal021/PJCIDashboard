@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Course from "./dashboard/Course";
 import Test from "./dashboard/Test";
-import Question from "./dashboard/Question";
+import User from "./dashboard/User";
 import Setting from "./Setting";
 import right from "../assests/arrowright.svg";
 import down from "../assests/arrowdown.svg";
@@ -11,7 +11,7 @@ function DashboardPreview() {
   const [isOpen, setIsOpen] = useState({
     course: false,
     test: false,
-    question: false,
+    user: false,
     setting: false,
   });
 
@@ -74,16 +74,23 @@ function DashboardPreview() {
       </div >
       <div className={`${navOpen ? "block" : "hidden"} top-0 sticky h-full w-[30vw] lg:w-[15vw]`}>
         <div className="scrollbar flex flex-col justify-start items-start overflow-auto bg-gray-800 p-6 gap-6 w-full h-screen">
-          <Link to="/" className="text-white text-xl font-semibold">
-            PJCI
-          </Link>
+          <img
+            src={"../../public/logo.jpg"}
+            alt="logo"
+            className="text-white text-xl font-semibold h-14 w-14 rounded-md">
+          </img>
           <div className="flex flex-col text-gray-200 gap-4 w-full">
+            <div className="flex flex-col gap-4 cursor-pointer">
+              <p className="flex text-lg font-medium justify-between items-center">
+                <Link to={"/"}>Dashboard</Link>
+              </p>
+            </div>
             <div className="flex flex-col gap-4 cursor-pointer">
               <p className="flex text-lg font-medium justify-between items-center">
                 <Link to={"/category"}>Category</Link>
               </p>
             </div>
-            {["course", "test", "setting"].map((section) => (
+            {["course", "test", "user", "setting"].map((section) => (
               <div
                 key={section}
                 className="flex flex-col space-y-1 cursor-pointer"
@@ -106,7 +113,7 @@ function DashboardPreview() {
                   {
                     course: Course,
                     test: Test,
-                    question: Question,
+                    user: User,
                     setting: Setting,
                   }[section]
                 )}

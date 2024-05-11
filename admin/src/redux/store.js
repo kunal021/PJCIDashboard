@@ -5,6 +5,7 @@ import categoryReducer from "./categories/categorySlice";
 import fullCourseReducer from "./courses/fullCourseSlice";
 import testReducer from "./tests/testSlice";
 import questionReducer from "./questions/questionSlice";
+import userReducer from "./users/userSlice"
 
 export default configureStore({
   reducer: {
@@ -13,5 +14,6 @@ export default configureStore({
     fullCourse: fullCourseReducer,
     test: testReducer,
     question: questionReducer,
+    user: userReducer,
   },
 });
