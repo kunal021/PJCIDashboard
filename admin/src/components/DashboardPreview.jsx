@@ -15,7 +15,8 @@ function DashboardPreview() {
     setting: false,
   });
 
-  const [navOpen, setNavOpen] = useState(false);
+  const [navOpen, setNavOpen] = useState(true);
+
 
   const toggleOpen = (section) => {
     setIsOpen((prevState) => ({
