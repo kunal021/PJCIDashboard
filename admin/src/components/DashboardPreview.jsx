@@ -75,7 +75,7 @@ function DashboardPreview() {
       <div className={`${navOpen ? "block" : "hidden"} top-0 sticky h-full w-[30vw] lg:w-[15vw]`}>
         <div className="scrollbar flex flex-col justify-start items-start overflow-auto bg-gray-800 p-6 gap-6 w-full h-screen">
           <Link to="/" className="text-white text-xl font-semibold">
-            Dashboard
+            PJCI
           </Link>
           <div className="flex flex-col text-gray-200 gap-4 w-full">
             <div className="flex flex-col gap-4 cursor-pointer">
