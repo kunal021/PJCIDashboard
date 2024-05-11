@@ -36,7 +36,7 @@ function DashboardPreview() {
   };
 
   return (
-    <div className="top-0 fixed lg:sticky">
+    <div className="top-0 fixed lg:sticky z-[100]">
       <div
         onClick={() => setNavOpen((prev) => !prev)}
         className="flex cursor-pointer fixed top-1 right-5 z-[100]">
