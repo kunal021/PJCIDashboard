@@ -4,6 +4,7 @@ import { setQuestion } from "../../redux/questions/questionSlice";
 import axios from "axios";
 import { useSearchParams } from "react-router-dom";
 import LinkButton from "../../utils/LinkButton";
+import { API_URL } from "../../url";
 
 const GetQuestions = () => {
   const dispatch = useDispatch();
@@ -20,7 +21,7 @@ const GetQuestions = () => {
         const formData = new FormData();
         formData.append("test_id", id);
         const response = await axios.post(
-          "http://localhost/PJCIDB/admin/test/gettestqns.php",
+          `${API_URL}/admin/test/gettestqns.php`,
           formData,
           { headers: "content-type/form-data" }
         );

@@ -8,11 +8,12 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import AddCategory from "./AddCategory";
 import LinkButton from "../../utils/LinkButton";
+import { API_URL } from "../../url";
 
 const fetchCategory = async (dispatch) => {
   try {
     const response = await axios.get(
-      "http://localhost/PJCIDB/admin/category/get.php"
+      `${API_URL}/admin/category/get.php`
     );
 
     dispatch(setCategory(response.data.data));

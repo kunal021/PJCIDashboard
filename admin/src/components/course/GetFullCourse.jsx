@@ -6,6 +6,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import LinkButton from "../../utils/LinkButton";
 import UpdateFullCourse from "./UpdateFullCourse";
+import { API_URL } from "../../url";
 
 const fetchFullCourse = async (dispatch) => {
   try {
@@ -36,7 +37,7 @@ function GetFullCourse() {
     if (deleteAlert) {
       try {
         const response = await axios.delete(
-          `http://localhost/PJCIDB/admin/courses/deletefullcourse.php?fullcourseid=${courseId}`
+          `${API_URL}/admin/courses/deletefullcourse.php?fullcourseid=${courseId}`
         );
 
         // console.log(response)

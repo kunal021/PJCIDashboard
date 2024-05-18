@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addCategory } from "../../redux/categories/categorySlice";
 import axios from "axios";
+import { API_URL } from "../../url";
 
 function AddCategory({ fetchCategory, setAddNewCategory }) {
   const [categoryName, setCategoryName] = useState("");
@@ -12,7 +13,7 @@ function AddCategory({ fetchCategory, setAddNewCategory }) {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost/PJCIDB/admin/category/add.php",
+        `${API_URL}/admin/category/add.php`,
         { c_name: categoryName },
         { headers: { "content-type": "multipart/form-data" } }
       );

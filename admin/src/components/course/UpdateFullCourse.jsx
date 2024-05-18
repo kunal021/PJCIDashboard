@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { updateFullCourse } from "../../redux/courses/fullCourseSlice";
 import axios from "axios";
 import FormField from "../../utils/FormField";
+import { API_URL } from "../../url";
 
 
 function UpdateFullCourse({ fetchFullCourse, setUpdateCourse, updateCourseData }) {
@@ -37,7 +38,7 @@ function UpdateFullCourse({ fetchFullCourse, setUpdateCourse, updateCourseData }
             formData.append("description", course.description);
             formData.append("imgurl", course.imgurl);
             const response = await axios.post(
-                "http://localhost/PJCIDB/admin/courses/updatefullcourse.php",
+                `${API_URL}/admin/courses/updatefullcourse.php`,
                 formData,
                 { headers: { "content-type": "multipart/form-data" } }
             );

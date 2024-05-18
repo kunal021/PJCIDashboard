@@ -6,6 +6,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import LinkButton from "../../utils/LinkButton";
 import UpdateTest from "./UpdateTest";
+import { API_URL } from "../../url";
 
 
 const fetchTest = async (dispatch) => {
@@ -36,7 +37,7 @@ function GetTest() {
     if (deleteAlert) {
       try {
         const response = await axios.delete(
-          `http://localhost/PJCIDB/admin/test/deletetest.php?testid=${testId}`
+          `${API_URL}/admin/test/deletetest.php?testid=${testId}`
         );
         if (testId && response.data.success) {
           dispatch(deleteTest(response.data));

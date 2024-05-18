@@ -6,6 +6,7 @@ import "../../utils/addQns.css"
 import axios from "axios";
 import { useSearchParams } from "react-router-dom";
 import LinkButton from "../../utils/LinkButton";
+import { API_URL } from "../../url";
 
 
 function AddQns() {
@@ -101,7 +102,7 @@ function AddQns() {
         }))
       }
 
-      const res = axios.post("http://localhost/PJCIDB/admin/test/addqnsintest.php", dataToSend);
+      const res = axios.post(`${API_URL}/admin/test/addqnsintest.php`, dataToSend);
       dispatch(addQuestion(res.data));
 
 

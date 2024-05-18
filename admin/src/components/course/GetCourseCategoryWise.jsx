@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCourse } from "../../redux/courses/courseSlice";
 import axios from "axios";
+import { API_URL } from "../../url";
 
 import { useSearchParams } from "react-router-dom";
 const GetCourseCategoryWise = () => {
@@ -18,7 +19,7 @@ const GetCourseCategoryWise = () => {
         const formData = new FormData();
         formData.append("id", id);
         const response = await axios.post(
-          "http://localhost/PJCIDB/admin/courses/getcoursecategorywise.php",
+          `${API_URL}/admin/courses/getcoursecategorywise.php`,
           formData,
           { headers: { "content-type": "multipart/form-data" } }
         );

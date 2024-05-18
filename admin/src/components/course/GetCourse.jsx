@@ -5,6 +5,7 @@ import { deleteCourse } from "../../redux/courses/courseSlice";
 import axios from "axios";
 import LinkButton from "../../utils/LinkButton";
 import UpdateCourse from "./UpdateCourse";
+import { API_URL } from "../../url";
 
 const fetchCourse = async (dispatch) => {
   try {
@@ -35,7 +36,7 @@ function GetCourse() {
     if (deleteAlert) {
       try {
         const response = await axios.delete(
-          `http://localhost/PJCIDB/admin/courses/deletecourse.php?courseid=${courseId}`
+          `${API_URL}/admin/courses/deletecourse.php?courseid=${courseId}`
         );
         if (courseId && response.data.success) {
           dispatch(deleteCourse(response.data));

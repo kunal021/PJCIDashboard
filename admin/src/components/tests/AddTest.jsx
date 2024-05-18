@@ -4,6 +4,7 @@ import { addTest } from "../../redux/tests/testSlice";
 import axios from "axios";
 import FormField from "../../utils/FormField";
 import LinkButton from "../../utils/LinkButton";
+import { API_URL } from "../../url";
 
 function AddTest() {
   const [formData, setFormData] = useState({
@@ -64,7 +65,7 @@ function AddTest() {
         formDataToSend.append(key, value);
       });
       const response = await axios.post(
-        "http://localhost/PJCIDB/admin/test/createtest.php",
+        `${API_URL}/admin/test/createtest.php`,
         formDataToSend,
         { headers: { "content-type": "multipart/form-data" } }
       );

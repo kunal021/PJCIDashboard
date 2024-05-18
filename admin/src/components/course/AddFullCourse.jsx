@@ -4,6 +4,7 @@ import { addFullCourse } from "../../redux/courses/fullCourseSlice";
 import axios from "axios";
 import FormField from "../../utils/FormField";
 import LinkButton from "../../utils/LinkButton";
+import { API_URL } from "../../url";
 
 function AddFullCourse() {
   const [course, setCourse] = useState({
@@ -33,7 +34,7 @@ function AddFullCourse() {
       formData.append("description", course.description);
       formData.append("imgurl", course.imgurl);
       const response = await axios.post(
-        "http://localhost/PJCIDB/admin/courses/addfullcourse.php",
+        `${API_URL}/admin/courses/addfullcourse.php`,
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );

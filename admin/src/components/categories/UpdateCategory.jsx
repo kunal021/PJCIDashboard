@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import { useSearchParams } from "react-router-dom";
 import LinkButton from "../../utils/LinkButton";
+import { API_URL } from "../../url";
 
 function UpdateCategory() {
 
@@ -18,7 +19,7 @@ function UpdateCategory() {
         e.preventDefault();
         try {
             const response = await axios.post(
-                "http://localhost/PJCIDB/admin/category/updatecategory.php",
+                `${API_URL}/admin/category/updatecategory.php`,
                 { id, name: categoryName },
                 { headers: { "content-type": "multipart/form-data" } }
             );

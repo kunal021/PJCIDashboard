@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios"
 import LinkButton from "../../utils/LinkButton";
+import { API_URL } from "../../url";
 
 function Home() {
     const [count, setCount] = useState(0);
@@ -9,7 +10,7 @@ function Home() {
     useEffect(() => {
         const getUserCount = async () => {
             try {
-                const res = await axios.get("http://localhost/PJCIDB/admin/dashbord/getusercount.php");
+                const res = await axios.get(`${API_URL}/admin/dashbord/getusercount.php`);
                 // console.log(res.data)
                 setCount(res.data.total_users)
             } catch (error) {

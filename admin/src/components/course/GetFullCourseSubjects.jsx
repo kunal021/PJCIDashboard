@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCourse } from "../../redux/courses/courseSlice";
 import axios from "axios";
 import { useSearchParams } from "react-router-dom";
+import { API_URL } from "../../url";
 
 const GetFullCourseSubjects = () => {
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ const GetFullCourseSubjects = () => {
         const forData = new FormData();
         forData.append("id", id);
         const response = await axios.post(
-          "http://localhost/PJCIDB/admin/courses/getfullcoursesubjects.php",
+          `${API_URL}/admin/courses/getfullcoursesubjects.php`,
           forData,
           { headers: { "content-type": "multipart/form-data" } }
         );

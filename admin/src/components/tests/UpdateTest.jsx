@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { updateTest } from "../../redux/tests/testSlice";
 import axios from "axios";
 import FormField from "../../utils/FormField";
+import { API_URL } from "../../url";
 
 function UpdateTest({ fetchTest, updateTestData, setUpdateTest }) {
     const [formData, setFormData] = useState({
@@ -69,7 +70,7 @@ function UpdateTest({ fetchTest, updateTestData, setUpdateTest }) {
                 formDataToSend.append(key, value);
             });
             const response = await axios.post(
-                "http://localhost/PJCIDB/admin/test/updatetest.php",
+                `${API_URL}/admin/test/updatetest.php`,
                 formDataToSend,
                 { headers: { "content-type": "multipart/form-data" } }
             );
