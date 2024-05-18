@@ -12,7 +12,7 @@ import { API_URL } from "../../url";
 const fetchTest = async (dispatch) => {
   try {
     const response = await axios.post(
-      "http://localhost/PJCIDB/admin/test/getalltest.php"
+      `${API_URL}/admin/test/getalltest.php`
     );
 
     dispatch(setTest(response.data.data));
