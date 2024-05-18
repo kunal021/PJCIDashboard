@@ -11,7 +11,7 @@ import { API_URL } from "../../url";
 const fetchFullCourse = async (dispatch) => {
   try {
     const response = await axios.post(
-      "http://localhost/PJCIDB/admin/courses/getallcourse.php"
+      `${API_URL}/admin/courses/getallcourse.php`
     );
     dispatch(setFullCourse(response.data.data_fullcourse));
   } catch (error) {
