@@ -37,7 +37,7 @@ function GetCategory() {
     if (deleteAlert) {
       try {
         const response = await axios.delete(
-          `http://localhost/PJCIDB/admin/category/delcategory.php?id=${courseId}`
+          `${API_URL}/admin/category/delcategory.php?id=${courseId}`
         );
         if (courseId && response.data.success) {
           dispatch(deleteCategory(response.data));
@@ -49,6 +49,7 @@ function GetCategory() {
       }
     }
   };
+
 
   return (
     <div className="w-fit flex flex-col justify-center items-center mx-auto">
