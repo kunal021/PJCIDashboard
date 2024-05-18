@@ -10,7 +10,7 @@ import { API_URL } from "../../url";
 const fetchCourse = async (dispatch) => {
   try {
     const response = await axios.post(
-      "http://localhost/PJCIDB/admin/courses/getallcourse.php"
+      `${API_URL}/admin/courses/getallcourse.php`
     );
 
     dispatch(setCourse(response.data.data_course));
