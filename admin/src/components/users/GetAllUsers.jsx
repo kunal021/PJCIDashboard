@@ -3,10 +3,11 @@ import { useEffect } from "react";
 import { setUser } from "../../redux/users/userSlice";
 import axios from "axios";
 import "../../utils/toggleBtn.css"
+import { API_URL } from "../../url";
 
 const getUsers = async (dispatch) => {
     try {
-        const response = await axios.post("http://localhost/PJCIDB/admin/user/getallstudentlist.php");
+        const response = await axios.post(`${API_URL}/admin/user/getallstudentlist.php`);
         dispatch(setUser(response.data.data))
     } catch (error) {
         console.log(error)
@@ -33,7 +34,7 @@ function GetAllUsers() {
                 const formData = new FormData();
                 formData.append("userid", userId);
                 formData.append("statuscode", isactive)
-                await axios.post("http://localhost/PJCIDB/admin/user/updateuserstatus.php",
+                await axios.post(`${API_URL}/admin/user/updateuserstatus.php`,
                     formData,
                     { headers: { "content-type": "multipart/form-data" } }
                 )
