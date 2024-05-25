@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addTest } from "../../redux/tests/testSlice";
 import axios from "axios";
+import toast from "react-hot-toast";
 import FormField from "../../utils/FormField";
 import LinkButton from "../../utils/LinkButton";
 import { API_URL } from "../../url";
@@ -70,6 +71,9 @@ function AddTest() {
         { headers: { "content-type": "multipart/form-data" } }
       );
       dispatch(addTest(response.data));
+      if (response.status == 201) {
+        toast.success("Test Added Sucessfully")
+      }
     } catch (error) {
       console.error("Error fetching courses:", error);
     }

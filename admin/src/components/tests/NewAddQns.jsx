@@ -4,6 +4,7 @@ import { addQuestion } from "../../redux/questions/questionSlice";
 import FormField from "../../utils/FormField";
 import "../../utils/addQns.css";
 import axios from "axios";
+import toast from "react-hot-toast";
 import { useSearchParams } from "react-router-dom";
 import LinkButton from "../../utils/LinkButton";
 import { API_URL } from "../../url";
@@ -25,15 +26,13 @@ function NewAddQns() {
 
     const [questions, setQuestions] = useState([initialFormData]);
 
-    console.log(questions)
-
     const handleAddQuestion = () => {
         const lastQuestion = questions[questions.length - 1];
         const isEmpty = Object.values(lastQuestion).some((value) => !value);
         if (!isEmpty) {
             setQuestions([...questions, { ...initialFormData }]);
         } else {
-            alert("Please fill all fields before adding a new question.");
+            toast.error("Please fill all fields before adding a new question.");
         }
     };
 
@@ -50,7 +49,7 @@ function NewAddQns() {
         );
 
         if (isEmpty) {
-            alert("Please fill all fields before submitting.");
+            toast.error("Please fill all fields before submitting.")
             return;
         }
         e.preventDefault();
@@ -69,11 +68,14 @@ function NewAddQns() {
                 })),
             };
 
-            const res = await axios.post(
+            const response = await axios.post(
                 `${API_URL}/admin/test/addqnsintest.php`,
                 dataToSend
             );
-            dispatch(addQuestion(res.data));
+            dispatch(addQuestion(response.data));
+            if (response.status == 201) {
+                toast.success("Question Added Sucessfully")
+            }
         } catch (error) {
             console.error("Error fetching courses:", error);
         }

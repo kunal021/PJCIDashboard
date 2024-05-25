@@ -3,12 +3,12 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { updateCourse } from "../../redux/courses/courseSlice";
 import axios from "axios";
+import toast from "react-hot-toast";
 import FormField from "../../utils/FormField";
 import { API_URL } from "../../url";
 
 
 function UpdateCourse({ fetchCourse, setUpdateCourse, updateCourseData }) {
-    // console.log(updateCourseData)
     const [course, setCourse] = useState({
         name: updateCourseData.course_name,
         price: updateCourseData.price,
@@ -17,7 +17,6 @@ function UpdateCourse({ fetchCourse, setUpdateCourse, updateCourseData }) {
         imgurl: updateCourseData.img_url,
     });
     const dispatch = useDispatch();
-    // console.log(updateCourseData)
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -43,6 +42,9 @@ function UpdateCourse({ fetchCourse, setUpdateCourse, updateCourseData }) {
                 { headers: { "content-type": "multipart/form-data" } }
             );
             dispatch(updateCourse(response.data));
+            if (response.status == 201) {
+                toast.success("Course Updated Sucessfully")
+            }
             fetchCourse()
         } catch (error) {
             console.error("Error fetching courses:", error);

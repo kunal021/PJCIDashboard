@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addFullCourse } from "../../redux/courses/fullCourseSlice";
 import axios from "axios";
+import toast from "react-hot-toast";
 import FormField from "../../utils/FormField";
 import LinkButton from "../../utils/LinkButton";
 import { API_URL } from "../../url";
@@ -39,6 +40,9 @@ function AddFullCourse() {
         { headers: { "content-type": "multipart/form-data" } }
       );
       dispatch(addFullCourse(response.data));
+      if (response.status == 201) {
+        toast.success("Full Course Added Sucessfully")
+      }
     } catch (error) {
       console.error("Error fetching courses:", error);
     }

@@ -42,6 +42,7 @@ function GetCategory() {
         if (courseId && response.data.success) {
           dispatch(deleteCategory(response.data));
         }
+
         fetchCategory(dispatch);
       } catch (error) {
         alert(error.response.data.massage)

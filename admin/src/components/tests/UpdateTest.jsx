@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { updateTest } from "../../redux/tests/testSlice";
 import axios from "axios";
+import toast from "react-hot-toast";
 import FormField from "../../utils/FormField";
 import { API_URL } from "../../url";
 
@@ -75,6 +76,9 @@ function UpdateTest({ fetchTest, updateTestData, setUpdateTest }) {
                 { headers: { "content-type": "multipart/form-data" } }
             );
             dispatch(updateTest(response.data));
+            if (response.status == 201) {
+                toast.success("Test Updated Sucessfully")
+            }
             fetchTest()
         } catch (error) {
             console.error("Error fetching courses:", error);

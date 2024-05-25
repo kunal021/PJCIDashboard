@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addCategory } from "../../redux/categories/categorySlice";
 import axios from "axios";
+import toast from "react-hot-toast";
 import { API_URL } from "../../url";
 
 function AddCategory({ fetchCategory, setAddNewCategory }) {
@@ -18,6 +19,10 @@ function AddCategory({ fetchCategory, setAddNewCategory }) {
         { headers: { "content-type": "multipart/form-data" } }
       );
       dispatch(addCategory(response.data));
+      console.log(response.data.success)
+      if (response.status == 201) {
+        toast.success("Category Added Sucessfully")
+      }
       fetchCategory();
     } catch (error) {
       console.error("Error fetching courses:", error);

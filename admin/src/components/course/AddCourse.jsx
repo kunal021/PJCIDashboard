@@ -5,6 +5,7 @@ import axios from "axios";
 import FormField from "../../utils/FormField";
 import LinkButton from "../../utils/LinkButton";
 import { API_URL } from "../../url";
+import toast from "react-hot-toast";
 
 function AddCourse() {
   const [course, setCourse] = useState({
@@ -39,6 +40,9 @@ function AddCourse() {
         { headers: { "content-type": "multipart/form-data" } }
       );
       dispatch(addCourse(response.data));
+      if (response.status == 201) {
+        toast.success("Course Added Sucessfully")
+      }
     } catch (error) {
       console.error("Error fetching courses:", error);
     }

@@ -2,6 +2,7 @@ import { updateCategory } from "../../redux/categories/categorySlice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import axios from "axios";
+import toast from "react-hot-toast";
 import { useSearchParams } from "react-router-dom";
 import LinkButton from "../../utils/LinkButton";
 import { API_URL } from "../../url";
@@ -25,11 +26,13 @@ function UpdateCategory() {
             );
             dispatch(updateCategory(response.data));
             // fetchCategory();
+            if (response.status == 200) {
+                toast.success("Category Updated Sucessfully")
+            }
         } catch (error) {
             console.error("Error fetching courses:", error);
         }
         setCategoryName("");
-        // setAddNewCategory((perv) => !perv);
     };
 
     return (

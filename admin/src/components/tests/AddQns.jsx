@@ -4,6 +4,7 @@ import { addQuestion } from "../../redux/questions/questionSlice";
 import FormField from "../../utils/FormField";
 import "../../utils/addQns.css"
 import axios from "axios";
+import toast from "react-hot-toast";
 import { useSearchParams } from "react-router-dom";
 import LinkButton from "../../utils/LinkButton";
 import { API_URL } from "../../url";
@@ -102,9 +103,11 @@ function AddQns() {
         }))
       }
 
-      const res = axios.post(`${API_URL}/admin/test/addqnsintest.php`, dataToSend);
-      dispatch(addQuestion(res.data));
-
+      const response = axios.post(`${API_URL}/admin/test/addqnsintest.php`, dataToSend);
+      dispatch(addQuestion(response.data));
+      if (response.status == 201) {
+        toast.success("Question Added Sucessfully")
+      }
 
     } catch (error) {
       console.error("Error fetching courses:", error);

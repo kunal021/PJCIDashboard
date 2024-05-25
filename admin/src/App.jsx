@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast"
 import GetCategory from "./components/categories/GetCategory";
 import GetCourse from "./components/course/GetCourse";
 import GetFullCourse from "./components/course/GetFullCourse";
@@ -19,6 +20,7 @@ function App() {
   return (
     <div>
       <BrowserRouter>
+        <Toaster />
         <div className="flex">
           <Dashboard />
           <Routes>
