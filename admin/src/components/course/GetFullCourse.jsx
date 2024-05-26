@@ -9,6 +9,8 @@ import UpdateFullCourse from "./UpdateFullCourse";
 import { API_URL } from "../../url";
 import toast from "react-hot-toast";
 import Loader from "../../utils/Loader";
+import ConfirmDelete from "../../utils/ConfirmDelete";
+import UpdateBtn from "../../utils/UpdateBtn";
 
 const fetchFullCourse = async (dispatch, setLoading) => {
   try {
@@ -39,23 +41,24 @@ function GetFullCourse() {
 
 
   const handleDelete = async (courseId) => {
-    const deleteAlert = window.confirm("Do you want to delete this course?");
-    if (deleteAlert) {
-      try {
-        const response = await axios.delete(
-          `${API_URL}/admin/courses/deletefullcourse.php?fullcourseid=${courseId}`
-        );
+    try {
+      const response = await axios.delete(
+        `${API_URL}/admin/courses/deletefullcourse.php?fullcourseid=${courseId}`
+      );
 
-        // console.log(response)
-        if (courseId && response.data.success) {
-          dispatch(deleteFullCourse(response.data));
-        }
-        fetchFullCourse(dispatch);
-      } catch (error) {
-        toast.error(error.response.data.massage)
+      console.log(response)
+      if (courseId && response.data.success) {
+        dispatch(deleteFullCourse(response.data));
       }
+      if (response.status == 204) {
+        toast.success("Full Course Deleted Successfully")
+      }
+      fetchFullCourse(dispatch);
+    } catch (error) {
+      toast.error(error.response.data.massage)
     }
   }
+
 
   return (
     <div className="w-fit flex flex-col justify-center items-center mx-auto">
@@ -106,23 +109,13 @@ function GetFullCourse() {
                   {course.total_number_of_videos}
                 </td>
                 <td className="border p-2 text-sm">
-                  <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-1 text-xs rounded"
-                    onClick={() => {
-                      setUpdateCourse((prev) => !prev);
-                      setUpdateCourseData(course);
-                    }}
-                  >
-                    Update
-                  </button>
+                  <UpdateBtn handleClick={() => {
+                    setUpdateCourse((prev) => !prev);
+                    setUpdateCourseData(course);
+                  }} />
                 </td>
                 <td className="border p-2 text-sm">
-                  <button
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold p-1 text-xs rounded"
-                    onClick={() => handleDelete(course.id)}
-                  >
-                    Delete
-                  </button>
+                  <ConfirmDelete handleClick={() => handleDelete(course.id)} />
                 </td>
                 <td className="border p-2 text-sm">
                   <Link to={`/get-full-course-subject?id=${course.id}`}>

@@ -8,6 +8,9 @@ import LinkButton from "../../utils/LinkButton";
 import UpdateTest from "./UpdateTest";
 import { API_URL } from "../../url";
 import Loader from "../../utils/Loader";
+import UpdateBtn from "../../utils/UpdateBtn";
+import ConfirmDelete from "../../utils/ConfirmDelete";
+import toast from "react-hot-toast";
 
 
 const fetchTest = async (dispatch, setLoading) => {
@@ -38,21 +41,23 @@ function GetTest() {
   }, [dispatch]);
 
   const handleDelete = async (testId) => {
-    const deleteAlert = window.confirm("Do you want to delete this test?");
-    if (deleteAlert) {
-      try {
-        const response = await axios.delete(
-          `${API_URL}/admin/test/deletetest.php?testid=${testId}`
-        );
-        if (testId && response.data.success) {
-          dispatch(deleteTest(response.data));
-        }
-        fetchTest(dispatch);
-      } catch (error) {
-        alert(error.response.data.massage)
-        // console.error("Error fetching category:", error);
+
+    try {
+      const response = await axios.delete(
+        `${API_URL}/admin/test/deletetest.php?testid=${testId}`
+      );
+      if (testId && response.data.success) {
+        dispatch(deleteTest(response.data));
       }
+      if (response.status == 201) {
+        toast.success("Test Deleted Successfully")
+      }
+      fetchTest(dispatch);
+    } catch (error) {
+      toast.error(error.response.data.massage)
+      // console.error("Error fetching category:", error);
     }
+
   }
 
   return (
@@ -102,23 +107,13 @@ function GetTest() {
                 <td className="border p-2 text-sm">{test.total_mark}</td>
                 <td className="border p-2 text-sm">{test.negative_mark}</td>
                 <td className="border p-2 text-sm">
-                  <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-1 text-xs rounded"
-                    onClick={() => {
-                      setUpdateTest((prev) => !prev);
-                      setUpdateTestData(test);
-                    }}
-                  >
-                    Update
-                  </button>
+                  <UpdateBtn handleClick={() => {
+                    setUpdateTest((prev) => !prev);
+                    setUpdateTestData(test);
+                  }} />
                 </td>
                 <td className="border p-2 text-sm">
-                  <button
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold p-1 text-xs rounded"
-                    onClick={() => handleDelete(test.test_id)}
-                  >
-                    Delete
-                  </button>
+                  <ConfirmDelete handleClick={() => handleDelete(test.test_id)} />
                 </td>
                 <td className="border p-2 text-sm">
                   <Link to={`/get-test-question?id=${test.test_id}`}>

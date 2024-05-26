@@ -7,9 +7,11 @@ import {
 import axios from "axios";
 import { Link } from "react-router-dom";
 import AddCategory from "./AddCategory";
-import LinkButton from "../../utils/LinkButton";
 import { API_URL } from "../../url";
 import Loader from "../../utils/Loader";
+import toast from "react-hot-toast";
+import ConfirmDelete from "../../utils/ConfirmDelete";
+import UpdateBtn from "../../utils/UpdateBtn";
 
 const fetchCategory = async (dispatch, setLoading) => {
   try {
@@ -38,21 +40,21 @@ function GetCategory() {
   }, [dispatch]);
 
   const handleDelete = async (courseId) => {
-    const deleteAlert = window.confirm("Do you want to delete this category?")
-    if (deleteAlert) {
-      try {
-        const response = await axios.delete(
-          `${API_URL}/admin/category/delcategory.php?id=${courseId}`
-        );
-        if (courseId && response.data.success) {
-          dispatch(deleteCategory(response.data));
-        }
-
-        fetchCategory(dispatch, setLoading);
-      } catch (error) {
-        alert(error.response.data.message)
+    try {
+      const response = await axios.delete(
+        `${API_URL}/admin/category/delcategory.php?id=${courseId}`
+      );
+      if (courseId && response.data.success) {
+        dispatch(deleteCategory(response.data));
       }
+      if (response.status == 200) {
+        toast.success("Category Deleted Successfully")
+      }
+      fetchCategory(dispatch, setLoading);
+    } catch (error) {
+      toast.error(error.response.data.massage)
     }
+
   };
 
   return (
@@ -91,15 +93,10 @@ function GetCategory() {
                   <td className="border p-2 text-sm">{item.id}</td>
                   <td className="border p-2 text-sm">{item.name}</td>
                   <td className="border p-2 text-sm">
-                    <LinkButton to={`/update-category?id=${item.id}&name=${item.name}`} use={"update"}>Update</LinkButton>
+                    <Link to={`/update-category?id=${item.id}&name=${item.name}`}><UpdateBtn /></Link>
                   </td>
                   <td className="border p-2 text-sm">
-                    <button
-                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                      onClick={() => handleDelete(item.id)}
-                    >
-                      Delete
-                    </button>
+                    <ConfirmDelete handleClick={() => handleDelete(item.id)} />
                   </td>
                   <td className="border p-2 text-sm">
                     <Link to={`/get-course-category-wise?id=${item.id}`}>

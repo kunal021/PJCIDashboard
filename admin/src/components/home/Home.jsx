@@ -27,15 +27,19 @@ function Home() {
     }, [])
     return (
         <div>
-            {loading ? (<Loader />) : (
-                <div className="flex flex-col justify-center items-center space-y-2 text-center m-10 px-6 py-4 border-2 border-transparent rounded-xl bg-black/20">
-                    <p>Total Users</p>
-                    <p>{count}</p>
-                    <div className="scale-75">
-                        <LinkButton to={"/get-users"}>See All Users</LinkButton>
+            {loading ? (
+                <div className="flex flex-col justify-center items-center text-center h-screen w-[85vw]">
+                    <Loader />
+                </div>) :
+                (
+                    <div className="flex flex-col justify-center items-center space-y-2 text-center m-10 px-6 py-4 border-2 border-transparent rounded-xl bg-black/20">
+                        <p>Total Users</p>
+                        <p>{count}</p>
+                        <div className="scale-75">
+                            <LinkButton to={"/get-users"}>See All Users</LinkButton>
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
         </div>
     );
 }

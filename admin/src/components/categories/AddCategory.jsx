@@ -19,7 +19,6 @@ function AddCategory({ fetchCategory, setAddNewCategory }) {
         { headers: { "content-type": "multipart/form-data" } }
       );
       dispatch(addCategory(response.data));
-      console.log(response.data.success)
       if (response.status == 201) {
         toast.success("Category Added Sucessfully")
       }
