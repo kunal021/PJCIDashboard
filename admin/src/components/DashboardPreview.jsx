@@ -77,7 +77,7 @@ function DashboardPreview() {
           <img
             src={"/logo.jpg"}
             alt="logo"
-            className="flex justify-center items-center text-white text-xl font-semibold h-20 w-20 rounded-md">
+            className="flex justify-center items-center text-white text-xl font-semibold h-20 w-36 rounded-md">
           </img>
           <div className="flex flex-col text-gray-200 gap-4 w-full">
             <div className="flex flex-col gap-4 cursor-pointer">
