@@ -44,7 +44,6 @@ function App() {
             <Route path="/add-test-question" element={<NewAddQns />} />
             <Route path="/add-test" element={<AddTest />} />
             <Route path="/get-users" element={<GetAllUsers />} />
-            {/* <Route path="/demo1" element={<NewAddQns />} /> */}
           </Routes>
         </div>
       </BrowserRouter>
