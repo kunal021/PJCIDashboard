@@ -7,9 +7,10 @@ import { Link } from "react-router-dom";
 import LinkButton from "../../utils/LinkButton";
 import UpdateTest from "./UpdateTest";
 import { API_URL } from "../../url";
+import Loader from "../../utils/Loader";
 
 
-const fetchTest = async (dispatch) => {
+const fetchTest = async (dispatch, setLoading) => {
   try {
     const response = await axios.post(
       `${API_URL}/admin/test/getalltest.php`
@@ -18,10 +19,13 @@ const fetchTest = async (dispatch) => {
     dispatch(setTest(response.data.data));
   } catch (error) {
     console.error("Error fetching courses:", error);
+  } finally {
+    setLoading(false)
   }
 };
 
 function GetTest() {
+  const [loading, setLoading] = useState(false)
   const [updateTest, setUpdateTest] = useState(false)
   const [updateTestData, setUpdateTestData] = useState({})
 
@@ -29,7 +33,8 @@ function GetTest() {
   const test = useSelector((state) => state.test.test);
 
   useEffect(() => {
-    fetchTest(dispatch);
+    setLoading(true)
+    fetchTest(dispatch, setLoading);
   }, [dispatch]);
 
   const handleDelete = async (testId) => {
@@ -52,7 +57,7 @@ function GetTest() {
 
   return (
     <div className="w-fit flex flex-col justify-center items-center mx-auto">
-      <div
+      {loading ? (<Loader />) : (<div
         className={`${updateTest ? "hidden"
           : "w-fit flex flex-col justify-center items-center mx-auto"
           } `}
@@ -126,7 +131,7 @@ function GetTest() {
             ))}
           </tbody>
         </table>
-      </div>
+      </div>)}
       {updateTest && <UpdateTest
         fetchTest={() => fetchTest(dispatch)}
         setUpdateTest={setUpdateTest}

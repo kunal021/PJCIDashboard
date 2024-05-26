@@ -6,8 +6,10 @@ import axios from "axios";
 import LinkButton from "../../utils/LinkButton";
 import UpdateCourse from "./UpdateCourse";
 import { API_URL } from "../../url";
+import Loader from "../../utils/Loader";
+import toast from "react-hot-toast";
 
-const fetchCourse = async (dispatch) => {
+const fetchCourse = async (dispatch, setLoading) => {
   try {
     const response = await axios.post(
       `${API_URL}/admin/courses/getallcourse.php`
@@ -16,11 +18,13 @@ const fetchCourse = async (dispatch) => {
     dispatch(setCourse(response.data.data_course));
   } catch (error) {
     console.error("Error fetching courses:", error);
+  } finally {
+    setLoading(false)
   }
 };
 
 function GetCourse() {
-
+  const [loading, setLoading] = useState(false)
   const [updateCourse, setUpdateCourse] = useState(false)
   const [updateCourseData, setUpdateCourseData] = useState({})
 
@@ -28,7 +32,8 @@ function GetCourse() {
   const courses = useSelector((state) => state.courses.courses);
 
   useEffect(() => {
-    fetchCourse(dispatch);
+    setLoading(true)
+    fetchCourse(dispatch, setLoading);
   }, [dispatch]);
 
   const handleDelete = async (courseId) => {
@@ -43,15 +48,14 @@ function GetCourse() {
         }
         fetchCourse(dispatch);
       } catch (error) {
-        alert(error.response.data.massage)
-        // console.error("Error fetching category:", error.response.data);
+        toast.error(error.response.data.massage)
       }
     }
   }
 
   return (
     <div className="w-fit flex flex-col justify-center items-center mx-auto">
-      <div
+      {loading ? (<Loader />) : (<div
         className={`${updateCourse ? "hidden"
           : "w-fit flex flex-col justify-center items-center mx-auto"
           } `}
@@ -119,7 +123,7 @@ function GetCourse() {
             ))}
           </tbody>
         </table>
-      </div>
+      </div>)}
       {updateCourse && <UpdateCourse
         fetchCourse={() => fetchCourse(dispatch)}
         setUpdateCourse={setUpdateCourse}

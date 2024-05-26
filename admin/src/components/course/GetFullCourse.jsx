@@ -7,8 +7,10 @@ import { Link } from "react-router-dom";
 import LinkButton from "../../utils/LinkButton";
 import UpdateFullCourse from "./UpdateFullCourse";
 import { API_URL } from "../../url";
+import toast from "react-hot-toast";
+import Loader from "../../utils/Loader";
 
-const fetchFullCourse = async (dispatch) => {
+const fetchFullCourse = async (dispatch, setLoading) => {
   try {
     const response = await axios.post(
       `${API_URL}/admin/courses/getallcourse.php`
@@ -16,10 +18,13 @@ const fetchFullCourse = async (dispatch) => {
     dispatch(setFullCourse(response.data.data_fullcourse));
   } catch (error) {
     console.error("Error fetching courses:", error);
+  } finally {
+    setLoading(false)
   }
 };
 
 function GetFullCourse() {
+  const [loading, setLoading] = useState(false);
   const [updateCourse, setUpdateCourse] = useState(false)
   const [updateCourseData, setUpdateCourseData] = useState({})
 
@@ -27,7 +32,8 @@ function GetFullCourse() {
   const fullCourse = useSelector((state) => state.fullCourse.fullCourse);
 
   useEffect(() => {
-    fetchFullCourse(dispatch);
+    setLoading(true)
+    fetchFullCourse(dispatch, setLoading);
   }, [dispatch]);
 
 
@@ -46,15 +52,14 @@ function GetFullCourse() {
         }
         fetchFullCourse(dispatch);
       } catch (error) {
-        alert(error.response.data.massage)
-        // console.error("Error fetching category:", error);
+        toast.error(error.response.data.massage)
       }
     }
   }
 
   return (
     <div className="w-fit flex flex-col justify-center items-center mx-auto">
-      <div
+      {loading ? (<Loader />) : (<div
         className={`${updateCourse ? "hidden"
           : "w-fit flex flex-col justify-center items-center mx-auto"
           } `}
@@ -130,7 +135,7 @@ function GetFullCourse() {
             ))}
           </tbody>
         </table>
-      </div>
+      </div>)}
       {updateCourse && <UpdateFullCourse
         fetchFullCourse={() => fetchFullCourse(dispatch)}
         setUpdateCourse={setUpdateCourse}
