@@ -28,7 +28,7 @@ function DashboardPreview() {
   const renderSection = (section, Component) => {
     return (
       isOpen[section] && (
-        <div className="bg-white/20 rounded-md px-2 py-1 w-[80%]">
+        <div className="bg-white/20 rounded-md px-2 py-1 z-[100]">
           <Component />
         </div>
       )
@@ -72,7 +72,7 @@ function DashboardPreview() {
           )
         }
       </div >
-      <div className={`${navOpen ? "block" : "hidden"} top-0 sticky h-full w-[30vw] lg:w-[15vw]`}>
+      <div className={`${navOpen ? "block" : "hidden"} top-0 sticky h-full w-[30vw] lg:w-[15vw] z-[100]`}>
         <div className="scrollbar flex flex-col justify-start items-center overflow-auto bg-gray-800 p-6 gap-6 w-full h-screen">
           <img
             src={"/logo.jpg"}

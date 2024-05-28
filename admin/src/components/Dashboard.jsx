@@ -3,7 +3,7 @@ import DashboardPreview from "./DashboardPreview";
 
 function Dashboard() {
   return (
-    <div className="sticky">
+    <div className="sticky z-[100]">
       <DashboardPreview />
       {/* <DashboardPreviewSmall /> */}
     </div>
