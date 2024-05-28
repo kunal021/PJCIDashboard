@@ -4,6 +4,8 @@ import { setUser } from "../../redux/users/userSlice";
 import axios from "axios";
 import "../../utils/toggleBtn.css"
 import { API_URL } from "../../url";
+import UpdateBtn from "../../utils/UpdateBtn";
+import ConfirmDelete from "../../utils/ConfirmDelete";
 
 const getUsers = async (dispatch) => {
     try {
@@ -86,23 +88,15 @@ function GetAllUsers() {
                                 </button>
                             </td>
                             <td className="border p-2 text-sm">
-                                <button
-                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-1 text-xs rounded"
-                                // onClick={() => {
-                                //     setUpdateCourse((prev) => !prev);
-                                //     setUpdateCourseData(user);
-                                // }}
-                                >
-                                    Update
-                                </button>
+                                <UpdateBtn handleClick={() => {
+                                    // setUpdateTest((prev) => !prev);
+                                    // setUpdateTestData(test);
+                                }} />
                             </td>
                             <td className="border p-2 text-sm">
-                                <button
-                                    className="bg-red-500 hover:bg-red-700 text-white font-bold p-1 text-xs rounded"
-                                // onClic k={() => handleDelete(user.id)}
-                                >
-                                    Delete
-                                </button>
+                                <ConfirmDelete
+                                // handleClick={() => handleDelete(test.test_id)} 
+                                />
                             </td>
                         </tr>
                     ))}
