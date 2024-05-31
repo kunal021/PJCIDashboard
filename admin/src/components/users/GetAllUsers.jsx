@@ -54,7 +54,7 @@ function GetAllUsers() {
                 } `}
         >
             <div className="flex justify-center items-center space-x-10">
-                <h1 className="text-3xl font-bold text-center my-5">Course List</h1>
+                <h1 className="text-3xl font-bold text-center my-5">All Users</h1>
                 {/* <LinkButton to={"/add-user"}>Add Course</LinkButton> */}
             </div>
             <table className="table-auto w-full m-5 border-2">

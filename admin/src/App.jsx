@@ -15,6 +15,7 @@ import UpdateCategory from "./components/categories/UpdateCategory";
 import Home from "./components/home/Home";
 import Dashboard from "./components/Dashboard";
 import GetAllUsers from "./components/users/GetAllUsers";
+import RichTextEditor from "./utils/TextEditior";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
             <Route path="/add-test-question" element={<NewAddQns />} />
             <Route path="/add-test" element={<AddTest />} />
             <Route path="/get-users" element={<GetAllUsers />} />
+            <Route path="demo" element={<RichTextEditor />} />
           </Routes>
         </div>
       </BrowserRouter>
