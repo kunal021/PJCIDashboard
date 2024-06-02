@@ -14,6 +14,7 @@ import CodeBlock from "@tiptap/extension-code-block";
 import Image from "@tiptap/extension-image";
 import TextAlign from "@tiptap/extension-text-align";
 import TextStyle from "@tiptap/extension-text-style";
+import FontFamily from '@tiptap/extension-font-family'
 import { FontSize } from "./fontSizeExtension";
 import {
     Bold,
@@ -67,6 +68,7 @@ const RichTextEditor = () => {
             }),
             TextStyle,
             FontSize,
+            FontFamily
         ],
         editorProps: {
             attributes: {
@@ -445,6 +447,21 @@ const RichTextEditor = () => {
                         }
                     >
                         <Square className="text-blue-400 fill-blue-400" />
+                    </button>
+                    <button
+                        onClick={() =>
+                            editor.chain().focus().setFontFamily("LMG ArunA").run()
+                        }
+                        className={
+                            editor.isActive("textStyle", { fontFamily: "LMG ArunA" })
+                                ? "is-active"
+                                : "not-active"
+                        }
+                    >
+                        LMG ArunA
+                    </button>
+                    <button onClick={() => editor.chain().focus().unsetFontFamily().run()}>
+                        <X className="h-5" />
                     </button>
                 </div>
             </div>
