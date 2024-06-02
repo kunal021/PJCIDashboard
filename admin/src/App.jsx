@@ -15,7 +15,7 @@ import UpdateCategory from "./components/categories/UpdateCategory";
 import Home from "./components/home/Home";
 import Dashboard from "./components/Dashboard";
 import GetAllUsers from "./components/users/GetAllUsers";
-import RichTextEditor from "./utils/TextEditior";
+import RichTextEditor from "./utils/TextEditor";
 
 function App() {
   return (
