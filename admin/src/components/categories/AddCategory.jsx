@@ -5,6 +5,7 @@ import { addCategory } from "../../redux/categories/categorySlice";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { API_URL } from "../../url";
+import Tiptap from "../../utils/TextEditor";
 
 function AddCategory({ fetchCategory, setAddNewCategory }) {
   const [categoryName, setCategoryName] = useState("");
@@ -30,28 +31,33 @@ function AddCategory({ fetchCategory, setAddNewCategory }) {
     setAddNewCategory((perv) => !perv);
   };
 
+  const handleContentData = (html) => {
+    setCategoryName(html)
+  };
+
   return (
-    <div className="w-fit flex flex-col justify-center items-center mx-auto">
+    <div className="w-full flex flex-col justify-center items-center">
       <h1 className="text-center text-3xl font-bold">Add Category</h1>
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col justify-between items-center border-2 rounded-lg border-gray-900 p-3 w-fit my-10 md:w-auto"
+      <div
+        className="flex flex-col justify-between items-center border-2 rounded-lg border-gray-900 p-10 gap-5 w-[800px] my-10"
       >
-        <input
+        {/* <input
           type="text"
           key="c_name"
           value={categoryName}
           onChange={(e) => setCategoryName(e.target.value)}
           placeholder="Enter Category Name"
           className="border-2 rounded-lg border-black p-2 text-sm font-bold mb-4 w-full md:w-auto"
-        />
+        /> */}
+
+        <Tiptap placeholder={"Category"} getHtmlData={handleContentData} h={32} />
         <button
-          type="submit"
-          className="border-2 rounded-lg bg-blue-500 p-2 text-sm font-semibold border-transparent hover:bg-blue-700 text-white transition-all duration-500 w-full md:w-auto"
+          onClick={handleSubmit}
+          className="border-2 rounded-lg bg-blue-500 p-2 text-sm font-semibold border-transparent hover:bg-blue-700 text-white transition-all duration-500 w-full md:w-auto z-50"
         >
           Add Category
         </button>
-      </form>
+      </div>
       <button
         onClick={() => setAddNewCategory((perv) => !perv)}
         className="border-2 rounded-lg border-transparent bg-red-500 py-2 px-4 text-sm font-semibold hover:bg-red-700 text-white transition-all duration-500 w-full md:w-auto"
