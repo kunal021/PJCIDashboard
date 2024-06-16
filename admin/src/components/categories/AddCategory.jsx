@@ -41,14 +41,6 @@ function AddCategory({ fetchCategory, setAddNewCategory }) {
       <div
         className="flex flex-col justify-between items-center border-2 rounded-lg border-gray-900 p-5 gap-5 w-full my-10"
       >
-        {/* <input
-          type="text"
-          key="c_name"
-          value={categoryName}
-          onChange={(e) => setCategoryName(e.target.value)}
-          placeholder="Enter Category Name"
-          className="border-2 rounded-lg border-black p-2 text-sm font-bold mb-4 w-full md:w-auto"
-        /> */}
 
         <div className="w-full my-10">
           <Tiptap placeholder="Category" getHtmlData={handleContentData} />

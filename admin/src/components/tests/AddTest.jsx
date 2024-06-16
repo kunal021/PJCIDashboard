@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import FormField from "../../utils/FormField";
 import LinkButton from "../../utils/LinkButton";
 import { API_URL } from "../../url";
+import Tiptap from "../../utils/TextEditor";
 
 function AddTest() {
   const [formData, setFormData] = useState({
@@ -21,7 +22,16 @@ function AddTest() {
     startTime: "",
     endTime: "",
   });
+  const [testName, setTestName] = useState("")
+  const [testDescription, setTestDescription] = useState("")
   const dispatch = useDispatch();
+
+  const getNameData = (html) => {
+    setTestName(html)
+  }
+  const getDescriptionData = (html) => {
+    setTestDescription(html)
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -49,8 +59,8 @@ function AddTest() {
     try {
       const formDataToSend = new FormData();
       const formDataObject = {
-        test_name: formData.testName,
-        description: formData.description,
+        test_name: testName,
+        description: testDescription,
         price: formData.price,
         duration: formData.duration,
         number_of_questions: formData.numberOfQuestion,
@@ -92,36 +102,20 @@ function AddTest() {
     });
   };
   return (
-    <div className="w-fit flex flex-col justify-center items-center mx-auto">
+    <div className="w-[70vw] flex flex-col justify-center items-center mx-auto">
       <h1 className="text-center my-5 text-3xl font-bold">Add Test</h1>
-      <div className="flex flex-col justify-center items-center max-w-md lg:w-full mx-auto mt-5">
-        <form
-          onSubmit={handleSubmit}
-          className="bg-white shadow-md px-8 py-4 mb-4 text-sm rounded-xl border-2 border-gray-900"
+      <div className="flex flex-col justify-center items-center mt-5 w-full">
+        <div
+          className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border-2 border-gray-900 w-full"
         >
-          <FormField
-            htmlFor="testName"
-            id="testName"
-            type="text"
-            placeholder="Test Name"
-            name="testName"
-            value={formData.testName}
-            onChange={handleChange}
-          >
-            Test Name
-          </FormField>
-          <FormField
-            htmlFor="description"
-            id="description"
-            type="textarea"
-            placeholder="Description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-          >
-            Description
-          </FormField>
-
+          <p className="block text-gray-700 text-sm font-bold">Test Name</p>
+          <div className="h-[100px] w-full my-6">
+            <Tiptap placeholder="Category" getHtmlData={getNameData} />
+          </div>
+          <p className="block text-gray-700 text-sm font-bold">Description</p>
+          <div className="h-[100px] w-full my-6">
+            <Tiptap placeholder={"Category"} getHtmlData={getDescriptionData} />
+          </div>
           <div className="flex flex-col md:flex-row md:space-x-6">
             <FormField
               htmlFor="price"
@@ -232,12 +226,12 @@ function AddTest() {
           <div className="flex items-center justify-between">
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="submit"
+              onClick={handleSubmit}
             >
               Create Test
             </button>
           </div>
-        </form>
+        </div>
         <div className="flex items-center justify-between mb-4">
           <LinkButton to={"/get-test"} use={"close"}>Close</LinkButton>
         </div>
