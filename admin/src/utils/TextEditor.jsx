@@ -20,18 +20,12 @@ import Placeholder from "@tiptap/extension-placeholder";
 import { FontSize } from "./fontSizeExtension";
 import {
     Bold,
-    Code,
     Italic,
     ListOrdered,
-    Strikethrough,
     Underline as ULIcon,
     List as LIIcon,
-    Link2,
-    Link2Off,
     Subscript as SUBIcon,
     Superscript as SUPIcon,
-    // Highlighter,
-    // Square,
     Heading as HIcon,
     Heading1,
     Heading2,
@@ -49,7 +43,7 @@ import {
 import { useState } from "react";
 
 
-const Tiptap = ({ placeholder, getHtmlData, h }) => {
+const Tiptap = ({ placeholder, getHtmlData }) => {
     const [headingOptionOpen, setHeadingOptionOpen] = useState(false);
     const [fontSizeOpen, setFontSizeOpen] = useState(false);
     const [showToolBar, setShowToolBar] = useState(false);
@@ -108,31 +102,6 @@ const Tiptap = ({ placeholder, getHtmlData, h }) => {
         return null;
     }
 
-    const setLink = () => {
-        const previousUrl = editor.getAttributes("link").href;
-        let url = window.prompt("URL", previousUrl);
-
-        if (url === null) {
-            return;
-        }
-
-        const isAbsolute = /^(https?:\/\/)/i.test(url);
-        if (!isAbsolute) {
-            url = "https://" + url;
-        }
-
-        if (url === "") {
-            editor.chain().focus().extendMarkRange("link").unsetLink().run();
-
-            return;
-        }
-        editor
-            .chain()
-            .focus()
-            .extendMarkRange("link")
-            .setLink({ href: url, target: "_blank" })
-            .run();
-    };
 
     const fontSizeArray = [
         "8",
@@ -208,22 +177,6 @@ const Tiptap = ({ placeholder, getHtmlData, h }) => {
                                 }
                             >
                                 <ULIcon className="h-4 md:h-8" />
-                            </button>
-                            <button
-                                onClick={() => editor.chain().focus().toggleStrike().run()}
-                                className={
-                                    editor.isActive("strike") ? "is-active" : "not-active"
-                                }
-                            >
-                                <Strikethrough className="h-4 md:h-8" />
-                            </button>
-                            <button
-                                onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-                                className={
-                                    editor.isActive("codeBlock") ? "is-active" : "not-active"
-                                }
-                            >
-                                <Code className="h-4 md:h-8" />
                             </button>
 
                             <div className="relative flex justify-between items-center space-y-1">
@@ -374,18 +327,6 @@ const Tiptap = ({ placeholder, getHtmlData, h }) => {
                                 <LIIcon className="h-4 md:h-8" />
                             </button>
                             <button
-                                onClick={setLink}
-                                className={editor.isActive("link") ? "is-active" : "not-active"}
-                            >
-                                <Link2 className="h-4 md:h-8" />
-                            </button>
-                            <button
-                                onClick={() => editor.chain().focus().unsetLink().run()}
-                                disabled={!editor.isActive("link")}
-                            >
-                                <Link2Off className="h-4 md:h-8" />
-                            </button>
-                            <button
                                 onClick={() => editor.chain().focus().toggleSubscript().run()}
                                 className={
                                     editor.isActive("subscript") ? "is-active" : "not-active"
@@ -404,159 +345,6 @@ const Tiptap = ({ placeholder, getHtmlData, h }) => {
                         </div>
                         <hr className="hidden lg:block bg-gray-500 h-8 w-[2px]"></hr>
                         <div className="relative flex justify-between items-center space-y-1">
-                            {/* <button
-                                onClick={handleMarkerOpen}
-                                className="flex border-2 rounded-md border-black p-[1px] "
-                            >
-                                <Highlighter className="h-4 md:h-8" />{" "}
-                                {markerOpen ? (
-                                    <ChevronUp className="h-4 md:h-8" />
-                                ) : (
-                                    <ChevronDown className="h-4 md:h-8" />
-                                )}
-                            </button>
-                            {markerOpen && (
-                                <div className="absolute flex flex-col justify-between items-center top-7 left-[6px] border-2 rounded-md border-black bg-gray-100 p-1">
-                                    <button
-                                        onClick={() =>
-                                            editor.chain().focus().toggleHighlight().run()
-                                        }
-                                        className={
-                                            editor.isActive("highlight") ? "is-active" : "not-active"
-                                        }
-                                    >
-                                        <Highlighter className="h-4 md:h-8" />
-                                    </button>
-                                    <button
-                                        onClick={() =>
-                                            editor
-                                                .chain()
-                                                .focus()
-                                                .toggleHighlight({ color: "#fb923c" })
-                                                .run()
-                                        }
-                                        className={
-                                            editor.isActive("highlight", { color: "#fb923c" })
-                                                ? "is-active"
-                                                : "not-active"
-                                        }
-                                    >
-                                        <Square className="text-orange-400 fill-orange-400 h-4 md:h-8" />
-                                    </button>
-                                    <button
-                                        onClick={() =>
-                                            editor
-                                                .chain()
-                                                .focus()
-                                                .toggleHighlight({ color: "#fbbf24" })
-                                                .run()
-                                        }
-                                        className={
-                                            editor.isActive("highlight", { color: "#fbbf24" })
-                                                ? "is-active"
-                                                : "not-active"
-                                        }
-                                    >
-                                        <Square className="text-amber-400 fill-amber-400 h-4 md:h-8" />
-                                    </button>
-                                    <button
-                                        onClick={() =>
-                                            editor
-                                                .chain()
-                                                .focus()
-                                                .toggleHighlight({ color: "#f87171" })
-                                                .run()
-                                        }
-                                        className={
-                                            editor.isActive("highlight", { color: "#f87171" })
-                                                ? "is-active"
-                                                : "not-active"
-                                        }
-                                    >
-                                        <Square className="text-red-400 fill-red-400 h-4 md:h-8" />
-                                    </button>
-                                    <button
-                                        onClick={() =>
-                                            editor
-                                                .chain()
-                                                .focus()
-                                                .toggleHighlight({ color: "#facc15" })
-                                                .run()
-                                        }
-                                        className={
-                                            editor.isActive("highlight", { color: "#facc15" })
-                                                ? "is-active"
-                                                : "not-active"
-                                        }
-                                    >
-                                        <Square className="text-yellow-400 fill-yellow-400 h-4 md:h-8" />
-                                    </button>
-                                    <button
-                                        onClick={() =>
-                                            editor
-                                                .chain()
-                                                .focus()
-                                                .toggleHighlight({ color: "#a3e635" })
-                                                .run()
-                                        }
-                                        className={
-                                            editor.isActive("highlight", { color: "#a3e635" })
-                                                ? "is-active"
-                                                : "not-active"
-                                        }
-                                    >
-                                        <Square className="text-lime-400 fill-lime-400 h-4 md:h-8" />
-                                    </button>
-                                    <button
-                                        onClick={() =>
-                                            editor
-                                                .chain()
-                                                .focus()
-                                                .toggleHighlight({ color: "#4ade80" })
-                                                .run()
-                                        }
-                                        className={
-                                            editor.isActive("highlight", { color: "#4ade80" })
-                                                ? "is-active"
-                                                : "not-active"
-                                        }
-                                    >
-                                        <Square className="text-green-400 fill-green-400 h-4 md:h-8" />
-                                    </button>
-                                    <button
-                                        onClick={() =>
-                                            editor
-                                                .chain()
-                                                .focus()
-                                                .toggleHighlight({ color: "#38bdf8" })
-                                                .run()
-                                        }
-                                        className={
-                                            editor.isActive("highlight", { color: "#38bdf8" })
-                                                ? "is-active"
-                                                : "not-active"
-                                        }
-                                    >
-                                        <Square className="text-sky-400 fill-sky-400 h-4 md:h-8" />
-                                    </button>
-                                    <button
-                                        onClick={() =>
-                                            editor
-                                                .chain()
-                                                .focus()
-                                                .toggleHighlight({ color: "#60a5fa" })
-                                                .run()
-                                        }
-                                        className={
-                                            editor.isActive("highlight", { color: "#60a5fa" })
-                                                ? "is-active"
-                                                : "not-active"
-                                        }
-                                    >
-                                        <Square className="text-blue-400 fill-blue-400 h-4 md:h-8" />
-                                    </button>
-                                </div>
-                            )} */}
                             <button
                                 onClick={() =>
                                     editor.chain().focus().setFontFamily("LMG ArunA").run()
@@ -576,8 +364,8 @@ const Tiptap = ({ placeholder, getHtmlData, h }) => {
                     </div>
                 )}
             </div>
-            <div className={`w-full h-${h} border border-gray-300 rounded-md`}>
-                <EditorContent editor={editor} className="overflow-y-auto" />
+            <div className={`w-full border border-gray-300 rounded-md`}>
+                <EditorContent editor={editor} className="overflow-y-auto h-20" />
             </div>
         </div>
     );
