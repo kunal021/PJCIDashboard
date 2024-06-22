@@ -16,16 +16,16 @@ function AddCourse() {
     description: "",
     imgurl: "",
   });
-  const [courseName, setCourseName] = useState("")
-  const [courseDescription, setCourseDescription] = useState("")
+  const [courseName, setCourseName] = useState("");
+  const [courseDescription, setCourseDescription] = useState("");
   const dispatch = useDispatch();
 
   const getNameData = (html) => {
-    setCourseName(html)
-  }
+    setCourseName(html);
+  };
   const getDescriptionData = (html) => {
-    setCourseDescription(html)
-  }
+    setCourseDescription(html);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,9 +40,9 @@ function AddCourse() {
     try {
       const formData = new FormData();
       formData.append("name", courseName);
-      formData.append("price", courseDescription);
+      formData.append("price", course.price);
       formData.append("duration", course.duration);
-      formData.append("description", course.description);
+      formData.append("description", courseDescription);
       formData.append("imgurl", course.imgurl);
       const response = await axios.post(
         `${API_URL}/admin/courses/addcourse.php`,
@@ -51,7 +51,7 @@ function AddCourse() {
       );
       dispatch(addCourse(response.data));
       if (response.status == 201) {
-        toast.success("Course Added Sucessfully")
+        toast.success("Course Added Sucessfully");
       }
     } catch (error) {
       console.error("Error fetching courses:", error);
@@ -69,9 +69,7 @@ function AddCourse() {
     <div className="w-[70vw] flex flex-col justify-center items-center mx-auto">
       <h1 className="text-center my-5 text-3xl font-bold">Add Course</h1>
       <div className="flex flex-col justify-center items-center mt-5 w-full">
-        <div
-          className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border-2 border-gray-900 w-full"
-        >
+        <div className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border-2 border-gray-900 w-full">
           <p className="block text-gray-700 text-sm font-bold">Name</p>
           <div className="h-[100px] w-full my-6">
             <Tiptap placeholder="Category" getHtmlData={getNameData} />
@@ -125,11 +123,13 @@ function AddCourse() {
           </div>
         </div>
         <div className="flex items-center justify-between mb-4">
-          <LinkButton to={"/get-course"} use={"close"}>Close</LinkButton>
+          <LinkButton to={"/get-course"} use={"close"}>
+            Close
+          </LinkButton>
         </div>
       </div>
     </div>
   );
 }
 
-export default AddCourse
+export default AddCourse;
