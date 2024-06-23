@@ -10,6 +10,7 @@ import { API_URL } from "../../url";
 import Loader from "../../utils/Loader";
 import toast from "react-hot-toast";
 import UpdateBtn from "../../utils/UpdateBtn";
+import parser from "html-react-parser";
 
 const fetchCourse = async (dispatch, setLoading) => {
   try {
@@ -93,15 +94,17 @@ function GetCourse() {
                   <td className="border p-2 text-sm">
                     <img
                       src={course.img_url}
-                      alt={course.course_name}
+                      alt={parser(course.course_name)}
                       height={150}
                       width={150}
                       className="rounded-lg border-transparent"
                     />
                   </td>
-                  <td className="border p-2 text-sm">{course.course_name}</td>
                   <td className="border p-2 text-sm">
-                    {course.course_description}
+                    {parser(course.course_name)}
+                  </td>
+                  <td className="border p-2 text-sm">
+                    {parser(course.course_description)}
                   </td>
                   <td className="border p-2 text-sm">{course.price}</td>
                   <td className="border p-2 text-sm">
