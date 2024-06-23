@@ -11,8 +11,6 @@ import LayoutAdjuster from "../../utils/LayoutAdjuster";
 
 function AddTest() {
   const [formData, setFormData] = useState({
-    testName: "",
-    description: "",
     price: "",
     duration: "",
     numberOfQuestion: "",
@@ -89,8 +87,6 @@ function AddTest() {
       console.error("Error fetching courses:", error);
     }
     setFormData({
-      testName: "",
-      description: "",
       price: "",
       duration: "",
       numberOfQuestion: "",
@@ -101,6 +97,8 @@ function AddTest() {
       startTime: "",
       endTime: "",
     });
+    setTestName("");
+    setTestDescription("");
   };
   return (
     <LayoutAdjuster>

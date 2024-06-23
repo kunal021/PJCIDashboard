@@ -12,6 +12,7 @@ import Loader from "../../utils/Loader";
 import ConfirmDelete from "../../utils/ConfirmDelete";
 import UpdateBtn from "../../utils/UpdateBtn";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
+import parser from "html-react-parser";
 
 const fetchFullCourse = async (dispatch, setLoading) => {
   try {
@@ -100,17 +101,17 @@ function GetFullCourse() {
                   <td className="border p-2 text-sm">
                     <img
                       src={course.img_url}
-                      alt={course.full_course_name}
+                      alt={parser(course.full_course_name)}
                       height={150}
                       width={150}
                       className="rounded-lg border-transparent"
                     />
                   </td>
                   <td className="border p-2 text-sm">
-                    {course.full_course_name}
+                    {parser(course.full_course_name)}
                   </td>
                   <td className="border p-2 text-sm">
-                    {course.full_course_description}
+                    {parser(course.full_course_description)}
                   </td>
                   <td className="border p-2 text-sm">
                     {course.full_course_price}
@@ -149,7 +150,7 @@ function GetFullCourse() {
       )}
       {updateCourse && (
         <UpdateFullCourse
-          fetchFullCourse={() => fetchFullCourse(dispatch)}
+          fetchFullCourse={() => fetchFullCourse(dispatch, setLoading)}
           setUpdateCourse={setUpdateCourse}
           updateCourseData={updateCourseData}
         />

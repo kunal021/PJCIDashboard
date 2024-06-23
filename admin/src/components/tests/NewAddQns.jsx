@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addQuestion } from "../../redux/questions/questionSlice";
-import FormField from "../../utils/FormField";
 import "../../utils/addQns.css";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -9,6 +8,7 @@ import { useSearchParams } from "react-router-dom";
 import LinkButton from "../../utils/LinkButton";
 import { API_URL } from "../../url";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
+import Tiptap from "../../utils/TextEditor";
 
 function NewAddQns() {
   const [searchParams] = useSearchParams();
@@ -37,14 +37,19 @@ function NewAddQns() {
     }
   };
 
-  const handleChange = (e, index) => {
-    const { name, value } = e.target;
+  const handleChange = (content, index, field) => {
     const newQuestions = [...questions];
-    newQuestions[index][name] = value;
+    newQuestions[index][field] = content;
     setQuestions(newQuestions);
   };
 
+  const handleDeleteQuestion = (index) => {
+    const updatedQuestions = questions.filter((_, i) => i !== index);
+    setQuestions(updatedQuestions);
+  };
+
   const handleSubmit = async (e) => {
+    e.preventDefault();
     const isEmpty = questions.some((question) =>
       Object.values(question).some((value) => !value)
     );
@@ -53,7 +58,7 @@ function NewAddQns() {
       toast.error("Please fill all fields before submitting.");
       return;
     }
-    e.preventDefault();
+
     try {
       const dataToSend = {
         test_id: id,
@@ -74,11 +79,13 @@ function NewAddQns() {
         dataToSend
       );
       dispatch(addQuestion(response.data));
-      if (response.status == 201) {
-        toast.success("Question Added Sucessfully");
+      if (response.status === 201) {
+        toast.success("Question Added Successfully");
       }
+      console.log(response);
     } catch (error) {
       console.error("Error fetching courses:", error);
+      toast.error("An error occurred while adding the question.");
     }
   };
 
@@ -86,144 +93,55 @@ function NewAddQns() {
     <LayoutAdjuster>
       <div className="w-[80%] flex flex-col justify-center items-center">
         <h1 className="text-center my-5 text-3xl font-bold">Add Question</h1>
-        <div className="flex flex-col justify-center items-center max-w-md md:w-[28rem] mx-auto mt-5">
+        <div className="flex flex-col justify-center items-center mt-5 w-full">
           {questions.map((formData, index) => (
-            <form
+            <div
               key={index}
-              onSubmit={(e) => handleSubmit(e, index)}
-              className="bg-white shadow-md px-8 py-4 mb-4 w-full text-sm rounded-xl border-2 border-gray-900"
+              className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border-2 border-gray-900 w-full"
             >
-              <FormField
-                htmlFor={`question${index}`}
-                id={`question${index}`}
-                type="textarea"
-                placeholder="Question"
-                name="question"
-                value={formData.question}
-                onChange={(e) => handleChange(e, index)}
-              >
-                Question {index + 1}
-              </FormField>
-              <div className="flex flex-col justify-center items-center md:flex-row md:space-x-24">
-                <FormField
-                  htmlFor={`option_a${index}`}
-                  id={`option_a${index}`}
-                  type="text"
-                  placeholder="Option A"
-                  name="a"
-                  value={formData.a}
-                  onChange={(e) => handleChange(e, index)}
-                >
-                  Option A
-                </FormField>
-                <input
-                  type="radio"
-                  id={`ans_a${index}`}
-                  name={`answer`}
-                  value="a"
-                  className="hidden"
-                  onChange={(e) => handleChange(e, index)}
-                />
-                <label htmlFor={`ans_a${index}`} className="checkbox-label">
-                  A
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  Question {index + 1}
                 </label>
-              </div>
-              <div className="flex flex-col justify-center items-center md:flex-row md:space-x-24">
-                <FormField
-                  htmlFor={`option_b${index}`}
-                  id={`option_b${index}`}
-                  type="text"
-                  placeholder="Option B"
-                  name="b"
-                  value={formData.b}
-                  onChange={(e) => handleChange(e, index)}
-                >
-                  Option B
-                </FormField>
-                <input
-                  type="radio"
-                  id={`ans_b${index}`}
-                  name={`answer`}
-                  value="b"
-                  className="hidden"
-                  onChange={(e) => handleChange(e, index)}
+                <Tiptap
+                  initialContent={formData.question}
+                  getHtmlData={(content) =>
+                    handleChange(content, index, "question")
+                  }
+                  placeholder="Write the question here..."
                 />
-                <label htmlFor={`ans_b${index}`} className="checkbox-label">
-                  B
-                </label>
               </div>
-              <div className="flex flex-col justify-center items-center md:flex-row md:space-x-24">
-                <FormField
-                  htmlFor={`option_c${index}`}
-                  id={`option_c${index}`}
-                  type="text"
-                  placeholder="Option C"
-                  name="c"
-                  value={formData.c}
-                  onChange={(e) => handleChange(e, index)}
+
+              {["a", "b", "c", "d", "e"].map((option) => (
+                <div
+                  key={option}
+                  className="flex flex-col justify-center items-center md:flex-row md:space-x-24"
                 >
-                  Option C
-                </FormField>
-                <input
-                  type="radio"
-                  id={`ans_c${index}`}
-                  name={`answer`}
-                  value="c"
-                  className="hidden"
-                  onChange={(e) => handleChange(e, index)}
-                />
-                <label htmlFor={`ans_c${index}`} className="checkbox-label">
-                  C
-                </label>
-              </div>
-              <div className="flex flex-col justify-center items-center md:flex-row md:space-x-24">
-                <FormField
-                  htmlFor={`option_d${index}`}
-                  id={`option_d${index}`}
-                  type="text"
-                  placeholder="Option D"
-                  name="d"
-                  value={formData.d}
-                  onChange={(e) => handleChange(e, index)}
-                >
-                  Option D
-                </FormField>
-                <input
-                  type="radio"
-                  id={`ans_d${index}`}
-                  name={`answer`}
-                  value="d"
-                  className="hidden"
-                  onChange={(e) => handleChange(e, index)}
-                />
-                <label htmlFor={`ans_d${index}`} className="checkbox-label">
-                  D
-                </label>
-              </div>
-              <div className="flex flex-col justify-center items-center md:flex-row md:space-x-24">
-                <FormField
-                  htmlFor={`option_e${index}`}
-                  id={`option_e${index}`}
-                  type="text"
-                  placeholder="Option E"
-                  name="e"
-                  value={formData.e}
-                  onChange={(e) => handleChange(e, index)}
-                >
-                  Option E
-                </FormField>
-                <input
-                  type="radio"
-                  id={`ans_e${index}`}
-                  name={`answer`}
-                  value="e"
-                  className="hidden"
-                  onChange={(e) => handleChange(e, index)}
-                />
-                <label htmlFor={`ans_e${index}`} className="checkbox-label">
-                  E
-                </label>
-              </div>
+                  <Tiptap
+                    initialContent={formData[option]}
+                    getHtmlData={(content) =>
+                      handleChange(content, index, option)
+                    }
+                    placeholder={`Option ${option.toUpperCase()}`}
+                  />
+                  <input
+                    type="radio"
+                    id={`ans_${option}${index}`}
+                    name={`answer${index}`}
+                    value={option}
+                    className="hidden"
+                    onChange={(e) =>
+                      handleChange(e.target.value, index, "answer")
+                    }
+                  />
+                  <label
+                    htmlFor={`ans_${option}${index}`}
+                    className="checkbox-label"
+                  >
+                    {option.toUpperCase()}
+                  </label>
+                </div>
+              ))}
 
               {index === questions.length - 1 && (
                 <div className="flex items-center justify-between mt-5">
@@ -234,14 +152,22 @@ function NewAddQns() {
                   >
                     Add Another Question
                   </button>
+                  {index !== 0 && (
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteQuestion(index)}
+                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    >
+                      Delete Question
+                    </button>
+                  )}
                 </div>
               )}
-            </form>
+            </div>
           ))}
 
           <div className="flex justify-center items-center mb-5 space-x-16 ">
             <button
-              type="submit"
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               onClick={handleSubmit}
             >

@@ -12,12 +12,14 @@ import UpdateBtn from "../../utils/UpdateBtn";
 import ConfirmDelete from "../../utils/ConfirmDelete";
 import toast from "react-hot-toast";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
+import parser from "html-react-parser";
 
 const fetchTest = async (dispatch, setLoading) => {
   try {
+    setLoading(true);
     const response = await axios.post(`${API_URL}/admin/test/getalltest.php`);
-
     dispatch(setTest(response.data.data));
+    console.log(response);
   } catch (error) {
     console.error("Error fetching courses:", error);
   } finally {
@@ -96,8 +98,12 @@ function GetTest() {
               {test.map((test) => (
                 <tr key={test.test_id} className="bg-gray-50">
                   <td className="border p-2 text-sm">{test.test_id}</td>
-                  <td className="border p-2 text-sm">{test.test_name}</td>
-                  <td className="border p-2 text-sm">{test.description}</td>
+                  <td className="border p-2 text-sm">
+                    {parser(test.test_name)}
+                  </td>
+                  <td className="border p-2 text-sm">
+                    {parser(test.description)}
+                  </td>
                   <td className="border p-2 text-sm">{test.price}</td>
                   <td className="border p-2 text-sm">{test.duration}</td>
                   <td className="border p-2 text-sm">{test.test_date}</td>
@@ -137,7 +143,7 @@ function GetTest() {
       )}
       {updateTest && (
         <UpdateTest
-          fetchTest={() => fetchTest(dispatch)}
+          fetchTest={() => fetchTest(dispatch, setLoading)}
           setUpdateTest={setUpdateTest}
           updateTestData={updateTestData}
         />

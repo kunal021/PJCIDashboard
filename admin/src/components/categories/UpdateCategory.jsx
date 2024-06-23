@@ -8,6 +8,7 @@ import LinkButton from "../../utils/LinkButton";
 import { API_URL } from "../../url";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import Tiptap from "../../utils/TextEditor";
+// import parser from "html-react-parser";
 
 function UpdateCategory() {
   const [searchParams] = useSearchParams();
@@ -46,7 +47,11 @@ function UpdateCategory() {
         <h1 className="text-center text-3xl font-bold">Update Category</h1>
         <div className="flex flex-col justify-between items-center border-2 rounded-lg border-gray-900 p-3 w-full my-10">
           <div className="w-full my-10">
-            <Tiptap placeholder="Category" getHtmlData={handleContentData} />
+            <Tiptap
+              placeholder="Category"
+              getHtmlData={handleContentData}
+              initialContent={categoryName}
+            />
           </div>
           <button
             onClick={handleSubmit}

@@ -115,8 +115,8 @@ const SideBar = () => {
           } h-20 w-36 rounded-md mt-5`}
         />
         <Menu
-          defaultSelectedKeys={["1"]}
-          defaultOpenKeys={["sub1"]}
+          // defaultSelectedKeys={["1"]}
+          // defaultOpenKeys={["sub1"]}
           mode="inline"
           theme="dark"
           inlineCollapsed={collapsed}

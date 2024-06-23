@@ -10,10 +10,8 @@ import Tiptap from "../../utils/TextEditor";
 
 function UpdateCourse({ fetchCourse, setUpdateCourse, updateCourseData }) {
   const [course, setCourse] = useState({
-    name: updateCourseData.course_name,
     price: updateCourseData.price,
     duration: updateCourseData.course_duration,
-    description: updateCourseData.course_description,
     imgurl: updateCourseData.img_url,
   });
   const [courseName, setCourseName] = useState(updateCourseData.course_name);

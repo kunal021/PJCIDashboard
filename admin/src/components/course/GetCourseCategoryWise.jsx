@@ -3,10 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCourse } from "../../redux/courses/courseSlice";
 import axios from "axios";
 import { API_URL } from "../../url";
-
 import { useSearchParams } from "react-router-dom";
 import Loader from "../../utils/Loader";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
+import parser from "html-react-parser";
+
 const GetCourseCategoryWise = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -65,15 +66,17 @@ const GetCourseCategoryWise = () => {
                   <td className="border p-2 text-sm">
                     <img
                       src={course.img_url}
-                      alt={course.course_name}
+                      alt={parser(course.course_name)}
                       height={150}
                       width={150}
                       className="rounded-lg border-transparent"
                     />
                   </td>
-                  <td className="border p-2 text-sm">{course.course_name}</td>
                   <td className="border p-2 text-sm">
-                    {course.course_description}
+                    {parser(course.course_name)}
+                  </td>
+                  <td className="border p-2 text-sm">
+                    {parser(course.course_description)}
                   </td>
                   <td className="border p-2 text-sm">{course.price}</td>
                   <td className="border p-2 text-sm">

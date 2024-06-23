@@ -3,15 +3,11 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
-// import ListItem from "@tiptap/extension-list-item";
-// import OrderedList from "@tiptap/extension-ordered-list";
-// import Heading from "@tiptap/extension-heading";
 import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
 import FontFamily from "@tiptap/extension-font-family";
 import Highlight from "@tiptap/extension-highlight";
 import Link from "@tiptap/extension-link";
-// import CodeBlock from "@tiptap/extension-code-block";
 import Image from "@tiptap/extension-image";
 import TextAlign from "@tiptap/extension-text-align";
 import TextStyle from "@tiptap/extension-text-style";
@@ -42,100 +38,68 @@ import {
 import { useState } from "react";
 
 const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
+  const [showToolBar, setShowToolBar] = useState(false);
   const [headingOptionOpen, setHeadingOptionOpen] = useState(false);
   const [fontSizeOpen, setFontSizeOpen] = useState(false);
-  const [showToolBar, setShowToolBar] = useState(false);
-  // const [markerOpen, setMarkerOpen] = useState(false);
-
-  // const divRef = useRef<HTMLDivElement | null>(null);
-
-  // useEffect(() => {
-  //   const handleClickOutside = (event: MouseEvent) => {
-  //     if (divRef.current && !divRef.current.contains(event.target as Node)) {
-  //       setShowToolBar(false);
-  //     }
-  //   };
-
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, [divRef]);
 
   const editor = useEditor({
     extensions: [
-      Placeholder.configure({
-        placeholder: placeholder,
-      }),
+      Placeholder.configure({ placeholder }),
       StarterKit,
       Underline,
-      //   Heading.configure({
-      //     levels: [1, 2, 3, 4, 5, 6],
-      //   }),
       Link,
-      //   OrderedList,
       Subscript,
       Superscript,
       Highlight.configure({ multicolor: true }),
-      //   ListItem,
-      //   CodeBlock,
       Image,
-      TextAlign.configure({
-        types: ["heading", "paragraph"],
-      }),
+      TextAlign.configure({ types: ["heading", "paragraph"] }),
       TextStyle,
       FontSize,
       FontFamily,
     ],
+    content: initialContent || "",
+    onUpdate({ editor }) {
+      getHtmlData(editor.getHTML());
+    },
     editorProps: {
       attributes: {
         class:
           "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl p-2 h-80 focus:outline-none",
       },
     },
-    content: initialContent || ``,
   });
 
-  if (!editor) {
-    return null;
-  }
+  if (!editor) return null;
 
-  const fontSizeArray = [
-    "8",
-    "9",
-    "10",
-    "12",
-    "14",
-    "16",
-    "18",
-    "20",
-    "24",
-    "28",
-    "36",
-    "48",
-    "72",
-  ];
-
-  const setFontSize = (size) => {
-    editor.chain().focus().setFontSize(size).run();
-  };
-  const unSetFontSize = () => {
-    editor.chain().focus().unsetFontSize().run();
-  };
-
-  const handleHeadingOptions = () => {
+  const handleToggleBold = () => editor.chain().focus().toggleBold().run();
+  const handleToggleItalic = () => editor.chain().focus().toggleItalic().run();
+  const handleToggleUnderline = () =>
+    editor.chain().focus().toggleUnderline().run();
+  const handleToggleHeadingOptions = () =>
     setHeadingOptionOpen((prev) => !prev);
-  };
+  const handleToggleFontSizeOptions = () => setFontSizeOpen((prev) => !prev);
 
-  const handleFontSizeOptions = () => {
-    setFontSizeOpen((prev) => !prev);
-  };
+  const handleHeadingLevel = (level) =>
+    editor.chain().focus().toggleHeading({ level }).run();
 
-  // const handleMarkerOpen = () => {
-  //     setMarkerOpen((prev) => !prev);
-  // };
+  const handleSetFontSize = (size) =>
+    editor.chain().focus().setFontSize(size).run();
+  const handleUnsetFontSize = () =>
+    editor.chain().focus().unsetFontSize().run();
 
-  getHtmlData(editor.getHTML());
+  const handleToggleOrderedList = () =>
+    editor.chain().focus().toggleOrderedList().run();
+  const handleToggleBulletList = () =>
+    editor.chain().focus().toggleBulletList().run();
+  const handleToggleSubscript = () =>
+    editor.chain().focus().toggleSubscript().run();
+  const handleToggleSuperscript = () =>
+    editor.chain().focus().toggleSuperscript().run();
+
+  const handleSetFontFamily = (font) =>
+    editor.chain().focus().setFontFamily(font).run();
+  const handleUnsetFontFamily = () =>
+    editor.chain().focus().unsetFontFamily().run();
 
   return (
     <div className="flex flex-col justify-center items-center h-full w-full p-4 space-y-5">
@@ -154,13 +118,13 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
           <div className="flex flex-col flex-wrap md:flex-row justify-center lg:justify-between items-start z-30 lg:border-2 lg:border-black space-y-1 md:space-x-4 md:space-y-0 lg:rounded-lg px-2 py-[2px]">
             <div className="flex justify-between items-center space-x-1">
               <button
-                onClick={() => editor.chain().focus().toggleBold().run()}
+                onClick={handleToggleBold}
                 className={editor.isActive("bold") ? "is-active" : "not-active"}
               >
                 <Bold className="h-4 md:h-8" />
               </button>
               <button
-                onClick={() => editor.chain().focus().toggleItalic().run()}
+                onClick={handleToggleItalic}
                 className={
                   editor.isActive("italic") ? "is-active" : "not-active"
                 }
@@ -168,7 +132,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                 <Italic className="h-4 md:h-8" />
               </button>
               <button
-                onClick={() => editor.chain().focus().toggleUnderline().run()}
+                onClick={handleToggleUnderline}
                 className={
                   editor.isActive("underline") ? "is-active" : "not-active"
                 }
@@ -178,7 +142,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
 
               <div className="relative flex justify-between items-center space-y-1">
                 <button
-                  onClick={handleHeadingOptions}
+                  onClick={handleToggleHeadingOptions}
                   className="flex border-2 rounded-md border-black p-[1px] "
                 >
                   <HIcon className="h-4 md:h-8" />
@@ -191,9 +155,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                 {headingOptionOpen && (
                   <div className="absolute flex flex-col justify-between items-center top-7 left-[6px] border-2 rounded-md border-black bg-gray-100 p-1">
                     <button
-                      onClick={() =>
-                        editor.chain().focus().toggleHeading({ level: 1 }).run()
-                      }
+                      onClick={() => handleHeadingLevel(1)}
                       className={
                         editor.isActive("heading", { level: 1 })
                           ? "is-active"
@@ -203,9 +165,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                       <Heading1 className="h-4 md:h-8" />
                     </button>
                     <button
-                      onClick={() =>
-                        editor.chain().focus().toggleHeading({ level: 2 }).run()
-                      }
+                      onClick={() => handleHeadingLevel(2)}
                       className={
                         editor.isActive("heading", { level: 2 })
                           ? "is-active"
@@ -215,9 +175,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                       <Heading2 className="h-4 md:h-8" />
                     </button>
                     <button
-                      onClick={() =>
-                        editor.chain().focus().toggleHeading({ level: 3 }).run()
-                      }
+                      onClick={() => handleHeadingLevel(3)}
                       className={
                         editor.isActive("heading", { level: 3 })
                           ? "is-active"
@@ -227,9 +185,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                       <Heading3 className="h-4 md:h-8" />
                     </button>
                     <button
-                      onClick={() =>
-                        editor.chain().focus().toggleHeading({ level: 4 }).run()
-                      }
+                      onClick={() => handleHeadingLevel(4)}
                       className={
                         editor.isActive("heading", { level: 4 })
                           ? "is-active"
@@ -239,9 +195,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                       <Heading4 className="h-4 md:h-8" />
                     </button>
                     <button
-                      onClick={() =>
-                        editor.chain().focus().toggleHeading({ level: 5 }).run()
-                      }
+                      onClick={() => handleHeadingLevel(5)}
                       className={
                         editor.isActive("heading", { level: 5 })
                           ? "is-active"
@@ -251,9 +205,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                       <Heading5 className="h-4 md:h-8" />
                     </button>
                     <button
-                      onClick={() =>
-                        editor.chain().focus().toggleHeading({ level: 6 }).run()
-                      }
+                      onClick={() => handleHeadingLevel(6)}
                       className={
                         editor.isActive("heading", { level: 6 })
                           ? "is-active"
@@ -270,7 +222,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
             <div className="flex justify-between items-center space-x-1">
               <div className="relative flex justify-between items-center space-y-1">
                 <button
-                  onClick={handleFontSizeOptions}
+                  onClick={handleToggleFontSizeOptions}
                   className="flex border-2 rounded-md border-black p-[1px] "
                 >
                   <ALargeSmall className="h-4 md:h-8" />
@@ -282,10 +234,24 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                 </button>
                 {fontSizeOpen && (
                   <div className="absolute font-bold flex flex-col justify-between items-center top-7 -left-[5px] border-2 rounded-md border-black bg-gray-100 p-1">
-                    {fontSizeArray.map((size) => (
+                    {[
+                      "8",
+                      "9",
+                      "10",
+                      "12",
+                      "14",
+                      "16",
+                      "18",
+                      "20",
+                      "24",
+                      "28",
+                      "36",
+                      "48",
+                      "72",
+                    ].map((size) => (
                       <div key={size} className="flex gap-[2px]">
                         <button
-                          onClick={() => setFontSize(size)}
+                          onClick={() => handleSetFontSize(size)}
                           className={
                             editor.isActive("textStyle", {
                               fontSize: `${size}px`,
@@ -297,7 +263,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                           {size}
                         </button>
                         <button
-                          onClick={unSetFontSize}
+                          onClick={handleUnsetFontSize}
                           className="hover:bg-gray-300 rounded-sm"
                         >
                           <X className="h-3 md:h-4" />
@@ -308,7 +274,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                 )}
               </div>
               <button
-                onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                onClick={handleToggleOrderedList}
                 className={
                   editor.isActive("orderedList") ? "is-active" : "not-active"
                 }
@@ -316,7 +282,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                 <ListOrdered className="h-4 md:h-8" />
               </button>
               <button
-                onClick={() => editor.chain().focus().toggleBulletList().run()}
+                onClick={handleToggleBulletList}
                 className={
                   editor.isActive("bulletList") ? "is-active" : "not-active"
                 }
@@ -324,7 +290,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                 <LIIcon className="h-4 md:h-8" />
               </button>
               <button
-                onClick={() => editor.chain().focus().toggleSubscript().run()}
+                onClick={handleToggleSubscript}
                 className={
                   editor.isActive("subscript") ? "is-active" : "not-active"
                 }
@@ -332,7 +298,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                 <SUBIcon className="h-4 md:h-8" />
               </button>
               <button
-                onClick={() => editor.chain().focus().toggleSuperscript().run()}
+                onClick={handleToggleSuperscript}
                 className={
                   editor.isActive("superscript") ? "is-active" : "not-active"
                 }
@@ -343,9 +309,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
             <hr className="hidden lg:block bg-gray-500 h-8 w-[2px]"></hr>
             <div className="relative flex justify-between items-center space-y-1">
               <button
-                onClick={() =>
-                  editor.chain().focus().setFontFamily("LMG ArunA").run()
-                }
+                onClick={() => handleSetFontFamily("LMG ArunA")}
                 className={
                   editor.isActive("textStyle", { fontFamily: "LMG ArunA" })
                     ? "is-active"
@@ -354,9 +318,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
               >
                 Guj
               </button>
-              <button
-                onClick={() => editor.chain().focus().unsetFontFamily().run()}
-              >
+              <button onClick={handleUnsetFontFamily}>
                 <X className="h-5" />
               </button>
             </div>

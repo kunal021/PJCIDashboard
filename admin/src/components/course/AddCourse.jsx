@@ -11,10 +11,8 @@ import LayoutAdjuster from "../../utils/LayoutAdjuster";
 
 function AddCourse() {
   const [course, setCourse] = useState({
-    name: "",
     price: "",
     duration: "",
-    description: "",
     imgurl: "",
   });
   const [courseName, setCourseName] = useState("");
@@ -58,12 +56,12 @@ function AddCourse() {
       console.error("Error fetching courses:", error);
     }
     setCourse({
-      name: "",
       price: "",
       duration: "",
-      description: "",
       imgurl: "",
     });
+    setCourseName("");
+    setCourseDescription("");
   };
 
   return (

@@ -6,11 +6,10 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import FormField from "../../utils/FormField";
 import { API_URL } from "../../url";
+import Tiptap from "../../utils/TextEditor";
 
 function UpdateTest({ fetchTest, updateTestData, setUpdateTest }) {
   const [formData, setFormData] = useState({
-    testName: updateTestData.test_name,
-    description: updateTestData.description,
     price: updateTestData.price,
     duration: updateTestData.duration,
     numberOfQuestion: updateTestData.number_of_questions,
@@ -21,10 +20,18 @@ function UpdateTest({ fetchTest, updateTestData, setUpdateTest }) {
     startTime: updateTestData.start_time,
     endTime: updateTestData.end_time,
   });
+  const [testName, setTestName] = useState(updateTestData.test_name);
+  const [testDescription, setTestDescription] = useState(
+    updateTestData.description
+  );
   const dispatch = useDispatch();
 
-  // console.log(updateTestData)
-  // console.log(updateTestData)
+  const getNameData = (html) => {
+    setTestName(html);
+  };
+  const getDescriptionData = (html) => {
+    setTestDescription(html);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,8 +60,8 @@ function UpdateTest({ fetchTest, updateTestData, setUpdateTest }) {
       const formDataToSend = new FormData();
       const formDataObject = {
         testid: updateTestData.test_id,
-        test_name: formData.testName,
-        description: formData.description,
+        test_name: testName,
+        description: testDescription,
         price: formData.price,
         duration: formData.duration,
         number_of_questions: formData.numberOfQuestion,
@@ -78,45 +85,35 @@ function UpdateTest({ fetchTest, updateTestData, setUpdateTest }) {
       if (response.status == 201) {
         toast.success("Test Updated Sucessfully");
       }
+      console.log(response);
       fetchTest();
     } catch (error) {
       console.error("Error fetching courses:", error);
     }
-
     setUpdateTest((perv) => !perv);
   };
 
   return (
-    <div className="w-fit flex flex-col justify-center items-center my-5">
+    <div className="w-[80%] h-full flex flex-col justify-center items-center my-5">
       <h1 className="text-center text-3xl font-bold">Update Test</h1>
-      <div className="flex flex-col justify-center items-center max-w-md lg:w-full mx-auto mt-5">
-        <form
-          onSubmit={handleSubmit}
-          className="bg-white shadow-md px-8 py-4 mb-4 text-sm rounded-xl border-2 border-gray-900"
-        >
-          <FormField
-            htmlFor="testName"
-            id="testName"
-            type="text"
-            placeholder="Test Name"
-            name="testName"
-            value={formData.testName}
-            onChange={handleChange}
-          >
-            Test Name
-          </FormField>
-          <FormField
-            htmlFor="description"
-            id="description"
-            type="textarea"
-            placeholder="Description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-          >
-            Description
-          </FormField>
-
+      <div className="flex flex-col justify-center items-center mt-5 w-full">
+        <div className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border-2 border-gray-900 w-full">
+          <p className="block text-gray-700 text-sm font-bold">Name</p>
+          <div className="h-[100px] w-full my-6">
+            <Tiptap
+              placeholder="Category"
+              getHtmlData={getNameData}
+              initialContent={testName}
+            />
+          </div>
+          <p className="block text-gray-700 text-sm font-bold">Description</p>
+          <div className="h-[100px] w-full my-6">
+            <Tiptap
+              placeholder={"Category"}
+              getHtmlData={getDescriptionData}
+              initialContent={testDescription}
+            />
+          </div>
           <div className="flex flex-col md:flex-row md:space-x-6">
             <FormField
               htmlFor="price"
@@ -227,12 +224,12 @@ function UpdateTest({ fetchTest, updateTestData, setUpdateTest }) {
           <div className="flex items-center justify-between">
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="submit"
+              onClick={handleSubmit}
             >
               Update Test
             </button>
           </div>
-        </form>
+        </div>
       </div>
       <button
         onClick={() => setUpdateTest((perv) => !perv)}

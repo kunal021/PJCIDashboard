@@ -96,9 +96,9 @@ function GetCategory() {
                   <td className="border p-2 text-sm">{parser(item.name)}</td>
                   <td className="border p-2 text-sm">
                     <Link
-                      to={`/update-category?id=${item.id}&name=${parser(
-                        item.name
-                      )}`}
+                      to={`/update-category?id=${
+                        item.id
+                      }&name=${encodeURIComponent(item.name)}`}
                     >
                       <UpdateBtn />
                     </Link>
