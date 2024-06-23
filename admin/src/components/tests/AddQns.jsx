@@ -2,13 +2,12 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addQuestion } from "../../redux/questions/questionSlice";
 import FormField from "../../utils/FormField";
-import "../../utils/addQns.css"
+import "../../utils/addQns.css";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useSearchParams } from "react-router-dom";
 import LinkButton from "../../utils/LinkButton";
 import { API_URL } from "../../url";
-
 
 function AddQns() {
   const [searchParams] = useSearchParams();
@@ -21,7 +20,7 @@ function AddQns() {
     c: "",
     d: "",
     e: "",
-    answer: []
+    answer: [],
   });
   // const [checked, setChecked] = useState({
   //   a: false,
@@ -33,10 +32,10 @@ function AddQns() {
   const [allQuestion, setAllQuestion] = useState([]);
 
   const handleAddQuestion = () => {
-    setAllQuestion((prevData) => ([...prevData, formData]))
-  }
+    setAllQuestion((prevData) => [...prevData, formData]);
+  };
 
-  console.log(allQuestion)
+  console.log(allQuestion);
 
   // const handleCheckbox = (e) => {
   //   const { name, checked } = e.target;
@@ -46,7 +45,7 @@ function AddQns() {
   //   }));
   // };
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   // const handleChange = (e) => {
   //   const { name, value, type, checked } = e.target;
@@ -83,15 +82,14 @@ function AddQns() {
         [name]: value,
       }));
     }
-  }
-
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const dataToSend = {
         test_id: id,
-        questions: allQuestion.map(question => ({
+        questions: allQuestion.map((question) => ({
           subject_id: 1,
           question_text: question.question,
           a: question.a,
@@ -99,16 +97,18 @@ function AddQns() {
           c: question.c,
           d: question.d,
           e: question.e,
-          correct_answer: question.answer.join(' ')
-        }))
-      }
+          correct_answer: question.answer.join(" "),
+        })),
+      };
 
-      const response = axios.post(`${API_URL}/admin/test/addqnsintest.php`, dataToSend);
+      const response = axios.post(
+        `${API_URL}/admin/test/addqnsintest.php`,
+        dataToSend
+      );
       dispatch(addQuestion(response.data));
       if (response.status == 201) {
-        toast.success("Question Added Sucessfully")
+        toast.success("Question Added Sucessfully");
       }
-
     } catch (error) {
       console.error("Error fetching courses:", error);
     }
@@ -119,7 +119,7 @@ function AddQns() {
       c: "",
       d: "",
       e: "",
-      answer: []
+      answer: [],
     });
     // setChecked({
     //   a: false,
@@ -128,7 +128,7 @@ function AddQns() {
     //   d: false,
     //   e: false
     // });
-  }
+  };
 
   return (
     <div className="w-fit flex flex-col justify-center items-center mx-auto">
@@ -171,8 +171,11 @@ function AddQns() {
               onChange={(e) => {
                 // handleCheckbox(e);
                 handleChange(e);
-              }} />
-            <label htmlFor="ans_a" className="checkbox-label">A</label>
+              }}
+            />
+            <label htmlFor="ans_a" className="checkbox-label">
+              A
+            </label>
           </div>
           <div className="flex flex-col md:flex-row md:space-x-6">
             <FormField
@@ -196,8 +199,11 @@ function AddQns() {
               onChange={(e) => {
                 // handleCheckbox(e);
                 handleChange(e);
-              }} />
-            <label htmlFor="ans_b" className="checkbox-label">B</label>
+              }}
+            />
+            <label htmlFor="ans_b" className="checkbox-label">
+              B
+            </label>
           </div>
           <div className="flex flex-col md:flex-row md:space-x-6">
             <FormField
@@ -217,12 +223,15 @@ function AddQns() {
               name="c"
               value="c"
               className="hidden"
-              // checked={checked.c} 
+              // checked={checked.c}
               onChange={(e) => {
                 // handleCheckbox(e);
                 handleChange(e);
-              }} />
-            <label htmlFor="ans_c" className="checkbox-label">C</label>
+              }}
+            />
+            <label htmlFor="ans_c" className="checkbox-label">
+              C
+            </label>
           </div>
           <div className="flex flex-col md:flex-row md:space-x-6">
             <FormField
@@ -246,8 +255,11 @@ function AddQns() {
               onChange={(e) => {
                 // handleCheckbox(e);
                 handleChange(e);
-              }} />
-            <label htmlFor="ans_d" className="checkbox-label">D</label>
+              }}
+            />
+            <label htmlFor="ans_d" className="checkbox-label">
+              D
+            </label>
           </div>
           <div className="flex flex-col md:flex-row md:space-x-6">
             <FormField
@@ -271,8 +283,11 @@ function AddQns() {
               onChange={(e) => {
                 // handleCheckbox(e);
                 handleChange(e);
-              }} />
-            <label htmlFor="ans_e" className="checkbox-label">E</label>
+              }}
+            />
+            <label htmlFor="ans_e" className="checkbox-label">
+              E
+            </label>
           </div>
           <div className="flex items-center justify-between mt-5">
             <button
@@ -292,10 +307,12 @@ function AddQns() {
           >
             Submit
           </button>
-          <LinkButton to={`/get-test-question?id=${id}`} use={"close"}>Close</LinkButton>
+          <LinkButton to={`/get-test-question?id=${id}`} use={"close"}>
+            Close
+          </LinkButton>
         </div>
-      </div >
-    </div >
+      </div>
+    </div>
   );
 }
 

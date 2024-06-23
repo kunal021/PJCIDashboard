@@ -41,7 +41,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-const Tiptap = ({ placeholder, getHtmlData }) => {
+const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
   const [headingOptionOpen, setHeadingOptionOpen] = useState(false);
   const [fontSizeOpen, setFontSizeOpen] = useState(false);
   const [showToolBar, setShowToolBar] = useState(false);
@@ -93,7 +93,7 @@ const Tiptap = ({ placeholder, getHtmlData }) => {
           "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl p-2 h-80 focus:outline-none",
       },
     },
-    content: ``,
+    content: initialContent || ``,
   });
 
   if (!editor) {

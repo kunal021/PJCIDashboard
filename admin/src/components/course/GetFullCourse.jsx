@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import Loader from "../../utils/Loader";
 import ConfirmDelete from "../../utils/ConfirmDelete";
 import UpdateBtn from "../../utils/UpdateBtn";
+import LayoutAdjuster from "../../utils/LayoutAdjuster";
 
 const fetchFullCourse = async (dispatch, setLoading) => {
   try {
@@ -60,7 +61,7 @@ function GetFullCourse() {
   };
 
   return (
-    <div className="w-fit flex flex-col justify-center items-center mx-auto">
+    <LayoutAdjuster>
       {loading ? (
         <Loader />
       ) : (
@@ -77,9 +78,9 @@ function GetFullCourse() {
             </h1>
             <LinkButton to={"/add-full-course"}>Add Full Course</LinkButton>
           </div>
-          <table className="table-auto w-full m-5 border-2">
+          <table className="table-auto w-full m-5 border">
             <thead>
-              <tr className="bg-gray-200">
+              <tr className="bg-gray-100">
                 <th className="p-2 text-sm">Id</th>
                 <th className="p-2 text-sm">Image</th>
                 <th className="p-2 text-sm">Course Name</th>
@@ -94,7 +95,7 @@ function GetFullCourse() {
             </thead>
             <tbody className="text-center">
               {fullCourse.map((course) => (
-                <tr key={course.id} className="bg-gray-100">
+                <tr key={course.id} className="bg-gray-50">
                   <td className="border p-2 text-sm">{course.id}</td>
                   <td className="border p-2 text-sm">
                     <img
@@ -153,7 +154,7 @@ function GetFullCourse() {
           updateCourseData={updateCourseData}
         />
       )}
-    </div>
+    </LayoutAdjuster>
   );
 }
 

@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Toaster } from "react-hot-toast"
+import { Toaster } from "react-hot-toast";
 import GetCategory from "./components/categories/GetCategory";
 import GetCourse from "./components/course/GetCourse";
 import GetFullCourse from "./components/course/GetFullCourse";
@@ -16,6 +16,7 @@ import Home from "./components/home/Home";
 import Dashboard from "./components/Dashboard";
 import GetAllUsers from "./components/users/GetAllUsers";
 import RichTextEditor from "./utils/TextEditor";
+// import SideBar from "./components/DashboardPreviewSmall";
 
 function App() {
   return (

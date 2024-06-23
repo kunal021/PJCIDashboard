@@ -7,6 +7,7 @@ import FormField from "../../utils/FormField";
 import LinkButton from "../../utils/LinkButton";
 import { API_URL } from "../../url";
 import Tiptap from "../../utils/TextEditor";
+import LayoutAdjuster from "../../utils/LayoutAdjuster";
 
 function AddTest() {
   const [formData, setFormData] = useState({
@@ -22,16 +23,16 @@ function AddTest() {
     startTime: "",
     endTime: "",
   });
-  const [testName, setTestName] = useState("")
-  const [testDescription, setTestDescription] = useState("")
+  const [testName, setTestName] = useState("");
+  const [testDescription, setTestDescription] = useState("");
   const dispatch = useDispatch();
 
   const getNameData = (html) => {
-    setTestName(html)
-  }
+    setTestName(html);
+  };
   const getDescriptionData = (html) => {
-    setTestDescription(html)
-  }
+    setTestDescription(html);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -82,7 +83,7 @@ function AddTest() {
       );
       dispatch(addTest(response.data));
       if (response.status == 201) {
-        toast.success("Test Added Sucessfully")
+        toast.success("Test Added Sucessfully");
       }
     } catch (error) {
       console.error("Error fetching courses:", error);
@@ -102,141 +103,146 @@ function AddTest() {
     });
   };
   return (
-    <div className="w-[70vw] flex flex-col justify-center items-center mx-auto">
-      <h1 className="text-center my-5 text-3xl font-bold">Add Test</h1>
-      <div className="flex flex-col justify-center items-center mt-5 w-full">
-        <div
-          className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border-2 border-gray-900 w-full"
-        >
-          <p className="block text-gray-700 text-sm font-bold">Test Name</p>
-          <div className="h-[100px] w-full my-6">
-            <Tiptap placeholder="Category" getHtmlData={getNameData} />
+    <LayoutAdjuster>
+      <div className="w-[80%] flex flex-col justify-center items-center">
+        <h1 className="text-center my-5 text-3xl font-bold">Add Test</h1>
+        <div className="flex flex-col justify-center items-center mt-5 w-full">
+          <div className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border-2 border-gray-900 w-full">
+            <p className="block text-gray-700 text-sm font-bold">Test Name</p>
+            <div className="h-[100px] w-full my-6">
+              <Tiptap placeholder="Category" getHtmlData={getNameData} />
+            </div>
+            <p className="block text-gray-700 text-sm font-bold">Description</p>
+            <div className="h-[100px] w-full my-6">
+              <Tiptap
+                placeholder={"Category"}
+                getHtmlData={getDescriptionData}
+              />
+            </div>
+            <div className="flex flex-col md:flex-row md:space-x-6">
+              <FormField
+                htmlFor="price"
+                id="price"
+                type="text"
+                placeholder="Price"
+                name="price"
+                value={formData.price}
+                onChange={handleChange}
+              >
+                Price
+              </FormField>
+              <FormField
+                htmlFor="duration"
+                id="duration"
+                type="text"
+                placeholder="Duration"
+                name="duration"
+                value={formData.duration}
+                onChange={handleChange}
+              >
+                Duration
+              </FormField>
+            </div>
+            <div className="flex flex-col md:flex-row md:space-x-6">
+              <FormField
+                htmlFor="numberOfQuestion"
+                id="numberOfQuestion"
+                type="text"
+                placeholder="Number Of Question"
+                name="numberOfQuestion"
+                value={formData.numberOfQuestion}
+                onChange={handleChange}
+              >
+                Number Of Question
+              </FormField>
+              <FormField
+                htmlFor="markPerQuestion"
+                id="markPerQuestion"
+                type="text"
+                placeholder="Mark Per Question"
+                name="markPerQuestion"
+                value={formData.markPerQuestion}
+                onChange={handleChange}
+              >
+                Mark Per Question
+              </FormField>
+            </div>
+            <div className="flex flex-col md:flex-row md:space-x-6">
+              <FormField
+                htmlFor="negativeMark"
+                id="negativeMark"
+                type="text"
+                placeholder="Negative Mark"
+                name="negativeMark"
+                value={formData.negativeMark}
+                onChange={handleChange}
+              >
+                Negative Mark
+              </FormField>
+              <FormField
+                htmlFor="totalMark"
+                id="totalMark"
+                type="text"
+                placeholder="Total Mark"
+                name="totalMark"
+                value={formData.totalMark}
+                onChange={handleChange}
+              >
+                Total Mark
+              </FormField>
+            </div>
+            <div className="flex flex-col md:flex-row md:space-x-6">
+              <FormField
+                htmlFor="testDate"
+                id="testDate"
+                type="date"
+                placeholder="Test Date"
+                name="testDate"
+                value={formData.testDate}
+                onChange={handleChange}
+              >
+                Test Date
+              </FormField>
+              <FormField
+                htmlFor="startTime"
+                id="startTime"
+                type="time"
+                placeholder="Start Time"
+                name="startTime"
+                value={formData.startTime}
+                onChange={handleChange}
+              >
+                Start Time
+              </FormField>
+              <FormField
+                htmlFor="endTime"
+                id="endTime"
+                type="time"
+                placeholder="End Time"
+                name="endTime"
+                value={formData.endTime}
+                onChange={handleChange}
+              >
+                End Time
+              </FormField>
+            </div>
+            <div className="flex items-center justify-between">
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                onClick={handleSubmit}
+              >
+                Create Test
+              </button>
+            </div>
           </div>
-          <p className="block text-gray-700 text-sm font-bold">Description</p>
-          <div className="h-[100px] w-full my-6">
-            <Tiptap placeholder={"Category"} getHtmlData={getDescriptionData} />
+          <div className="flex items-center justify-between mb-4">
+            <LinkButton to={"/get-test"} use={"close"}>
+              Close
+            </LinkButton>
           </div>
-          <div className="flex flex-col md:flex-row md:space-x-6">
-            <FormField
-              htmlFor="price"
-              id="price"
-              type="text"
-              placeholder="Price"
-              name="price"
-              value={formData.price}
-              onChange={handleChange}
-            >
-              Price
-            </FormField>
-            <FormField
-              htmlFor="duration"
-              id="duration"
-              type="text"
-              placeholder="Duration"
-              name="duration"
-              value={formData.duration}
-              onChange={handleChange}
-            >
-              Duration
-            </FormField>
-          </div>
-          <div className="flex flex-col md:flex-row md:space-x-6">
-            <FormField
-              htmlFor="numberOfQuestion"
-              id="numberOfQuestion"
-              type="text"
-              placeholder="Number Of Question"
-              name="numberOfQuestion"
-              value={formData.numberOfQuestion}
-              onChange={handleChange}
-            >
-              Number Of Question
-            </FormField>
-            <FormField
-              htmlFor="markPerQuestion"
-              id="markPerQuestion"
-              type="text"
-              placeholder="Mark Per Question"
-              name="markPerQuestion"
-              value={formData.markPerQuestion}
-              onChange={handleChange}
-            >
-              Mark Per Question
-            </FormField>
-          </div>
-          <div className="flex flex-col md:flex-row md:space-x-6">
-            <FormField
-              htmlFor="negativeMark"
-              id="negativeMark"
-              type="text"
-              placeholder="Negative Mark"
-              name="negativeMark"
-              value={formData.negativeMark}
-              onChange={handleChange}
-            >
-              Negative Mark
-            </FormField>
-            <FormField
-              htmlFor="totalMark"
-              id="totalMark"
-              type="text"
-              placeholder="Total Mark"
-              name="totalMark"
-              value={formData.totalMark}
-              onChange={handleChange}
-            >
-              Total Mark
-            </FormField>
-          </div>
-          <div className="flex flex-col md:flex-row md:space-x-6">
-            <FormField
-              htmlFor="testDate"
-              id="testDate"
-              type="date"
-              placeholder="Test Date"
-              name="testDate"
-              value={formData.testDate}
-              onChange={handleChange}
-            >
-              Test Date
-            </FormField>
-            <FormField
-              htmlFor="startTime"
-              id="startTime"
-              type="time"
-              placeholder="Start Time"
-              name="startTime"
-              value={formData.startTime}
-              onChange={handleChange}
-            >
-              Start Time
-            </FormField>
-            <FormField
-              htmlFor="endTime"
-              id="endTime"
-              type="time"
-              placeholder="End Time"
-              name="endTime"
-              value={formData.endTime}
-              onChange={handleChange}
-            >
-              End Time
-            </FormField>
-          </div>
-          <div className="flex items-center justify-between">
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              onClick={handleSubmit}
-            >
-              Create Test
-            </button>
-          </div>
-        </div>
-        <div className="flex items-center justify-between mb-4">
-          <LinkButton to={"/get-test"} use={"close"}>Close</LinkButton>
         </div>
       </div>
-    </div>
+    </LayoutAdjuster>
   );
 }
 

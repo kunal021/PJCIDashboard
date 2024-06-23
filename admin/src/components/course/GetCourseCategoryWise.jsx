@@ -6,6 +6,7 @@ import { API_URL } from "../../url";
 
 import { useSearchParams } from "react-router-dom";
 import Loader from "../../utils/Loader";
+import LayoutAdjuster from "../../utils/LayoutAdjuster";
 const GetCourseCategoryWise = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -16,7 +17,7 @@ const GetCourseCategoryWise = () => {
 
   useEffect(() => {
     const fetchCourse = async () => {
-      setLoading(true)
+      setLoading(true);
       try {
         const formData = new FormData();
         formData.append("id", id);
@@ -28,9 +29,8 @@ const GetCourseCategoryWise = () => {
         dispatch(setCourse(response.data.data_course));
       } catch (error) {
         console.error("Error fetching courses:", error);
-      }
-      finally {
-        setLoading(false)
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -40,14 +40,15 @@ const GetCourseCategoryWise = () => {
   }, [dispatch, id, searchParams]);
 
   return (
-    <div className="w-fit flex flex-col justify-center items-center mx-auto">
-      {loading ? (<Loader />)
-        :
-        (<>
-          <h1 className="text-3xl font-bold text-center my-5">Course List</h1>
-          <table className="table-auto w-full m-5 border-2">
+    <LayoutAdjuster>
+      {loading ? (
+        <Loader />
+      ) : (
+        <div className="flex flex-col justify-center items-center my-5">
+          <h1 className="text-3xl font-bold text-center">Course List</h1>
+          <table className="table-auto w-full m-5 border">
             <thead>
-              <tr className="bg-gray-200">
+              <tr className="bg-gray-100">
                 <th className="p-2 text-sm">Id</th>
                 <th className="p-2 text-sm">Image</th>
                 <th className="p-2 text-sm">Course Name</th>
@@ -59,7 +60,7 @@ const GetCourseCategoryWise = () => {
             </thead>
             <tbody className="text-center">
               {courses.map((course) => (
-                <tr key={course.id} className="bg-gray-100">
+                <tr key={course.id} className="bg-gray-50">
                   <td className="border px-4 py-2">{course.id}</td>
                   <td className="border p-2 text-sm">
                     <img
@@ -75,7 +76,9 @@ const GetCourseCategoryWise = () => {
                     {course.course_description}
                   </td>
                   <td className="border p-2 text-sm">{course.price}</td>
-                  <td className="border p-2 text-sm">{course.course_duration}</td>
+                  <td className="border p-2 text-sm">
+                    {course.course_duration}
+                  </td>
                   <td className="border p-2 text-sm">
                     {course.total_number_of_videos}
                   </td>
@@ -83,8 +86,9 @@ const GetCourseCategoryWise = () => {
               ))}
             </tbody>
           </table>
-        </>)}
-    </div>
+        </div>
+      )}
+    </LayoutAdjuster>
   );
 };
 

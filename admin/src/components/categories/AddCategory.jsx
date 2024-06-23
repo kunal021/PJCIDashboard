@@ -21,7 +21,7 @@ function AddCategory({ fetchCategory, setAddNewCategory }) {
       );
       dispatch(addCategory(response.data));
       if (response.status == 201) {
-        toast.success("Category Added Sucessfully")
+        toast.success("Category Added Sucessfully");
       }
       fetchCategory();
     } catch (error) {
@@ -32,16 +32,13 @@ function AddCategory({ fetchCategory, setAddNewCategory }) {
   };
 
   const handleContentData = (html) => {
-    setCategoryName(html)
+    setCategoryName(html);
   };
 
   return (
     <div className="w-[70vw] flex flex-col justify-center items-center">
       <h1 className="text-center text-3xl font-bold">Add Category</h1>
-      <div
-        className="flex flex-col justify-between items-center border-2 rounded-lg border-gray-900 p-5 gap-5 w-full my-10"
-      >
-
+      <div className="flex flex-col justify-between items-center border-2 rounded-lg border-gray-900 p-5 gap-5 w-full my-10">
         <div className="w-full my-10">
           <Tiptap placeholder="Category" getHtmlData={handleContentData} />
         </div>

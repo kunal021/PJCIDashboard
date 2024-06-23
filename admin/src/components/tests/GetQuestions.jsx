@@ -7,9 +7,10 @@ import LinkButton from "../../utils/LinkButton";
 import { API_URL } from "../../url";
 import toast from "react-hot-toast";
 import Loader from "../../utils/Loader";
+import LayoutAdjuster from "../../utils/LayoutAdjuster";
 
 const GetQuestions = () => {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const question = useSelector((state) => state.question.question);
 
@@ -19,7 +20,7 @@ const GetQuestions = () => {
 
   useEffect(() => {
     const fetchCourse = async () => {
-      setLoading(true)
+      setLoading(true);
       try {
         // dispatch(setQuestion([]));
         const formData = new FormData();
@@ -38,23 +39,27 @@ const GetQuestions = () => {
       } catch (error) {
         console.error("Error fetching courses:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     };
 
     fetchCourse();
   }, [dispatch, id]);
   return (
-    <div className="w-fit flex flex-col justify-center items-center mx-auto">
-      {loading ? (<Loader />) : (
-        <>
-          <div className="flex justify-center items-center space-x-10">
-            <h1 className="text-3xl font-bold text-center my-5">Questions List</h1>
-            <LinkButton to={`/add-test-question?id=${id}`}>Add Question</LinkButton>
+    <LayoutAdjuster>
+      {loading ? (
+        <Loader />
+      ) : (
+        <div className="w-full flex flex-col justify-center items-center">
+          <div className="flex justify-center items-center my-5 space-x-10">
+            <h1 className="text-3xl font-bold text-center">Questions List</h1>
+            <LinkButton to={`/add-test-question?id=${id}`}>
+              Add Question
+            </LinkButton>
           </div>
-          <table className="table-auto w-full m-5 border-2">
+          <table className="table-auto w-full m-5 border">
             <thead>
-              <tr className="bg-gray-200">
+              <tr className="bg-gray-100">
                 <th className="p-2 text-sm">Question Id</th>
                 <th className="p-2 text-sm">Test Id</th>
                 <th className="p-2 text-sm">Subject Id</th>
@@ -69,11 +74,13 @@ const GetQuestions = () => {
             </thead>
             <tbody className="text-center">
               {question.map((question) => (
-                <tr key={question.qnsid} className="bg-gray-100">
+                <tr key={question.qnsid} className="bg-gray-50">
                   <td className="border p-2 text-sm">{question.qnsid}</td>
                   <td className="border p-2 text-sm">{question.testid}</td>
                   <td className="border p-2 text-sm">{question.subid}</td>
-                  <td className="border p-2 text-sm">{question.question_text}</td>
+                  <td className="border p-2 text-sm">
+                    {question.question_text}
+                  </td>
                   <td className="border p-2 text-sm">{question.a}</td>
                   <td className="border p-2 text-sm">{question.b}</td>
                   <td className="border p-2 text-sm">{question.c}</td>
@@ -84,9 +91,9 @@ const GetQuestions = () => {
               ))}
             </tbody>
           </table>
-        </>
+        </div>
       )}
-    </div>
+    </LayoutAdjuster>
   );
 };
 

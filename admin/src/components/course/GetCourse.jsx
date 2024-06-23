@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setCourse } from "../../redux/courses/courseSlice";
-import { deleteCourse } from "../../redux/courses/courseSlice";
+import { setCourse, deleteCourse } from "../../redux/courses/courseSlice";
 import axios from "axios";
 import LinkButton from "../../utils/LinkButton";
 import UpdateCourse from "./UpdateCourse";
@@ -11,6 +10,7 @@ import Loader from "../../utils/Loader";
 import toast from "react-hot-toast";
 import UpdateBtn from "../../utils/UpdateBtn";
 import parser from "html-react-parser";
+import LayoutAdjuster from "../../utils/LayoutAdjuster";
 
 const fetchCourse = async (dispatch, setLoading) => {
   try {
@@ -18,7 +18,6 @@ const fetchCourse = async (dispatch, setLoading) => {
     const response = await axios.post(
       `${API_URL}/admin/courses/getallcourse.php`
     );
-
     dispatch(setCourse(response.data.data_course));
   } catch (error) {
     console.error("Error fetching courses:", error);
@@ -36,29 +35,28 @@ function GetCourse() {
   const courses = useSelector((state) => state.courses.courses);
 
   useEffect(() => {
-    setLoading(true);
     fetchCourse(dispatch, setLoading);
   }, [dispatch]);
 
-  const handleDelete = async (courseId) => {
-    try {
-      const response = await axios.delete(
-        `${API_URL}/admin/courses/deletecourse.php?courseid=${courseId}`
-      );
-      if (courseId && response.data.success) {
-        dispatch(deleteCourse(response.data));
+  const handleDelete = useCallback(
+    async (courseId) => {
+      try {
+        const response = await axios.delete(
+          `${API_URL}/admin/courses/deletecourse.php?courseid=${courseId}`
+        );
+        if (response.data.success) {
+          dispatch(deleteCourse({ courseId }));
+          toast.success("Course Deleted Successfully");
+        }
+      } catch (error) {
+        toast.error(error.response?.data?.message || "Error deleting course");
       }
-      if (response.status == 200) {
-        toast.success("Course Deleted Successfully");
-      }
-      fetchCourse(dispatch);
-    } catch (error) {
-      toast.error(error.response.data.massage);
-    }
-  };
+    },
+    [dispatch]
+  );
 
   return (
-    <div className="w-fit flex flex-col justify-center items-center mx-auto">
+    <LayoutAdjuster>
       {loading ? (
         <Loader />
       ) : (
@@ -67,15 +65,15 @@ function GetCourse() {
             updateCourse
               ? "hidden"
               : "w-fit flex flex-col justify-center items-center mx-auto"
-          } `}
+          }`}
         >
-          <div className="flex justify-center items-center space-x-10">
-            <h1 className="text-3xl font-bold text-center my-5">Course List</h1>
-            <LinkButton to={"/add-course"}>Add Course</LinkButton>
+          <div className="flex justify-center items-center space-x-10 my-5">
+            <h1 className="text-3xl font-bold text-center">Course List</h1>
+            <LinkButton to="/add-course">Add Course</LinkButton>
           </div>
-          <table className="table-auto w-full m-5 border-2">
+          <table className="table-auto w-full m-5 border">
             <thead>
-              <tr className="bg-gray-200">
+              <tr className="bg-gray-100">
                 <th className="p-2 text-sm">Id</th>
                 <th className="p-2 text-sm">Image</th>
                 <th className="p-2 text-sm">Course Name</th>
@@ -89,7 +87,7 @@ function GetCourse() {
             </thead>
             <tbody className="text-center">
               {courses.map((course) => (
-                <tr key={course.id} className="bg-gray-100">
+                <tr key={course.id} className="bg-gray-50">
                   <td className="border p-2 text-sm">{course.id}</td>
                   <td className="border p-2 text-sm">
                     <img
@@ -116,17 +114,15 @@ function GetCourse() {
                   <td className="border p-2 text-sm">
                     <UpdateBtn
                       handleClick={() => {
-                        setUpdateCourse((prev) => !prev);
+                        setUpdateCourse(true);
                         setUpdateCourseData(course);
                       }}
                     />
                   </td>
                   <td className="border p-2 text-sm">
-                    <td className="border p-2 text-sm">
-                      <ConfirmDelete
-                        handleClick={() => handleDelete(course.id)}
-                      />
-                    </td>
+                    <ConfirmDelete
+                      handleClick={() => handleDelete(course.id)}
+                    />
                   </td>
                 </tr>
               ))}
@@ -136,12 +132,12 @@ function GetCourse() {
       )}
       {updateCourse && (
         <UpdateCourse
-          fetchCourse={() => fetchCourse(dispatch)}
+          fetchCourse={() => fetchCourse(dispatch, setLoading)}
           setUpdateCourse={setUpdateCourse}
           updateCourseData={updateCourseData}
         />
       )}
-    </div>
+    </LayoutAdjuster>
   );
 }
 

@@ -12,12 +12,12 @@ import Loader from "../../utils/Loader";
 import toast from "react-hot-toast";
 import ConfirmDelete from "../../utils/ConfirmDelete";
 import UpdateBtn from "../../utils/UpdateBtn";
+import LayoutAdjuster from "../../utils/LayoutAdjuster";
+import parser from "html-react-parser";
 
 const fetchCategory = async (dispatch, setLoading) => {
   try {
-    const response = await axios.get(
-      `${API_URL}/admin/category/get.php`
-    );
+    const response = await axios.get(`${API_URL}/admin/category/get.php`);
 
     dispatch(setCategory(response.data.data));
   } catch (error) {
@@ -48,28 +48,30 @@ function GetCategory() {
         dispatch(deleteCategory(response.data));
       }
       if (response.status == 200) {
-        toast.success("Category Deleted Successfully")
+        toast.success("Category Deleted Successfully");
       }
       fetchCategory(dispatch, setLoading);
     } catch (error) {
-      toast.error(error.response.data.massage)
+      toast.error(error.response.data.massage);
     }
-
   };
 
   return (
-    <div className="w-fit flex flex-col justify-center items-center m-auto">
+    <LayoutAdjuster>
       {loading ? (
         <Loader />
       ) : (
         <div
-          className={`${addNewCategory
-            ? "hidden"
-            : "w-fit flex flex-col justify-center items-center mx-auto"
-            } `}
+          className={`${
+            addNewCategory
+              ? "hidden"
+              : "w-fit flex flex-col justify-center items-center mx-auto"
+          } `}
         >
           <div className="flex justify-center items-center space-x-10">
-            <h1 className="text-center text-3xl font-bold my-5">Category List</h1>
+            <h1 className="text-center text-3xl font-bold my-5">
+              Category List
+            </h1>
             <button
               onClick={() => setAddNewCategory((prev) => !prev)}
               className="border-2 rounded-lg border-transparent bg-blue-500 p-2 text-sm font-semibold text-white hover:bg-blue-700 hover:text-white transition-all duration-500 w-full md:w-auto"
@@ -91,9 +93,15 @@ function GetCategory() {
               {category.map((item) => (
                 <tr key={item.id} className="bg-gray-100">
                   <td className="border p-2 text-sm">{item.id}</td>
-                  <td className="border p-2 text-sm">{item.name}</td>
+                  <td className="border p-2 text-sm">{parser(item.name)}</td>
                   <td className="border p-2 text-sm">
-                    <Link to={`/update-category?id=${item.id}&name=${item.name}`}><UpdateBtn /></Link>
+                    <Link
+                      to={`/update-category?id=${item.id}&name=${parser(
+                        item.name
+                      )}`}
+                    >
+                      <UpdateBtn />
+                    </Link>
                   </td>
                   <td className="border p-2 text-sm">
                     <ConfirmDelete handleClick={() => handleDelete(item.id)} />
@@ -117,7 +125,7 @@ function GetCategory() {
           setAddNewCategory={setAddNewCategory}
         />
       )}
-    </div>
+    </LayoutAdjuster>
   );
 }
 

@@ -1,11 +1,11 @@
-import DashboardPreview from "./DashboardPreview";
+import SideBar from "./DashboardPreviewSmall";
 // import DashboardPreviewSmall from "./DashboardPreviewSmall";
 
 function Dashboard() {
   return (
     <div className="sticky z-[100]">
-      <DashboardPreview />
-      {/* <DashboardPreviewSmall /> */}
+      {/* <DashboardPreview /> */}
+      <SideBar />
     </div>
   );
 }
