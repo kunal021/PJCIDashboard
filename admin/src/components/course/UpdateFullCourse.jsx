@@ -62,10 +62,10 @@ function UpdateFullCourse({
         toast.success("Full Course Updated Sucessfully");
       }
       fetchFullCourse();
+      setUpdateCourse(false);
     } catch (error) {
       console.error("Error fetching courses:", error);
     }
-    setUpdateCourse(false);
   };
 
   return (

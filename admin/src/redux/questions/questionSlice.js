@@ -20,6 +20,8 @@ export const questionSlice = createSlice({
       );
       if (index !== -1) {
         state.question[index] = action.payload;
+      } else {
+        throw new Error("Question ID not found:", action.payload.id);
       }
     },
     deleteQuestion: (state, action) => {

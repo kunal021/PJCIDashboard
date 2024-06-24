@@ -55,10 +55,10 @@ function UpdateCourse({ fetchCourse, setUpdateCourse, updateCourseData }) {
         toast.success("Course Updated Sucessfully");
       }
       fetchCourse();
+      setUpdateCourse((perv) => !perv);
     } catch (error) {
       console.error("Error fetching courses:", error);
     }
-    setUpdateCourse((perv) => !perv);
   };
 
   return (

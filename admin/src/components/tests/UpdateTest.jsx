@@ -85,12 +85,11 @@ function UpdateTest({ fetchTest, updateTestData, setUpdateTest }) {
       if (response.status == 201) {
         toast.success("Test Updated Sucessfully");
       }
-      console.log(response);
       fetchTest();
+      setUpdateTest((perv) => !perv);
     } catch (error) {
       console.error("Error fetching courses:", error);
     }
-    setUpdateTest((perv) => !perv);
   };
 
   return (
