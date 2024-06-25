@@ -104,9 +104,11 @@ const SideBar = () => {
     }
   };
 
+  // bg-[#001529]
+
   return (
     <>
-      <div className="fixed top-0 left-0 h-screen bg-[#001529] overflow-auto flex flex-col items-center">
+      <div className="fixed top-0 left-0 h-screen bg-[#001529] border-r overflow-auto flex flex-col items-center">
         <img
           src="/logo.jpg"
           alt="logo"

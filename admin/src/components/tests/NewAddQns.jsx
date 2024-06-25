@@ -97,7 +97,7 @@ function NewAddQns() {
           {questions.map((formData, index) => (
             <div
               key={index}
-              className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border-2 border-gray-900 w-full"
+              className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border border-gray-400 w-full"
             >
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -117,13 +117,18 @@ function NewAddQns() {
                   key={option}
                   className="flex flex-col justify-center items-center md:flex-row md:space-x-24"
                 >
-                  <Tiptap
-                    initialContent={formData[option]}
-                    getHtmlData={(content) =>
-                      handleChange(content, index, option)
-                    }
-                    placeholder={`Option ${option.toUpperCase()}`}
-                  />
+                  <div className="flex flex-col justify-start items-start w-full">
+                    <label className="block text-gray-700 text-sm font-bold my-2">
+                      Option {option.toUpperCase()}
+                    </label>
+                    <Tiptap
+                      initialContent={formData[option]}
+                      getHtmlData={(content) =>
+                        handleChange(content, index, option)
+                      }
+                      placeholder={`Option ${option.toUpperCase()}`}
+                    />
+                  </div>
                   <input
                     type="radio"
                     id={`ans_${option}${index}`}

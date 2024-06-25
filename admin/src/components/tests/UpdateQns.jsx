@@ -92,7 +92,7 @@ function UpdateQns({ fetchQuestions, setUpdateQuestion, updatedQuestionData }) {
       <div className="flex flex-col justify-center items-center mt-5 w-full">
         <div className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border-2 border-gray-900 w-full">
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
+            <label className="block text-gray-700 text-sm font-bold my-2">
               Question
             </label>
             <Tiptap
@@ -103,11 +103,16 @@ function UpdateQns({ fetchQuestions, setUpdateQuestion, updatedQuestionData }) {
           </div>
 
           <div className="flex flex-col justify-center items-center md:flex-row md:space-x-24">
-            <Tiptap
-              initialContent={optionA}
-              getHtmlData={getOptionAData}
-              placeholder={`Option A`}
-            />
+            <div className="flex flex-col justify-start items-start w-full">
+              <label className="block text-gray-700 text-sm font-bold my-2">
+                Option A
+              </label>
+              <Tiptap
+                initialContent={optionA}
+                getHtmlData={getOptionAData}
+                placeholder={`Option A`}
+              />
+            </div>
             <input
               type="radio"
               id={`ans_a`}
@@ -122,11 +127,16 @@ function UpdateQns({ fetchQuestions, setUpdateQuestion, updatedQuestionData }) {
             </label>
           </div>
           <div className="flex flex-col justify-center items-center md:flex-row md:space-x-24">
-            <Tiptap
-              initialContent={optionB}
-              getHtmlData={getOptionBData}
-              placeholder={`Option B`}
-            />
+            <div className="flex flex-col justify-start items-start w-full">
+              <label className="block text-gray-700 text-sm font-bold my-2">
+                Option B
+              </label>
+              <Tiptap
+                initialContent={optionB}
+                getHtmlData={getOptionBData}
+                placeholder={`Option B`}
+              />
+            </div>
             <input
               type="radio"
               id={`ans_b`}
@@ -141,11 +151,16 @@ function UpdateQns({ fetchQuestions, setUpdateQuestion, updatedQuestionData }) {
             </label>
           </div>
           <div className="flex flex-col justify-center items-center md:flex-row md:space-x-24">
-            <Tiptap
-              initialContent={optionC}
-              getHtmlData={getOptionCData}
-              placeholder={`Option C`}
-            />
+            <div className="flex flex-col justify-start items-start w-full">
+              <label className="block text-gray-700 text-sm font-bold my-2">
+                Option C
+              </label>
+              <Tiptap
+                initialContent={optionC}
+                getHtmlData={getOptionCData}
+                placeholder={`Option C`}
+              />
+            </div>
             <input
               type="radio"
               id={`ans_c`}
@@ -160,11 +175,16 @@ function UpdateQns({ fetchQuestions, setUpdateQuestion, updatedQuestionData }) {
             </label>
           </div>
           <div className="flex flex-col justify-center items-center md:flex-row md:space-x-24">
-            <Tiptap
-              initialContent={optionD}
-              getHtmlData={getOptionDData}
-              placeholder={`Option D`}
-            />
+            <div className="flex flex-col justify-start items-start w-full">
+              <label className="block text-gray-700 text-sm font-bold my-2">
+                Option D
+              </label>
+              <Tiptap
+                initialContent={optionD}
+                getHtmlData={getOptionDData}
+                placeholder={`Option D`}
+              />
+            </div>
             <input
               type="radio"
               id={`ans_d`}
@@ -179,11 +199,16 @@ function UpdateQns({ fetchQuestions, setUpdateQuestion, updatedQuestionData }) {
             </label>
           </div>
           <div className="flex flex-col justify-center items-center md:flex-row md:space-x-24">
-            <Tiptap
-              initialContent={optionE}
-              getHtmlData={getOptionEData}
-              placeholder={`Option E`}
-            />
+            <div className="flex flex-col justify-start items-start w-full">
+              <label className="block text-gray-700 text-sm font-bold my-2">
+                Option E
+              </label>
+              <Tiptap
+                initialContent={optionE}
+                getHtmlData={getOptionEData}
+                placeholder={`Option E`}
+              />
+            </div>
             <input
               type="radio"
               id={`ans_e`}
@@ -202,7 +227,7 @@ function UpdateQns({ fetchQuestions, setUpdateQuestion, updatedQuestionData }) {
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               onClick={handleSubmit}
             >
-              Update Test
+              Update Question
             </button>
           </div>
         </div>

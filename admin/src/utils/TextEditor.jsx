@@ -38,7 +38,7 @@ import {
 import { useState } from "react";
 
 const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
-  const [showToolBar, setShowToolBar] = useState(false);
+  const [showToolBar, setShowToolBar] = useState(true);
   const [headingOptionOpen, setHeadingOptionOpen] = useState(false);
   const [fontSizeOpen, setFontSizeOpen] = useState(false);
 
@@ -63,8 +63,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
     },
     editorProps: {
       attributes: {
-        class:
-          "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl p-2 h-80 focus:outline-none",
+        class: `prose prose-sm sm:prose lg:prose-lg xl:prose-2xl p-2 focus:outline-none`,
       },
     },
   });
@@ -102,26 +101,26 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
     editor.chain().focus().unsetFontFamily().run();
 
   return (
-    <div className="flex flex-col justify-center items-center h-full w-full p-4 space-y-5">
-      <div className="flex space-x-2 justify-start items-center h-10 w-full">
+    <div className="flex flex-col justify-center items-center h-full w-full p-2 gap-2">
+      <div className="flex gap-1 justify-start items-center h-10 w-full">
         <div
           onClick={() => setShowToolBar((prev) => !prev)}
-          className="flex justify-center items-center z-30 border-2 rounded-full py-1 md:py-0 md:p-1 border-black cursor-pointer"
+          className="flex justify-center items-center z-30 border rounded-full py-1 md:p-[2px] border-gray-300 cursor-pointer"
         >
           {showToolBar ? (
-            <Minus className="h-4 md:h-8" />
+            <Minus color="#475569" className="h-4 md:h-6" />
           ) : (
-            <Plus className="h-4 md:h-8" />
+            <Plus color="#475569" className="h-4 md:h-6" />
           )}
         </div>
         {showToolBar && (
-          <div className="flex flex-col flex-wrap md:flex-row justify-center lg:justify-between items-start z-30 lg:border-2 lg:border-black space-y-1 md:space-x-4 md:space-y-0 lg:rounded-lg px-2 py-[2px]">
-            <div className="flex justify-between items-center space-x-1">
+          <div className="flex flex-col flex-wrap md:flex-row justify-center lg:justify-between items-center z-30 lg:border lg:border-gray-300 gap-[6px] lg:rounded-lg px-[2px]">
+            <div className="flex justify-between items-center gap-[2px]">
               <button
                 onClick={handleToggleBold}
                 className={editor.isActive("bold") ? "is-active" : "not-active"}
               >
-                <Bold className="h-4 md:h-8" />
+                <Bold className="h-4 md:h-5" />
               </button>
               <button
                 onClick={handleToggleItalic}
@@ -129,7 +128,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                   editor.isActive("italic") ? "is-active" : "not-active"
                 }
               >
-                <Italic className="h-4 md:h-8" />
+                <Italic className="h-4 md:h-5" />
               </button>
               <button
                 onClick={handleToggleUnderline}
@@ -137,23 +136,23 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                   editor.isActive("underline") ? "is-active" : "not-active"
                 }
               >
-                <ULIcon className="h-4 md:h-8" />
+                <ULIcon className="h-4 md:h-5" />
               </button>
 
               <div className="relative flex justify-between items-center space-y-1">
                 <button
                   onClick={handleToggleHeadingOptions}
-                  className="flex border-2 rounded-md border-black p-[1px] "
+                  className="flex border rounded-md border-gray-300 p-[1px] "
                 >
-                  <HIcon className="h-4 md:h-8" />
+                  <HIcon className="h-4 md:h-5" />
                   {headingOptionOpen ? (
-                    <ChevronUp className="h-4 md:h-8" />
+                    <ChevronUp className="h-4 md:h-5" />
                   ) : (
-                    <ChevronDown className="h-4 md:h-8" />
+                    <ChevronDown className="h-4 md:h-5" />
                   )}
                 </button>
                 {headingOptionOpen && (
-                  <div className="absolute flex flex-col justify-between items-center top-7 left-[6px] border-2 rounded-md border-black bg-gray-100 p-1">
+                  <div className="absolute flex flex-col justify-between items-center top-7 left-[6px] border rounded-md border-gray-300 bg-gray-50 p-1">
                     <button
                       onClick={() => handleHeadingLevel(1)}
                       className={
@@ -162,7 +161,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                           : "not-active"
                       }
                     >
-                      <Heading1 className="h-4 md:h-8" />
+                      <Heading1 className="h-4 md:h-5" />
                     </button>
                     <button
                       onClick={() => handleHeadingLevel(2)}
@@ -172,7 +171,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                           : "not-active"
                       }
                     >
-                      <Heading2 className="h-4 md:h-8" />
+                      <Heading2 className="h-4 md:h-5" />
                     </button>
                     <button
                       onClick={() => handleHeadingLevel(3)}
@@ -182,7 +181,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                           : "not-active"
                       }
                     >
-                      <Heading3 className="h-4 md:h-8" />
+                      <Heading3 className="h-4 md:h-5" />
                     </button>
                     <button
                       onClick={() => handleHeadingLevel(4)}
@@ -192,7 +191,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                           : "not-active"
                       }
                     >
-                      <Heading4 className="h-4 md:h-8" />
+                      <Heading4 className="h-4 md:h-5" />
                     </button>
                     <button
                       onClick={() => handleHeadingLevel(5)}
@@ -202,7 +201,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                           : "not-active"
                       }
                     >
-                      <Heading5 className="h-4 md:h-8" />
+                      <Heading5 className="h-4 md:h-5" />
                     </button>
                     <button
                       onClick={() => handleHeadingLevel(6)}
@@ -212,28 +211,28 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                           : "not-active"
                       }
                     >
-                      <Heading6 className="h-4 md:h-8" />
+                      <Heading6 className="h-4 md:h-5" />
                     </button>
                   </div>
                 )}
               </div>
             </div>
-            <hr className="hidden lg:block bg-gray-500 h-8 w-[2px]"></hr>
-            <div className="flex justify-between items-center space-x-1">
+            <hr className="hidden lg:block bg-gray-300 h-10 w-[1px]"></hr>
+            <div className="flex justify-between items-center gap-[2px]">
               <div className="relative flex justify-between items-center space-y-1">
                 <button
                   onClick={handleToggleFontSizeOptions}
-                  className="flex border-2 rounded-md border-black p-[1px] "
+                  className="flex border rounded-md border-gray-300 p-[1px] "
                 >
-                  <ALargeSmall className="h-4 md:h-8" />
+                  <ALargeSmall className="h-4 md:h-5" />
                   {fontSizeOpen ? (
-                    <ChevronUp className="h-4 md:h-8" />
+                    <ChevronUp className="h-4 md:h-5" />
                   ) : (
-                    <ChevronDown className="h-4 md:h-8" />
+                    <ChevronDown className="h-4 md:h-5" />
                   )}
                 </button>
                 {fontSizeOpen && (
-                  <div className="absolute font-bold flex flex-col justify-between items-center top-7 -left-[5px] border-2 rounded-md border-black bg-gray-100 p-1">
+                  <div className="absolute font-bold flex flex-col justify-between items-center top-7 -left-[5px] border rounded-md border-gray-300 bg-gray-50 p-1">
                     {[
                       "8",
                       "9",
@@ -266,7 +265,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                           onClick={handleUnsetFontSize}
                           className="hover:bg-gray-300 rounded-sm"
                         >
-                          <X className="h-3 md:h-4" />
+                          <X className="h-3" />
                         </button>
                       </div>
                     ))}
@@ -279,7 +278,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                   editor.isActive("orderedList") ? "is-active" : "not-active"
                 }
               >
-                <ListOrdered className="h-4 md:h-8" />
+                <ListOrdered className="h-4 md:h-5" />
               </button>
               <button
                 onClick={handleToggleBulletList}
@@ -287,7 +286,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                   editor.isActive("bulletList") ? "is-active" : "not-active"
                 }
               >
-                <LIIcon className="h-4 md:h-8" />
+                <LIIcon className="h-4 md:h-5" />
               </button>
               <button
                 onClick={handleToggleSubscript}
@@ -295,7 +294,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                   editor.isActive("subscript") ? "is-active" : "not-active"
                 }
               >
-                <SUBIcon className="h-4 md:h-8" />
+                <SUBIcon className="h-4 md:h-5" />
               </button>
               <button
                 onClick={handleToggleSuperscript}
@@ -303,11 +302,11 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                   editor.isActive("superscript") ? "is-active" : "not-active"
                 }
               >
-                <SUPIcon className="h-4 md:h-8" />
+                <SUPIcon className="h-4" />
               </button>
             </div>
-            <hr className="hidden lg:block bg-gray-500 h-8 w-[2px]"></hr>
-            <div className="relative flex justify-between items-center space-y-1">
+            <hr className="hidden lg:block bg-gray-300 h-10 w-[1px]"></hr>
+            <div className="relative flex justify-between items-center gap-[2px]">
               <button
                 onClick={() => handleSetFontFamily("LMG ArunA")}
                 className={
@@ -319,14 +318,16 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                 Guj
               </button>
               <button onClick={handleUnsetFontFamily}>
-                <X className="h-5" />
+                <X className="h-4" />
               </button>
             </div>
           </div>
         )}
       </div>
-      <div className={`w-full border border-gray-300 rounded-md`}>
-        <EditorContent editor={editor} className="overflow-y-auto h-20" />
+      <div
+        className={`w-full border border-gray-300 rounded-md overflow-y-auto`}
+      >
+        <EditorContent editor={editor} />
       </div>
     </div>
   );

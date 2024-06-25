@@ -17,17 +17,17 @@
 
 .is-active {
     background: #d1d5db;
-    padding: 4px;
-    border-radius: 4px;
+    padding: 1px;
+    border-radius: 2px;
 }
 
 .not-active {
-    padding: 4px;
+    padding: 1px;
 }
 
 .not-active:hover {
-    background: #d1d5db;
-    border-radius: 4px;
+    background: #e1e1e1;
+    border-radius: 3px;
 }
 
 @font-face {

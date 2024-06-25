@@ -96,9 +96,9 @@ function UpdateTest({ fetchTest, updateTestData, setUpdateTest }) {
     <div className="w-[80%] h-full flex flex-col justify-center items-center my-5">
       <h1 className="text-center text-3xl font-bold">Update Test</h1>
       <div className="flex flex-col justify-center items-center mt-5 w-full">
-        <div className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border-2 border-gray-900 w-full">
+        <div className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border border-gray-400 w-full">
           <p className="block text-gray-700 text-sm font-bold">Name</p>
-          <div className="h-[100px] w-full my-6">
+          <div className="w-full my-2">
             <Tiptap
               placeholder="Category"
               getHtmlData={getNameData}
@@ -106,7 +106,7 @@ function UpdateTest({ fetchTest, updateTestData, setUpdateTest }) {
             />
           </div>
           <p className="block text-gray-700 text-sm font-bold">Description</p>
-          <div className="h-[100px] w-full my-6">
+          <div className="w-full my-2">
             <Tiptap
               placeholder={"Category"}
               getHtmlData={getDescriptionData}

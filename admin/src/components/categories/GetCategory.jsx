@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 import ConfirmDelete from "../../utils/ConfirmDelete";
 import UpdateBtn from "../../utils/UpdateBtn";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
-import parser from "html-react-parser";
+// import parser from "html-react-parser";
 
 const fetchCategory = async (dispatch, setLoading) => {
   try {
@@ -93,12 +93,10 @@ function GetCategory() {
               {category.map((item) => (
                 <tr key={item.id} className="bg-gray-100">
                   <td className="border p-2 text-sm">{item.id}</td>
-                  <td className="border p-2 text-sm">{parser(item.name)}</td>
+                  <td className="border p-2 text-sm">{item.name}</td>
                   <td className="border p-2 text-sm">
                     <Link
-                      to={`/update-category?id=${
-                        item.id
-                      }&name=${encodeURIComponent(item.name)}`}
+                      to={`/update-category?id=${item.id}&name=${item.name}`}
                     >
                       <UpdateBtn />
                     </Link>
