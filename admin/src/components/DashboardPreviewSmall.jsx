@@ -10,7 +10,7 @@ import {
 } from "@ant-design/icons";
 import { Button, Menu } from "antd";
 import "tailwindcss/tailwind.css"; // Make sure to import Tailwind CSS
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleCollapsed } from "../redux/sidebar/sidebarSlice"; // Adjust the import path
 
@@ -69,16 +69,51 @@ const items = [
     ],
   },
   {
-    key: "10",
-    icon: <SettingOutlined />,
+    key: "sub4",
     label: "Settings",
-    link: "/settings",
+    icon: <SettingOutlined />,
+    children: [
+      {
+        key: "11",
+        label: "Terms & Conditions",
+        link: "/terms-and-conditions",
+      },
+      {
+        key: "12",
+        label: "Privacy Policy",
+        link: "/privacy-policy",
+      },
+    ],
   },
 ];
 
 const SideBar = () => {
   const dispatch = useDispatch();
   const collapsed = useSelector((state) => state.sidebar.collapsed);
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  const getSelectedKeys = () => {
+    const selectedItem = items.find((item) =>
+      item.link
+        ? item.link === currentPath
+        : item.children.find((child) => child.link === currentPath)
+    );
+    return !selectedItem.key.includes("sub")
+      ? [selectedItem.key]
+      : [selectedItem.children.find((child) => child.link === currentPath).key];
+  };
+
+  const getOpenKeys = () => {
+    const item = items.filter((item) => item.key.includes("sub"));
+    const selectedItem = item.find((item) =>
+      item.children.find((child) => child.link === currentPath)
+    );
+    if (selectedItem && selectedItem.children) {
+      return [selectedItem.key]; // Open the parent submenu if it has children
+    }
+    return [];
+  };
 
   const toggleSidebar = () => {
     dispatch(toggleCollapsed());
@@ -117,12 +152,12 @@ const SideBar = () => {
           } h-20 w-36 rounded-md mt-5`}
         />
         <Menu
-          // defaultSelectedKeys={["1"]}
-          // defaultOpenKeys={["sub1"]}
+          defaultSelectedKeys={getSelectedKeys}
+          defaultOpenKeys={getOpenKeys}
           mode="inline"
           theme="dark"
           inlineCollapsed={collapsed}
-          className={`${!collapsed && "w-64"} pt-5`}
+          className={`${!collapsed && "w-64"} pt-5 mb-5`}
         >
           {items.map((item) => renderMenuItem(item))}
         </Menu>

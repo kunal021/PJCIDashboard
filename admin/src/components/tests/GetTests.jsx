@@ -13,6 +13,7 @@ import ConfirmDelete from "../../utils/ConfirmDelete";
 import toast from "react-hot-toast";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import parser from "html-react-parser";
+import { Avatar } from "antd";
 
 const fetchTest = async (dispatch, setLoading) => {
   try {
@@ -67,14 +68,14 @@ function GetTest() {
           className={`${
             updateTest
               ? "hidden"
-              : "w-fit flex flex-col justify-center items-center mx-auto"
+              : "w-full flex flex-col justify-center items-center mx-auto"
           } `}
         >
           <div className="flex justify-center items-center my-5 space-x-10">
             <h1 className="text-3xl font-bold text-center">Test List</h1>
             <LinkButton to={"/add-test"}>Add Test</LinkButton>
           </div>
-          <table className="table-auto w-full m-5 border-collapse border">
+          {/* <table className="table-auto w-full m-5 border-collapse border">
             <thead>
               <tr className="bg-gray-100">
                 <th className="p-2 text-sm">Test Id</th>
@@ -138,7 +139,52 @@ function GetTest() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table> */}
+
+          <div className="flex flex-wrap justify-center items-center w-full">
+            {test.map((test) => (
+              <Link
+                to={`/get-test-question?id=${test.test_id}`}
+                key={test.test_id}
+                className="flex justify-center items-center w-[40%] border rounded-md border-gray-300 m-2 p-3"
+              >
+                <div className="flex justify-start items-center gap-4 w-full">
+                  <div className="flex justify-center items-center w-[10%]">
+                    <Avatar className="bg-black text-white">
+                      {test.test_id}
+                    </Avatar>
+                  </div>
+                  <div className="flex flex-col justify-start items-center gap-2 w-full">
+                    <div className="flex justify-start items-center font-bold w-full">
+                      <p>{parser(test.test_name)}</p>
+                    </div>
+                    <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-700 border-slate-600" />
+                    <div className="flex justify-start items-center gap-1 w-full text-xs font-medium">
+                      <div className="flex justify-start items-start gap-1 w-full">
+                        <p>Start Date:</p>
+                        <p>{test.test_date}</p>
+                      </div>
+                      <div className="flex justify-start items-start gap-1 w-full">
+                        <p>Start Time:</p>
+                        <p>{test.start_time}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col justify-center items-end gap-4 w-[10%]">
+                  <UpdateBtn
+                    handleClick={() => {
+                      setUpdateTest((prev) => !prev);
+                      setUpdateTestData(test);
+                    }}
+                  />
+                  <ConfirmDelete
+                    handleClick={() => handleDelete(test.test_id)}
+                  />
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       )}
       {updateTest && (
