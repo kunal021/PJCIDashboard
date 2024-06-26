@@ -5,7 +5,7 @@ import "../../utils/addQns.css";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useSearchParams } from "react-router-dom";
-import LinkButton from "../../utils/LinkButton";
+// import LinkButton from "../../utils/LinkButton";
 import { API_URL } from "../../url";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import Tiptap from "../../utils/TextEditor";
@@ -78,7 +78,8 @@ function NewAddQns() {
         `${API_URL}/admin/test/addqnsintest.php`,
         dataToSend
       );
-      dispatch(addQuestion(response.data));
+      console.log(response);
+      dispatch(addQuestion(response.data.data));
       if (response.status === 201) {
         toast.success("Question Added Successfully");
       }
@@ -178,9 +179,12 @@ function NewAddQns() {
             >
               Submit
             </button>
-            <LinkButton to={`/get-test-question?id=${id}`} use={"close"}>
+            <button
+              onClick={() => window.history.back()}
+              className="text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline bg-red-500 hover:bg-red-700"
+            >
               Close
-            </LinkButton>
+            </button>
           </div>
         </div>
       </div>

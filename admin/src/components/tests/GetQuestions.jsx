@@ -24,7 +24,7 @@ const fetchQuestions = async (dispatch, setLoading, id) => {
       { headers: "content-type/form-data" }
     );
 
-    // console.log(response);
+    console.log(response);
 
     if (response.data) {
       dispatch(setQuestion(response.data.data));
@@ -88,56 +88,61 @@ const GetQuestions = () => {
                 </tr>
               </thead>
               <tbody className="text-center">
-                {question.map((question, idx) => (
-                  <tr key={idx} className="bg-gray-50">
-                    <td className="border p-2 text-sm">{question.qnsid}</td>
-                    <td className="border p-2 text-sm">{question.testid}</td>
-                    <td className="border p-2 text-sm">{question.subid}</td>
-                    <td className="border p-2 text-sm">
-                      {typeof question.question_text === "string"
-                        ? parser(question.question_text)
-                        : question.question_text}
-                    </td>
-                    <td className="border p-2 text-sm">
-                      {typeof question.a === "string"
-                        ? parser(question.a)
-                        : question.a}
-                    </td>
-                    <td className="border p-2 text-sm">
-                      {typeof question.b === "string"
-                        ? parser(question.b)
-                        : question.b}
-                    </td>
-                    <td className="border p-2 text-sm">
-                      {typeof question.c === "string"
-                        ? parser(question.c)
-                        : question.c}
-                    </td>
-                    <td className="border p-2 text-sm">
-                      {typeof question.d === "string"
-                        ? parser(question.d)
-                        : question.d}
-                    </td>
-                    <td className="border p-2 text-sm">
-                      {typeof question.e === "string"
-                        ? parser(question.e)
-                        : question.e}
-                    </td>
-                    <td className="border p-2 text-sm">
-                      {typeof question.answer === "string"
-                        ? parser(question.answer)
-                        : question.answer}
-                    </td>
-                    <td className="border p-2 text-sm">
-                      <UpdateBtn
-                        handleClick={() => {
-                          setUpdateQuestion((prev) => !prev);
-                          setUpdateQuestionData(question);
-                        }}
-                      />
-                    </td>
-                  </tr>
-                ))}
+                {question.map(
+                  (question, idx) =>
+                    question && (
+                      <tr key={idx} className="bg-gray-50">
+                        <td className="border p-2 text-sm">{question.qnsid}</td>
+                        <td className="border p-2 text-sm">
+                          {question.testid}
+                        </td>
+                        <td className="border p-2 text-sm">{question.subid}</td>
+                        <td className="border p-2 text-sm">
+                          {typeof question.question_text === "string"
+                            ? parser(question.question_text)
+                            : question.question_text}
+                        </td>
+                        <td className="border p-2 text-sm">
+                          {typeof question.a === "string"
+                            ? parser(question.a)
+                            : question.a}
+                        </td>
+                        <td className="border p-2 text-sm">
+                          {typeof question.b === "string"
+                            ? parser(question.b)
+                            : question.b}
+                        </td>
+                        <td className="border p-2 text-sm">
+                          {typeof question.c === "string"
+                            ? parser(question.c)
+                            : question.c}
+                        </td>
+                        <td className="border p-2 text-sm">
+                          {typeof question.d === "string"
+                            ? parser(question.d)
+                            : question.d}
+                        </td>
+                        <td className="border p-2 text-sm">
+                          {typeof question.e === "string"
+                            ? parser(question.e)
+                            : question.e}
+                        </td>
+                        <td className="border p-2 text-sm">
+                          {typeof question.answer === "string"
+                            ? parser(question.answer)
+                            : question.answer}
+                        </td>
+                        <td className="border p-2 text-sm">
+                          <UpdateBtn
+                            handleClick={() => {
+                              setUpdateQuestion((prev) => !prev);
+                              setUpdateQuestionData(question);
+                            }}
+                          />
+                        </td>
+                      </tr>
+                    )
+                )}
               </tbody>
             </table>
           ) : (
