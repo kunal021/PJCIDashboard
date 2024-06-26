@@ -81,6 +81,7 @@ function UpdateTest({ fetchTest, updateTestData, setUpdateTest }) {
         formDataToSend,
         { headers: { "content-type": "multipart/form-data" } }
       );
+      console.log(response.data);
       dispatch(updateTest(response.data));
       if (response.status == 201) {
         toast.success("Test Updated Sucessfully");

@@ -99,9 +99,16 @@ const SideBar = () => {
         ? item.link === currentPath
         : item.children.find((child) => child.link === currentPath)
     );
-    return !selectedItem.key.includes("sub")
-      ? [selectedItem.key]
-      : [selectedItem.children.find((child) => child.link === currentPath).key];
+    if (selectedItem) {
+      console.log(selectedItem);
+      return selectedItem.key.includes("sub")
+        ? [
+            selectedItem.children.find((child) => child.link === currentPath)
+              .key,
+          ]
+        : [selectedItem.key];
+    }
+    return [];
   };
 
   const getOpenKeys = () => {

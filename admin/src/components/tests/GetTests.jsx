@@ -20,7 +20,7 @@ const fetchTest = async (dispatch, setLoading) => {
     setLoading(true);
     const response = await axios.post(`${API_URL}/admin/test/getalltest.php`);
     dispatch(setTest(response.data.data));
-    console.log(response);
+    // console.log(response);
   } catch (error) {
     console.error("Error fetching courses:", error);
   } finally {
@@ -46,13 +46,14 @@ function GetTest() {
       const response = await axios.delete(
         `${API_URL}/admin/test/deletetest.php?testid=${testId}`
       );
+      console.log(response);
       if (testId && response.data.success) {
         dispatch(deleteTest(response.data));
       }
       if (response.status == 201) {
         toast.success("Test Deleted Successfully");
       }
-      fetchTest(dispatch);
+      fetchTest(dispatch, setLoading);
     } catch (error) {
       toast.error(error.response.data.massage);
       // console.error("Error fetching category:", error);
@@ -141,24 +142,31 @@ function GetTest() {
             </tbody>
           </table> */}
 
-          <div className="flex flex-wrap justify-center items-center w-full">
-            {test.map((test) => (
-              <Link
-                to={`/get-test-question?id=${test.test_id}`}
-                key={test.test_id}
-                className="flex justify-center items-center w-[40%] border rounded-md border-gray-300 m-2 p-3"
+          <div className="flex flex-col justify-center items-center w-full">
+            {test.map((test, idx) => (
+              <div
+                key={idx}
+                className="flex justify-center items-center w-[80%] border rounded-md border-gray-300 m-2 p-3"
               >
-                <div className="flex justify-start items-center gap-4 w-full">
-                  <div className="flex justify-center items-center w-[10%]">
-                    <Avatar className="bg-black text-white">
+                <Link
+                  to={`/get-test-question?id=${test.test_id}`}
+                  className="flex justify-start items-center gap-4 w-full"
+                >
+                  <div className="flex justify-center items-center w-[10%] text-">
+                    <Avatar className="bg-gray-500 text-white">
                       {test.test_id}
                     </Avatar>
                   </div>
                   <div className="flex flex-col justify-start items-center gap-2 w-full">
                     <div className="flex justify-start items-center font-bold w-full">
-                      <p>{parser(test.test_name)}</p>
+                      <div>
+                        {typeof test.test_name === "string"
+                          ? parser(test.test_name)
+                          : test.test_name}
+                      </div>
+                      {/* {console.log(typeof test.test_name)} */}
                     </div>
-                    <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-700 border-slate-600" />
+                    <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
                     <div className="flex justify-start items-center gap-1 w-full text-xs font-medium">
                       <div className="flex justify-start items-start gap-1 w-full">
                         <p>Start Date:</p>
@@ -170,7 +178,7 @@ function GetTest() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </Link>
                 <div className="flex flex-col justify-center items-end gap-4 w-[10%]">
                   <UpdateBtn
                     handleClick={() => {
@@ -182,7 +190,7 @@ function GetTest() {
                     handleClick={() => handleDelete(test.test_id)}
                   />
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         </div>

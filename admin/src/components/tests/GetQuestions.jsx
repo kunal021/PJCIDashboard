@@ -24,6 +24,8 @@ const fetchQuestions = async (dispatch, setLoading, id) => {
       { headers: "content-type/form-data" }
     );
 
+    // console.log(response);
+
     if (response.data) {
       dispatch(setQuestion(response.data.data));
     } else {
@@ -85,21 +87,45 @@ const GetQuestions = () => {
               </tr>
             </thead>
             <tbody className="text-center">
-              {question.map((question) => (
-                <tr key={question.qnsid} className="bg-gray-50">
+              {question.map((question, idx) => (
+                <tr key={idx} className="bg-gray-50">
                   <td className="border p-2 text-sm">{question.qnsid}</td>
                   <td className="border p-2 text-sm">{question.testid}</td>
                   <td className="border p-2 text-sm">{question.subid}</td>
                   <td className="border p-2 text-sm">
-                    {parser(question.question_text)}
+                    {typeof question.question_text === "string"
+                      ? parser(question.question_text)
+                      : question.question_text}
                   </td>
-                  <td className="border p-2 text-sm">{parser(question.a)}</td>
-                  <td className="border p-2 text-sm">{parser(question.b)}</td>
-                  <td className="border p-2 text-sm">{parser(question.c)}</td>
-                  <td className="border p-2 text-sm">{parser(question.d)}</td>
-                  <td className="border p-2 text-sm">{parser(question.e)}</td>
                   <td className="border p-2 text-sm">
-                    {parser(question.answer)}
+                    {typeof question.a === "string"
+                      ? parser(question.a)
+                      : question.a}
+                  </td>
+                  <td className="border p-2 text-sm">
+                    {typeof question.b === "string"
+                      ? parser(question.b)
+                      : question.b}
+                  </td>
+                  <td className="border p-2 text-sm">
+                    {typeof question.c === "string"
+                      ? parser(question.c)
+                      : question.c}
+                  </td>
+                  <td className="border p-2 text-sm">
+                    {typeof question.d === "string"
+                      ? parser(question.d)
+                      : question.d}
+                  </td>
+                  <td className="border p-2 text-sm">
+                    {typeof question.e === "string"
+                      ? parser(question.e)
+                      : question.e}
+                  </td>
+                  <td className="border p-2 text-sm">
+                    {typeof question.answer === "string"
+                      ? parser(question.answer)
+                      : question.answer}
                   </td>
                   <td className="border p-2 text-sm">
                     <UpdateBtn
@@ -117,7 +143,7 @@ const GetQuestions = () => {
       )}
       {updatedQuestion && (
         <UpdateQns
-          fetchQuestions={() => fetchQuestions(dispatch, setLoading)}
+          fetchQuestions={() => fetchQuestions(dispatch, setLoading, id)}
           setUpdateQuestion={setUpdateQuestion}
           updatedQuestionData={updatedQuestionData}
         />

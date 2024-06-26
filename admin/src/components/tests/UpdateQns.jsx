@@ -48,8 +48,6 @@ function UpdateQns({ fetchQuestions, setUpdateQuestion, updatedQuestionData }) {
     setAnswer(e.target.value);
   };
 
-  console.log(updatedQuestionData.qnsid);
-
   const handleSubmit = async () => {
     try {
       const formDataToSend = new FormData();
@@ -73,8 +71,8 @@ function UpdateQns({ fetchQuestions, setUpdateQuestion, updatedQuestionData }) {
         `${API_URL}/admin/test/updateqns.php`,
         formDataToSend
       );
-      console.log(response);
-      dispatch(updateQuestion(response.data.data));
+      // console.log(response.data);
+      dispatch(updateQuestion(response.data));
       if (response.status === 201) {
         toast.success("Question Updated Successfully");
       }
@@ -83,7 +81,7 @@ function UpdateQns({ fetchQuestions, setUpdateQuestion, updatedQuestionData }) {
       console.error("Error fetching Question:", error);
       toast.error("An error occurred while adding the question.");
     }
-    // setUpdateQuestion((prev) => !prev);
+    setUpdateQuestion((prev) => !prev);
   };
 
   return (
