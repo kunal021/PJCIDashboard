@@ -70,75 +70,81 @@ const GetQuestions = () => {
               Add Question
             </LinkButton>
           </div>
-          <table className="table-auto w-full m-5 border">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="p-2 text-sm">Question Id</th>
-                <th className="p-2 text-sm">Test Id</th>
-                <th className="p-2 text-sm">Subject Id</th>
-                <th className="p-2 text-sm">Question</th>
-                <th className="p-2 text-sm">Option a</th>
-                <th className="p-2 text-sm">Option b</th>
-                <th className="p-2 text-sm">Option c</th>
-                <th className="p-2 text-sm">Option d</th>
-                <th className="p-2 text-sm">Option e</th>
-                <th className="p-2 text-sm">Answer</th>
-                <th className="p-2 text-sm">Update</th>
-              </tr>
-            </thead>
-            <tbody className="text-center">
-              {question.map((question, idx) => (
-                <tr key={idx} className="bg-gray-50">
-                  <td className="border p-2 text-sm">{question.qnsid}</td>
-                  <td className="border p-2 text-sm">{question.testid}</td>
-                  <td className="border p-2 text-sm">{question.subid}</td>
-                  <td className="border p-2 text-sm">
-                    {typeof question.question_text === "string"
-                      ? parser(question.question_text)
-                      : question.question_text}
-                  </td>
-                  <td className="border p-2 text-sm">
-                    {typeof question.a === "string"
-                      ? parser(question.a)
-                      : question.a}
-                  </td>
-                  <td className="border p-2 text-sm">
-                    {typeof question.b === "string"
-                      ? parser(question.b)
-                      : question.b}
-                  </td>
-                  <td className="border p-2 text-sm">
-                    {typeof question.c === "string"
-                      ? parser(question.c)
-                      : question.c}
-                  </td>
-                  <td className="border p-2 text-sm">
-                    {typeof question.d === "string"
-                      ? parser(question.d)
-                      : question.d}
-                  </td>
-                  <td className="border p-2 text-sm">
-                    {typeof question.e === "string"
-                      ? parser(question.e)
-                      : question.e}
-                  </td>
-                  <td className="border p-2 text-sm">
-                    {typeof question.answer === "string"
-                      ? parser(question.answer)
-                      : question.answer}
-                  </td>
-                  <td className="border p-2 text-sm">
-                    <UpdateBtn
-                      handleClick={() => {
-                        setUpdateQuestion((prev) => !prev);
-                        setUpdateQuestionData(question);
-                      }}
-                    />
-                  </td>
+          {question ? (
+            <table className="table-auto w-full m-5 border">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="p-2 text-sm">Question Id</th>
+                  <th className="p-2 text-sm">Test Id</th>
+                  <th className="p-2 text-sm">Subject Id</th>
+                  <th className="p-2 text-sm">Question</th>
+                  <th className="p-2 text-sm">Option a</th>
+                  <th className="p-2 text-sm">Option b</th>
+                  <th className="p-2 text-sm">Option c</th>
+                  <th className="p-2 text-sm">Option d</th>
+                  <th className="p-2 text-sm">Option e</th>
+                  <th className="p-2 text-sm">Answer</th>
+                  <th className="p-2 text-sm">Update</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="text-center">
+                {question.map((question, idx) => (
+                  <tr key={idx} className="bg-gray-50">
+                    <td className="border p-2 text-sm">{question.qnsid}</td>
+                    <td className="border p-2 text-sm">{question.testid}</td>
+                    <td className="border p-2 text-sm">{question.subid}</td>
+                    <td className="border p-2 text-sm">
+                      {typeof question.question_text === "string"
+                        ? parser(question.question_text)
+                        : question.question_text}
+                    </td>
+                    <td className="border p-2 text-sm">
+                      {typeof question.a === "string"
+                        ? parser(question.a)
+                        : question.a}
+                    </td>
+                    <td className="border p-2 text-sm">
+                      {typeof question.b === "string"
+                        ? parser(question.b)
+                        : question.b}
+                    </td>
+                    <td className="border p-2 text-sm">
+                      {typeof question.c === "string"
+                        ? parser(question.c)
+                        : question.c}
+                    </td>
+                    <td className="border p-2 text-sm">
+                      {typeof question.d === "string"
+                        ? parser(question.d)
+                        : question.d}
+                    </td>
+                    <td className="border p-2 text-sm">
+                      {typeof question.e === "string"
+                        ? parser(question.e)
+                        : question.e}
+                    </td>
+                    <td className="border p-2 text-sm">
+                      {typeof question.answer === "string"
+                        ? parser(question.answer)
+                        : question.answer}
+                    </td>
+                    <td className="border p-2 text-sm">
+                      <UpdateBtn
+                        handleClick={() => {
+                          setUpdateQuestion((prev) => !prev);
+                          setUpdateQuestionData(question);
+                        }}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div className="text-2xl font-bold text-center mt-20">
+              No Data Available
+            </div>
+          )}
         </div>
       )}
       {updatedQuestion && (

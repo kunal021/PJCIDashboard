@@ -142,57 +142,63 @@ function GetTest() {
             </tbody>
           </table> */}
 
-          <div className="flex flex-col justify-center items-center w-full">
-            {test.map((test, idx) => (
-              <div
-                key={idx}
-                className="flex justify-center items-center w-[80%] border rounded-md border-gray-300 m-2 p-3"
-              >
-                <Link
-                  to={`/get-test-question?id=${test.test_id}`}
-                  className="flex justify-start items-center gap-4 w-full"
+          {test ? (
+            <div className="flex flex-col justify-center items-center w-full">
+              {test.map((test, idx) => (
+                <div
+                  key={idx}
+                  className="flex justify-center items-center w-[80%] border rounded-md border-gray-300 m-2 p-3"
                 >
-                  <div className="flex justify-center items-center w-[10%] text-">
-                    <Avatar className="bg-gray-500 text-white">
-                      {test.test_id}
-                    </Avatar>
-                  </div>
-                  <div className="flex flex-col justify-start items-center gap-2 w-full">
-                    <div className="flex justify-start items-center font-bold w-full">
-                      <div>
-                        {typeof test.test_name === "string"
-                          ? parser(test.test_name)
-                          : test.test_name}
-                      </div>
-                      {/* {console.log(typeof test.test_name)} */}
+                  <Link
+                    to={`/get-test-question?id=${test.test_id}`}
+                    className="flex justify-start items-center gap-4 w-full"
+                  >
+                    <div className="flex justify-center items-center w-[10%] text-">
+                      <Avatar className="bg-gray-500 text-white">
+                        {test.test_id}
+                      </Avatar>
                     </div>
-                    <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                    <div className="flex justify-start items-center gap-1 w-full text-xs font-medium">
-                      <div className="flex justify-start items-start gap-1 w-full">
-                        <p>Start Date:</p>
-                        <p>{test.test_date}</p>
+                    <div className="flex flex-col justify-start items-center gap-2 w-full">
+                      <div className="flex justify-start items-center font-bold w-full">
+                        <div>
+                          {typeof test.test_name === "string"
+                            ? parser(test.test_name)
+                            : test.test_name}
+                        </div>
+                        {/* {console.log(typeof test.test_name)} */}
                       </div>
-                      <div className="flex justify-start items-start gap-1 w-full">
-                        <p>Start Time:</p>
-                        <p>{test.start_time}</p>
+                      <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
+                      <div className="flex justify-start items-center gap-1 w-full text-xs font-medium">
+                        <div className="flex justify-start items-start gap-1 w-full">
+                          <p>Start Date:</p>
+                          <p>{test.test_date}</p>
+                        </div>
+                        <div className="flex justify-start items-start gap-1 w-full">
+                          <p>Start Time:</p>
+                          <p>{test.start_time}</p>
+                        </div>
                       </div>
                     </div>
+                  </Link>
+                  <div className="flex flex-col justify-center items-end gap-4 w-[10%]">
+                    <UpdateBtn
+                      handleClick={() => {
+                        setUpdateTest((prev) => !prev);
+                        setUpdateTestData(test);
+                      }}
+                    />
+                    <ConfirmDelete
+                      handleClick={() => handleDelete(test.test_id)}
+                    />
                   </div>
-                </Link>
-                <div className="flex flex-col justify-center items-end gap-4 w-[10%]">
-                  <UpdateBtn
-                    handleClick={() => {
-                      setUpdateTest((prev) => !prev);
-                      setUpdateTestData(test);
-                    }}
-                  />
-                  <ConfirmDelete
-                    handleClick={() => handleDelete(test.test_id)}
-                  />
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-2xl font-bold text-center mt-20">
+              No Data Available
+            </div>
+          )}
         </div>
       )}
       {updateTest && (

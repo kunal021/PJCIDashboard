@@ -79,42 +79,50 @@ function GetCategory() {
               Add Category
             </button>
           </div>
-          <table className="table-auto w-full m-5 border-2">
-            <thead>
-              <tr className="bg-gray-200">
-                <th className="p-2 text-sm">Id</th>
-                <th className="p-2 text-sm">Name</th>
-                <th className="p-2 text-sm">Update</th>
-                <th className="p-2 text-sm">Delete</th>
-                <th className="p-2 text-sm">See All Course</th>
-              </tr>
-            </thead>
-            <tbody className="text-center">
-              {category.map((item) => (
-                <tr key={item.id} className="bg-gray-100">
-                  <td className="border p-2 text-sm">{item.id}</td>
-                  <td className="border p-2 text-sm">{item.name}</td>
-                  <td className="border p-2 text-sm">
-                    <Link
-                      to={`/update-category?id=${item.id}&name=${item.name}`}
-                    >
-                      <UpdateBtn />
-                    </Link>
-                  </td>
-                  <td className="border p-2 text-sm">
-                    <ConfirmDelete handleClick={() => handleDelete(item.id)} />
-                  </td>
-                  <td className="border p-2 text-sm">
-                    <Link to={`/get-course-category-wise?id=${item.id}`}>
-                      <button className="bg-green-500 hover:bg-green-700 text-white font-bold p-1 text-xs rounded">
-                        See All Course
-                      </button>
-                    </Link>
-                  </td>
+          {category ? (
+            <table className="table-auto w-full m-5 border-2">
+              <thead>
+                <tr className="bg-gray-200">
+                  <th className="p-2 text-sm">Id</th>
+                  <th className="p-2 text-sm">Name</th>
+                  <th className="p-2 text-sm">Update</th>
+                  <th className="p-2 text-sm">Delete</th>
+                  <th className="p-2 text-sm">See All Course</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="text-center">
+                {category.map((item) => (
+                  <tr key={item.id} className="bg-gray-100">
+                    <td className="border p-2 text-sm">{item.id}</td>
+                    <td className="border p-2 text-sm">{item.name}</td>
+                    <td className="border p-2 text-sm">
+                      <Link
+                        to={`/update-category?id=${item.id}&name=${item.name}`}
+                      >
+                        <UpdateBtn />
+                      </Link>
+                    </td>
+                    <td className="border p-2 text-sm">
+                      <ConfirmDelete
+                        handleClick={() => handleDelete(item.id)}
+                      />
+                    </td>
+                    <td className="border p-2 text-sm">
+                      <Link to={`/get-course-category-wise?id=${item.id}`}>
+                        <button className="bg-green-500 hover:bg-green-700 text-white font-bold p-1 text-xs rounded">
+                          See All Course
+                        </button>
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div className="text-2xl font-bold text-center mt-20">
+              No Data Available
+            </div>
+          )}
         </div>
       )}
       {addNewCategory && (
