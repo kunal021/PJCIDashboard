@@ -63,7 +63,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
     },
     editorProps: {
       attributes: {
-        class: `prose prose-sm sm:prose lg:prose-lg xl:prose-2xl p-2 focus:outline-none`,
+        class: `p-2 focus:outline-none`,
       },
     },
   });

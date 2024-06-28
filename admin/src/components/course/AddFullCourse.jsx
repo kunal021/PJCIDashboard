@@ -69,7 +69,7 @@ function AddFullCourse() {
 
   return (
     <LayoutAdjuster>
-      <div className="w-[70%] flex flex-col justify-center items-center mx-auto">
+      <div className="w-[80%] flex flex-col justify-center items-center mx-auto">
         <h1 className="text-center my-5 text-3xl font-bold">Add Full Course</h1>
         <div className="flex flex-col justify-center items-center mt-5 w-full">
           <div className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border border-gray-400 w-full">

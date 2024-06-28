@@ -46,7 +46,7 @@ function GetTest() {
       const response = await axios.delete(
         `${API_URL}/admin/test/deletetest.php?testid=${testId}`
       );
-      console.log(response);
+      // console.log(response);
       if (testId && response.data.success) {
         dispatch(deleteTest(response.data));
       }

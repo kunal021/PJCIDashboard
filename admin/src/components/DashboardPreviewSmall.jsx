@@ -13,6 +13,8 @@ import "tailwindcss/tailwind.css"; // Make sure to import Tailwind CSS
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleCollapsed } from "../redux/sidebar/sidebarSlice"; // Adjust the import path
+import UpdateServerStatus from "./setting/UpdateServerStatus";
+import { Server } from "lucide-react";
 
 const items = [
   {
@@ -85,6 +87,17 @@ const items = [
       },
     ],
   },
+  {
+    key: "sub5",
+    label: "Server Status",
+    icon: <Server className="h-4 w-4" />,
+    children: [
+      {
+        key: "14",
+        label: <UpdateServerStatus />,
+      },
+    ],
+  },
 ];
 
 const SideBar = () => {
@@ -100,7 +113,7 @@ const SideBar = () => {
         : item.children.find((child) => child.link === currentPath)
     );
     if (selectedItem) {
-      console.log(selectedItem);
+      // console.log(selectedItem);
       return selectedItem.key.includes("sub")
         ? [
             selectedItem.children.find((child) => child.link === currentPath)
