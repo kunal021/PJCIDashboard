@@ -72,7 +72,6 @@ function UpdateCourse({ fetchCourse, setUpdateCourse, updateCourseData }) {
               placeholder="Category"
               getHtmlData={getNameData}
               initialContent={courseName}
-              height={70}
             />
           </div>
           <p className="block text-gray-700 text-sm font-bold">Description</p>
@@ -81,7 +80,6 @@ function UpdateCourse({ fetchCourse, setUpdateCourse, updateCourseData }) {
               placeholder={"Category"}
               getHtmlData={getDescriptionData}
               initialContent={courseDescription}
-              height={100}
             />
           </div>
           <div className="flex flex-col md:flex-row md:space-x-6">

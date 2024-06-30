@@ -15,7 +15,9 @@ import UpdateCategory from "./components/categories/UpdateCategory";
 import Home from "./components/home/Home";
 import Dashboard from "./components/Dashboard";
 import GetAllUsers from "./components/users/GetAllUsers";
-import RichTextEditor from "./utils/TextEditor";
+import AboutUs from "./components/setting/AboutUs";
+import PrivacyPolicy from "./components/setting/PrivacyPolicy";
+import TermsAndConditions from "./components/setting/TermsAndConditions";
 // import SideBar from "./components/DashboardPreviewSmall";
 
 function App() {
@@ -46,10 +48,16 @@ function App() {
             <Route path="/add-test-question" element={<NewAddQns />} />
             <Route path="/add-test" element={<AddTest />} />
             <Route path="/get-users" element={<GetAllUsers />} />
-            <Route path="demo" element={<RichTextEditor />} />
+            <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route
+              path="/terms-and-conditions"
+              element={<TermsAndConditions />}
+            />
           </Routes>
         </div>
       </BrowserRouter>
+      M
     </div>
   );
 }

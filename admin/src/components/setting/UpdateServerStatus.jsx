@@ -35,6 +35,9 @@ function UpdateServerStatus() {
   };
   return (
     <div className="flex items-center justify-start">
+      <p className="font-semibold text-center">
+        {statusCode === "1" ? "Server is Active" : "Server is Inactive"}
+      </p>
       <button
         onClick={() => {
           handleChangeStatus(statusCode);
@@ -46,9 +49,6 @@ function UpdateServerStatus() {
           <div className="toggle-switch-handle"></div>
         </div>
       </button>
-      <p className="font-semibold text-center">
-        {statusCode === "1" ? "Server is Active" : "Server is Inactive"}
-      </p>
     </div>
   );
 }

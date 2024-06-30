@@ -77,11 +77,16 @@ const items = [
     children: [
       {
         key: "11",
+        label: "About Us",
+        link: "/about-us",
+      },
+      {
+        key: "12",
         label: "Terms & Conditions",
         link: "/terms-and-conditions",
       },
       {
-        key: "12",
+        key: "13",
         label: "Privacy Policy",
         link: "/privacy-policy",
       },

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { setUser } from "../../redux/users/userSlice";
 import axios from "axios";
 import "../../utils/toggleBtn.css";
@@ -7,13 +7,20 @@ import { API_URL } from "../../url";
 import UpdateBtn from "../../utils/UpdateBtn";
 import ConfirmDelete from "../../utils/ConfirmDelete";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
+import Pagination from "../../utils/Pagination";
 
-const getUsers = async (dispatch) => {
+const getUsers = async (dispatch, setPaginationData, page) => {
   try {
+    const formData = new FormData();
+    formData.append("page", page);
+    formData.append("limit", 10);
     const response = await axios.post(
-      `${API_URL}/admin/user/getallstudentlist.php`
+      `${API_URL}/admin/user/getallstudentlist.php`,
+      formData,
+      { headers: { "content-type": "multipart/form-data" } }
     );
     dispatch(setUser(response.data.data));
+    setPaginationData(response.data.pagination);
   } catch (error) {
     console.log("Error fetching users:", error);
     // Handle error (e.g., show an error message)
@@ -21,12 +28,14 @@ const getUsers = async (dispatch) => {
 };
 
 function GetAllUsers() {
+  const [paginationData, setPaginationData] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
   const dispatch = useDispatch();
   const users = useSelector((state) => state.user.user);
 
   useEffect(() => {
-    getUsers(dispatch);
-  }, [dispatch]);
+    getUsers(dispatch, setPaginationData, currentPage);
+  }, [currentPage, dispatch]);
 
   const handleChangeStatus = useCallback(
     async (userId, isactive) => {
@@ -124,6 +133,13 @@ function GetAllUsers() {
             ))}
           </tbody>
         </table>
+        <div className="mb-4">
+          <Pagination
+            totalPage={paginationData.total_pages}
+            currPage={currentPage}
+            setCurrPage={setCurrentPage}
+          />
+        </div>
       </div>
     </LayoutAdjuster>
   );
