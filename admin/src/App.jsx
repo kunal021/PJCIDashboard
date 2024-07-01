@@ -18,6 +18,8 @@ import GetAllUsers from "./components/users/GetAllUsers";
 import AboutUs from "./components/setting/AboutUs";
 import PrivacyPolicy from "./components/setting/PrivacyPolicy";
 import TermsAndConditions from "./components/setting/TermsAndConditions";
+import GetVideo from "./components/videos/GetVideo";
+import AddVideo from "./components/videos/AddVideo";
 // import SideBar from "./components/DashboardPreviewSmall";
 
 function App() {
@@ -54,6 +56,8 @@ function App() {
               path="/terms-and-conditions"
               element={<TermsAndConditions />}
             />
+            <Route path="/get-videos" element={<GetVideo />} />
+            <Route path="/add-video" element={<AddVideo />} />
           </Routes>
         </div>
       </BrowserRouter>

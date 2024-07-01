@@ -7,6 +7,7 @@ import {
   MenuUnfoldOutlined,
   SettingOutlined,
   UserOutlined,
+  VideoCameraOutlined,
 } from "@ant-design/icons";
 import { Button, Menu } from "antd";
 import "tailwindcss/tailwind.css"; // Make sure to import Tailwind CSS
@@ -60,45 +61,62 @@ const items = [
   },
   {
     key: "sub3",
+    label: "Video",
+    icon: <VideoCameraOutlined />,
+    children: [
+      {
+        key: "9",
+        label: "All Videos",
+        link: "/get-videos",
+      },
+      {
+        key: "10",
+        label: "Add Video",
+        link: "/add-video",
+      },
+    ],
+  },
+  {
+    key: "sub4",
     label: "User",
     icon: <UserOutlined />,
     children: [
       {
-        key: "9",
+        key: "12",
         label: "All Users",
         link: "/get-users",
       },
     ],
   },
   {
-    key: "sub4",
+    key: "sub5",
     label: "Settings",
     icon: <SettingOutlined />,
     children: [
       {
-        key: "11",
+        key: "14",
         label: "About Us",
         link: "/about-us",
       },
       {
-        key: "12",
+        key: "15",
         label: "Terms & Conditions",
         link: "/terms-and-conditions",
       },
       {
-        key: "13",
+        key: "16",
         label: "Privacy Policy",
         link: "/privacy-policy",
       },
     ],
   },
   {
-    key: "sub5",
+    key: "sub6",
     label: "Server Status",
     icon: <Server className="h-4 w-4" />,
     children: [
       {
-        key: "14",
+        key: "18",
         label: <UpdateServerStatus />,
       },
     ],

@@ -37,7 +37,7 @@ const fetchQuestions = async (
       { headers: "content-type/form-data" }
     );
 
-    console.log(response);
+    // console.log(response);
 
     if (response.data) {
       dispatch(setQuestion(response.data.data));
