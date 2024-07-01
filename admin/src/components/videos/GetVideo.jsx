@@ -6,6 +6,8 @@ import Loader from "../../utils/Loader";
 import { Avatar } from "antd";
 import Pagination from "../../utils/Pagination";
 import parser from "html-react-parser";
+import toast from "react-hot-toast";
+import ConfirmDelete from "../../utils/ConfirmDelete";
 
 function GetVideo() {
   const [loading, setLoading] = useState(false);
@@ -37,6 +39,32 @@ function GetVideo() {
 
     fetchData();
   }, [currentPage]);
+
+  const handleDelete = async (id) => {
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("video_id", id);
+      const response = await axios.post(
+        `${API_URL}/admin/video/deletevideo.php`,
+        formData,
+        {
+          headers: "content-type/form-data",
+        }
+      );
+
+      console.log(response);
+      if (response.status === 201) {
+        setData((prevData) => prevData.filter((item) => item.id !== id));
+        toast.success("Video Deleted Successfully");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.data.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <LayoutAdjuster>
       {loading ? (
@@ -70,6 +98,17 @@ function GetVideo() {
                             : item.video_title}
                         </div>
                       </div>
+                    </div>
+                    <div className="flex flex-col justify-between items-end gap-10 w-fit">
+                      {/* <UpdateBtn
+                        handleClick={() => {
+                          setUpdateQuestion((prev) => !prev);
+                          setUpdateQuestionData(question);
+                        }}
+                      /> */}
+                      <ConfirmDelete
+                        handleClick={() => handleDelete(item.id)}
+                      />
                     </div>
                   </div>
                 ))}

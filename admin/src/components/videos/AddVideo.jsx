@@ -12,7 +12,7 @@ function AddVideo() {
   const [data, setData] = useState({
     videoid: "",
     // video_title: "",
-    // video_duration: "",
+    video_duration: "",
   });
 
   const [videoTitle, setVideoTitle] = useState("");
@@ -30,7 +30,7 @@ function AddVideo() {
       const formData = new FormData();
       formData.append("videoid", data.videoid);
       formData.append("video_title", videoTitle);
-      formData.append("video_duration", "2hrs");
+      formData.append("video_duration", data.video_duration);
       const response = await axios.post(
         `${API_URL}/admin/video/addvideo.php`,
         formData,
@@ -73,6 +73,17 @@ function AddVideo() {
             onChange={handleChange}
           >
             Video Id
+          </FormField>
+          <FormField
+            id={"video_duration"}
+            type={"text"}
+            placeholder={"Enter Video Duration"}
+            htmlFor={"video_duration"}
+            name={"video_duration"}
+            value={data.video_duration}
+            onChange={handleChange}
+          >
+            Video Duration
           </FormField>
           <div className="w-full flex flex-col justify-center items-start m-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">

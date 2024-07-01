@@ -34,6 +34,8 @@ import {
   X,
   Plus,
   Minus,
+  Link2,
+  Link2Off,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -99,6 +101,32 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
     editor.chain().focus().setFontFamily(font).run();
   const handleUnsetFontFamily = () =>
     editor.chain().focus().unsetFontFamily().run();
+
+  const setLink = () => {
+    const previousUrl = editor.getAttributes("link").href;
+    let url = window.prompt("URL", previousUrl);
+
+    if (url === null) {
+      return;
+    }
+
+    const isAbsolute = /^(https?:\/\/)/i.test(url);
+    if (!isAbsolute) {
+      url = "https://" + url;
+    }
+
+    if (url === "") {
+      editor.chain().focus().extendMarkRange("link").unsetLink().run();
+
+      return;
+    }
+    editor
+      .chain()
+      .focus()
+      .extendMarkRange("link")
+      .setLink({ href: url, target: "_blank" })
+      .run();
+  };
 
   return (
     <div className="flex flex-col justify-center items-center h-full w-full p-2 gap-2">
@@ -307,6 +335,18 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
             </div>
             <hr className="hidden lg:block bg-gray-300 h-10 w-[1px]"></hr>
             <div className="relative flex justify-between items-center gap-[2px]">
+              <button
+                onClick={setLink}
+                className={editor.isActive("link") ? "is-active" : "not-active"}
+              >
+                <Link2 className="h-4" />
+              </button>
+              <button
+                onClick={() => editor.chain().focus().unsetLink().run()}
+                disabled={!editor.isActive("link")}
+              >
+                <Link2Off className="h-4" />
+              </button>
               <button
                 onClick={() => handleSetFontFamily("LMG ArunA")}
                 className={
