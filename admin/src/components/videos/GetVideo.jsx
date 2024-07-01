@@ -8,8 +8,11 @@ import Pagination from "../../utils/Pagination";
 import parser from "html-react-parser";
 import toast from "react-hot-toast";
 import ConfirmDelete from "../../utils/ConfirmDelete";
+import UpdateBtn from "../../utils/UpdateBtn";
+import { useNavigate } from "react-router-dom";
 
 function GetVideo() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [paginationData, setPaginationData] = useState({});
@@ -100,12 +103,11 @@ function GetVideo() {
                       </div>
                     </div>
                     <div className="flex flex-col justify-between items-end gap-10 w-fit">
-                      {/* <UpdateBtn
+                      <UpdateBtn
                         handleClick={() => {
-                          setUpdateQuestion((prev) => !prev);
-                          setUpdateQuestionData(question);
+                          navigate(`/update-video?id=${item.id}`);
                         }}
-                      /> */}
+                      />
                       <ConfirmDelete
                         handleClick={() => handleDelete(item.id)}
                       />

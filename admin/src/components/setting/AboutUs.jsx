@@ -20,8 +20,8 @@ function AboutUs() {
           formData,
           { headers: { "content-type": "multipart/form-data" } }
         );
-        console.log(response);
-        setData(response.data.data[0].content);
+        // console.log(response);
+        setData(response.data.data.content);
       } catch (error) {
         console.log(error);
       } finally {

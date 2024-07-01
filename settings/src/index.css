@@ -1,0 +1,57 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#logo {
+    width: 140px;
+    height: 70px;
+    background-image: url("/pjci_logo.png");
+    background-size: contain;
+    margin: 0 0 0 50px;
+    padding-top: 10px;
+}
+
+#container {
+    height: 565px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.krizyo {
+    display: block;
+}
+
+#launch,
+#copyright {
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#launch {
+    height: auto;
+    font-size: 90px;
+    font-weight: bold;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+#copyright {
+    height: auto;
+    font-size: 20px;
+    font-weight: 200;
+    margin-top: 5px;
+    margin-bottom: 0;
+    margin-left: 360px;
+}
+
+.link {
+    color: #ffffff;
+}
+
+.link:visited {
+    color: #ffffff;
+}

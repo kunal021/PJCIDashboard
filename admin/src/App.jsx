@@ -20,6 +20,7 @@ import PrivacyPolicy from "./components/setting/PrivacyPolicy";
 import TermsAndConditions from "./components/setting/TermsAndConditions";
 import GetVideo from "./components/videos/GetVideo";
 import AddVideo from "./components/videos/AddVideo";
+import UpdateVideo from "./components/videos/UpdateVideo";
 // import SideBar from "./components/DashboardPreviewSmall";
 
 function App() {
@@ -58,6 +59,7 @@ function App() {
             />
             <Route path="/get-videos" element={<GetVideo />} />
             <Route path="/add-video" element={<AddVideo />} />
+            <Route path="/update-video" element={<UpdateVideo />} />
           </Routes>
         </div>
       </BrowserRouter>

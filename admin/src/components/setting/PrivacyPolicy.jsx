@@ -22,7 +22,7 @@ function PrivacyPolicy() {
           { headers: { "content-type": "multipart/form-data" } }
         );
         // console.log(response);
-        setData(response.data.data[0].content);
+        setData(response.data.data.content);
       } catch (error) {
         console.log(error);
       } finally {
