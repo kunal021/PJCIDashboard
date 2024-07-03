@@ -1,23 +1,23 @@
+/* eslint-disable react/prop-types */
 import axios from "axios";
 import { useState } from "react";
 import { API_URL } from "../../url";
 import FormField from "../../utils/FormField";
-// import Loader from "../../utils/Loader";
 import Tiptap from "../../utils/TextEditor";
 import toast from "react-hot-toast";
-import { useSearchParams } from "react-router-dom";
-import LayoutAdjuster from "../../utils/LayoutAdjuster";
+import { useDispatch } from "react-redux";
+import { updateVideo } from "../../redux/videos/videoSlice";
 
-function UpdateVideo() {
-  const [searchParams] = useSearchParams();
-  const id = searchParams.get("id");
-  // const [loading, setLoading] = useState(false);
+function UpdateVideo({ setUpdateVideo, updateVideoData }) {
+  console.log(updateVideoData);
+
   const [data, setData] = useState({
-    videoid: "",
-    video_duration: "",
+    videoid: updateVideoData.video_id,
+    video_duration: updateVideoData.video_duration,
   });
+  const [videoTitle, setVideoTitle] = useState(updateVideoData.video_title);
 
-  const [videoTitle, setVideoTitle] = useState("");
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,33 +28,39 @@ function UpdateVideo() {
   };
   const handleUpdateVideo = async () => {
     try {
-      // setLoading(true);
       const formData = new FormData();
-      formData.append("id", id);
+      formData.append("id", updateVideoData.id);
       formData.append("videoid", data.videoid);
       formData.append("video_title", videoTitle);
       formData.append("video_duration", data.video_duration);
       const response = await axios.post(
-        `${API_URL}/admin/video/addvideo.php`,
+        `${API_URL}/admin/video/updatevideo.php`,
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );
 
-      console.log(response);
       if (response.status === 201) {
+        dispatch(
+          updateVideo({
+            id: updateVideoData.id,
+            video_id: data.videoid,
+            video_title: videoTitle,
+            video_duration: data.video_duration,
+          })
+        );
         toast.success("Video Updated Successfully");
       }
     } catch (error) {
-      toast.error(error.data.message);
       console.log(error);
     }
+    setUpdateVideo((prev) => !prev);
   };
 
   const getVideoData = (html) => {
     setVideoTitle(html);
   };
   return (
-    <LayoutAdjuster>
+    <div className="w-[80%] h-full flex flex-col justify-center items-center my-5">
       <div className="flex flex-col justify-center items-center w-full">
         <h1 className="text-center text-3xl font-bold">Update Course</h1>
         <div className="w-full flex flex-col justify-center items-center ml-2">
@@ -85,7 +91,7 @@ function UpdateVideo() {
               Video Title:
             </label>
             <Tiptap
-              // initialContent={data}
+              initialContent={videoTitle}
               getHtmlData={getVideoData}
               placeholder="Write the question here..."
             />
@@ -94,11 +100,11 @@ function UpdateVideo() {
             onClick={handleUpdateVideo}
             className="bg-blue-500 hover:bg-blue-700 text-white w-[20%] font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
-            Add Video
+            Update Video
           </button>
         </div>
       </div>
-    </LayoutAdjuster>
+    </div>
   );
 }
 

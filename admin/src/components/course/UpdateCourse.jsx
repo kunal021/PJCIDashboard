@@ -8,7 +8,7 @@ import FormField from "../../utils/FormField";
 import { API_URL } from "../../url";
 import Tiptap from "../../utils/TextEditor";
 
-function UpdateCourse({ fetchCourse, setUpdateCourse, updateCourseData }) {
+function UpdateCourse({ setUpdateCourse, updateCourseData }) {
   const [course, setCourse] = useState({
     price: updateCourseData.price,
     duration: updateCourseData.course_duration,
@@ -35,6 +35,8 @@ function UpdateCourse({ fetchCourse, setUpdateCourse, updateCourseData }) {
     }));
   };
 
+  // console.log(updateCourseData);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -50,12 +52,22 @@ function UpdateCourse({ fetchCourse, setUpdateCourse, updateCourseData }) {
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );
-      dispatch(updateCourse(response.data));
+      console.log(response);
       if (response.status == 201) {
+        dispatch(
+          updateCourse({
+            id: updateCourseData.id,
+            course_name: courseName,
+            price: course.price,
+            course_duration: course.duration,
+            course_description: courseDescription,
+            img_url: course.imgurl,
+            total_number_of_videos: updateCourseData.total_number_of_videos,
+          })
+        );
         toast.success("Course Updated Sucessfully");
       }
-      fetchCourse();
-      setUpdateCourse((perv) => !perv);
+      // setUpdateCourse((perv) => !perv);
     } catch (error) {
       console.error("Error fetching courses:", error);
     }

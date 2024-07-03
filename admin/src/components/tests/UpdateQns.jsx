@@ -2,16 +2,12 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { updateQuestion } from "../../redux/questions/questionSlice";
-// import "../../utils/addQns.css";
 import axios from "axios";
 import toast from "react-hot-toast";
-// import { useSearchParams } from "react-router-dom";
-// import LinkButton from "../../utils/LinkButton";
 import { API_URL } from "../../url";
-// import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import Tiptap from "../../utils/TextEditor";
 
-function UpdateQns({ fetchQuestions, setUpdateQuestion, updatedQuestionData }) {
+function UpdateQns({ setUpdateQuestion, updatedQuestionData }) {
   const dispatch = useDispatch();
 
   const [question, setQuestion] = useState(updatedQuestionData.question_text);
@@ -40,9 +36,6 @@ function UpdateQns({ fetchQuestions, setUpdateQuestion, updatedQuestionData }) {
   const getOptionEData = (html) => {
     setOptionE(html);
   };
-  //   const getAnswerData = (html) => {
-  //     setAnswer(html);
-  //   };
 
   const handleChange = (e) => {
     setAnswer(e.target.value);
@@ -65,18 +58,26 @@ function UpdateQns({ fetchQuestions, setUpdateQuestion, updatedQuestionData }) {
         formDataToSend.append(key, value);
       });
 
-      //   console.log(dataToSend);
-
       const response = await axios.post(
         `${API_URL}/admin/test/updateqns.php`,
         formDataToSend
       );
-      // console.log(response.data);
-      dispatch(updateQuestion(response.data));
+
       if (response.status === 201) {
+        dispatch(
+          updateQuestion({
+            qnsid: updatedQuestionData.qnsid,
+            question_text: question,
+            a: optionA,
+            b: optionB,
+            c: optionC,
+            d: optionD,
+            e: optionE,
+            answer: answer,
+          })
+        );
         toast.success("Question Updated Successfully");
       }
-      fetchQuestions();
     } catch (error) {
       console.error("Error fetching Question:", error);
       toast.error("An error occurred while adding the question.");

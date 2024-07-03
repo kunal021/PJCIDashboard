@@ -8,11 +8,7 @@ import FormField from "../../utils/FormField";
 import { API_URL } from "../../url";
 import Tiptap from "../../utils/TextEditor";
 
-function UpdateFullCourse({
-  fetchFullCourse,
-  setUpdateCourse,
-  updateCourseData,
-}) {
+function UpdateFullCourse({ setUpdateCourse, updateCourseData }) {
   const [course, setCourse] = useState({
     name: updateCourseData.full_course_name,
     price: updateCourseData.full_course_price,
@@ -57,12 +53,21 @@ function UpdateFullCourse({
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );
-      dispatch(updateFullCourse(response.data));
       if (response.status == 201) {
+        dispatch(
+          updateFullCourse({
+            id: updateCourseData.id,
+            full_course_name: courseName,
+            full_course_price: course.price,
+            full_course_duration: course.duration,
+            full_course_description: courseDescription,
+            img_url: course.imgurl,
+            total_number_of_videos: updateCourseData.total_number_of_videos,
+          })
+        );
         toast.success("Full Course Updated Sucessfully");
       }
-      fetchFullCourse();
-      setUpdateCourse(false);
+      setUpdateCourse((prev) => !prev);
     } catch (error) {
       console.error("Error fetching courses:", error);
     }

@@ -11,6 +11,8 @@ import toast from "react-hot-toast";
 import UpdateBtn from "../../utils/UpdateBtn";
 import parser from "html-react-parser";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
+import { truncateData } from "../../utils/truncateData";
+import { Avatar } from "antd";
 
 const fetchCourse = async (dispatch, setLoading) => {
   try {
@@ -18,6 +20,7 @@ const fetchCourse = async (dispatch, setLoading) => {
     const response = await axios.post(
       `${API_URL}/admin/courses/getallcourse.php`
     );
+    console.log(response);
     dispatch(setCourse(response.data.data_course));
   } catch (error) {
     console.error("Error fetching courses:", error);
@@ -30,6 +33,7 @@ function GetCourse() {
   const [loading, setLoading] = useState(false);
   const [updateCourse, setUpdateCourse] = useState(false);
   const [updateCourseData, setUpdateCourseData] = useState({});
+  const [readMore, setReadMore] = useState({});
 
   const dispatch = useDispatch();
   const courses = useSelector((state) => state.courses.courses);
@@ -55,6 +59,17 @@ function GetCourse() {
     [dispatch]
   );
 
+  const handleReadMoreToggle = (courseId) => {
+    setReadMore((prev) => ({
+      ...prev,
+      [courseId]: !prev[courseId],
+    }));
+  };
+
+  const isLongDescription = (description) => {
+    return parser(description).split(" ").length > 50;
+  };
+
   return (
     <LayoutAdjuster>
       {loading ? (
@@ -72,63 +87,77 @@ function GetCourse() {
             <LinkButton to="/add-course">Add Course</LinkButton>
           </div>
           {courses ? (
-            <table className="table-auto w-full m-5 border">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="p-2 text-sm">Id</th>
-                  <th className="p-2 text-sm">Image</th>
-                  <th className="p-2 text-sm">Course Name</th>
-                  <th className="p-2 text-sm">Description</th>
-                  <th className="p-2 text-sm">Price</th>
-                  <th className="p-2 text-sm">Duration</th>
-                  <th className="p-2 text-sm">Total Videos</th>
-                  <th className="p-2 text-sm">Update</th>
-                  <th className="p-2 text-sm">Delete</th>
-                </tr>
-              </thead>
-              <tbody className="text-center">
-                {courses.map((course) => (
-                  <tr key={course.id} className="bg-gray-50">
-                    <td className="border p-2 text-sm">{course.id}</td>
-                    <td className="border p-2 text-sm">
-                      <img
-                        src={course.img_url}
-                        alt={parser(course.course_name)}
-                        height={150}
-                        width={150}
-                        className="rounded-lg border-transparent"
-                      />
-                    </td>
-                    <td className="border p-2 text-sm">
-                      {parser(course.course_name)}
-                    </td>
-                    <td className="border p-2 text-sm">
-                      {parser(course.course_description)}
-                    </td>
-                    <td className="border p-2 text-sm">{course.price}</td>
-                    <td className="border p-2 text-sm">
-                      {course.course_duration}
-                    </td>
-                    <td className="border p-2 text-sm">
-                      {course.total_number_of_videos}
-                    </td>
-                    <td className="border p-2 text-sm">
-                      <UpdateBtn
-                        handleClick={() => {
-                          setUpdateCourse(true);
-                          setUpdateCourseData(course);
-                        }}
-                      />
-                    </td>
-                    <td className="border p-2 text-sm">
-                      <ConfirmDelete
-                        handleClick={() => handleDelete(course.id)}
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="flex flex-col justify-center items-center w-full">
+              {courses.map(
+                (course, idx) =>
+                  course && (
+                    <div
+                      key={idx}
+                      className="flex  justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-3 gap-3"
+                    >
+                      <div className="flex flex-col justify-center items-start gap-4 w-full">
+                        <div className="flex justify-between items-center w-full gap-4">
+                          <div>
+                            <Avatar className="bg-gray-500 text-white">
+                              {course.id}
+                            </Avatar>
+                          </div>
+                          <div>Duration: {course.course_duration}</div>
+                          <div>Videos: {course.total_number_of_videos}</div>
+                          <div>Price: {course.price}</div>
+                        </div>
+                        <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
+                        <div>
+                          <div className="flex flex-wrap text-wrap justify-center items-center gap-10">
+                            <img
+                              src={course.img_url}
+                              alt={parser(course.course_name)}
+                              height={150}
+                              width={150}
+                              className="rounded-lg border-transparent"
+                            />
+                            {parser(course.course_name)}
+                          </div>
+                        </div>
+                        <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
+                        <div className="flex flex-row-reverse flex-wrap text-wrap justify-end items-start gap-4 w-full">
+                          {/* {isLongDescription ? (
+                            <div>
+                              {readMore[course.id]
+                                ? parser(course.course_description)
+                                : truncateData(
+                                    parser(course.course_description),
+                                    50
+                                  )}
+                              <span
+                                className="text-blue-500 cursor-pointer px-1"
+                                onClick={() => handleReadMoreToggle(course.id)}
+                              >
+                                {readMore[course.id]
+                                  ? "Read Less"
+                                  : "Read More"}
+                              </span>
+                            </div>
+                          ) : ( */}
+                          {parser(course.course_description)}
+                          {/* )} */}
+                        </div>
+                      </div>
+                      <div className="flex flex-col justify-between items-end gap-10 w-fit">
+                        <UpdateBtn
+                          handleClick={() => {
+                            setUpdateCourse(true);
+                            setUpdateCourseData(course);
+                          }}
+                        />
+                        <ConfirmDelete
+                          handleClick={() => handleDelete(course.id)}
+                        />
+                      </div>
+                    </div>
+                  )
+              )}
+            </div>
           ) : (
             <div className="text-2xl font-bold text-center mt-20">
               No Data Available

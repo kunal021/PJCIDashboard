@@ -7,6 +7,7 @@ import testReducer from "./tests/testSlice";
 import questionReducer from "./questions/questionSlice";
 import userReducer from "./users/userSlice";
 import sidebarReducer from "./sidebar/sidebarSlice";
+import videoReducer from "./videos/videoSlice";
 
 export default configureStore({
   reducer: {
@@ -17,5 +18,6 @@ export default configureStore({
     question: questionReducer,
     user: userReducer,
     sidebar: sidebarReducer,
+    video: videoReducer,
   },
 });

@@ -33,6 +33,9 @@ function Home() {
         <Link to={"/about-us"} className="link">
           About Us
         </Link>
+        <Link to={"/contact-us"} className="link">
+          Contact Us
+        </Link>
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ import FormField from "../../utils/FormField";
 import { API_URL } from "../../url";
 import Tiptap from "../../utils/TextEditor";
 
-function UpdateTest({ fetchTest, updateTestData, setUpdateTest }) {
+function UpdateTest({ updateTestData, setUpdateTest }) {
   const [formData, setFormData] = useState({
     price: updateTestData.price,
     duration: updateTestData.duration,
@@ -81,12 +81,26 @@ function UpdateTest({ fetchTest, updateTestData, setUpdateTest }) {
         formDataToSend,
         { headers: { "content-type": "multipart/form-data" } }
       );
-      console.log(response.data);
-      dispatch(updateTest(response.data));
+
       if (response.status == 201) {
+        dispatch(
+          updateTest({
+            test_id: updateTestData.test_id,
+            test_name: testName,
+            description: testDescription,
+            price: formData.price,
+            duration: formData.duration,
+            number_of_questions: formData.numberOfQuestion,
+            mark_per_qns: formData.markPerQuestion,
+            negative_mark: formData.negativeMark,
+            total_mark: formData.totalMark,
+            test_date: formData.testDate,
+            start_time: formData.startTime,
+            end_time: formData.endTime,
+          })
+        );
         toast.success("Test Updated Sucessfully");
       }
-      fetchTest();
       setUpdateTest((perv) => !perv);
     } catch (error) {
       console.error("Error fetching courses:", error);
