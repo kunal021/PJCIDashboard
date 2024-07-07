@@ -12,6 +12,7 @@ import UpdateBtn from "../../utils/UpdateBtn";
 import parser from "html-react-parser";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import { Avatar } from "antd";
+import AddVideoInCourse from "./AddVideoInCourse";
 
 const fetchCourse = async (dispatch, setLoading) => {
   try {
@@ -162,6 +163,9 @@ function GetCourse() {
                         </div>
                       </div>
                       <div className="flex flex-col justify-between items-end gap-10 w-fit">
+                        <div className="z-[50]">
+                          <AddVideoInCourse />
+                        </div>
                         <UpdateBtn
                           handleClick={() => {
                             setUpdateCourse(true);

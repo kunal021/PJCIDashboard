@@ -87,6 +87,7 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
             course_description: courseDescription,
             img_url: course.img_url,
             total_number_of_videos: course.total_number_of_videos,
+            isactive: course.isactive,
           })
         );
         toast.success("Course Updated Sucessfully");
