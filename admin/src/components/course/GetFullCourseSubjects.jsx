@@ -82,26 +82,7 @@ const GetFullCourseSubjects = () => {
                         </div>
                         <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
                         <div className="flex flex-row-reverse flex-wrap text-wrap justify-end items-start gap-4 w-full">
-                          {/* {isLongDescription ? (
-                            <div>
-                              {readMore[course.id]
-                                ? parser(course.course_description)
-                                : truncateData(
-                                    parser(course.course_description),
-                                    50
-                                  )}
-                              <span
-                                className="text-blue-500 cursor-pointer px-1"
-                                onClick={() => handleReadMoreToggle(course.id)}
-                              >
-                                {readMore[course.id]
-                                  ? "Read Less"
-                                  : "Read More"}
-                              </span>
-                            </div>
-                          ) : ( */}
                           {parser(course.course_description)}
-                          {/* )} */}
                         </div>
                       </div>
                       {/* <div className="flex flex-col justify-between items-end gap-10 w-fit">

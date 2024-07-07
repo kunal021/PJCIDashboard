@@ -11,17 +11,20 @@ import toast from "react-hot-toast";
 import UpdateBtn from "../../utils/UpdateBtn";
 import parser from "html-react-parser";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
-import { truncateData } from "../../utils/truncateData";
 import { Avatar } from "antd";
 
 const fetchCourse = async (dispatch, setLoading) => {
   try {
     setLoading(true);
+    const formData = new FormData();
+    formData.append("course_type", 1);
     const response = await axios.post(
-      `${API_URL}/admin/courses/getallcourse.php`
+      `${API_URL}/admin/courses/getallcourse.php`,
+      formData,
+      { headers: { "content-type": "multipart/form-data" } }
     );
-    console.log(response);
-    dispatch(setCourse(response.data.data_course));
+    // console.log(response);
+    dispatch(setCourse(response.data.data));
   } catch (error) {
     console.error("Error fetching courses:", error);
   } finally {
@@ -33,7 +36,6 @@ function GetCourse() {
   const [loading, setLoading] = useState(false);
   const [updateCourse, setUpdateCourse] = useState(false);
   const [updateCourseData, setUpdateCourseData] = useState({});
-  const [readMore, setReadMore] = useState({});
 
   const dispatch = useDispatch();
   const courses = useSelector((state) => state.courses.courses);
@@ -59,16 +61,41 @@ function GetCourse() {
     [dispatch]
   );
 
-  const handleReadMoreToggle = (courseId) => {
-    setReadMore((prev) => ({
-      ...prev,
-      [courseId]: !prev[courseId],
-    }));
-  };
+  const handleChangeStatus = useCallback(
+    async (courseId, isactive) => {
+      const confirmAlert = window.confirm(
+        `${
+          isactive === "1"
+            ? "Category will become Inactive. Do you want to proceed"
+            : "Category will become Active. Do you want to proceed"
+        }`
+      );
+      if (confirmAlert) {
+        try {
+          isactive = isactive === "1" ? "0" : "1";
+          const formData = new FormData();
+          formData.append("course_id", courseId);
+          formData.append("statuscode", isactive);
+          formData.append("course_type", 1);
+          await axios.post(
+            `${API_URL}/admin/courses/updatecoursestatus.php`,
+            formData,
+            { headers: { "content-type": "multipart/form-data" } }
+          );
 
-  const isLongDescription = (description) => {
-    return parser(description).split(" ").length > 50;
-  };
+          // Update local state instead of fetching users again
+          const updatedCourse = courses.map((course) =>
+            course.id === courseId ? { ...course, isactive } : course
+          );
+          dispatch(setCourse(updatedCourse));
+        } catch (error) {
+          console.log("Error updating user status:", error);
+          // Handle error (e.g., show an error message)
+        }
+      }
+    },
+    [dispatch, courses]
+  );
 
   return (
     <LayoutAdjuster>
@@ -97,57 +124,48 @@ function GetCourse() {
                     >
                       <div className="flex flex-col justify-center items-start gap-4 w-full">
                         <div className="flex justify-between items-center w-full gap-4">
-                          <div>
-                            <Avatar className="bg-gray-500 text-white">
-                              {course.id}
-                            </Avatar>
-                          </div>
-                          <div>Duration: {course.course_duration}</div>
-                          <div>Videos: {course.total_number_of_videos}</div>
-                          <div>Price: {course.price}</div>
+                          <Avatar className="bg-gray-500 text-white">
+                            {course.id}
+                          </Avatar>
+                          <button
+                            onClick={() => {
+                              handleChangeStatus(course.id, course.isactive);
+                            }}
+                            className="toggle-switch scale-75 align-middle"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={course.isactive === "1"}
+                              readOnly
+                            />
+                            <div className="toggle-switch-background">
+                              <div className="toggle-switch-handle"></div>
+                            </div>
+                          </button>
                         </div>
                         <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                        <div>
-                          <div className="flex flex-wrap text-wrap justify-center items-center gap-10">
-                            <img
-                              src={course.img_url}
-                              alt={parser(course.course_name)}
-                              height={150}
-                              width={150}
-                              className="rounded-lg border-transparent"
-                            />
+                        <div className="flex  justify-center items-center gap-10 w-full">
+                          <img
+                            src={course.img_url}
+                            alt={parser(course.course_name)}
+                            className="rounded-lg border-transparent max-w-[25%]"
+                          />
+                          <div className="text-start w-[75%]">
                             {parser(course.course_name)}
                           </div>
                         </div>
                         <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                        <div className="flex flex-row-reverse flex-wrap text-wrap justify-end items-start gap-4 w-full">
-                          {/* {isLongDescription ? (
-                            <div>
-                              {readMore[course.id]
-                                ? parser(course.course_description)
-                                : truncateData(
-                                    parser(course.course_description),
-                                    50
-                                  )}
-                              <span
-                                className="text-blue-500 cursor-pointer px-1"
-                                onClick={() => handleReadMoreToggle(course.id)}
-                              >
-                                {readMore[course.id]
-                                  ? "Read Less"
-                                  : "Read More"}
-                              </span>
-                            </div>
-                          ) : ( */}
-                          {parser(course.course_description)}
-                          {/* )} */}
+                        <div className="flex justify-between items-center w-full gap-4">
+                          <div>Duration: {course.course_duration}</div>
+                          <div>Videos: {course.total_number_of_videos}</div>
+                          <div>Price: {course.price}</div>
                         </div>
                       </div>
                       <div className="flex flex-col justify-between items-end gap-10 w-fit">
                         <UpdateBtn
                           handleClick={() => {
                             setUpdateCourse(true);
-                            setUpdateCourseData(course);
+                            setUpdateCourseData(course.id);
                           }}
                         />
                         <ConfirmDelete
@@ -167,7 +185,6 @@ function GetCourse() {
       )}
       {updateCourse && (
         <UpdateCourse
-          fetchCourse={() => fetchCourse(dispatch, setLoading)}
           setUpdateCourse={setUpdateCourse}
           updateCourseData={updateCourseData}
         />

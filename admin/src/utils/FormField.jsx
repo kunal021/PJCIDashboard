@@ -6,7 +6,7 @@ function FormField({
   type,
   placeholder,
   name,
-  value,
+  value = "",
   onChange,
 }) {
   const className = `appearance-none border w-full rounded-md border-gray-300 focus:border-black/50 focus:ring-2 focus:ring-black/50 py-2 px-3 text-gray-700 leading-tight focus:outline-none`;

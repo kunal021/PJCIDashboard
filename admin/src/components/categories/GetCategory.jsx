@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setCategory,
@@ -13,12 +13,13 @@ import toast from "react-hot-toast";
 import ConfirmDelete from "../../utils/ConfirmDelete";
 import UpdateBtn from "../../utils/UpdateBtn";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
+import SeeAll from "../../utils/SeeAll";
 // import parser from "html-react-parser";
 
 const fetchCategory = async (dispatch, setLoading) => {
   try {
+    setLoading(true);
     const response = await axios.get(`${API_URL}/admin/category/get.php`);
-
     dispatch(setCategory(response.data.data));
   } catch (error) {
     console.error("Error fetching category:", error);
@@ -35,7 +36,6 @@ function GetCategory() {
   const category = useSelector((state) => state.category.category);
 
   useEffect(() => {
-    setLoading(true);
     fetchCategory(dispatch, setLoading);
   }, [dispatch]);
 
@@ -55,6 +55,41 @@ function GetCategory() {
       toast.error(error.response.data.massage);
     }
   };
+
+  const handleChangeStatus = useCallback(
+    async (categoryId, isactive) => {
+      const confirmAlert = window.confirm(
+        `${
+          isactive === "1"
+            ? "Category will become Inactive. Do you want to proceed"
+            : "Category will become Active. Do you want to proceed"
+        }`
+      );
+      if (confirmAlert) {
+        try {
+          isactive = isactive === "1" ? "0" : "1";
+          const formData = new FormData();
+          formData.append("c_id", categoryId);
+          formData.append("statuscode", isactive);
+          await axios.post(
+            `${API_URL}/admin/category/updatecategorystatus.php`,
+            formData,
+            { headers: { "content-type": "multipart/form-data" } }
+          );
+
+          // Update local state instead of fetching users again
+          const updatedCategory = category.map((category) =>
+            category.id === categoryId ? { ...category, isactive } : category
+          );
+          dispatch(setCategory(updatedCategory));
+        } catch (error) {
+          console.log("Error updating user status:", error);
+          // Handle error (e.g., show an error message)
+        }
+      }
+    },
+    [dispatch, category]
+  );
 
   return (
     <LayoutAdjuster>
@@ -87,7 +122,8 @@ function GetCategory() {
                   <th className="p-2 text-sm">Name</th>
                   <th className="p-2 text-sm">Update</th>
                   <th className="p-2 text-sm">Delete</th>
-                  <th className="p-2 text-sm">See All Course</th>
+                  <th className="p-2 text-sm">Status</th>
+                  <th className="p-2 text-sm">All Course</th>
                 </tr>
               </thead>
               <tbody className="text-center">
@@ -107,11 +143,26 @@ function GetCategory() {
                         handleClick={() => handleDelete(item.id)}
                       />
                     </td>
+                    <td className="border p-2 text-sm flex justify-center items-center">
+                      <button
+                        onClick={() => {
+                          handleChangeStatus(item.id, item.isactive);
+                        }}
+                        className="toggle-switch scale-75"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={item.isactive === "1"}
+                          readOnly
+                        />
+                        <div className="toggle-switch-background">
+                          <div className="toggle-switch-handle"></div>
+                        </div>
+                      </button>
+                    </td>
                     <td className="border p-2 text-sm">
                       <Link to={`/get-course-category-wise?id=${item.id}`}>
-                        <button className="bg-green-500 hover:bg-green-700 text-white font-bold p-1 text-xs rounded">
-                          See All Course
-                        </button>
+                        <SeeAll childern={"See All Course"} />
                       </Link>
                     </td>
                   </tr>
