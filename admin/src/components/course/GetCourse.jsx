@@ -98,6 +98,15 @@ function GetCourse() {
     [dispatch, courses]
   );
 
+  const renderCourseData = (data) => {
+    if (typeof data === "string") {
+      return parser(data);
+    }
+    return data;
+  };
+
+  // console.log(courses);
+
   return (
     <LayoutAdjuster>
       {loading ? (
@@ -145,14 +154,14 @@ function GetCourse() {
                           </button>
                         </div>
                         <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                        <div className="flex  justify-center items-center gap-10 w-full">
+                        <div className="flex justify-center items-center gap-10 w-full">
                           <img
                             src={course.img_url}
-                            alt={parser(course.course_name)}
-                            className="rounded-lg border-transparent max-w-[25%]"
+                            alt={renderCourseData(course.course_name)}
+                            className="rounded-lg border-transparent w-36 h-24"
                           />
-                          <div className="text-start w-[75%]">
-                            {parser(course.course_name)}
+                          <div className="text-start w-full">
+                            {renderCourseData(course.course_name)}
                           </div>
                         </div>
                         <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />

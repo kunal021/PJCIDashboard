@@ -41,6 +41,13 @@ const GetCourseCategoryWise = () => {
     }
   }, [dispatch, id, searchParams]);
 
+  const renderCourseData = (data) => {
+    if (typeof data === "string") {
+      return parser(data);
+    }
+    return data;
+  };
+
   return (
     <LayoutAdjuster>
       {loading ? (
@@ -64,45 +71,26 @@ const GetCourseCategoryWise = () => {
                               {course.id}
                             </Avatar>
                           </div>
-                          <div>Duration: {course.course_duration}</div>
-                          <div>Videos: {course.total_number_of_videos}</div>
-                          <div>Price: {course.price}</div>
                         </div>
                         <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                        <div>
-                          <div className="flex flex-wrap text-wrap justify-center items-center gap-10">
-                            <img
-                              src={course.img_url}
-                              alt={parser(course.course_name)}
-                              height={150}
-                              width={150}
-                              className="rounded-lg border-transparent"
-                            />
-                            {parser(course.course_name)}
+                        <div className="flex justify-center items-center gap-10">
+                          <img
+                            src={course.img_url}
+                            alt={renderCourseData(course.course_name)}
+                            className="rounded-lg border-transparent w-36 h-24"
+                          />
+                          <div className="text-start w-full">
+                            {renderCourseData(course.course_name)}
                           </div>
                         </div>
                         <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                        <div className="flex flex-row-reverse flex-wrap text-wrap justify-end items-start gap-4 w-full">
-                          {/* {isLongDescription ? (
-                            <div>
-                              {readMore[course.id]
-                                ? parser(course.course_description)
-                                : truncateData(
-                                    parser(course.course_description),
-                                    50
-                                  )}
-                              <span
-                                className="text-blue-500 cursor-pointer px-1"
-                                onClick={() => handleReadMoreToggle(course.id)}
-                              >
-                                {readMore[course.id]
-                                  ? "Read Less"
-                                  : "Read More"}
-                              </span>
-                            </div>
-                          ) : ( */}
+                        {/* <div className="flex flex-row-reverse flex-wrap text-wrap justify-end items-start gap-4 w-full">
                           {parser(course.course_description)}
-                          {/* )} */}
+                        </div> */}
+                        <div className="flex justify-between items-center w-full gap-4">
+                          <div>Duration: {course.course_duration}</div>
+                          <div>Videos: {course.total_number_of_videos}</div>
+                          <div>Price: {course.price}</div>
                         </div>
                       </div>
                       {/* <div className="flex flex-col justify-between items-end gap-10 w-fit">

@@ -29,8 +29,6 @@ const fetchData = async (
       formData,
       { headers: "content-type/form-data" }
     );
-    // console.log(response);
-    // setData(response.data.data);
     dispatch(setVideo(response.data.data));
     setPaginationData(response.data.pagination);
   } catch (error) {

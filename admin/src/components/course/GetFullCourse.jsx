@@ -103,6 +103,13 @@ function GetFullCourse() {
     [dispatch, fullCourse]
   );
 
+  const renderCourseData = (data) => {
+    if (typeof data === "string") {
+      return parser(data);
+    }
+    return data;
+  };
+
   // console.log(fullCourse);
 
   return (
@@ -158,11 +165,11 @@ function GetFullCourse() {
                         <div className="flex justify-center items-center gap-10 w-full">
                           <img
                             src={course.img_url}
-                            alt={parser(course.full_course_name)}
-                            className="rounded-lg border-transparent max-w-[25%]"
+                            alt={renderCourseData(course.full_course_name)}
+                            className="rounded-lg border-transparent w-36 h-24"
                           />
-                          <div className="text-start w-[75%]">
-                            {parser(course.full_course_name)}
+                          <div className="text-start w-full">
+                            {renderCourseData(course.full_course_name)}
                           </div>
                         </div>
 
