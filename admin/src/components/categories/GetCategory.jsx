@@ -14,6 +14,7 @@ import ConfirmDelete from "../../utils/ConfirmDelete";
 import UpdateBtn from "../../utils/UpdateBtn";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import SeeAll from "../../utils/SeeAll";
+import AddCourseInCategory from "./AddCourseInCategory";
 // import parser from "html-react-parser";
 
 const fetchCategory = async (dispatch, setLoading) => {
@@ -123,6 +124,7 @@ function GetCategory() {
                   <th className="p-2 text-sm">Update</th>
                   <th className="p-2 text-sm">Delete</th>
                   <th className="p-2 text-sm">Status</th>
+                  <th className="p-2 text-sm">Add Course</th>
                   <th className="p-2 text-sm">All Course</th>
                 </tr>
               </thead>
@@ -159,6 +161,9 @@ function GetCategory() {
                           <div className="toggle-switch-handle"></div>
                         </div>
                       </button>
+                    </td>
+                    <td className="border p-2 text-sm">
+                      <AddCourseInCategory />
                     </td>
                     <td className="border p-2 text-sm">
                       <Link to={`/get-course-category-wise?id=${item.id}`}>
