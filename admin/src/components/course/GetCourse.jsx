@@ -173,7 +173,7 @@ function GetCourse() {
                       </div>
                       <div className="flex flex-col justify-between items-end gap-10 w-fit">
                         <div className="z-[50]">
-                          <AddVideoInCourse />
+                          <AddVideoInCourse courseId={course.id} />
                         </div>
                         <UpdateBtn
                           handleClick={() => {
