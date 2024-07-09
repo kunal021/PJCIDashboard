@@ -16,6 +16,7 @@ import UpdateQns from "./UpdateQns";
 import parser from "html-react-parser";
 import ConfirmDelete from "../../utils/ConfirmDelete";
 import Pagination from "../../utils/Pagination";
+import GetTestById from "./GetTestById";
 
 const fetchQuestions = async (
   dispatch,
@@ -26,7 +27,6 @@ const fetchQuestions = async (
 ) => {
   try {
     setLoading(true);
-    // dispatch(setQuestion([]));
     const formData = new FormData();
     formData.append("test_id", id);
     formData.append("page", page);
@@ -36,8 +36,6 @@ const fetchQuestions = async (
       formData,
       { headers: "content-type/form-data" }
     );
-
-    // console.log(response);
 
     if (response.data) {
       dispatch(setQuestion(response.data.data));
@@ -83,7 +81,6 @@ const GetQuestions = () => {
       fetchQuestions(dispatch, setLoading, id, setPaginationData, currentPage);
     } catch (error) {
       toast.error(error.response.data.massage);
-      // console.log(error);
     }
   };
   return (
@@ -98,6 +95,9 @@ const GetQuestions = () => {
               : "w-fit flex flex-col justify-center items-center mx-auto"
           } `}
         >
+          <div className="w-full my-5">
+            <GetTestById testId={id} />
+          </div>
           <div className="flex justify-center items-center my-5 space-x-10">
             <h1 className="text-3xl font-bold text-center">Questions List</h1>
             <LinkButton to={`/add-test-question?id=${id}`}>

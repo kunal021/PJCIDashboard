@@ -26,7 +26,7 @@ const fetchData = async (
     const response = await axios.post(
       `${API_URL}/admin/video/getvideolist.php`,
       formData,
-      { headers: "content-type/form-data" }
+      { headers: { "Content-Type": "multipart/form-data" } }
     );
     dispatch(setVideo(response.data.data));
     setPaginationData(response.data.pagination);
