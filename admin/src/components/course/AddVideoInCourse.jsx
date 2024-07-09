@@ -48,7 +48,7 @@ function AddVideoInCourse({ courseId }) {
     (state) => state.addVideoInCourse.addVideoInCourse
   );
   //   console.log(video);
-  console.log(addVideoInCourse);
+  // console.log(addVideoInCourse);
 
   useEffect(() => {
     fetchData(setLoading, currentPage, dispatch, setPaginationData);

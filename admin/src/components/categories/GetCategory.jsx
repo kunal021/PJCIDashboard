@@ -163,7 +163,7 @@ function GetCategory() {
                       </button>
                     </td>
                     <td className="border p-2 text-sm">
-                      <AddCourseInCategory />
+                      <AddCourseInCategory categoryId={item.id} />
                     </td>
                     <td className="border p-2 text-sm">
                       <Link to={`/get-course-category-wise?id=${item.id}`}>

@@ -67,8 +67,8 @@ function GetCourse() {
       const confirmAlert = window.confirm(
         `${
           isactive === "1"
-            ? "Category will become Inactive. Do you want to proceed"
-            : "Category will become Active. Do you want to proceed"
+            ? "course will become Inactive. Do you want to proceed"
+            : "course will become Active. Do you want to proceed"
         }`
       );
       if (confirmAlert) {
