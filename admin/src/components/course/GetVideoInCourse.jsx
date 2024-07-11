@@ -8,28 +8,27 @@ import Pagination from "../../utils/Pagination";
 import parser from "html-react-parser";
 import toast from "react-hot-toast";
 import ConfirmDelete from "../../utils/ConfirmDelete";
-import UpdateBtn from "../../utils/UpdateBtn";
-import { useDispatch, useSelector } from "react-redux";
-import { deleteVideo, setVideo } from "../../redux/videos/videoSlice";
-import UpdateVideo from "./UpdateVideo";
+import { useSearchParams } from "react-router-dom";
 
 const fetchData = async (
   setLoading,
   currentPage,
-  dispatch,
-  setPaginationData
+  setPaginationData,
+  courseId,
+  setVideo
 ) => {
   try {
     setLoading(true);
     const formData = new FormData();
+    formData.append("course_id", courseId);
     formData.append("page", currentPage);
     formData.append("limit", 10);
     const response = await axios.post(
-      `${API_URL}/admin/video/getvideolist.php`,
+      `${API_URL}/admin/courses/getvideolistofcourse.php`,
       formData,
       { headers: "content-type/form-data" }
     );
-    dispatch(setVideo(response.data.data));
+    setVideo(response.data.data);
     setPaginationData(response.data.pagination);
   } catch (error) {
     console.log(error);
@@ -38,35 +37,35 @@ const fetchData = async (
   }
 };
 
-function GetVideo() {
-  const dispatch = useDispatch();
+function GetVideoInCourse() {
+  const [searchParams] = useSearchParams();
+  const courseId = searchParams.get("id");
   const [loading, setLoading] = useState(false);
   const [paginationData, setPaginationData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [updateVideo, setUpdateVideo] = useState(false);
-  const [updateVideoData, setUpdateVideoData] = useState({});
 
-  const video = useSelector((state) => state.video.video);
+  const [video, setVideo] = useState([]);
 
   useEffect(() => {
-    fetchData(setLoading, currentPage, dispatch, setPaginationData);
-  }, [currentPage, dispatch]);
+    fetchData(setLoading, currentPage, setPaginationData, courseId, setVideo);
+  }, [courseId, currentPage]);
 
   const handleDelete = async (id) => {
     try {
       setLoading(true);
       const formData = new FormData();
-      formData.append("video_id", id);
+      formData.append("v_id", id);
+      formData.append("c_id", courseId);
       const response = await axios.post(
-        `${API_URL}/admin/video/deletevideo.php`,
+        `${API_URL}/admin/courses/deletevideofromcourse.php`,
         formData,
         {
           headers: "content-type/form-data",
         }
       );
 
-      if (response.status === 201) {
-        dispatch(deleteVideo(id));
+      if (response.status === 200) {
+        setVideo(video.filter((item) => item.id !== id));
         toast.success("Video Deleted Successfully");
       }
     } catch (error) {
@@ -85,11 +84,7 @@ function GetVideo() {
         </>
       ) : (
         <div
-          className={`${
-            updateVideo
-              ? "hidden"
-              : "w-full flex flex-col justify-center items-center mx-auto"
-          } `}
+          className={`w-full flex flex-col justify-center items-center mx-auto`}
         >
           <div className="w-full flex flex-col justify-center items-center my-5">
             <h1 className="text-3xl font-bold text-center">Videos List</h1>
@@ -106,7 +101,7 @@ function GetVideo() {
                           <Avatar className="bg-gray-500 text-white">
                             {item.id}
                           </Avatar>
-                          <div>Video ID: {item.video_id}</div>
+                          {/* <div>Video ID: {item.video_id}</div> */}
                         </div>
                         <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
                         <div>
@@ -119,12 +114,6 @@ function GetVideo() {
                         </div>
                       </div>
                       <div className="flex flex-col justify-between items-end gap-10 w-fit">
-                        <UpdateBtn
-                          handleClick={() => {
-                            setUpdateVideo((prev) => !prev);
-                            setUpdateVideoData(item);
-                          }}
-                        />
                         <ConfirmDelete
                           handleClick={() => handleDelete(item.id)}
                         />
@@ -148,17 +137,8 @@ function GetVideo() {
           </div>
         </div>
       )}
-      {updateVideo && (
-        <UpdateVideo
-          fetchVideo={() =>
-            fetchData(setLoading, currentPage, dispatch, setPaginationData)
-          }
-          setUpdateVideo={setUpdateVideo}
-          updateVideoData={updateVideoData}
-        />
-      )}
     </LayoutAdjuster>
   );
 }
 
-export default GetVideo;
+export default GetVideoInCourse;

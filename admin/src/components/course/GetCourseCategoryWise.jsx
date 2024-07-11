@@ -55,7 +55,7 @@ const GetCourseCategoryWise = () => {
       ) : (
         <div className="flex flex-col justify-center items-center my-5">
           <h1 className="text-3xl font-bold text-center">Course List</h1>
-          {courses ? (
+          {courses.length > 0 ? (
             <div className="flex flex-col justify-center items-center w-full">
               {courses.map(
                 (course, idx) =>

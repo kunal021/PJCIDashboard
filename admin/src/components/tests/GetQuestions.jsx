@@ -104,7 +104,7 @@ const GetQuestions = () => {
               Add Question
             </LinkButton>
           </div>
-          {question ? (
+          {question.length > 0 ? (
             <div className="flex flex-col justify-center items-center w-full">
               {question.map(
                 (question, idx) =>

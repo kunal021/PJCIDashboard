@@ -15,6 +15,7 @@ import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import parser from "html-react-parser";
 import { Avatar } from "antd";
 import SeeAll from "../../utils/SeeAll";
+import AddCourseInFullCourse from "./AddCourseInFullCourse";
 
 const fetchFullCourse = async (dispatch, setLoading) => {
   try {
@@ -130,7 +131,7 @@ function GetFullCourse() {
             </h1>
             <LinkButton to={"/add-full-course"}>Add Full Course</LinkButton>
           </div>
-          {fullCourse ? (
+          {fullCourse.length > 0 ? (
             <div className="flex flex-col justify-center items-center w-full overflow-ellipsis">
               {fullCourse.map(
                 (course, idx) =>
@@ -181,6 +182,7 @@ function GetFullCourse() {
                         </div>
                       </div>
                       <div className="flex flex-col justify-between items-end gap-10 w-fit">
+                        <AddCourseInFullCourse courseId={course.id} />
                         <SeeAll
                           handleClick={() =>
                             navigate(`/get-full-course-subject?id=${course.id}`)

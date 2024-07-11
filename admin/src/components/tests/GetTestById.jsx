@@ -42,7 +42,7 @@ function GetTestById({ testId }) {
         <div
           className={`w-full flex flex-col justify-center items-center mx-auto`}
         >
-          {test ? (
+          {test.length > 0 ? (
             <div className="flex flex-col justify-center items-center w-full">
               <h1 className="text-3xl font-bold text-center my-2">
                 Test Details

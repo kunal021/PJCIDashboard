@@ -115,7 +115,7 @@ function GetCategory() {
               Add Category
             </button>
           </div>
-          {category ? (
+          {category.length > 0 ? (
             <table className="table-auto w-full m-5 border-2">
               <thead>
                 <tr className="bg-gray-200">

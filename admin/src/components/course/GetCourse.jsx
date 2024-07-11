@@ -13,6 +13,8 @@ import parser from "html-react-parser";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import { Avatar } from "antd";
 import AddVideoInCourse from "./AddVideoInCourse";
+import SeeAll from "../../utils/SeeAll";
+import { useNavigate } from "react-router-dom";
 
 const fetchCourse = async (dispatch, setLoading) => {
   try {
@@ -34,6 +36,7 @@ const fetchCourse = async (dispatch, setLoading) => {
 };
 
 function GetCourse() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [updateCourse, setUpdateCourse] = useState(false);
   const [updateCourseData, setUpdateCourseData] = useState({});
@@ -123,7 +126,7 @@ function GetCourse() {
             <h1 className="text-3xl font-bold text-center">Course List</h1>
             <LinkButton to="/add-course">Add Course</LinkButton>
           </div>
-          {courses ? (
+          {courses.length > 0 ? (
             <div className="flex flex-col justify-center items-center w-full">
               {courses.map(
                 (course, idx) =>
@@ -172,9 +175,13 @@ function GetCourse() {
                         </div>
                       </div>
                       <div className="flex flex-col justify-between items-end gap-10 w-fit">
-                        <div className="z-[50]">
-                          <AddVideoInCourse courseId={course.id} />
-                        </div>
+                        <AddVideoInCourse courseId={course.id} />
+                        <SeeAll
+                          handleClick={() =>
+                            navigate(`/get-course-videos?id=${course.id}`)
+                          }
+                          childern={"See All Videos"}
+                        />
                         <UpdateBtn
                           handleClick={() => {
                             setUpdateCourse(true);

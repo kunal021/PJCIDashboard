@@ -76,7 +76,7 @@ function GetTest() {
             <h1 className="text-3xl font-bold text-center">Test List</h1>
             <LinkButton to={"/add-test"}>Add Test</LinkButton>
           </div>
-          {test ? (
+          {test.length > 0 ? (
             <div className="flex flex-col justify-center items-center w-full">
               {test.map((test, idx) => (
                 <div

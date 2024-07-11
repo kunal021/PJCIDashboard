@@ -21,6 +21,7 @@ import TermsAndConditions from "./components/setting/TermsAndConditions";
 import GetVideo from "./components/videos/GetVideo";
 import AddVideo from "./components/videos/AddVideo";
 import UpdateVideo from "./components/videos/UpdateVideo";
+import GetVideoInCourse from "./components/course/GetVideoInCourse";
 // import SideBar from "./components/DashboardPreviewSmall";
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/get-course" element={<GetCourse />} />
             <Route path="/add-course" element={<AddCourse />} />
+            <Route path="/get-course-videos" element={<GetVideoInCourse />} />
             <Route path="/get-full-course" element={<GetFullCourse />} />
             <Route path="/add-full-course" element={<AddFullCourse />} />
             <Route
