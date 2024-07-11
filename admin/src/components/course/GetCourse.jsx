@@ -12,9 +12,10 @@ import UpdateBtn from "../../utils/UpdateBtn";
 import parser from "html-react-parser";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import { Avatar } from "antd";
-import AddVideoInCourse from "./AddVideoInCourse";
-import SeeAll from "../../utils/SeeAll";
+// import AddVideoInCourse from "./AddVideoInCourse";
+// import SeeAll from "../../utils/SeeAll";
 import { useNavigate } from "react-router-dom";
+import { CalendarClock, IndianRupee, SquarePlay } from "lucide-react";
 
 const fetchCourse = async (dispatch, setLoading) => {
   try {
@@ -133,9 +134,9 @@ function GetCourse() {
                   course && (
                     <div
                       key={idx}
-                      className="flex  justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-3 gap-3"
+                      className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-2 gap-4"
                     >
-                      <div className="flex flex-col justify-center items-start gap-4 w-full">
+                      <div className="flex flex-col justify-center items-start gap-2 w-full">
                         <div className="flex justify-between items-center w-full gap-4">
                           <Avatar className="bg-gray-500 text-white">
                             {course.id}
@@ -156,32 +157,50 @@ function GetCourse() {
                             </div>
                           </button>
                         </div>
-                        <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                        <div className="flex justify-center items-center gap-10 w-full">
-                          <img
-                            src={course.img_url}
-                            alt={renderCourseData(course.course_name)}
-                            className="rounded-lg border-transparent w-36 h-24"
-                          />
-                          <div className="text-start w-full">
-                            {renderCourseData(course.course_name)}
+                        {/* <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" /> */}
+                        <div className="flex justify-center items-center gap-6 w-full">
+                          <div className="flex justify-center items-center">
+                            <img
+                              src={course.img_url}
+                              alt={renderCourseData(course.course_name)}
+                              className="rounded-lg border-transparent w-36 h-24"
+                            />
                           </div>
-                        </div>
-                        <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                        <div className="flex justify-between items-center w-full gap-4">
-                          <div>Duration: {course.course_duration}</div>
-                          <div>Videos: {course.total_number_of_videos}</div>
-                          <div>Price: {course.price}</div>
+                          <div
+                            onClick={() =>
+                              navigate(`/get-course-videos?id=${course.id}`)
+                            }
+                            className="flex flex-col justify-center items-start gap-3 w-full cursor-pointer"
+                          >
+                            <div className="text-start w-full">
+                              {renderCourseData(course.course_name)}
+                            </div>
+                            <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
+                            <div className="flex justify-between items-center w-full gap-2">
+                              <div className="flex justify-center items-center gap-0.5">
+                                <CalendarClock className="scale-75" />
+                                <p>{course.course_duration}</p>
+                              </div>
+                              <div className="flex justify-center items-center gap-0.5">
+                                <SquarePlay className="scale-75" />
+                                <p>{course.total_number_of_videos}</p>
+                              </div>
+                              <div className="flex justify-center items-center gap-0.5">
+                                <IndianRupee className="scale-75" />
+                                <p>{course.price}</p>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <div className="flex flex-col justify-between items-end gap-10 w-fit">
-                        <AddVideoInCourse courseId={course.id} />
+                        {/* <AddVideoInCourse courseId={course.id} />
                         <SeeAll
                           handleClick={() =>
                             navigate(`/get-course-videos?id=${course.id}`)
                           }
                           childern={"See All Videos"}
-                        />
+                        /> */}
                         <UpdateBtn
                           handleClick={() => {
                             setUpdateCourse(true);

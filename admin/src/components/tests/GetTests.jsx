@@ -69,7 +69,7 @@ function GetTest() {
           className={`${
             updateTest
               ? "hidden"
-              : "w-full flex flex-col justify-center items-center mx-auto"
+              : "w-[80%] flex flex-col justify-center items-center mx-auto"
           } `}
         >
           <div className="flex justify-center items-center my-5 space-x-10">
