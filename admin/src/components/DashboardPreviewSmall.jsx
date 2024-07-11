@@ -188,7 +188,7 @@ const SideBar = () => {
     <>
       <div className="fixed top-0 left-0 h-screen bg-[#001529] border-r overflow-auto flex flex-col items-center">
         <img
-          src="/logo.jpg"
+          src="/logo.png"
           alt="logo"
           className={`${
             !collapsed ? "block" : "hidden"

@@ -32,7 +32,7 @@ function Home() {
       {loading ? (
         <Loader />
       ) : (
-        <div className="flex flex-col justify-center items-center space-y-2 text-center m-10 px-6 py-4 border-2 border-transparent rounded-xl bg-black/20">
+        <div className="flex flex-col justify-center items-center space-y-2 text-center m-10 px-6 py-4 border-2 border-transparent rounded-xl bg-gray-100">
           <p>Total Users</p>
           <p>{count}</p>
           <div className="scale-75">

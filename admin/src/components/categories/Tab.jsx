@@ -2,52 +2,83 @@
 import * as Tabs from "@radix-ui/react-tabs";
 import axios from "axios";
 import { API_URL } from "../../url";
-import { setCourse } from "../../redux/courses/courseSlice";
-import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { Check, Loader, Plus } from "lucide-react";
+import { Loader, Plus } from "lucide-react";
 import { Avatar } from "antd";
 import parser from "html-react-parser";
-import { setFullCourse } from "../../redux/courses/fullCourseSlice";
+import Pagination from "../../utils/Pagination";
 
-const fetchData = async (setLoading, dispatch, coursetype) => {
+const fetchData = async (
+  setLoading,
+  coursetype,
+  categoryid,
+  setError,
+  setPaginationData,
+  setCourse,
+  setFullCourse
+) => {
   try {
     setLoading(true);
     const formData = new FormData();
     formData.append("course_type", coursetype);
+    formData.append("c_id", categoryid);
+    formData.append("limit", 10);
+    // formData.append("course_type", coursetype);
     const response = await axios.post(
-      `${API_URL}/admin/courses/getallcourse.php`,
+      `${API_URL}/admin/category/getcourseavailabletoadd.php`,
       formData,
       { headers: { "Content-Type": "multipart/form-data" } }
     );
     if (coursetype == 1) {
-      dispatch(setCourse(response.data.data));
+      setCourse(response.data.data);
+      setPaginationData(response.data.pagination);
     }
     if (coursetype == 0) {
-      dispatch(setFullCourse(response.data.data));
+      setFullCourse(response.data.data);
+      setPaginationData(response.data.pagination);
     }
   } catch (error) {
     console.log(error);
+    setError(error.response.data.massage);
   } finally {
     setLoading(false);
   }
 };
 
 function Tab({ categoryId }) {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const [paginationData, setPaginationData] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [error, setError] = useState(null);
 
-  const courses = useSelector((state) => state.courses.courses);
-  const fullCourses = useSelector((state) => state.fullCourse.fullCourse);
+  const [course, setCourse] = useState([]);
+  const [fullCourse, setFullCourse] = useState([]);
 
-  console.log(courses);
-  console.log(fullCourses);
+  console.log(course);
+  console.log(fullCourse);
   console.log(categoryId);
 
   useEffect(() => {
-    fetchData(setLoading, dispatch, 1);
-    fetchData(setLoading, dispatch, 0);
-  }, [dispatch]);
+    fetchData(
+      setLoading,
+      1,
+      categoryId,
+      setError,
+      setPaginationData,
+      setCourse,
+      setFullCourse
+    );
+    fetchData(
+      setLoading,
+      0,
+      categoryId,
+      setError,
+      setPaginationData,
+      setCourse,
+      setFullCourse
+    );
+  }, [categoryId]);
 
   const handleAddCourse = async (course_type, courseid, categoryid) => {
     try {
@@ -106,9 +137,9 @@ function Tab({ categoryId }) {
           >
             <div className="w-full flex flex-col justify-center items-center my-2">
               <div className="w-full flex flex-col justify-center items-center">
-                {courses ? (
+                {course.length > 0 ? (
                   <div className="flex flex-col justify-center items-center w-full">
-                    {courses.map((item, idx) => (
+                    {course.map((item, idx) => (
                       <div
                         key={idx}
                         className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-2 p-3 gap-3"
@@ -116,7 +147,7 @@ function Tab({ categoryId }) {
                         <div className="flex flex-col justify-center items-start gap-4 w-[90%]">
                           <div className="flex justify-start items-center text-sm w-full gap-4">
                             <div className="flex justify-center items-center">
-                              <Avatar className="bg-gray-500 text-white w-10">
+                              <Avatar className="bg-gray-500 text-white w-8 h-8">
                                 {idx + 1}
                               </Avatar>
                             </div>
@@ -139,10 +170,17 @@ function Tab({ categoryId }) {
                         </button>
                       </div>
                     ))}
+                    <div>
+                      <Pagination
+                        totalPage={paginationData.total_pages}
+                        currPage={currentPage}
+                        setCurrPage={setCurrentPage}
+                      />
+                    </div>
                   </div>
                 ) : (
                   <div className="text-2xl font-bold text-center mt-20">
-                    No Data Available
+                    {error}
                   </div>
                 )}
               </div>
@@ -162,9 +200,9 @@ function Tab({ categoryId }) {
           >
             <div className="w-full flex flex-col justify-center items-center my-2">
               <div className="w-full flex flex-col justify-center items-center">
-                {fullCourses ? (
+                {fullCourse.length > 0 ? (
                   <div className="flex flex-col justify-center items-center w-full">
-                    {fullCourses.map((item, idx) => (
+                    {fullCourse.map((item, idx) => (
                       <div
                         key={idx}
                         className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-2 p-3 gap-3"
@@ -172,7 +210,7 @@ function Tab({ categoryId }) {
                         <div className="flex flex-col justify-center items-start gap-4 w-[90%]">
                           <div className="flex justify-start items-center text-sm w-full gap-4">
                             <div className="flex justify-center items-center">
-                              <Avatar className="bg-gray-500 text-white w-10">
+                              <Avatar className="bg-gray-500 text-white w-8 h-8">
                                 {idx + 1}
                               </Avatar>
                             </div>
@@ -195,10 +233,17 @@ function Tab({ categoryId }) {
                         </button>
                       </div>
                     ))}
+                    <div>
+                      <Pagination
+                        totalPage={paginationData.total_pages}
+                        currPage={currentPage}
+                        setCurrPage={setCurrentPage}
+                      />
+                    </div>
                   </div>
                 ) : (
                   <div className="text-2xl font-bold text-center mt-20">
-                    No Data Available
+                    {error}
                   </div>
                 )}
               </div>

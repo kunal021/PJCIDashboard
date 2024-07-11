@@ -1,79 +1,86 @@
 /* eslint-disable react/prop-types */
 import * as Dialog from "@radix-ui/react-dialog";
 import axios from "axios";
-import { Check, Plus, SquarePlay, X } from "lucide-react";
-import { useSelector, useDispatch } from "react-redux";
+import { Plus, SquarePlay, X } from "lucide-react";
 import { API_URL } from "../../url";
-import { setVideo } from "../../redux/videos/videoSlice";
 import { useEffect, useState } from "react";
 import Loader from "../../utils/Loader";
 import Pagination from "../../utils/Pagination";
 import parser from "html-react-parser";
 import { Avatar } from "antd";
-import { setAddVideoInCourse } from "../../redux/addvideoincourse/addVideoInCourseSlice";
 
 const fetchData = async (
   setLoading,
   currentPage,
-  dispatch,
-  setPaginationData
+  setPaginationData,
+  courseId,
+  setVideo,
+  setError
 ) => {
   try {
     setLoading(true);
     const formData = new FormData();
+    formData.append("course_id", courseId);
     formData.append("page", currentPage);
     formData.append("limit", 10);
     const response = await axios.post(
-      `${API_URL}/admin/video/getvideolist.php`,
+      `${API_URL}/admin/courses/getvideoavailabletoadd.php`,
       formData,
       { headers: { "Content-Type": "multipart/form-data" } }
     );
-    dispatch(setVideo(response.data.data));
+    setVideo(response.data.data);
     setPaginationData(response.data.pagination);
   } catch (error) {
-    console.log(error);
+    console.log(error.response);
+    setError(error.response.data.massage);
   } finally {
     setLoading(false);
   }
 };
 
 function AddVideoInCourse({ courseId }) {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [paginationData, setPaginationData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-
-  const video = useSelector((state) => state.video.video);
-  const addVideoInCourse = useSelector(
-    (state) => state.addVideoInCourse.addVideoInCourse
-  );
+  const [error, setError] = useState(null);
+  const [video, setVideo] = useState([]);
+  // const addVideoInCourse = useSelector(
+  //   (state) => state.addVideoInCourse.addVideoInCourse
+  // );
   //   console.log(video);
   // console.log(addVideoInCourse);
 
   useEffect(() => {
-    fetchData(setLoading, currentPage, dispatch, setPaginationData);
-  }, [currentPage, dispatch]);
+    fetchData(
+      setLoading,
+      currentPage,
+      setPaginationData,
+      courseId,
+      setVideo,
+      setError
+    );
+  }, [currentPage, courseId]);
 
   const handleAddVideo = async (vid, cid) => {
     try {
       const formData = new FormData();
       formData.append("c_id", cid);
       formData.append("v_id", vid);
-      const response = await axios.post(
+      await axios.post(
         `${API_URL}/admin/courses/addvideoincourse.php`,
         formData,
         { headers: "content-type/form-data" }
       );
-      dispatch(setAddVideoInCourse(video.filter((items) => items.id === vid)));
-      console.log(response);
+      setVideo(video.filter((items) => items.id !== vid));
     } catch (error) {
       console.log(error);
     }
   };
 
-  const isVideoAdded = (vid) => {
-    return addVideoInCourse.some((video) => video.id === vid);
-  };
+  // const isVideoAdded = (vid) => {
+  //   return addVideoInCourse.some((video) => video.id === vid);
+  // };
 
   return (
     <Dialog.Root>
@@ -101,7 +108,7 @@ function AddVideoInCourse({ courseId }) {
             >
               <div className="w-full flex flex-col justify-center items-center my-2">
                 <div className="w-full flex flex-col justify-center items-center">
-                  {video ? (
+                  {video.length > 0 ? (
                     <div className="flex flex-col justify-center items-center w-full">
                       {video.map((item, idx) => (
                         <div
@@ -111,7 +118,7 @@ function AddVideoInCourse({ courseId }) {
                           <div className="flex flex-col justify-center items-start gap-4 w-[90%]">
                             <div className="flex justify-start items-center text-sm w-full gap-4">
                               <div className="flex justify-center items-center">
-                                <Avatar className="bg-gray-500 text-white w-10">
+                                <Avatar className="bg-gray-500 text-white w-8 h-8">
                                   {idx + 1}
                                 </Avatar>
                               </div>
@@ -124,27 +131,28 @@ function AddVideoInCourse({ courseId }) {
                             </div>
                           </div>
                           <button
-                            disabled={isVideoAdded(item.id)}
+                            // disabled={isVideoAdded(item.id)}
                             onClick={() => handleAddVideo(item.id, courseId)}
                             className="rounded-full bg-green-200 p-1 items-center"
                           >
-                            {isVideoAdded(item.id) ? <Check /> : <Plus />}
+                            {/* {isVideoAdded(item.id) ? <Check /> : <Plus />} */}
+                            <Plus />
                           </button>
                         </div>
                       ))}
+                      <div>
+                        <Pagination
+                          totalPage={paginationData.total_pages}
+                          currPage={currentPage}
+                          setCurrPage={setCurrentPage}
+                        />
+                      </div>
                     </div>
                   ) : (
                     <div className="text-2xl font-bold text-center mt-20">
-                      No Data Available
+                      {error}
                     </div>
                   )}
-                  <div>
-                    <Pagination
-                      totalPage={paginationData.total_pages}
-                      currPage={currentPage}
-                      setCurrPage={setCurrentPage}
-                    />
-                  </div>
                 </div>
               </div>
             </div>
