@@ -8,8 +8,8 @@ const LayoutAdjuster = ({ children }) => {
 
   return (
     <div
-      className={`w-[80%] ${
-        sidebarCollapsed ? "ml-40" : `ml-[15.5rem]`
+      className={`w-full ${
+        sidebarCollapsed ? "ml-20" : `ml-[15.5rem]`
       } transition-all px-4 min-h-screen flex justify-center items-center`}
     >
       {children}

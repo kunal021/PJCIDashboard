@@ -119,7 +119,7 @@ function GetCourse() {
           className={`${
             updateCourse
               ? "hidden"
-              : "w-fit flex flex-col justify-center items-center mx-auto"
+              : "w-[80%] flex flex-col justify-center items-center mx-auto"
           }`}
         >
           <div className="flex justify-center items-center space-x-10 my-5">

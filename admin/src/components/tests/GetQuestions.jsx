@@ -56,6 +56,7 @@ const GetQuestions = () => {
   const [updatedQuestionData, setUpdateQuestionData] = useState({});
   const [paginationData, setPaginationData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
+  const [show, setShow] = useState(false);
   const dispatch = useDispatch();
   const question = useSelector((state) => state.question.question);
 
