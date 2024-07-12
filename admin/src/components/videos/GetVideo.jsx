@@ -98,7 +98,6 @@ function GetVideo() {
         );
 
         console.log(res);
-        console.log(video);
         // Update local state instead of fetching users again
         const updatedVideo = video.map((video) =>
           video.id === videoId ? { ...video, is_active } : video
