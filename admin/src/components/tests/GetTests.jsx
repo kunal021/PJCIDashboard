@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setTest } from "../../redux/tests/testSlice";
 import { deleteTest } from "../../redux/tests/testSlice";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import LinkButton from "../../utils/LinkButton";
 import UpdateTest from "./UpdateTest";
 import { API_URL } from "../../url";
@@ -14,6 +13,7 @@ import toast from "react-hot-toast";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import parser from "html-react-parser";
 import { Avatar } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const fetchTest = async (dispatch, setLoading) => {
   try {
@@ -29,6 +29,7 @@ const fetchTest = async (dispatch, setLoading) => {
 };
 
 function GetTest() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [updateTest, setUpdateTest] = useState(false);
   const [updateTestData, setUpdateTestData] = useState({});
@@ -60,6 +61,42 @@ function GetTest() {
     }
   };
 
+  const handleChangeStatus = useCallback(
+    async (testId, isactive) => {
+      const confirmAlert = window.confirm(
+        `${
+          isactive === "1"
+            ? "course will become Inactive. Do you want to proceed"
+            : "course will become Active. Do you want to proceed"
+        }`
+      );
+      if (confirmAlert) {
+        try {
+          isactive = isactive === "1" ? "0" : "1";
+          const formData = new FormData();
+          formData.append("test_id", testId);
+          formData.append("statuscode", isactive);
+          await axios.post(
+            `${API_URL}/admin/test/updateteststatus.php`,
+            formData,
+            { headers: { "content-type": "multipart/form-data" } }
+          );
+          // console.log(res);
+
+          // Update local state instead of fetching users again
+          const updatedTest = test.map((test) =>
+            test.test_id === testId ? { ...test, isactive } : test
+          );
+          dispatch(setTest(updatedTest));
+        } catch (error) {
+          console.log("Error updating user status:", error);
+          // Handle error (e.g., show an error message)
+        }
+      }
+    },
+    [dispatch, test]
+  );
+
   return (
     <LayoutAdjuster>
       {loading ? (
@@ -83,23 +120,41 @@ function GetTest() {
                   key={idx}
                   className="flex justify-center items-center w-[80%] border rounded-md border-gray-300 m-2 p-3"
                 >
-                  <Link
-                    to={`/get-test-question?id=${test.test_id}`}
-                    className="flex justify-start items-center gap-4 w-full"
-                  >
+                  <div className="flex justify-start items-center gap-4 w-full">
                     <div className="flex justify-center items-center w-[10%] text-">
                       <Avatar className="bg-gray-500 text-white">
                         {test.test_id}
                       </Avatar>
                     </div>
                     <div className="flex flex-col justify-start items-center gap-2 w-full">
-                      <div className="flex justify-start items-center font-bold w-full">
-                        <div>
+                      <div className="flex justify-start items-center font-bold w-full cursor-pointer">
+                        <div
+                          onClick={() =>
+                            navigate(`/get-test-question?id=${test.test_id}`)
+                          }
+                          className="w-full"
+                        >
                           {typeof test.test_name === "string"
                             ? parser(test.test_name)
                             : test.test_name}
                         </div>
-                        {/* {console.log(typeof test.test_name)} */}
+                        <div className="w-[20%]">
+                          <button
+                            onClick={() => {
+                              handleChangeStatus(test.test_id, test.isactive);
+                            }}
+                            className="toggle-switch scale-75 align-middle"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={test.isactive === "1"}
+                              readOnly
+                            />
+                            <div className="toggle-switch-background">
+                              <div className="toggle-switch-handle"></div>
+                            </div>
+                          </button>
+                        </div>
                       </div>
                       <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
                       <div className="flex justify-start items-center gap-1 w-full text-xs font-medium">
@@ -113,7 +168,7 @@ function GetTest() {
                         </div>
                       </div>
                     </div>
-                  </Link>
+                  </div>
                   <div className="flex flex-col justify-center items-end gap-4 w-[10%]">
                     <UpdateBtn
                       handleClick={() => {

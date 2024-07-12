@@ -88,7 +88,7 @@ function GetVideoInCourse() {
         >
           <div className="w-full flex flex-col justify-center items-center my-5">
             <h1 className="text-3xl font-bold text-center">Videos List</h1>
-            <div className="w-full flex flex-col justify-center items-center">
+            <div className="w-[80%] flex flex-col justify-center items-center">
               {video.length > 0 ? (
                 <div className="flex flex-col justify-center items-center w-full">
                   {video.map((item, idx) => (

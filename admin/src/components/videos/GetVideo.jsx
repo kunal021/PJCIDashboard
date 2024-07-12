@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { API_URL } from "../../url";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import Loader from "../../utils/Loader";
@@ -77,6 +77,41 @@ function GetVideo() {
     }
   };
 
+  const handleChangeStatus = useCallback(
+    async (videoId, isactive) => {
+      const confirmAlert = window.confirm(
+        `${
+          isactive === "1"
+            ? "course will become Inactive. Do you want to proceed"
+            : "course will become Active. Do you want to proceed"
+        }`
+      );
+      if (confirmAlert) {
+        try {
+          isactive = isactive === "1" ? "0" : "1";
+          const formData = new FormData();
+          formData.append("videoid", videoId);
+          formData.append("status", isactive);
+          await axios.post(
+            `${API_URL}/admin/video/updatevideostatus.php`,
+            formData,
+            { headers: { "content-type": "multipart/form-data" } }
+          );
+
+          // Update local state instead of fetching users again
+          const updatedVideo = video.map((video) =>
+            video.id === videoId ? { ...video, isactive } : video
+          );
+          dispatch(setVideo(updatedVideo));
+        } catch (error) {
+          console.log("Error updating user status:", error);
+          // Handle error (e.g., show an error message)
+        }
+      }
+    },
+    [dispatch, video]
+  );
+
   return (
     <LayoutAdjuster>
       {loading ? (
@@ -93,7 +128,7 @@ function GetVideo() {
         >
           <div className="w-full flex flex-col justify-center items-center my-5">
             <h1 className="text-3xl font-bold text-center">Videos List</h1>
-            <div className="w-full flex flex-col justify-center items-center">
+            <div className="w-[80%] flex flex-col justify-center items-center">
               {video.length > 0 ? (
                 <div className="flex flex-col justify-center items-center w-full">
                   {video.map((item, idx) => (
@@ -107,11 +142,33 @@ function GetVideo() {
                             {item.id}
                           </Avatar>
                           <div>Video ID: {item.video_id}</div>
+                          <div>
+                            <button
+                              onClick={() => {
+                                handleChangeStatus(item.id, item.isactive);
+                              }}
+                              className="toggle-switch scale-75 align-middle"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={item.isactive === "1"}
+                                readOnly
+                              />
+                              <div className="toggle-switch-background">
+                                <div className="toggle-switch-handle"></div>
+                              </div>
+                            </button>
+                          </div>
                         </div>
                         <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                        <div>
-                          <div className="flex flex-wrap text-wrap">
-                            Video Title:{" "}
+                        <div className="flex justify-between items-center w-full gap-6">
+                          <div className="flex justify-center items-center w-48">
+                            <img
+                              src={`https://img.youtube.com/vi/${item.video_id}/maxresdefault.jpg`}
+                              className="rounded-lg border-transparent h-24 w-full"
+                            />
+                          </div>
+                          <div className="flex flex-wrap text-wrap w-full">
                             {typeof item.video_title == "string"
                               ? parser(item.video_title)
                               : item.video_title}
@@ -131,19 +188,19 @@ function GetVideo() {
                       </div>
                     </div>
                   ))}
+                  <div>
+                    <Pagination
+                      totalPage={paginationData.total_pages}
+                      currPage={currentPage}
+                      setCurrPage={setCurrentPage}
+                    />
+                  </div>
                 </div>
               ) : (
                 <div className="text-2xl font-bold text-center mt-20">
                   No Data Available
                 </div>
               )}
-              <div>
-                <Pagination
-                  totalPage={paginationData.total_pages}
-                  currPage={currentPage}
-                  setCurrPage={setCurrentPage}
-                />
-              </div>
             </div>
           </div>
         </div>

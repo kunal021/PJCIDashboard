@@ -164,11 +164,11 @@ function GetFullCourse() {
                         </div>
 
                         <div className="flex justify-center items-center gap-6 w-full">
-                          <div className="flex justify-center items-center">
+                          <div className="flex justify-center items-center w-48">
                             <img
                               src={course.img_url}
-                              alt={renderCourseData(course.full_course_name)}
-                              className="rounded-lg border-transparent w-36 h-24"
+                              alt={"image"}
+                              className="rounded-lg border-transparent w-full h-24"
                             />
                           </div>
                           <div

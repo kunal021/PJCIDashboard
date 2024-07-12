@@ -65,11 +65,11 @@ const GetFullCourseSubjects = () => {
                     >
                       <div className="flex flex-col justify-center items-start gap-2 w-full">
                         <div className="flex justify-center items-center gap-6 w-full">
-                          <div className="flex justify-center items-center">
+                          <div className="flex justify-center items-center w-48">
                             <img
                               src={course.img_url}
-                              alt={renderCourseData(course.course_name)}
-                              className="rounded-lg border-transparent w-36 h-24"
+                              alt={"image"}
+                              className="rounded-lg border-transparent w-full h-24"
                             />
                           </div>
                           <div className="flex flex-col justify-center items-start gap-3 w-full cursor-pointer">
