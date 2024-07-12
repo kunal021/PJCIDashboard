@@ -9,8 +9,6 @@ import { useDispatch } from "react-redux";
 import { updateVideo } from "../../redux/videos/videoSlice";
 
 function UpdateVideo({ setUpdateVideo, updateVideoData }) {
-  console.log(updateVideoData);
-
   const [data, setData] = useState({
     videoid: updateVideoData.video_id,
     video_duration: updateVideoData.video_duration,
@@ -46,6 +44,8 @@ function UpdateVideo({ setUpdateVideo, updateVideoData }) {
             video_id: data.videoid,
             video_title: videoTitle,
             video_duration: data.video_duration,
+            is_active: updateVideoData.is_active,
+            is_deleted: updateVideoData.is_deleted,
           })
         );
         toast.success("Video Updated Successfully");

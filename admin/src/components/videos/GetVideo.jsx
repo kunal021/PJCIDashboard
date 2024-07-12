@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { API_URL } from "../../url";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import Loader from "../../utils/Loader";
@@ -77,40 +77,39 @@ function GetVideo() {
     }
   };
 
-  const handleChangeStatus = useCallback(
-    async (videoId, isactive) => {
-      const confirmAlert = window.confirm(
-        `${
-          isactive === "1"
-            ? "course will become Inactive. Do you want to proceed"
-            : "course will become Active. Do you want to proceed"
-        }`
-      );
-      if (confirmAlert) {
-        try {
-          isactive = isactive === "1" ? "0" : "1";
-          const formData = new FormData();
-          formData.append("videoid", videoId);
-          formData.append("status", isactive);
-          await axios.post(
-            `${API_URL}/admin/video/updatevideostatus.php`,
-            formData,
-            { headers: { "content-type": "multipart/form-data" } }
-          );
+  const handleChangeStatus = async (videoId, is_active) => {
+    const confirmAlert = window.confirm(
+      `${
+        is_active === "1"
+          ? "Video will become Inactive. Do you want to proceed"
+          : "Video will become Active. Do you want to proceed"
+      }`
+    );
+    if (confirmAlert) {
+      try {
+        is_active = is_active === "1" ? "0" : "1";
+        const formData = new FormData();
+        formData.append("videoid", videoId);
+        formData.append("status", is_active);
+        const res = await axios.post(
+          `${API_URL}/admin/video/updatevideostatus.php`,
+          formData,
+          { headers: { "content-type": "multipart/form-data" } }
+        );
 
-          // Update local state instead of fetching users again
-          const updatedVideo = video.map((video) =>
-            video.id === videoId ? { ...video, isactive } : video
-          );
-          dispatch(setVideo(updatedVideo));
-        } catch (error) {
-          console.log("Error updating user status:", error);
-          // Handle error (e.g., show an error message)
-        }
+        console.log(res);
+        console.log(video);
+        // Update local state instead of fetching users again
+        const updatedVideo = video.map((video) =>
+          video.id === videoId ? { ...video, is_active } : video
+        );
+        dispatch(setVideo(updatedVideo));
+      } catch (error) {
+        console.log("Error updating user status:", error);
+        // Handle error (e.g., show an error message)
       }
-    },
-    [dispatch, video]
-  );
+    }
+  };
 
   return (
     <LayoutAdjuster>
@@ -145,13 +144,13 @@ function GetVideo() {
                           <div>
                             <button
                               onClick={() => {
-                                handleChangeStatus(item.id, item.isactive);
+                                handleChangeStatus(item.id, item.is_active);
                               }}
                               className="toggle-switch scale-75 align-middle"
                             >
                               <input
                                 type="checkbox"
-                                checked={item.isactive === "1"}
+                                checked={item.is_active === "1"}
                                 readOnly
                               />
                               <div className="toggle-switch-background">
@@ -207,9 +206,6 @@ function GetVideo() {
       )}
       {updateVideo && (
         <UpdateVideo
-          fetchVideo={() =>
-            fetchData(setLoading, currentPage, dispatch, setPaginationData)
-          }
           setUpdateVideo={setUpdateVideo}
           updateVideoData={updateVideoData}
         />
