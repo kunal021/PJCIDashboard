@@ -28,7 +28,7 @@ const fetchTest = async (setTest, setLoading, testId) => {
 function GetTestById({ testId }) {
   const [loading, setLoading] = useState(false);
   const [test, setTest] = useState([]);
-  console.log(test);
+  // console.log(test);
 
   useEffect(() => {
     fetchTest(setTest, setLoading, testId);

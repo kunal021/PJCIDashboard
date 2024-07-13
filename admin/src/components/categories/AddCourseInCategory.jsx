@@ -9,7 +9,7 @@ function AddCourseInCategory({ categoryId }) {
       <Dialog.Trigger asChild>
         <button className="text-white bg-green-500 hover:bg-green-700 items-center text-xs font-bold justify-center rounded p-1 group relative">
           <SquarePlay />
-          <p className="absolute -left-[20%] -top-full mt-1 hidden group-hover:block bg-white text-black rounded p-1">
+          <p className="absolute -left-[20%] -top-full mt-1 hidden group-hover:block bg-white/50 text-black text-xs rounded p-1">
             Add Course
           </p>
         </button>

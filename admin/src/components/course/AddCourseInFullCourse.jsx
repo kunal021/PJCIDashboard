@@ -13,14 +13,14 @@ const fetchData = async (
   setLoading,
   currentPage,
   setPaginationData,
-  courseId,
+  fullCourseId,
   setVideo,
   setError
 ) => {
   try {
     setLoading(true);
     const formData = new FormData();
-    formData.append("fullcourse_id", courseId);
+    formData.append("fullcourse_id", fullCourseId);
     formData.append("page", currentPage);
     formData.append("limit", 10);
     const response = await axios.post(
@@ -38,31 +38,27 @@ const fetchData = async (
   }
 };
 
-function AddCourseInFullCourse({ courseId }) {
-  // const dispatch = useDispatch();
+function AddCourseInFullCourse({ courseId: fullCourseId }) {
   const [loading, setLoading] = useState(false);
   const [paginationData, setPaginationData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState(null);
   const [video, setVideo] = useState([]);
-  // const addVideoInCourse = useSelector(
-  //   (state) => state.addVideoInCourse.addVideoInCourse
-  // );
-  //   console.log(video);
-  // console.log(addVideoInCourse);
 
   useEffect(() => {
     fetchData(
       setLoading,
       currentPage,
       setPaginationData,
-      courseId,
+      fullCourseId,
       setVideo,
       setError
     );
-  }, [currentPage, courseId]);
+  }, [currentPage, fullCourseId]);
 
-  const handleAddVideo = async (fcid, cid) => {
+  console.log(fullCourseId);
+
+  const handleAddCourse = async (fcid, cid) => {
     try {
       const formData = new FormData();
       formData.append("courseid", cid);
@@ -72,15 +68,12 @@ function AddCourseInFullCourse({ courseId }) {
         formData,
         { headers: "content-type/form-data" }
       );
-      setVideo(video.filter((items) => items.id !== fcid));
+
+      setVideo(video.filter((items) => items.id !== cid));
     } catch (error) {
       console.log(error);
     }
   };
-
-  // const isVideoAdded = (vid) => {
-  //   return addVideoInCourse.some((video) => video.id === vid);
-  // };
 
   return (
     <Dialog.Root>
@@ -132,7 +125,9 @@ function AddCourseInFullCourse({ courseId }) {
                           </div>
                           <button
                             // disabled={isVideoAdded(item.id)}
-                            onClick={() => handleAddVideo(courseId, item.id)}
+                            onClick={() =>
+                              handleAddCourse(fullCourseId, item.id)
+                            }
                             className="rounded-full bg-green-200 p-1 items-center"
                           >
                             {/* {isVideoAdded(item.id) ? <Check /> : <Plus />} */}

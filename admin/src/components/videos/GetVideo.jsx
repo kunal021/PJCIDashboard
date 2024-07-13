@@ -91,13 +91,13 @@ function GetVideo() {
         const formData = new FormData();
         formData.append("videoid", videoId);
         formData.append("status", is_active);
-        const res = await axios.post(
+        await axios.post(
           `${API_URL}/admin/video/updatevideostatus.php`,
           formData,
           { headers: { "content-type": "multipart/form-data" } }
         );
 
-        console.log(res);
+        // console.log(res);
         // Update local state instead of fetching users again
         const updatedVideo = video.map((video) =>
           video.id === videoId ? { ...video, is_active } : video

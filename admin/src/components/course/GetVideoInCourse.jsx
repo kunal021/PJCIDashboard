@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { API_URL } from "../../url";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import Loader from "../../utils/Loader";
@@ -9,6 +9,7 @@ import parser from "html-react-parser";
 import toast from "react-hot-toast";
 import ConfirmDelete from "../../utils/ConfirmDelete";
 import { useSearchParams } from "react-router-dom";
+import GetCourseById from "./GetCourseById";
 
 const fetchData = async (
   setLoading,
@@ -43,11 +44,13 @@ function GetVideoInCourse() {
   const [loading, setLoading] = useState(false);
   const [paginationData, setPaginationData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
+  const [show, setShow] = useState(false);
 
   const [video, setVideo] = useState([]);
 
-  useEffect(() => {
+  const handleOpenAndFetchData = useMemo(() => {
     fetchData(setLoading, currentPage, setPaginationData, courseId, setVideo);
+    setShow(true);
   }, [courseId, currentPage]);
 
   const handleDelete = async (id) => {
@@ -87,53 +90,66 @@ function GetVideoInCourse() {
           className={`w-full flex flex-col justify-center items-center mx-auto`}
         >
           <div className="w-full flex flex-col justify-center items-center my-5">
-            <h1 className="text-3xl font-bold text-center">Videos List</h1>
-            <div className="w-[80%] flex flex-col justify-center items-center">
-              {video.length > 0 ? (
-                <div className="flex flex-col justify-center items-center w-full">
-                  {video.map((item, idx) => (
-                    <div
-                      key={idx}
-                      className="flex  justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-3 gap-3"
-                    >
-                      <div className="flex flex-col justify-center items-start gap-4 w-full">
-                        <div className="flex justify-between items-center w-full gap-4">
-                          <Avatar className="bg-gray-500 text-white">
-                            {item.id}
-                          </Avatar>
-                          {/* <div>Video ID: {item.video_id}</div> */}
-                        </div>
-                        <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                        <div>
-                          <div className="flex flex-wrap text-wrap">
-                            Video Title:{" "}
-                            {typeof item.video_title == "string"
-                              ? parser(item.video_title)
-                              : item.video_title}
+            <GetCourseById id={courseId} />
+            {show ? (
+              <div
+                onClick={() => setShow(false)}
+                className="cursor-pointer font-semibold border rounded-md border-red-200 bg-red-50 hover:bg-red-100 px-4 py-2"
+              >
+                Close
+              </div>
+            ) : (
+              <div
+                onClick={handleOpenAndFetchData}
+                className="cursor-pointer font-semibold border rounded-md border-blue-200 bg-blue-50 hover:bg-blue-100 px-4 py-2"
+              >
+                See Videos
+              </div>
+            )}
+            {show && (
+              <div className="flex flex-col justify-center items-center my-5 w-[80%]">
+                <h1 className="text-3xl font-bold text-center">Videos List</h1>
+                <div className="w-full flex flex-col justify-center items-center">
+                  {video.length > 0 ? (
+                    <div className="flex flex-col justify-center items-center w-full">
+                      {video.map((item, idx) => (
+                        <div
+                          key={idx}
+                          className="flex  justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-3 gap-3"
+                        >
+                          <div className="flex justify-center items-center gap-4 w-full">
+                            <Avatar className="bg-gray-500 text-white w-8">
+                              {item.id}
+                            </Avatar>
+                            <div className="flex flex-wrap text-wrap w-full">
+                              {typeof item.video_title == "string"
+                                ? parser(item.video_title)
+                                : item.video_title}
+                            </div>
+                          </div>
+                          <div className="flex flex-col justify-between items-end gap-10 w-fit">
+                            <ConfirmDelete
+                              handleClick={() => handleDelete(item.id)}
+                            />
                           </div>
                         </div>
-                      </div>
-                      <div className="flex flex-col justify-between items-end gap-10 w-fit">
-                        <ConfirmDelete
-                          handleClick={() => handleDelete(item.id)}
-                        />
-                      </div>
+                      ))}
                     </div>
-                  ))}
+                  ) : (
+                    <div className="text-2xl font-bold text-center mt-20">
+                      No Data Available
+                    </div>
+                  )}
+                  <div>
+                    <Pagination
+                      totalPage={paginationData.total_pages}
+                      currPage={currentPage}
+                      setCurrPage={setCurrentPage}
+                    />
+                  </div>
                 </div>
-              ) : (
-                <div className="text-2xl font-bold text-center mt-20">
-                  No Data Available
-                </div>
-              )}
-              <div>
-                <Pagination
-                  totalPage={paginationData.total_pages}
-                  currPage={currentPage}
-                  setCurrPage={setCurrentPage}
-                />
               </div>
-            </div>
+            )}
           </div>
         </div>
       )}

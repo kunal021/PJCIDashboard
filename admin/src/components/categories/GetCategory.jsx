@@ -167,7 +167,7 @@ function GetCategory() {
                     </td>
                     <td className="border p-2 text-sm">
                       <Link to={`/get-course-category-wise?id=${item.id}`}>
-                        <SeeAll childern={"See All Course"} />
+                        <SeeAll childern={"Courses"} />
                       </Link>
                     </td>
                   </tr>
