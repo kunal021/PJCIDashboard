@@ -205,16 +205,16 @@ const SideBar = () => {
           {items.map((item) => renderMenuItem(item))}
         </Menu>
       </div>
-      <div className="fixed top-4 right-4">
+      <div
+        className={`fixed top-4 ${collapsed && "left-24"} ${
+          !collapsed && "left-[17rem]"
+        }`}
+      >
         <Button type="primary" onClick={toggleSidebar}>
           {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
         </Button>
       </div>
-      <div
-        className={`fixed top-4 space-x-2 ${collapsed && "left-24"} ${
-          !collapsed && "left-[17rem]"
-        }`}
-      >
+      <div className={`fixed top-4 space-x-2 right-4`}>
         <button
           onClick={() => {
             window.history.back();
