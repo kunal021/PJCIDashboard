@@ -118,7 +118,7 @@ function GetCourseById({ id }) {
           {courses ? (
             <div className="flex flex-col justify-center items-center w-full">
               <h1 className="text-3xl font-bold text-center my-2">
-                Course Details
+                Course Detail
               </h1>
               <div className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-2 gap-4">
                 <div className="flex flex-col justify-center items-start gap-2 w-full">

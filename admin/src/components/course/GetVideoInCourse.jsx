@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { API_URL } from "../../url";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import Loader from "../../utils/Loader";
@@ -48,10 +48,13 @@ function GetVideoInCourse() {
 
   const [video, setVideo] = useState([]);
 
-  const handleOpenAndFetchData = useMemo(() => {
+  useEffect(() => {
     fetchData(setLoading, currentPage, setPaginationData, courseId, setVideo);
-    setShow(true);
   }, [courseId, currentPage]);
+
+  const handleOpenAndFetchData = () => {
+    setShow(true);
+  };
 
   const handleDelete = async (id) => {
     try {

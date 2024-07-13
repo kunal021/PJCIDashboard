@@ -37,7 +37,7 @@ function AddVideo() {
         { headers: { "content-type": "multipart/form-data" } }
       );
 
-      console.log(response);
+      // console.log(response);
       if (response.status === 201) {
         toast.success("Video Added Successfully");
       }
@@ -49,7 +49,9 @@ function AddVideo() {
     }
     setData({
       videoid: "",
+      video_duration: "",
     });
+    setVideoTitle("");
   };
 
   const getVideoData = (html) => {
@@ -62,7 +64,7 @@ function AddVideo() {
           <Loader />
         </>
       ) : (
-        <div className="w-full flex flex-col justify-center items-center ml-2">
+        <div className="w-[80%] flex flex-col justify-center items-center ml-2">
           <FormField
             id={"videoid"}
             type={"text"}

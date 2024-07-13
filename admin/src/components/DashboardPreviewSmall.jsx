@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   AppstoreOutlined,
   BookOutlined,
@@ -15,7 +16,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleCollapsed } from "../redux/sidebar/sidebarSlice"; // Adjust the import path
 import UpdateServerStatus from "./setting/UpdateServerStatus";
-import { Server } from "lucide-react";
+import { MoveLeft, MoveRight, Server } from "lucide-react";
 
 const items = [
   {
@@ -129,34 +130,30 @@ const SideBar = () => {
   const location = useLocation();
   const currentPath = location.pathname;
 
-  const getSelectedKeys = () => {
+  const [selectedKeys, setSelectedKeys] = useState([]);
+  const [openKeys, setOpenKeys] = useState([]);
+
+  useEffect(() => {
     const selectedItem = items.find((item) =>
       item.link
         ? item.link === currentPath
         : item.children.find((child) => child.link === currentPath)
     );
     if (selectedItem) {
-      // console.log(selectedItem);
-      return selectedItem.key.includes("sub")
-        ? [
-            selectedItem.children.find((child) => child.link === currentPath)
-              .key,
-          ]
-        : [selectedItem.key];
+      setSelectedKeys(
+        selectedItem.key.includes("sub")
+          ? [
+              selectedItem.children.find((child) => child.link === currentPath)
+                .key,
+            ]
+          : [selectedItem.key]
+      );
+      setOpenKeys(selectedItem.key.includes("sub") ? [selectedItem.key] : []);
+    } else {
+      setSelectedKeys([]);
+      setOpenKeys([]);
     }
-    return [];
-  };
-
-  const getOpenKeys = () => {
-    const item = items.filter((item) => item.key.includes("sub"));
-    const selectedItem = item.find((item) =>
-      item.children.find((child) => child.link === currentPath)
-    );
-    if (selectedItem && selectedItem.children) {
-      return [selectedItem.key]; // Open the parent submenu if it has children
-    }
-    return [];
-  };
+  }, [currentPath]);
 
   const toggleSidebar = () => {
     dispatch(toggleCollapsed());
@@ -182,7 +179,9 @@ const SideBar = () => {
     }
   };
 
-  // bg-[#001529]
+  const handleOpenChange = (keys) => {
+    setOpenKeys(keys);
+  };
 
   return (
     <>
@@ -195,12 +194,13 @@ const SideBar = () => {
           } h-20 w-36 rounded-md mt-5`}
         />
         <Menu
-          defaultSelectedKeys={getSelectedKeys}
-          defaultOpenKeys={getOpenKeys}
+          selectedKeys={selectedKeys}
+          openKeys={openKeys}
           mode="inline"
           theme="dark"
           inlineCollapsed={collapsed}
           className={`${!collapsed && "w-64"} pt-5 mb-5`}
+          onOpenChange={handleOpenChange}
         >
           {items.map((item) => renderMenuItem(item))}
         </Menu>
@@ -209,6 +209,28 @@ const SideBar = () => {
         <Button type="primary" onClick={toggleSidebar}>
           {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
         </Button>
+      </div>
+      <div
+        className={`fixed top-4 space-x-2 ${collapsed && "left-24"} ${
+          !collapsed && "left-[17rem]"
+        }`}
+      >
+        <button
+          onClick={() => {
+            window.history.back();
+          }}
+          className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-1 px-2.5 rounded-md align-middle transition-all duration-300"
+        >
+          <MoveLeft className="w-5" />
+        </button>
+        <button
+          onClick={() => {
+            window.history.forward();
+          }}
+          className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-1 px-2.5 rounded-md align-middle transition-all duration-300"
+        >
+          <MoveRight className="w-5" />
+        </button>
       </div>
     </>
   );

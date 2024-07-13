@@ -76,7 +76,9 @@ const GetFullCourseSubjects = () => {
           )}
           {show && (
             <div className="flex flex-col justify-center items-center my-5 w-[80%]">
-              <h1 className="text-3xl font-bold text-center">Course List</h1>
+              <h1 className="text-3xl font-bold text-center">
+                Full Course List
+              </h1>
               {courses.length > 0 ? (
                 <div className="flex flex-col justify-center items-center">
                   {courses.map(
