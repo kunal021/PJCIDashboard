@@ -7,13 +7,14 @@ import toast from "react-hot-toast";
 import FormField from "../../utils/FormField";
 import { API_URL } from "../../url";
 import Tiptap from "../../utils/TextEditor";
-import { UploadCloud } from "lucide-react";
+import { Loader, UploadCloud } from "lucide-react";
 
 function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
   const [course, setCourse] = useState([]);
   const [courseName, setCourseName] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -101,19 +102,18 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
 
   const handleUploadImage = async (e) => {
     const file = e.target.files[0];
-    console.log(file);
     if (!file) return;
     try {
+      setLoading(true);
       const formData = new FormData();
       formData.append("image", file);
-      console.log(0);
       const response = await axios.post(
         `${API_URL}/admin/courses/uplodecourseimage.php`,
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );
 
-      // console.log(response.data);
+      console.log(response.data);
       if (response.status === 200) {
         setCourse((prev) => ({ ...prev, img_url: response.data.url }));
         toast.success("Image Uploaded Successfully");
@@ -121,6 +121,8 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
     } catch (error) {
       console.log(error);
       toast.error("Error Uploading Image");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -183,16 +185,31 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
             />
             <label
               htmlFor="fileinput"
-              className="flex flex-col justify-center items-center w-60 h-36 cursor-pointer bg-gray-50 text-black px-4 py-2 rounded-lg border-2 border-gray-300 border-dashed hover:bg-gray-100"
+              className="flex flex-col justify-center items-center w-60 h-36 cursor-pointer bg-gray-50 text-black px-4 py-2 rounded-lg border-2 border-gray-300 border-dashed hover:bg-blue-50"
             >
-              <UploadCloud />
-              <p>Upload Image</p>
+              {!loading ? (
+                <>
+                  <UploadCloud />
+                  <p>Upload Image</p>
+                </>
+              ) : (
+                <>
+                  <Loader className="animate-spin h-6 w-6" />
+                  <p>Uploading...</p>
+                </>
+              )}
             </label>
-            <img
-              src={course.img_url}
-              alt="image"
-              className="w-60 h-36 rounded-lg"
-            />
+            {course.img_url ? (
+              <img
+                src={course.img_url}
+                alt="image"
+                className="w-60 h-36 rounded-lg m-auto"
+              />
+            ) : (
+              <div className="rounded-lg border-2 border-gray-300 border-dashed h-36 w-60 text-center items-center m-auto">
+                Preview
+              </div>
+            )}
           </div>
           <FormField
             htmlFor={"imgurl"}

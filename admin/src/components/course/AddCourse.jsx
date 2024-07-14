@@ -8,7 +8,7 @@ import { API_URL } from "../../url";
 import toast from "react-hot-toast";
 import Tiptap from "../../utils/TextEditor";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
-import { UploadCloud } from "lucide-react";
+import { Loader, UploadCloud } from "lucide-react";
 
 function AddCourse() {
   const [course, setCourse] = useState({
@@ -17,6 +17,7 @@ function AddCourse() {
     imgurl: "",
   });
   // const [imageData, setImagedata] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [courseName, setCourseName] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
   const dispatch = useDispatch();
@@ -68,12 +69,11 @@ function AddCourse() {
 
   const handleUploadImage = async (e) => {
     const file = e.target.files[0];
-    console.log(file);
     if (!file) return;
     try {
+      setLoading(true);
       const formData = new FormData();
       formData.append("image", file);
-      console.log(0);
       const response = await axios.post(
         `${API_URL}/admin/courses/uplodecourseimage.php`,
         formData,
@@ -88,6 +88,8 @@ function AddCourse() {
     } catch (error) {
       console.log(error);
       toast.error("Error Uploading Image");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -142,16 +144,31 @@ function AddCourse() {
               />
               <label
                 htmlFor="fileinput"
-                className="flex flex-col justify-center items-center w-60 h-36 cursor-pointer bg-gray-50 text-black px-4 py-2 rounded-lg border-2 border-gray-300 border-dashed hover:bg-gray-100"
+                className="flex flex-col justify-center items-center w-60 h-36 cursor-pointer bg-gray-50 text-black px-4 py-2 rounded-lg border-2 border-gray-300 border-dashed hover:bg-blue-50"
               >
-                <UploadCloud />
-                <p>Upload Image</p>
+                {!loading ? (
+                  <>
+                    <UploadCloud />
+                    <p>Upload Image</p>
+                  </>
+                ) : (
+                  <>
+                    <Loader className="animate-spin h-6 w-6" />
+                    <p>Uploading...</p>
+                  </>
+                )}
               </label>
-              <img
-                src={course.imgurl}
-                alt="image"
-                className="w-60 h-36 rounded-lg"
-              />
+              {course.imgurl ? (
+                <img
+                  src={course.imgurl}
+                  alt="image"
+                  className="w-60 h-36 rounded-lg m-auto"
+                />
+              ) : (
+                <div className="rounded-lg border-2 border-gray-300 border-dashed h-36 w-60 text-center items-center m-auto">
+                  Preview
+                </div>
+              )}
             </div>
             <FormField
               htmlFor={"imgurl"}
