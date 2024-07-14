@@ -79,67 +79,75 @@ function GetAllUsers() {
           <h1 className="text-3xl font-bold text-center my-5">All Users</h1>
           {/* <LinkButton to={"/add-user"}>Add Course</LinkButton> */}
         </div>
-        <table className="table-auto w-full m-5 border">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="p-2 text-sm">Id</th>
-              <th className="p-2 text-sm">Name</th>
-              <th className="p-2 text-sm">Mobile No.</th>
-              <th className="p-2 text-sm">Active</th>
-              <th className="p-2 text-sm">Update</th>
-              <th className="p-2 text-sm">Delete</th>
-            </tr>
-          </thead>
-          <tbody className="text-center">
-            {users.map((user) => (
-              <tr key={user.id} className="bg-gray-50">
-                <td className="border p-2 text-sm">{user.id}</td>
-                <td className="border p-2 text-sm">
-                  {user.firstname} {user.lastname}
-                </td>
-                <td className="border p-2 text-sm">{user.mo_number}</td>
-                <td className="border p-2 text-sm flex justify-center items-center">
-                  <button
-                    onClick={() => {
-                      handleChangeStatus(user.id, user.isactive);
-                    }}
-                    className="toggle-switch scale-75"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={user.isactive === "1"}
-                      readOnly
-                    />
-                    <div className="toggle-switch-background">
-                      <div className="toggle-switch-handle"></div>
-                    </div>
-                  </button>
-                </td>
-                <td className="border p-2 text-sm">
-                  <UpdateBtn
-                    handleClick={() => {
-                      // Handle update button click
-                    }}
-                  />
-                </td>
-                <td className="border p-2 text-sm">
-                  <ConfirmDelete
-                    handleClick={() => {
-                      // Handle delete button click
-                    }}
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className="mb-4">
-          <Pagination
-            totalPage={paginationData.total_pages}
-            currPage={currentPage}
-            setCurrPage={setCurrentPage}
-          />
-        </div>
+        {users.length > 0 ? (
+          <>
+            <table className="table-auto w-full m-5 border">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="p-2 text-sm">Id</th>
+                  <th className="p-2 text-sm">Name</th>
+                  <th className="p-2 text-sm">Mobile No.</th>
+                  <th className="p-2 text-sm">Active</th>
+                  <th className="p-2 text-sm">Update</th>
+                  <th className="p-2 text-sm">Delete</th>
+                </tr>
+              </thead>
+              <tbody className="text-center">
+                {users.map((user) => (
+                  <tr key={user.id} className="bg-gray-50">
+                    <td className="border p-2 text-sm">{user.id}</td>
+                    <td className="border p-2 text-sm">
+                      {user.firstname} {user.Lastname}
+                    </td>
+                    <td className="border p-2 text-sm">{user.mo_number}</td>
+                    <td className="border p-2 text-sm flex justify-center items-center">
+                      <button
+                        onClick={() => {
+                          handleChangeStatus(user.id, user.isactive);
+                        }}
+                        className="toggle-switch scale-75"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={user.isactive === "1"}
+                          readOnly
+                        />
+                        <div className="toggle-switch-background">
+                          <div className="toggle-switch-handle"></div>
+                        </div>
+                      </button>
+                    </td>
+                    <td className="border p-2 text-sm">
+                      <UpdateBtn
+                        handleClick={() => {
+                          // Handle update button click
+                        }}
+                      />
+                    </td>
+                    <td className="border p-2 text-sm">
+                      <ConfirmDelete
+                        handleClick={() => {
+                          // Handle delete button click
+                        }}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="mb-4">
+              <Pagination
+                totalPage={paginationData.total_pages}
+                currPage={currentPage}
+                setCurrPage={setCurrentPage}
+              />
+            </div>
+          </>
+        ) : (
+          <div className="text-2xl font-bold text-center mt-20">
+            No Data Available
+          </div>
+        )}
       </div>
     </LayoutAdjuster>
   );
