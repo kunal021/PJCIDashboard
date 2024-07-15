@@ -66,7 +66,7 @@ function UpdateCategory() {
           </FormField>
           <button
             onClick={handleSubmit}
-            className="border-2 rounded-lg bg-blue-500 p-2 text-sm font-semibold border-transparent hover:bg-blue-700 text-white transition-all duration-500 w-full md:w-auto"
+            className="border rounded-md bg-blue-50 p-2 text-sm font-semibold border-blue-200 hover:bg-blue-100 text-black w-full md:w-auto"
           >
             Update Category
           </button>
