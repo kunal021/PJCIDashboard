@@ -57,7 +57,7 @@ function AboutUs() {
           <Loader />
         </>
       ) : (
-        <div className="w-full flex flex-col justify-center items-center">
+        <div className="w-[80%] flex flex-col justify-center items-center">
           <div className="w-full my-2">
             <Tiptap getHtmlData={getData} initialContent={data} />
           </div>
