@@ -62,20 +62,20 @@ function GetTest() {
   };
 
   const handleChangeStatus = useCallback(
-    async (testId, isactive) => {
+    async (testId, flag) => {
       const confirmAlert = window.confirm(
         `${
-          isactive === "1"
+          flag === "1"
             ? "course will become Inactive. Do you want to proceed"
             : "course will become Active. Do you want to proceed"
         }`
       );
       if (confirmAlert) {
         try {
-          isactive = isactive === "1" ? "0" : "1";
+          flag = flag === "1" ? "0" : "1";
           const formData = new FormData();
           formData.append("test_id", testId);
-          formData.append("statuscode", isactive);
+          formData.append("statuscode", flag);
           await axios.post(
             `${API_URL}/admin/test/updateteststatus.php`,
             formData,
@@ -85,7 +85,7 @@ function GetTest() {
 
           // Update local state instead of fetching users again
           const updatedTest = test.map((test) =>
-            test.test_id === testId ? { ...test, isactive } : test
+            test.test_id === testId ? { ...test, flag } : test
           );
           dispatch(setTest(updatedTest));
         } catch (error) {
@@ -96,6 +96,8 @@ function GetTest() {
     },
     [dispatch, test]
   );
+
+  console.log(test);
 
   return (
     <LayoutAdjuster>
@@ -141,13 +143,13 @@ function GetTest() {
                         <div className="w-[20%]">
                           <button
                             onClick={() => {
-                              handleChangeStatus(test.test_id, test.isactive);
+                              handleChangeStatus(test.test_id, test.flag);
                             }}
                             className="toggle-switch scale-75 align-middle"
                           >
                             <input
                               type="checkbox"
-                              checked={test.isactive === "1"}
+                              checked={test.flag === "1"}
                               readOnly
                             />
                             <div className="toggle-switch-background">

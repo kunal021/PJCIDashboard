@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setCourse } from "../../redux/courses/courseSlice";
+import { setCourse, deleteCourse } from "../../redux/courses/courseSlice";
 import axios from "axios";
 import { API_URL } from "../../url";
 import { useSearchParams } from "react-router-dom";
@@ -9,6 +9,8 @@ import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import parser from "html-react-parser";
 import { Avatar } from "antd";
 import { CalendarClock, IndianRupee, SquarePlay } from "lucide-react";
+import ConfirmDelete from "../../utils/ConfirmDelete";
+import toast from "react-hot-toast";
 
 const GetCourseCategoryWise = () => {
   const [loading, setLoading] = useState(false);
@@ -49,12 +51,36 @@ const GetCourseCategoryWise = () => {
     return data;
   };
 
+  const handleDelete = async (courseId) => {
+    try {
+      const formData = new FormData();
+      formData.append("c_id", id);
+      formData.append("course_id", courseId);
+      console.log(courseId, id, formData);
+      const response = await axios.post(
+        `${API_URL}/admin/category/deletecourseandfcfromcategory.php`,
+        formData,
+        { headers: { "content-type": "multipart/form-data" } }
+      );
+
+      console.log(response);
+      if (response.status === 200) {
+        toast.success("Course Deleted Sucessfully");
+        dispatch(deleteCourse(courseId));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // console.log(courses);
+
   return (
     <LayoutAdjuster>
       {loading ? (
         <Loader />
       ) : (
-        <div className="flex flex-col justify-center items-center my-5">
+        <div className="flex flex-col justify-center items-center my-5 w-full">
           <h1 className="text-3xl font-bold text-center">Course List</h1>
           {courses.length > 0 ? (
             <div className="flex flex-col justify-center items-center w-[80%]">
@@ -63,7 +89,7 @@ const GetCourseCategoryWise = () => {
                   course && (
                     <div
                       key={idx}
-                      className="flex  justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-2 gap-4"
+                      className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-2 gap-4"
                     >
                       <div className="flex flex-col justify-center items-start gap-2 w-full">
                         <div className="flex justify-center items-center gap-6 w-full">
@@ -100,6 +126,11 @@ const GetCourseCategoryWise = () => {
                                 <p>{course.price}</p>
                               </div>
                             </div>
+                          </div>
+                          <div>
+                            <ConfirmDelete
+                              handleClick={() => handleDelete(course.id)}
+                            />
                           </div>
                         </div>
                       </div>
