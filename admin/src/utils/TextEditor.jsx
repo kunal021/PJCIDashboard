@@ -411,7 +411,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                   <X className="h-4" />
                 </button>
               </div>
-              <div className="flex justify-center items-center">
+              <div className="flex justify-center items-center cursor-pointer bg-gray-50 text-black p-1.5 rounded-lg border border-gray-300 border-dashed hover:bg-blue-50">
                 <input
                   id="fileinput"
                   type="file"
@@ -420,14 +420,11 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                   className="hidden"
                 />
                 {loading ? (
-                  <div className="flex justify-center items-center cursor-pointer bg-gray-50 text-black p-1 rounded-lg border border-gray-300 border-dashed hover:bg-blue-50">
+                  <div>
                     <Loader className="animate-spin h-4 w-4" />
                   </div>
                 ) : (
-                  <label
-                    htmlFor="fileinput"
-                    className="flex justify-center items-center cursor-pointer bg-gray-50 text-black p-1 rounded-lg border border-gray-300 border-dashed hover:bg-blue-50"
-                  >
+                  <label htmlFor="fileinput" className="cursor-pointer">
                     <ImageIcon className="h-4" />
                   </label>
                 )}
