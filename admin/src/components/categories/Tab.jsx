@@ -55,9 +55,9 @@ function Tab({ categoryId }) {
   const [course, setCourse] = useState([]);
   const [fullCourse, setFullCourse] = useState([]);
 
-  console.log(course);
-  console.log(fullCourse);
-  console.log(categoryId);
+  // console.log(course);
+  // console.log(fullCourse);
+  // console.log(categoryId);
 
   useEffect(() => {
     fetchData(

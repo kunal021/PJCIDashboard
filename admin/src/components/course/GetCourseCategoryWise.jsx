@@ -73,7 +73,7 @@ const GetCourseCategoryWise = () => {
     }
   };
 
-  // console.log(courses);
+  console.log(courses);
 
   return (
     <LayoutAdjuster>

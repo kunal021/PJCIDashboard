@@ -110,7 +110,7 @@ function GetCategory() {
             </h1>
             <button
               onClick={() => setAddNewCategory((prev) => !prev)}
-              className="border rounded-md bg-blue-50\0 p-2 text-sm font-semibold text-black hover:bg-blue-100 border-blue-200 md:w-auto"
+              className="border rounded-md bg-blue-50 p-2 text-sm font-semibold text-black hover:bg-blue-100 border-blue-200 md:w-auto"
             >
               Add Category
             </button>
