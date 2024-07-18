@@ -8,12 +8,13 @@ import Superscript from "@tiptap/extension-superscript";
 import FontFamily from "@tiptap/extension-font-family";
 import Highlight from "@tiptap/extension-highlight";
 import Link from "@tiptap/extension-link";
-// import Image from "@tiptap/extension-image";
+import Image from "@tiptap/extension-image";
 import TextAlign from "@tiptap/extension-text-align";
 import TextStyle from "@tiptap/extension-text-style";
 import Placeholder from "@tiptap/extension-placeholder";
 import { FontSize } from "./fontSizeExtension";
-import { CustomImage } from "./TipTapImage";
+import FileHandler from "@tiptap-pro/extension-file-handler";
+// import { CustomImage } from "./TipTapImage";
 import {
   Bold,
   Italic,
@@ -37,12 +38,12 @@ import {
   Minus,
   Link2,
   Link2Off,
-  ImageIcon,
-  Trash2,
-  Loader,
+  // ImageIcon,
+  // Trash2,
+  // Loader,
 } from "lucide-react";
 import { useState } from "react";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 import { API_URL } from "../url";
 import axios from "axios";
 
@@ -50,7 +51,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
   const [showToolBar, setShowToolBar] = useState(true);
   const [headingOptionOpen, setHeadingOptionOpen] = useState(false);
   const [fontSizeOpen, setFontSizeOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
   const editor = useEditor({
     extensions: [
@@ -61,16 +62,78 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
       Subscript,
       Superscript,
       Highlight.configure({ multicolor: true }),
-      // Image,
+      Image,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       TextStyle,
       FontSize,
       FontFamily,
-      CustomImage,
+      FileHandler.configure({
+        allowedMimeTypes: [
+          "image/png",
+          "image/jpeg",
+          "image/gif",
+          "image/webp",
+          "image/*",
+        ],
+        async onDrop(currentEditor, files, pos) {
+          for (const file of files) {
+            const formData = new FormData();
+            formData.append("image", file);
+            const response = await axios.post(
+              `${API_URL}/admin/courses/uplodecourseimage.php`,
+              formData,
+              { headers: { "content-type": "multipart/form-data" } }
+            );
+
+            if (response.data && response.data.url) {
+              currentEditor
+                .chain()
+                .insertContentAt(pos, {
+                  type: "image",
+                  attrs: {
+                    src: response.data.url,
+                  },
+                })
+                .focus()
+                .run();
+            }
+          }
+        },
+        async onPaste(currentEditor, files, htmlContent) {
+          for (const file of files) {
+            if (htmlContent) {
+              console.log(htmlContent); // eslint-disable-line no-console
+              return false;
+            }
+
+            const formData = new FormData();
+            formData.append("image", file);
+            const response = await axios.post(
+              `${API_URL}/admin/courses/uplodecourseimage.php`,
+              formData,
+              { headers: { "content-type": "multipart/form-data" } }
+            );
+
+            if (response.data && response.data.url) {
+              currentEditor
+                .chain()
+                .insertContentAt(currentEditor.state.selection.anchor, {
+                  type: "image",
+                  attrs: {
+                    src: response.data.url,
+                  },
+                })
+                .focus()
+                .run();
+            }
+          }
+        },
+      }),
     ],
     content: initialContent || "",
     onUpdate({ editor }) {
-      getHtmlData(editor.getHTML());
+      const html = editor.getHTML();
+      getHtmlData(html);
     },
     editorProps: {
       attributes: {
@@ -135,46 +198,6 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
       .extendMarkRange("link")
       .setLink({ href: url, target: "_blank" })
       .run();
-  };
-
-  const handleUploadImage = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    try {
-      setLoading(true);
-      const formData = new FormData();
-      formData.append("image", file);
-      const response = await axios.post(
-        `${API_URL}/admin/courses/uplodecourseimage.php`,
-        formData,
-        { headers: { "content-type": "multipart/form-data" } }
-      );
-
-      // console.log(response.data);
-      if (response.status === 200) {
-        editor.chain().focus().setImage({ src: response.data.url }).run();
-        toast.success("Image Uploaded Successfully");
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Error Uploading Image");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleRemoveImage = () => {
-    const { from, to } = editor.view.state.selection;
-    const tr = editor.view.state.tr;
-
-    editor.view.state.doc.nodesBetween(from, to, (node, pos) => {
-      if (node.type.name === "image") {
-        tr.delete(pos, pos + node.nodeSize);
-      }
-    });
-
-    editor.view.dispatch(tr);
-    editor.chain().focus().run();
   };
 
   return (
@@ -411,7 +434,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                   <X className="h-4" />
                 </button>
               </div>
-              <div className="flex justify-center items-center cursor-pointer bg-gray-50 text-black p-1.5 rounded-lg border border-gray-300 border-dashed hover:bg-blue-50">
+              {/* <div className="flex justify-center items-center cursor-pointer bg-gray-50 text-black p-1.5 rounded-lg border border-gray-300 border-dashed hover:bg-blue-50">
                 <input
                   id="fileinput"
                   type="file"
@@ -431,7 +454,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                 <button onClick={handleRemoveImage}>
                   <Trash2 className="h-4" />
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
         )}

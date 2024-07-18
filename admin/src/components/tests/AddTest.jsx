@@ -23,6 +23,7 @@ function AddTest() {
   });
   const [testName, setTestName] = useState("");
   const [testDescription, setTestDescription] = useState("");
+
   const dispatch = useDispatch();
 
   const getNameData = (html) => {
@@ -81,10 +82,10 @@ function AddTest() {
       );
       dispatch(addTest(response.data));
       if (response.status == 201) {
-        toast.success("Test Added Sucessfully");
+        toast.success("Test Added Successfully");
       }
     } catch (error) {
-      console.error("Error fetching courses:", error);
+      console.error("Error adding test:", error);
     }
     setFormData({
       price: "",
@@ -100,6 +101,7 @@ function AddTest() {
     setTestName("");
     setTestDescription("");
   };
+
   return (
     <LayoutAdjuster>
       <div className="w-[80%] flex flex-col justify-center items-center">
@@ -113,7 +115,7 @@ function AddTest() {
             <p className="block text-gray-700 text-sm font-bold">Description</p>
             <div className="w-full my-2">
               <Tiptap
-                placeholder={"Category"}
+                placeholder="Description"
                 getHtmlData={getDescriptionData}
               />
             </div>
@@ -146,12 +148,12 @@ function AddTest() {
                 htmlFor="numberOfQuestion"
                 id="numberOfQuestion"
                 type="text"
-                placeholder="Number Of Question"
+                placeholder="Number Of Questions"
                 name="numberOfQuestion"
                 value={formData.numberOfQuestion}
                 onChange={handleChange}
               >
-                Number Of Question
+                Number Of Questions
               </FormField>
               <FormField
                 htmlFor="markPerQuestion"
