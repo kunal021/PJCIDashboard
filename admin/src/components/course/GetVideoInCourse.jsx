@@ -137,19 +137,19 @@ function GetVideoInCourse() {
                           </div>
                         </div>
                       ))}
+                      <div>
+                        <Pagination
+                          totalPage={paginationData.total_pages}
+                          currPage={currentPage}
+                          setCurrPage={setCurrentPage}
+                        />
+                      </div>
                     </div>
                   ) : (
                     <div className="text-2xl font-bold text-center mt-20">
                       No Data Available
                     </div>
                   )}
-                  <div>
-                    <Pagination
-                      totalPage={paginationData.total_pages}
-                      currPage={currentPage}
-                      setCurrPage={setCurrentPage}
-                    />
-                  </div>
                 </div>
               </div>
             )}

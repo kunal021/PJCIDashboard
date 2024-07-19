@@ -61,6 +61,7 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
       const formDataObject = {
         testid: updateTestData.test_id,
         test_name: testName,
+        flag: updateTestData.flag,
         description: testDescription,
         price: formData.price,
         duration: formData.duration,
@@ -73,6 +74,8 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
         end_time: formData.endTime,
       };
 
+      console.log(formDataObject);
+
       Object.entries(formDataObject).forEach(([key, value]) => {
         formDataToSend.append(key, value);
       });
@@ -82,10 +85,13 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
         { headers: { "content-type": "multipart/form-data" } }
       );
 
+      // console.log(response);
+
       if (response.status == 201) {
         dispatch(
           updateTest({
             test_id: updateTestData.test_id,
+            flag: updateTestData.flag,
             test_name: testName,
             description: testDescription,
             price: formData.price,
@@ -101,7 +107,7 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
         );
         toast.success("Test Updated Sucessfully");
       }
-      setUpdateTest((perv) => !perv);
+      // setUpdateTest((perv) => !perv);
     } catch (error) {
       console.error("Error fetching courses:", error);
     }

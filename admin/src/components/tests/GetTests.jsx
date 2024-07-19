@@ -38,7 +38,6 @@ function GetTest() {
   const test = useSelector((state) => state.test.test);
 
   useEffect(() => {
-    setLoading(true);
     fetchTest(dispatch, setLoading);
   }, [dispatch]);
 
@@ -66,8 +65,8 @@ function GetTest() {
       const confirmAlert = window.confirm(
         `${
           flag === "1"
-            ? "course will become Inactive. Do you want to proceed"
-            : "course will become Active. Do you want to proceed"
+            ? "Test will become Inactive. Do you want to proceed"
+            : "Test will become Active. Do you want to proceed"
         }`
       );
       if (confirmAlert) {
@@ -97,7 +96,7 @@ function GetTest() {
     [dispatch, test]
   );
 
-  console.log(test);
+  // console.log(test);
 
   return (
     <LayoutAdjuster>

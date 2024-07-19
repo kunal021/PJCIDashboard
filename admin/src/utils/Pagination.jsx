@@ -4,6 +4,7 @@ const Pagination = ({ totalPage, currPage, setCurrPage }) => {
   const handlePageClick = (page) => {
     if (page >= 1 && page <= totalPage) {
       setCurrPage(page);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 

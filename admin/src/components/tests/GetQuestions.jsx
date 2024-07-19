@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteQuestion,
@@ -63,8 +63,11 @@ const GetQuestions = () => {
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
 
-  const handleOpenAndFetchData = () => {
+  useEffect(() => {
     fetchQuestions(dispatch, setLoading, id, setPaginationData, currentPage);
+  }, [dispatch, id, currentPage]);
+
+  const handleOpenAndFetchData = () => {
     setShow(true);
   };
 
@@ -124,7 +127,7 @@ const GetQuestions = () => {
                   Add Question
                 </LinkButton>
               </div>
-              {question.length > 0 ? (
+              {question ? (
                 <div className="flex flex-col justify-center items-center w-full">
                   {question.map(
                     (question, idx) =>

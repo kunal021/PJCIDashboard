@@ -35,24 +35,13 @@ function AddTest() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "startTime" || name === "endTime") {
-      const [hours, minutes] = value.split(":");
-      let hour = parseInt(hours, 10);
-      hour = hour % 12 || 12;
-      if (hour < 10) {
-        hour = `0${hour}`;
-      }
-      setFormData((prevTest) => ({
-        ...prevTest,
-        [name]: `${hour}:${minutes}`,
-      }));
-    } else {
-      setFormData((prevTest) => ({
-        ...prevTest,
-        [name]: value,
-      }));
-    }
+    setFormData((prevTest) => ({
+      ...prevTest,
+      [name]: value,
+    }));
   };
+
+  // console.log(formData);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
