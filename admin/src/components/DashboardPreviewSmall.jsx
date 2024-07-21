@@ -4,6 +4,7 @@ import {
   BookOutlined,
   DashboardOutlined,
   FormOutlined,
+  LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   SettingOutlined,
@@ -17,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleCollapsed } from "../redux/sidebar/sidebarSlice"; // Adjust the import path
 import UpdateServerStatus from "./setting/UpdateServerStatus";
 import { MoveLeft, MoveRight, Server } from "lucide-react";
+import Logout from "./setting/Logout";
 
 const items = [
   {
@@ -119,6 +121,17 @@ const items = [
       {
         key: "18",
         label: <UpdateServerStatus />,
+      },
+    ],
+  },
+  {
+    key: "sub7",
+    label: "Logout",
+    icon: <LogoutOutlined className="h-4 w-4" />,
+    children: [
+      {
+        key: "20",
+        label: <Logout />,
       },
     ],
   },

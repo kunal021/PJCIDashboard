@@ -1,16 +1,12 @@
-/* eslint-disable react/prop-types */
-
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
-import { Trash2 } from "lucide-react";
+import { LogOut } from "lucide-react";
 
-const ConfirmDelete = ({ handleClick }) => (
+const Logout = () => (
   <AlertDialog.Root>
     <AlertDialog.Trigger asChild>
-      <button className="bg-red-500 hover:bg-red-700 text-white font-bold p-1 text-xs rounded group relative">
-        <Trash2 />
-        <div className="absolute -left-[20%] -top-full mt-1 hidden group-hover:block bg-white/50 text-black rounded p-1">
-          Delete
-        </div>
+      <button className="relative flex justify-center items-center text gap-2">
+        <p className="pb-1">Log Out</p>
+        <LogOut className="w-4 h-4 text-red-500" />
       </button>
     </AlertDialog.Trigger>
     <AlertDialog.Portal>
@@ -20,8 +16,8 @@ const ConfirmDelete = ({ handleClick }) => (
           Are you absolutely sure?
         </AlertDialog.Title>
         <AlertDialog.Description className="text-mauve11 mt-4 mb-5 text-[15px] leading-normal">
-          This action cannot be undone. This will permanently delete your data
-          and remove your data from server.
+          This action will log you out from this site. You can always log in
+          again.
         </AlertDialog.Description>
         <div className="flex justify-end gap-[25px]">
           <AlertDialog.Cancel asChild>
@@ -31,10 +27,10 @@ const ConfirmDelete = ({ handleClick }) => (
           </AlertDialog.Cancel>
           <AlertDialog.Action asChild>
             <button
-              onClick={handleClick}
+              onClick={() => localStorage.removeItem("authToken")}
               className="text-red11 bg-red4 hover:bg-red5 focus:shadow-red7 inline-flex h-[35px] items-center justify-center rounded-[4px] px-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]"
             >
-              Yes, delete
+              Yes, Log Out
             </button>
           </AlertDialog.Action>
         </div>
@@ -43,4 +39,4 @@ const ConfirmDelete = ({ handleClick }) => (
   </AlertDialog.Root>
 );
 
-export default ConfirmDelete;
+export default Logout;

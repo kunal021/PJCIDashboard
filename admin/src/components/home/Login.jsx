@@ -4,6 +4,7 @@ import { UAParser } from "ua-parser-js";
 import { API_URL } from "../../url";
 import toast from "react-hot-toast";
 import { useLocation } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
 function Login() {
   const [number, setNumber] = useState("");
@@ -77,6 +78,7 @@ function Login() {
       return;
     }
     try {
+      setLoading(true);
       const formData = new FormData();
       formData.append("number", number);
       formData.append("otp", otp);
@@ -98,6 +100,8 @@ function Login() {
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -107,6 +111,7 @@ function Login() {
       return;
     }
     try {
+      setLoading(true);
       const formData = new FormData();
       formData.append("number", number);
       const response = await axios.post(
@@ -124,6 +129,8 @@ function Login() {
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -132,6 +139,11 @@ function Login() {
 
   return (
     <div className="flex flex-col justify-center items-center m-auto min-h-screen gap-10">
+      {loading && (
+        <div className="top-10 right-10 fixed">
+          <Loader2 className="text-blue-500 h-8 w-8 animate-spin" />
+        </div>
+      )}
       <h1 className="text-3xl font-bold">Log In to Continue</h1>
       <div className="flex flex-col justify-center items-center border border-gray-200 p-6 rounded-lg gap-2 m-2">
         <div className="flex justify-start items-center gap-2 mt-2">
