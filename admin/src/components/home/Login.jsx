@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { UAParser } from "ua-parser-js";
 import { API_URL } from "../../url";
 import toast from "react-hot-toast";
+import { useLocation } from "react-router-dom";
 
 function Login() {
   const [number, setNumber] = useState("");
@@ -13,9 +14,8 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [countdown, setCountdown] = useState(0);
 
-  const parser = new UAParser();
-
   useEffect(() => {
+    const parser = new UAParser();
     const getDeviceData = async () => {
       try {
         const ip = await axios.get("https://ipapi.co/json");
@@ -26,6 +26,8 @@ function Login() {
       }
     };
     getDeviceData();
+
+    localStorage.getItem("authToken") && (window.location.href = "/");
   }, []);
 
   useEffect(() => {
@@ -57,7 +59,7 @@ function Login() {
 
       if (response.status === 201) {
         setOtpStatus(201);
-        setCountdown(90); // Set countdown to 90 seconds
+        setCountdown(90);
         toast.success("OTP Sent Successfully");
       }
       console.log(response);
@@ -85,11 +87,12 @@ function Login() {
           headers: { "content-type": "multipart/form-data" },
         }
       );
-      console.log(response);
+      // console.log(response);
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         toast.success("Login Successful");
-        localStorage.setItem("authToken", response.data.data);
+        // console.log(response.data);
+        localStorage.setItem("authToken", JSON.stringify(response.data));
         window.location.href = "/";
       }
     } catch (error) {
@@ -102,7 +105,7 @@ function Login() {
     if (countdown > 0) {
       toast.error(`Please wait for the ${countdown} seconds to resend OTP`);
       return;
-    } // Prevent resending OTP before countdown ends
+    }
     try {
       const formData = new FormData();
       formData.append("number", number);
@@ -115,7 +118,7 @@ function Login() {
       );
 
       if (response.status === 201) {
-        setCountdown(90); // Reset countdown to 90 seconds
+        setCountdown(150);
         toast.success("OTP Resent Successfully");
       }
     } catch (error) {
@@ -123,6 +126,9 @@ function Login() {
       toast.error(error.response.data.message);
     }
   };
+
+  const location = useLocation();
+  console.log(location.pathname === "/login");
 
   return (
     <div className="flex flex-col justify-center items-center m-auto min-h-screen gap-10">
@@ -138,7 +144,7 @@ function Login() {
             minLength={10}
             maxLength={10}
             placeholder="Enter Number"
-            className="border border-gray-200 px-2 py-1.5 rounded-md focus:outline-none focus:border-2 focus:border-black/50"
+            className="border border-gray-200 px-2 py-1.5 rounded-md focus:outline-none focus:border focus:border-black/50"
           />
           <button
             onClick={otpStatus ? handleResendOTP : handleGetOTP}
@@ -166,7 +172,7 @@ function Login() {
               placeholder="Enter OTP"
               minLength={6}
               maxLength={6}
-              className="border border-gray-200 px-2 py-1.5 rounded-md focus:outline-none focus:border-2 focus:border-black/50"
+              className="border border-gray-200 px-2 py-1.5 rounded-md focus:outline-none focus:border focus:border-black/50"
             />
           )}
         </div>

@@ -21,7 +21,7 @@ function NewAddQns() {
     b: "",
     c: "",
     d: "",
-    e: "",
+    e: "NOTA",
     answer: "",
   };
 

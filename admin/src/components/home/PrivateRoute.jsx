@@ -1,14 +1,15 @@
 /* eslint-disable react/prop-types */
-import { Navigate } from "react-router-dom";
-
-// Mock authentication function
+import { Navigate, useLocation } from "react-router-dom";
 const isAuthenticated = () => {
-  // Implement your authentication logic here
-  // For example, check if a token exists in local storage
   return !!localStorage.getItem("authToken");
 };
 
 const PrivateRoute = ({ element: Component }) => {
+  const location = useLocation();
+  if (isAuthenticated() && location.pathname === "/login") {
+    <Navigate to="/" replace={true} />;
+  }
+
   return isAuthenticated() ? <Component /> : <Navigate to="/login" />;
 };
 
