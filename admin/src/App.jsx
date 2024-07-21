@@ -13,7 +13,6 @@ import AddFullCourse from "./components/course/AddFullCourse";
 import NewAddQns from "./components/tests/NewAddQns";
 import UpdateCategory from "./components/categories/UpdateCategory";
 import Home from "./components/home/Home";
-import Dashboard from "./components/Dashboard";
 import GetAllUsers from "./components/users/GetAllUsers";
 import AboutUs from "./components/setting/AboutUs";
 import PrivacyPolicy from "./components/setting/PrivacyPolicy";
@@ -22,51 +21,101 @@ import GetVideo from "./components/videos/GetVideo";
 import AddVideo from "./components/videos/AddVideo";
 import UpdateVideo from "./components/videos/UpdateVideo";
 import GetVideoInCourse from "./components/course/GetVideoInCourse";
-// import SideBar from "./components/DashboardPreviewSmall";
+import Login from "./components/home/Login";
+import PrivateRoute from "./components/home/PrivateRoute";
+import Layout from "./components/home/Layout";
 
 function App() {
   return (
-    <div>
-      <BrowserRouter>
-        <Toaster />
-        <div className="flex">
-          <Dashboard />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/get-course" element={<GetCourse />} />
-            <Route path="/add-course" element={<AddCourse />} />
-            <Route path="/get-course-videos" element={<GetVideoInCourse />} />
-            <Route path="/get-full-course" element={<GetFullCourse />} />
-            <Route path="/add-full-course" element={<AddFullCourse />} />
-            <Route
-              path="/get-full-course-subject"
-              element={<GetFullCourseSubjects />}
-            />
-            <Route
-              path="/get-course-category-wise"
-              element={<GetCourseCategoryWise />}
-            />
-            <Route path="/category" element={<GetCategory />} />
-            <Route path="/update-category" element={<UpdateCategory />} />
-            <Route path="/get-test" element={<GetTest />} />
-            <Route path="/get-test-question" element={<GetQuestions />} />
-            <Route path="/add-test-question" element={<NewAddQns />} />
-            <Route path="/add-test" element={<AddTest />} />
-            <Route path="/get-users" element={<GetAllUsers />} />
-            <Route path="/about-us" element={<AboutUs />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route
-              path="/terms-and-conditions"
-              element={<TermsAndConditions />}
-            />
-            <Route path="/get-videos" element={<GetVideo />} />
-            <Route path="/add-video" element={<AddVideo />} />
-            <Route path="/update-video" element={<UpdateVideo />} />
-          </Routes>
-        </div>
-      </BrowserRouter>
-      M
-    </div>
+    <BrowserRouter>
+      <Toaster />
+      <Layout>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<PrivateRoute element={Home} />} />
+          <Route
+            path="/get-course"
+            element={<PrivateRoute element={GetCourse} />}
+          />
+          <Route
+            path="/add-course"
+            element={<PrivateRoute element={AddCourse} />}
+          />
+          <Route
+            path="/get-course-videos"
+            element={<PrivateRoute element={GetVideoInCourse} />}
+          />
+          <Route
+            path="/get-full-course"
+            element={<PrivateRoute element={GetFullCourse} />}
+          />
+          <Route
+            path="/add-full-course"
+            element={<PrivateRoute element={AddFullCourse} />}
+          />
+          <Route
+            path="/get-full-course-subject"
+            element={<PrivateRoute element={GetFullCourseSubjects} />}
+          />
+          <Route
+            path="/get-course-category-wise"
+            element={<PrivateRoute element={GetCourseCategoryWise} />}
+          />
+          <Route
+            path="/category"
+            element={<PrivateRoute element={GetCategory} />}
+          />
+          <Route
+            path="/update-category"
+            element={<PrivateRoute element={UpdateCategory} />}
+          />
+          <Route
+            path="/get-test"
+            element={<PrivateRoute element={GetTest} />}
+          />
+          <Route
+            path="/get-test-question"
+            element={<PrivateRoute element={GetQuestions} />}
+          />
+          <Route
+            path="/add-test-question"
+            element={<PrivateRoute element={NewAddQns} />}
+          />
+          <Route
+            path="/add-test"
+            element={<PrivateRoute element={AddTest} />}
+          />
+          <Route
+            path="/get-users"
+            element={<PrivateRoute element={GetAllUsers} />}
+          />
+          <Route
+            path="/about-us"
+            element={<PrivateRoute element={AboutUs} />}
+          />
+          <Route
+            path="/privacy-policy"
+            element={<PrivateRoute element={PrivacyPolicy} />}
+          />
+          <Route
+            path="/terms-and-conditions"
+            element={<PrivateRoute element={TermsAndConditions} />}
+          />
+          <Route
+            path="/get-videos"
+            element={<PrivateRoute element={GetVideo} />}
+          />
+          <Route
+            path="/add-video"
+            element={<PrivateRoute element={AddVideo} />}
+          />
+          <Route
+            path="/update-video"
+            element={<PrivateRoute element={UpdateVideo} />}
+          />
+        </Routes>
+      </Layout>
+    </BrowserRouter>
   );
 }
 
