@@ -3,19 +3,20 @@ import * as Dialog from "@radix-ui/react-dialog";
 import axios from "axios";
 import { Plus, SquarePlay, X } from "lucide-react";
 import { API_URL } from "../../url";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Loader from "../../utils/Loader";
 import Pagination from "../../utils/Pagination";
 import parser from "html-react-parser";
 import { Avatar } from "antd";
+import toast from "react-hot-toast";
 
 const fetchData = async (
   setLoading,
   currentPage,
   setPaginationData,
   courseId,
-  setVideo,
-  setError
+  setVideo
+  // setError
 ) => {
   try {
     setLoading(true);
@@ -32,7 +33,7 @@ const fetchData = async (
     setPaginationData(response.data.pagination);
   } catch (error) {
     console.log(error.response);
-    setError(error.response.data.massage);
+    // setError(error.response.data.massage);
   } finally {
     setLoading(false);
   }
@@ -43,13 +44,28 @@ function AddVideoInCourse({ courseId }) {
   const [loading, setLoading] = useState(false);
   const [paginationData, setPaginationData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [error, setError] = useState(null);
+  // const [error, setError] = useState(null);
   const [video, setVideo] = useState([]);
-  // const addVideoInCourse = useSelector(
-  //   (state) => state.addVideoInCourse.addVideoInCourse
-  // );
-  //   console.log(video);
-  // console.log(addVideoInCourse);
+
+  const handleAddVideo = useCallback(
+    async (vid, cid) => {
+      try {
+        const formData = new FormData();
+        formData.append("c_id", cid);
+        formData.append("v_id", vid);
+        await axios.post(
+          `${API_URL}/admin/courses/addvideoincourse.php`,
+          formData,
+          { headers: "content-type/form-data" }
+        );
+        setVideo(video.filter((items) => items.id !== vid));
+        toast.success("Video Added Successfully");
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [video]
+  );
 
   useEffect(() => {
     fetchData(
@@ -57,26 +73,10 @@ function AddVideoInCourse({ courseId }) {
       currentPage,
       setPaginationData,
       courseId,
-      setVideo,
-      setError
+      setVideo
+      // setError
     );
   }, [currentPage, courseId]);
-
-  const handleAddVideo = async (vid, cid) => {
-    try {
-      const formData = new FormData();
-      formData.append("c_id", cid);
-      formData.append("v_id", vid);
-      await axios.post(
-        `${API_URL}/admin/courses/addvideoincourse.php`,
-        formData,
-        { headers: "content-type/form-data" }
-      );
-      setVideo(video.filter((items) => items.id !== vid));
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   // const isVideoAdded = (vid) => {
   //   return addVideoInCourse.some((video) => video.id === vid);
@@ -108,7 +108,7 @@ function AddVideoInCourse({ courseId }) {
             >
               <div className="w-full flex flex-col justify-center items-center my-2">
                 <div className="w-full flex flex-col justify-center items-center">
-                  {video.length > 0 ? (
+                  {video.length ? (
                     <div className="flex flex-col justify-center items-center w-full">
                       {video.map((item, idx) => (
                         <div
@@ -150,7 +150,7 @@ function AddVideoInCourse({ courseId }) {
                     </div>
                   ) : (
                     <div className="text-2xl font-bold text-center mt-20">
-                      {error}
+                      No Data Found
                     </div>
                   )}
                 </div>

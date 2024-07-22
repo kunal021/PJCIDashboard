@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setCourse } from "../../redux/courses/courseSlice";
+import { deleteCourse, setCourse } from "../../redux/courses/courseSlice";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { API_URL } from "../../url";
@@ -10,6 +10,8 @@ import parser from "html-react-parser";
 import { Avatar } from "antd";
 import { CalendarClock, IndianRupee, SquarePlay } from "lucide-react";
 import GetFullCourseById from "./GetFullCourseById";
+import ConfirmDelete from "../../utils/ConfirmDelete";
+import toast from "react-hot-toast";
 
 const GetFullCourseSubjects = () => {
   const navigate = useNavigate();
@@ -32,6 +34,7 @@ const GetFullCourseSubjects = () => {
         forData,
         { headers: { "content-type": "multipart/form-data" } }
       );
+      console.log(response);
       dispatch(setCourse(response.data.data));
     } catch (error) {
       console.error("Error fetching courses:", error);
@@ -44,6 +47,29 @@ const GetFullCourseSubjects = () => {
   // useEffect(() => {
   //   fetchCourse();
   // }, [dispatch,  id]);
+
+  const handleDelete = async (courseId) => {
+    try {
+      const formData = new FormData();
+      formData.append("c_id", courseId);
+      formData.append("fc_id", id);
+      const response = await axios.post(
+        `${API_URL}/admin/courses/deletecoursefromfc.php`,
+        formData,
+        {
+          headers: "content-type/form-data",
+        }
+      );
+
+      console.log(response);
+      if (response.status == 200) {
+        dispatch(deleteCourse(courseId));
+        toast.success("Course Deleted Successfully");
+      }
+    } catch (error) {
+      console.log("error");
+    }
+  };
 
   const renderCourseData = (data) => {
     if (typeof data === "string") {
@@ -79,15 +105,12 @@ const GetFullCourseSubjects = () => {
               <h1 className="text-3xl font-bold text-center">
                 Full Course List
               </h1>
-              {courses.length > 0 ? (
+              {courses.length ? (
                 <div className="flex flex-col justify-center items-center">
                   {courses.map(
                     (course, idx) =>
                       course && (
                         <div
-                          onClick={() =>
-                            navigate(`/get-course-videos?id=${course.id}`)
-                          }
                           key={idx}
                           className="flex  justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-2 gap-4 cursor-pointer"
                         >
@@ -100,7 +123,12 @@ const GetFullCourseSubjects = () => {
                                   className="rounded-lg border-transparent w-full h-24"
                                 />
                               </div>
-                              <div className="flex flex-col justify-center items-start gap-3 w-full">
+                              <div
+                                onClick={() =>
+                                  navigate(`/get-course-videos?id=${course.id}`)
+                                }
+                                className="flex flex-col justify-center items-start gap-3 w-full"
+                              >
                                 <div className="flex justify-center items-center gap-2 w-full">
                                   <div>
                                     <Avatar className="bg-gray-500 text-white w-8">
@@ -126,6 +154,11 @@ const GetFullCourseSubjects = () => {
                                     <p>{course.price}</p>
                                   </div>
                                 </div>
+                              </div>
+                              <div className="flex flex-col justify-between items-end gap-10 w-fit">
+                                <ConfirmDelete
+                                  handleClick={() => handleDelete(course.id)}
+                                />
                               </div>
                             </div>
                           </div>

@@ -60,7 +60,9 @@ function GetFullCourse() {
       if (courseId && response.data.success) {
         dispatch(deleteFullCourse(response.data));
       }
+      // console.log(response);
       if (response.status == 204) {
+        dispatch(deleteFullCourse(courseId));
         toast.success("Full Course Deleted Successfully");
       }
       fetchFullCourse(dispatch);

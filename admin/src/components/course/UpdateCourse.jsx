@@ -15,6 +15,7 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
   const [courseDescription, setCourseDescription] = useState("");
   const [dataLoaded, setDataLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [durationUnit, setDurationunit] = useState("");
 
   const dispatch = useDispatch();
 
@@ -70,7 +71,7 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
       formData.append("courseid", course.id);
       formData.append("name", courseName);
       formData.append("price", course.price);
-      formData.append("duration", course.course_duration);
+      formData.append("duration", `${course.course_duration} ${durationUnit}`);
       formData.append("description", courseDescription);
       formData.append("imgurl", course.img_url);
       const response = await axios.post(
@@ -85,7 +86,7 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
             id: course.id,
             course_name: courseName,
             price: course.price,
-            course_duration: course.course_duration,
+            course_duration: `${course.course_duration} ${durationUnit}`,
             course_description: courseDescription,
             img_url: course.img_url,
             total_number_of_videos: course.total_number_of_videos,
@@ -151,7 +152,7 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
               />
             )}
           </div>
-          <div className="flex flex-col md:flex-row md:space-x-6">
+          <div className="flex flex-col justify-center items-center md:flex-row md:space-x-6">
             <FormField
               htmlFor={"price"}
               id={"price"}
@@ -174,6 +175,15 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
             >
               Duration
             </FormField>
+            <select
+              value={durationUnit}
+              onChange={(e) => setDurationunit(e.target.value)}
+              className="w-fit h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
+            >
+              <option value={"Day"}>Day</option>
+              <option value={"Month"}>Month</option>
+              <option value={"Year"}>Year</option>
+            </select>
           </div>
           <div className="my-4 flex justify-between items-center">
             <input

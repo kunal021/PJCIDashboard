@@ -20,6 +20,7 @@ function AddCourse() {
   const [loading, setLoading] = useState(false);
   const [courseName, setCourseName] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
+  const [durationUnit, setDurationunit] = useState("Day");
   const dispatch = useDispatch();
 
   const getNameData = (html) => {
@@ -43,7 +44,7 @@ function AddCourse() {
       const formData = new FormData();
       formData.append("name", courseName);
       formData.append("price", course.price);
-      formData.append("duration", course.duration);
+      formData.append("duration", `${course.duration} ${durationUnit}`);
       formData.append("description", courseDescription);
       formData.append("imgurl", course.imgurl);
       const response = await axios.post(
@@ -65,6 +66,7 @@ function AddCourse() {
     });
     setCourseName("");
     setCourseDescription("");
+    setDurationunit("");
   };
 
   const handleUploadImage = async (e) => {
@@ -110,7 +112,7 @@ function AddCourse() {
                 getHtmlData={getDescriptionData}
               />
             </div>
-            <div className="flex flex-col md:flex-row md:space-x-6">
+            <div className="flex flex-col justify-center items-center md:flex-row md:space-x-6">
               <FormField
                 htmlFor={"price"}
                 id={"price"}
@@ -128,11 +130,20 @@ function AddCourse() {
                 type={"text"}
                 placeholder={"Duration"}
                 name={"duration"}
-                value={course.duration}
+                value={`${course.duration}`}
                 onChange={handleChange}
               >
                 Duration
               </FormField>
+              <select
+                value={durationUnit}
+                onChange={(e) => setDurationunit(e.target.value)}
+                className="w-fit h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
+              >
+                <option value={"Day"}>Day</option>
+                <option value={"Month"}>Month</option>
+                <option value={"Year"}>Year</option>
+              </select>
             </div>
             <div className="my-4 flex justify-between items-center">
               <input

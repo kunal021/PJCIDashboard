@@ -8,14 +8,15 @@ import Loader from "../../utils/Loader";
 import Pagination from "../../utils/Pagination";
 import parser from "html-react-parser";
 import { Avatar } from "antd";
+import toast from "react-hot-toast";
 
 const fetchData = async (
   setLoading,
   currentPage,
   setPaginationData,
   fullCourseId,
-  setVideo,
-  setError
+  setCourse
+  // setError
 ) => {
   try {
     setLoading(true);
@@ -28,11 +29,11 @@ const fetchData = async (
       formData,
       { headers: { "Content-Type": "multipart/form-data" } }
     );
-    setVideo(response.data.data);
+    setCourse(response.data.data);
     setPaginationData(response.data.pagination);
   } catch (error) {
-    console.log(error.response);
-    setError(error.response.data.massage);
+    console.log(error.response.data);
+    // setError(error.response.data.message);
   } finally {
     setLoading(false);
   }
@@ -42,8 +43,8 @@ function AddCourseInFullCourse({ courseId: fullCourseId }) {
   const [loading, setLoading] = useState(false);
   const [paginationData, setPaginationData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [error, setError] = useState(null);
-  const [video, setVideo] = useState([]);
+  // const [error, setError] = useState(null);
+  const [course, setCourse] = useState([]);
 
   useEffect(() => {
     fetchData(
@@ -51,12 +52,12 @@ function AddCourseInFullCourse({ courseId: fullCourseId }) {
       currentPage,
       setPaginationData,
       fullCourseId,
-      setVideo,
-      setError
+      setCourse
+      // setError
     );
   }, [currentPage, fullCourseId]);
 
-  console.log(fullCourseId);
+  // console.log(fullCourseIsd);
 
   const handleAddCourse = async (fcid, cid) => {
     try {
@@ -69,7 +70,8 @@ function AddCourseInFullCourse({ courseId: fullCourseId }) {
         { headers: "content-type/form-data" }
       );
 
-      setVideo(video.filter((items) => items.id !== cid));
+      setCourse(course.filter((items) => items.id !== cid));
+      toast.success("Course Added Successfully");
     } catch (error) {
       console.log(error);
     }
@@ -81,7 +83,7 @@ function AddCourseInFullCourse({ courseId: fullCourseId }) {
         <button className="text-white bg-green-500 hover:bg-green-700 items-center text-xs font-bold justify-center rounded p-1 group relative">
           <SquarePlay />
           <p className="absolute -left-[20%] -top-full mt-1 hidden group-hover:block bg-white text-black rounded p-1">
-            Add Video
+            Add Course
           </p>
         </button>
       </Dialog.Trigger>
@@ -101,9 +103,9 @@ function AddCourseInFullCourse({ courseId: fullCourseId }) {
             >
               <div className="w-full flex flex-col justify-center items-center my-2">
                 <div className="w-full flex flex-col justify-center items-center">
-                  {video.length > 0 ? (
+                  {course.length ? (
                     <div className="flex flex-col justify-center items-center w-full">
-                      {video.map((item, idx) => (
+                      {course.map((item, idx) => (
                         <div
                           key={idx}
                           className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-2 p-3 gap-3"
@@ -145,7 +147,7 @@ function AddCourseInFullCourse({ courseId: fullCourseId }) {
                     </div>
                   ) : (
                     <div className="text-2xl font-bold text-center mt-20">
-                      {error}
+                      No Data Found
                     </div>
                   )}
                 </div>

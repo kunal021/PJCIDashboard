@@ -55,8 +55,10 @@ function GetCourse() {
         const response = await axios.delete(
           `${API_URL}/admin/courses/deletecourse.php?courseid=${courseId}`
         );
-        if (response.data.success) {
-          dispatch(deleteCourse({ courseId }));
+
+        // console.log(response);
+        if (response.status === 200) {
+          dispatch(deleteCourse(courseId));
           toast.success("Course Deleted Successfully");
         }
       } catch (error) {

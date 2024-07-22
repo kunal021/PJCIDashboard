@@ -40,15 +40,17 @@ function GetCategory() {
     fetchCategory(dispatch, setLoading);
   }, [dispatch]);
 
-  const handleDelete = async (courseId) => {
+  const handleDelete = async (categoryId) => {
     try {
       const response = await axios.delete(
-        `${API_URL}/admin/category/delcategory.php?id=${courseId}`
+        `${API_URL}/admin/category/delcategory.php?id=${categoryId}`
       );
-      if (courseId && response.data.success) {
-        dispatch(deleteCategory(response.data));
+      // console.log(response);
+      if (categoryId && response.data.success) {
+        dispatch(deleteCategory(categoryId));
       }
       if (response.status == 200) {
+        dispatch(deleteCategory(response.data));
         toast.success("Category Deleted Successfully");
       }
       fetchCategory(dispatch, setLoading);
