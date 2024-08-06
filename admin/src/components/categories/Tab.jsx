@@ -7,12 +7,13 @@ import { Loader, Plus } from "lucide-react";
 import { Avatar } from "antd";
 import parser from "html-react-parser";
 import Pagination from "../../utils/Pagination";
+import toast from "react-hot-toast";
 
 const fetchData = async (
   setLoading,
   coursetype,
   categoryid,
-  setError,
+  // setError,
   setPaginationData,
   setCourse,
   setFullCourse
@@ -29,17 +30,21 @@ const fetchData = async (
       formData,
       { headers: { "Content-Type": "multipart/form-data" } }
     );
-    if (coursetype == 1) {
-      setCourse(response.data.data);
-      setPaginationData(response.data.pagination);
-    }
-    if (coursetype == 0) {
-      setFullCourse(response.data.data);
-      setPaginationData(response.data.pagination);
+    console.log(response);
+    if (response.status === 200) {
+      console.log(response.data);
+      if (coursetype == 1) {
+        setCourse(response.data.data);
+        setPaginationData(response.data.pagination);
+      }
+      if (coursetype == 0) {
+        setFullCourse(response.data.data);
+        setPaginationData(response.data.pagination);
+      }
     }
   } catch (error) {
     console.log(error);
-    setError(error.response.data.massage);
+    // setError(error.response.data.massage);
   } finally {
     setLoading(false);
   }
@@ -50,7 +55,7 @@ function Tab({ categoryId }) {
   const [loading, setLoading] = useState(false);
   const [paginationData, setPaginationData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [error, setError] = useState(null);
+  // const [error, setError] = useState(null);
 
   const [course, setCourse] = useState([]);
   const [fullCourse, setFullCourse] = useState([]);
@@ -64,7 +69,7 @@ function Tab({ categoryId }) {
       setLoading,
       1,
       categoryId,
-      setError,
+      // setError,
       setPaginationData,
       setCourse,
       setFullCourse
@@ -73,7 +78,7 @@ function Tab({ categoryId }) {
       setLoading,
       0,
       categoryId,
-      setError,
+      // setError,
       setPaginationData,
       setCourse,
       setFullCourse
@@ -92,7 +97,16 @@ function Tab({ categoryId }) {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
-      console.log(response);
+      if (response.status === 200) {
+        if (course_type == 1) {
+          setCourse(course.filter((item) => item.id !== courseid));
+          toast.success("Course Added Successfully");
+        }
+        if (course_type == 0) {
+          setFullCourse(fullCourse.filter((item) => item.id !== courseid));
+          toast.success("Full Course Added Successfully");
+        }
+      }
     } catch (error) {
       console.log(error);
     }
@@ -113,14 +127,12 @@ function Tab({ categoryId }) {
         <Tabs.Trigger
           className="bg-white px-5 h-[45px] flex-1 flex items-center justify-center text-[15px] leading-none text-mauve11 select-none first:rounded-tl-md last:rounded-tr-md hover:text-violet11 data-[state=active]:text-violet11 data-[state=active]:shadow-[inset_0_-1px_0_0,0_1px_0_0] data-[state=active]:shadow-current data-[state=active]:focus:relative data-[state=active]:focus:shadow-[0_0_0_2px] data-[state=active]:focus:shadow-black outline-none cursor-default"
           value="tab1"
-          // onClick={() => fetchData(setLoading, dispatch, 1)}
         >
           Course
         </Tabs.Trigger>
         <Tabs.Trigger
           className="bg-white px-5 h-[45px] flex-1 flex items-center justify-center text-[15px] leading-none text-mauve11 select-none first:rounded-tl-md last:rounded-tr-md hover:text-violet11 data-[state=active]:text-violet11 data-[state=active]:shadow-[inset_0_-1px_0_0,0_1px_0_0] data-[state=active]:shadow-current data-[state=active]:focus:relative data-[state=active]:focus:shadow-[0_0_0_2px] data-[state=active]:focus:shadow-black outline-none cursor-default"
           value="tab2"
-          // onClick={() => fetchData(setLoading, dispatch, 0)}
         >
           Full Course
         </Tabs.Trigger>
@@ -130,7 +142,7 @@ function Tab({ categoryId }) {
         value="tab1"
       >
         {loading ? (
-          <Loader className="animate-spin text-blue-500" />
+          <Loader className="animate-spin text-blue-500 text-center w-full" />
         ) : (
           <div
             className={`w-full flex flex-col justify-center items-center mx-auto`}
@@ -159,13 +171,11 @@ function Tab({ categoryId }) {
                           </div>
                         </div>
                         <button
-                          // disabled={isCourseAdded(item.id)}
                           onClick={() =>
                             handleAddCourse(1, item.id, categoryId)
                           }
                           className="rounded-full bg-green-200 p-1 items-center"
                         >
-                          {/* {isCourseAdded(item.id) ? <Check /> : <Plus />} */}
                           <Plus />
                         </button>
                       </div>
@@ -180,7 +190,7 @@ function Tab({ categoryId }) {
                   </div>
                 ) : (
                   <div className="text-2xl font-bold text-center mt-20">
-                    {error}
+                    No Data Available
                   </div>
                 )}
               </div>
@@ -222,13 +232,11 @@ function Tab({ categoryId }) {
                           </div>
                         </div>
                         <button
-                          // disabled={isCourseAdded(item.id)}
                           onClick={() =>
                             handleAddCourse(0, item.id, categoryId)
                           }
                           className="rounded-full bg-green-200 p-1 items-center"
                         >
-                          {/* {isCourseAdded(item.id) ? <Check /> : <Plus />} */}
                           <Plus />
                         </button>
                       </div>
@@ -243,7 +251,7 @@ function Tab({ categoryId }) {
                   </div>
                 ) : (
                   <div className="text-2xl font-bold text-center mt-20">
-                    {error}
+                    No Data Available
                   </div>
                 )}
               </div>

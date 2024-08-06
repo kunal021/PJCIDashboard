@@ -11,7 +11,7 @@ import { Loader, UploadCloud } from "lucide-react";
 
 function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
   const [course, setCourse] = useState([]);
-  const [courseName, setCourseName] = useState("");
+  // const [courseName, setCourseName] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
   const [dataLoaded, setDataLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -32,7 +32,7 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
         );
         // console.log(response);
         setCourse(response.data.data);
-        setCourseName(response.data.data.course_name);
+        // setCourseName(response.data.data.course_name);
         setCourseDescription(response.data.data.course_description);
         setDataLoaded(true);
       } catch (error) {
@@ -47,9 +47,9 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
   // console.log(courseName);
   // console.log(courseDescription);
 
-  const getNameData = (html) => {
-    setCourseName(html);
-  };
+  // const getNameData = (html) => {
+  //   setCourseName(html);
+  // };
   const getDescriptionData = (html) => {
     setCourseDescription(html);
   };
@@ -69,7 +69,7 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
     try {
       const formData = new FormData();
       formData.append("courseid", course.id);
-      formData.append("name", courseName);
+      formData.append("name", course.course_name);
       formData.append("price", course.price);
       formData.append("duration", `${course.course_duration} ${durationUnit}`);
       formData.append("description", courseDescription);
@@ -84,7 +84,7 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
         dispatch(
           updateCourse({
             id: course.id,
-            course_name: courseName,
+            course_name: course.course_name,
             price: course.price,
             course_duration: `${course.course_duration} ${durationUnit}`,
             course_description: courseDescription,
@@ -114,7 +114,7 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
         { headers: { "content-type": "multipart/form-data" } }
       );
 
-      console.log(response.data);
+      // console.log(response.data);
       if (response.status === 200) {
         setCourse((prev) => ({ ...prev, img_url: response.data.url }));
         toast.success("Image Uploaded Successfully");
@@ -132,14 +132,25 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
       <h1 className="text-center text-3xl font-bold">Update Course</h1>
       <div className="flex flex-col justify-center items-center mt-5 w-full">
         <div className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border border-gray-400 w-full">
-          <p className="block text-gray-700 text-sm font-bold">Name</p>
+          {/* <p className="block text-gray-700 text-sm font-bold">Name</p> */}
           <div className="w-full my-2">
             {dataLoaded && (
-              <Tiptap
-                placeholder="Category"
-                getHtmlData={getNameData}
-                initialContent={courseName}
-              />
+              // <Tiptap
+              //   placeholder="Category"
+              //   getHtmlData={getNameData}
+              //   initialContent={courseName}
+              // />
+              <FormField
+                htmlFor={"course_name"}
+                id={"course_name"}
+                type={"text"}
+                placeholder={"Name"}
+                name={"course_name"}
+                value={course.course_name}
+                onChange={handleChange}
+              >
+                Name
+              </FormField>
             )}
           </div>
           <p className="block text-gray-700 text-sm font-bold">Description</p>

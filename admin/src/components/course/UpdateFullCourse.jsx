@@ -11,7 +11,7 @@ import { Loader, UploadCloud } from "lucide-react";
 
 function UpdateFullCourse({ setUpdateCourse, updateCourseData: id }) {
   const [course, setCourse] = useState([]);
-  const [courseName, setCourseName] = useState("");
+  // const [courseName, setCourseName] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
   const [dataLoaded, setDataLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -31,7 +31,7 @@ function UpdateFullCourse({ setUpdateCourse, updateCourseData: id }) {
         );
         // console.log(response);
         setCourse(response.data.data);
-        setCourseName(response.data.data.full_course_name);
+        // setCourseName(response.data.data.full_course_name);
         setCourseDescription(response.data.data.full_course_description);
         setDataLoaded(true);
       } catch (error) {
@@ -45,9 +45,9 @@ function UpdateFullCourse({ setUpdateCourse, updateCourseData: id }) {
   // console.log(course);
   // console.log(courseName);
 
-  const getNameData = (html) => {
-    setCourseName(html);
-  };
+  // const getNameData = (html) => {
+  //   setCourseName(html);
+  // };
   const getDescriptionData = (html) => {
     setCourseDescription(html);
   };
@@ -65,7 +65,7 @@ function UpdateFullCourse({ setUpdateCourse, updateCourseData: id }) {
     try {
       const formData = new FormData();
       formData.append("fullcourseid", course.id);
-      formData.append("name", courseName);
+      formData.append("name", course.full_course_name);
       formData.append("price", course.full_course_price);
       formData.append(
         "duration",
@@ -82,7 +82,7 @@ function UpdateFullCourse({ setUpdateCourse, updateCourseData: id }) {
         dispatch(
           updateFullCourse({
             id: course.id,
-            full_course_name: courseName,
+            full_course_name: course.full_course_name,
             full_course_price: course.full_course_price,
             full_course_duration: `${course.full_course_duration} ${durationUnit}`,
             full_course_description: courseDescription,
@@ -128,14 +128,25 @@ function UpdateFullCourse({ setUpdateCourse, updateCourseData: id }) {
       <h1 className="text-center text-3xl font-bold">Update Full Course</h1>
       <div className="flex flex-col justify-center items-center mt-5 w-full">
         <div className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border border-gray-400 w-full">
-          <p className="block text-gray-700 text-sm font-bold">Name</p>
+          {/* <p className="block text-gray-700 text-sm font-bold">Name</p> */}
           <div className="w-full my-2">
             {dataLoaded && (
-              <Tiptap
-                placeholder="Category"
-                getHtmlData={getNameData}
-                initialContent={courseName}
-              />
+              // <Tiptap
+              //   placeholder="Category"
+              //   getHtmlData={getNameData}
+              //   initialContent={courseName}
+              // />
+              <FormField
+                htmlFor={"full_course_name"}
+                id={"full_course_name"}
+                type={"text"}
+                placeholder={"Name"}
+                name={"full_course_name"}
+                value={course.full_course_name}
+                onChange={handleChange}
+              >
+                Name
+              </FormField>
             )}
           </div>
           <p className="block text-gray-700 text-sm font-bold">Description</p>

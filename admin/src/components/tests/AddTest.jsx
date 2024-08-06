@@ -11,6 +11,7 @@ import LayoutAdjuster from "../../utils/LayoutAdjuster";
 
 function AddTest() {
   const [formData, setFormData] = useState({
+    name: "",
     price: "",
     duration: "",
     numberOfQuestion: "",
@@ -21,14 +22,15 @@ function AddTest() {
     startTime: "",
     endTime: "",
   });
-  const [testName, setTestName] = useState("");
+  // const [testName, setTestName] = useState("");
   const [testDescription, setTestDescription] = useState("");
+  const [durationUnit, setDurationunit] = useState("Day");
 
   const dispatch = useDispatch();
 
-  const getNameData = (html) => {
-    setTestName(html);
-  };
+  // const getNameData = (html) => {
+  //   setTestName(html);
+  // };
   const getDescriptionData = (html) => {
     setTestDescription(html);
   };
@@ -48,12 +50,12 @@ function AddTest() {
     try {
       const formDataToSend = new FormData();
       const formDataObject = {
-        test_name: testName,
+        test_name: formData.name,
         description: testDescription,
         price: formData.price,
-        duration: formData.duration,
+        duration: formData.duration + " " + durationUnit,
         number_of_questions: formData.numberOfQuestion,
-        mark_per_qns: formData.markPerQuestion,
+        markperqns: formData.markPerQuestion,
         negative_mark: formData.negativeMark,
         total_mark: formData.totalMark,
         test_date: formData.testDate,
@@ -69,14 +71,16 @@ function AddTest() {
         formDataToSend,
         { headers: { "content-type": "multipart/form-data" } }
       );
-      dispatch(addTest(response.data));
+      // console.log(response);
       if (response.status == 201) {
+        dispatch(addTest(response.data));
         toast.success("Test Added Successfully");
       }
     } catch (error) {
       console.error("Error adding test:", error);
     }
     setFormData({
+      name: "",
       price: "",
       duration: "",
       numberOfQuestion: "",
@@ -87,7 +91,7 @@ function AddTest() {
       startTime: "",
       endTime: "",
     });
-    setTestName("");
+    // setTestName("");
     setTestDescription("");
   };
 
@@ -97,9 +101,20 @@ function AddTest() {
         <h1 className="text-center my-5 text-3xl font-bold">Add Test</h1>
         <div className="flex flex-col justify-center items-center mt-5 w-full">
           <div className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border border-gray-400 w-full">
-            <p className="block text-gray-700 text-sm font-bold">Test Name</p>
+            {/* <p className="block text-gray-700 text-sm font-bold">Test Name</p> */}
             <div className="w-full my-2">
-              <Tiptap placeholder="Category" getHtmlData={getNameData} />
+              {/* <Tiptap placeholder="Category" getHtmlData={getNameData} /> */}
+              <FormField
+                htmlFor={"name"}
+                id={"name"}
+                type={"text"}
+                placeholder={"Name"}
+                name={"name"}
+                value={formData.name}
+                onChange={handleChange}
+              >
+                Name
+              </FormField>
             </div>
             <p className="block text-gray-700 text-sm font-bold">Description</p>
             <div className="w-full my-2">
@@ -108,7 +123,7 @@ function AddTest() {
                 getHtmlData={getDescriptionData}
               />
             </div>
-            <div className="flex flex-col md:flex-row md:space-x-6">
+            <div className="flex flex-col justify-center items-center md:flex-row md:space-x-6">
               <FormField
                 htmlFor="price"
                 id="price"
@@ -131,6 +146,15 @@ function AddTest() {
               >
                 Duration
               </FormField>
+              <select
+                value={durationUnit}
+                onChange={(e) => setDurationunit(e.target.value)}
+                className="w-fit h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
+              >
+                <option value={"Day"}>Day</option>
+                <option value={"Month"}>Month</option>
+                <option value={"Year"}>Year</option>
+              </select>
             </div>
             <div className="flex flex-col md:flex-row md:space-x-6">
               <FormField

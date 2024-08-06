@@ -12,19 +12,20 @@ import { Loader, UploadCloud } from "lucide-react";
 
 function AddFullCourse() {
   const [course, setCourse] = useState({
+    name: "",
     price: "",
     duration: "",
     imgurl: "",
   });
   const [loading, setLoading] = useState(false);
-  const [courseName, setCourseName] = useState("");
+  // const [courseName, setCourseName] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
   const [durationUnit, setDurationunit] = useState("Day");
   const dispatch = useDispatch();
 
-  const getNameData = (html) => {
-    setCourseName(html);
-  };
+  // const getNameData = (html) => {
+  //   setCourseName(html);
+  // };
   const getDescriptionData = (html) => {
     setCourseDescription(html);
   };
@@ -41,7 +42,7 @@ function AddFullCourse() {
     e.preventDefault();
     try {
       const formData = new FormData();
-      formData.append("name", courseName);
+      formData.append("name", course.name);
       formData.append("price", course.price);
       formData.append("duration", `${course.duration} ${durationUnit}`);
       formData.append("description", courseDescription);
@@ -52,7 +53,7 @@ function AddFullCourse() {
         { headers: { "content-type": "multipart/form-data" } }
       );
 
-      console.log(response);
+      // console.log(response);
       dispatch(addFullCourse(response.data));
       if (response.status == 201) {
         toast.success("Full Course Added Sucessfully");
@@ -61,11 +62,12 @@ function AddFullCourse() {
       console.error("Error fetching courses:", error);
     }
     setCourse({
+      name: "",
       price: "",
       duration: "",
       imgurl: "",
     });
-    setCourseName("");
+    // setCourseName("");
     setCourseDescription("");
     setDurationunit("");
   };
@@ -102,9 +104,20 @@ function AddFullCourse() {
         <h1 className="text-center my-5 text-3xl font-bold">Add Full Course</h1>
         <div className="flex flex-col justify-center items-center mt-5 w-full">
           <div className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border border-gray-400 w-full">
-            <p className="block text-gray-700 text-sm font-bold">Name</p>
+            {/* <p className="block text-gray-700 text-sm font-bold">Name</p> */}
             <div className="w-full my-2">
-              <Tiptap placeholder="Category" getHtmlData={getNameData} />
+              {/* <Tiptap placeholder="Category" getHtmlData={getNameData} /> */}
+              <FormField
+                htmlFor={"name"}
+                id={"name"}
+                type={"text"}
+                placeholder={"Name"}
+                name={"name"}
+                value={course.name}
+                onChange={handleChange}
+              >
+                Name
+              </FormField>
             </div>
             <p className="block text-gray-700 text-sm font-bold">Description</p>
             <div className="w-full my-2">
