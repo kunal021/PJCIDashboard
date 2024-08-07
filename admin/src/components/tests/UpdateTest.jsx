@@ -10,6 +10,7 @@ import Tiptap from "../../utils/TextEditor";
 
 function UpdateTest({ updateTestData, setUpdateTest }) {
   const [formData, setFormData] = useState({
+    name: updateTestData.test_name,
     price: updateTestData.price,
     duration: updateTestData.duration,
     numberOfQuestion: updateTestData.number_of_questions,
@@ -20,15 +21,16 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
     startTime: updateTestData.start_time,
     endTime: updateTestData.end_time,
   });
-  const [testName, setTestName] = useState(updateTestData.test_name);
+  // const [testName, setTestName] = useState(updateTestData.test_name);
   const [testDescription, setTestDescription] = useState(
     updateTestData.description
   );
+  const [durationUnit, setDurationunit] = useState("Day");
   const dispatch = useDispatch();
 
-  const getNameData = (html) => {
-    setTestName(html);
-  };
+  // const getNameData = (html) => {
+  //   setTestName(html);
+  // };
   const getDescriptionData = (html) => {
     setTestDescription(html);
   };
@@ -48,11 +50,11 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
       const formDataToSend = new FormData();
       const formDataObject = {
         testid: updateTestData.test_id,
-        test_name: testName,
+        test_name: formData.name,
         flag: updateTestData.flag,
         description: testDescription,
         price: formData.price,
-        duration: formData.duration,
+        duration: formData.duration + " " + durationUnit,
         number_of_questions: formData.numberOfQuestion,
         markperqns: formData.markPerQuestion,
         negative_mark: formData.negativeMark,
@@ -62,7 +64,7 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
         end_time: formData.endTime,
       };
 
-      console.log(formDataObject);
+      // console.log(formDataObject);
 
       Object.entries(formDataObject).forEach(([key, value]) => {
         formDataToSend.append(key, value);
@@ -80,7 +82,7 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
           updateTest({
             test_id: updateTestData.test_id,
             flag: updateTestData.flag,
-            test_name: testName,
+            test_name: formData.name,
             description: testDescription,
             price: formData.price,
             duration: formData.duration,
@@ -95,7 +97,8 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
         );
         toast.success("Test Updated Sucessfully");
       }
-      // setUpdateTest((perv) => !perv);
+      setUpdateTest((perv) => !perv);
+      window.location.reload();
     } catch (error) {
       console.error("Error fetching courses:", error);
     }
@@ -106,13 +109,24 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
       <h1 className="text-center text-3xl font-bold">Update Test</h1>
       <div className="flex flex-col justify-center items-center mt-5 w-full">
         <div className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border border-gray-400 w-full">
-          <p className="block text-gray-700 text-sm font-bold">Name</p>
+          {/* <p className="block text-gray-700 text-sm font-bold">Name</p> */}
           <div className="w-full my-2">
-            <Tiptap
+            {/* <Tiptap
               placeholder="Category"
               getHtmlData={getNameData}
               initialContent={testName}
-            />
+            /> */}
+            <FormField
+              htmlFor="name"
+              id="name"
+              type="text"
+              placeholder="Name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+            >
+              Name
+            </FormField>
           </div>
           <p className="block text-gray-700 text-sm font-bold">Description</p>
           <div className="w-full my-2">
@@ -122,7 +136,7 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
               initialContent={testDescription}
             />
           </div>
-          <div className="flex flex-col md:flex-row md:space-x-6">
+          <div className="flex flex-col justify-center items-center md:flex-row md:space-x-6">
             <FormField
               htmlFor="price"
               id="price"
@@ -145,6 +159,15 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
             >
               Duration
             </FormField>
+            <select
+              value={durationUnit}
+              onChange={(e) => setDurationunit(e.target.value)}
+              className="w-fit h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
+            >
+              <option value={"Day"}>Day</option>
+              <option value={"Month"}>Month</option>
+              <option value={"Year"}>Year</option>
+            </select>
           </div>
           <div className="flex flex-col md:flex-row md:space-x-6">
             <FormField
