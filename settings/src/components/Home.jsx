@@ -36,6 +36,9 @@ function Home() {
         <Link to={"/contact-us"} className="link">
           Contact Us
         </Link>
+        <Link to={"/delete-user-data"} className="link">
+          Delete User Data
+        </Link>
       </div>
     </div>
   );

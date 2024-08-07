@@ -8,6 +8,7 @@ import UpdateBtn from "../../utils/UpdateBtn";
 import ConfirmDelete from "../../utils/ConfirmDelete";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import Pagination from "../../utils/Pagination";
+import UpdateUser from "./UpdateUser";
 
 const getUsers = async (dispatch, setPaginationData, page) => {
   try {
@@ -30,6 +31,8 @@ const getUsers = async (dispatch, setPaginationData, page) => {
 function GetAllUsers() {
   const [paginationData, setPaginationData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
+  const [updateUser, setUpdateUser] = useState(false);
+  const [updateUserData, setUpdateUserData] = useState({});
   const dispatch = useDispatch();
   const users = useSelector((state) => state.user.user);
 
@@ -74,7 +77,13 @@ function GetAllUsers() {
 
   return (
     <LayoutAdjuster>
-      <div className="flex flex-col justify-center items-center">
+      <div
+        className={`${
+          updateUser
+            ? "hidden"
+            : "w-[80%] flex flex-col justify-center items-center mx-auto"
+        }`}
+      >
         <div className="flex justify-center items-center space-x-10">
           <h1 className="text-3xl font-bold text-center my-5">All Users</h1>
           {/* <LinkButton to={"/add-user"}>Add Course</LinkButton> */}
@@ -120,7 +129,8 @@ function GetAllUsers() {
                     <td className="border p-2 text-sm">
                       <UpdateBtn
                         handleClick={() => {
-                          // Handle update button click
+                          setUpdateUserData(user);
+                          setUpdateUser(true);
                         }}
                       />
                     </td>
@@ -149,6 +159,12 @@ function GetAllUsers() {
           </div>
         )}
       </div>
+      {updateUser && (
+        <UpdateUser
+          setUpdateUser={setUpdateUser}
+          updateUserData={updateUserData}
+        />
+      )}
     </LayoutAdjuster>
   );
 }
