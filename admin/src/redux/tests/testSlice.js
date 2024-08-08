@@ -16,14 +16,14 @@ export const testSlice = createSlice({
     },
     updateTest: (state, action) => {
       const index = state.test.findIndex(
-        (test) => test.id === action.payload.id
+        (test) => test.test_id === action.payload.test_id
       );
       if (index !== -1) {
         state.test[index] = action.payload;
       }
     },
     deleteTest: (state, action) => {
-      state.test = state.test.filter((test) => test.id !== action.payload);
+      state.test = state.test.filter((test) => test.test_id !== action.payload);
     },
   },
 });

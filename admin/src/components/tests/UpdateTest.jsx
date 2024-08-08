@@ -21,16 +21,12 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
     startTime: updateTestData.start_time,
     endTime: updateTestData.end_time,
   });
-  // const [testName, setTestName] = useState(updateTestData.test_name);
   const [testDescription, setTestDescription] = useState(
     updateTestData.description
   );
-  const [durationUnit, setDurationunit] = useState("Day");
+  const [durationUnit, setDurationUnit] = useState("Day");
   const dispatch = useDispatch();
 
-  // const getNameData = (html) => {
-  //   setTestName(html);
-  // };
   const getDescriptionData = (html) => {
     setTestDescription(html);
   };
@@ -64,20 +60,17 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
         end_time: formData.endTime,
       };
 
-      // console.log(formDataObject);
-
       Object.entries(formDataObject).forEach(([key, value]) => {
         formDataToSend.append(key, value);
       });
+
       const response = await axios.post(
         `${API_URL}/admin/test/updatetest.php`,
         formDataToSend,
         { headers: { "content-type": "multipart/form-data" } }
       );
 
-      // console.log(response);
-
-      if (response.status == 201) {
+      if (response.status === 201) {
         dispatch(
           updateTest({
             test_id: updateTestData.test_id,
@@ -95,12 +88,12 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
             end_time: formData.endTime,
           })
         );
-        toast.success("Test Updated Sucessfully");
+        toast.success("Test Updated Successfully");
       }
-      setUpdateTest((perv) => !perv);
-      window.location.reload();
+      setUpdateTest((prev) => !prev);
     } catch (error) {
-      console.error("Error fetching courses:", error);
+      console.error("Error updating test:", error);
+      toast.error("Failed to update test");
     }
   };
 
@@ -109,13 +102,7 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
       <h1 className="text-center text-3xl font-bold">Update Test</h1>
       <div className="flex flex-col justify-center items-center mt-5 w-full">
         <div className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border border-gray-400 w-full">
-          {/* <p className="block text-gray-700 text-sm font-bold">Name</p> */}
           <div className="w-full my-2">
-            {/* <Tiptap
-              placeholder="Category"
-              getHtmlData={getNameData}
-              initialContent={testName}
-            /> */}
             <FormField
               htmlFor="name"
               id="name"
@@ -161,12 +148,12 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
             </FormField>
             <select
               value={durationUnit}
-              onChange={(e) => setDurationunit(e.target.value)}
+              onChange={(e) => setDurationUnit(e.target.value)}
               className="w-fit h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
             >
-              <option value={"Day"}>Day</option>
-              <option value={"Month"}>Month</option>
-              <option value={"Year"}>Year</option>
+              <option value="Day">Day</option>
+              <option value="Month">Month</option>
+              <option value="Year">Year</option>
             </select>
           </div>
           <div className="flex flex-col md:flex-row md:space-x-6">
@@ -174,12 +161,12 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
               htmlFor="numberOfQuestion"
               id="numberOfQuestion"
               type="text"
-              placeholder="Number Of Question"
+              placeholder="Number Of Questions"
               name="numberOfQuestion"
               value={formData.numberOfQuestion}
               onChange={handleChange}
             >
-              Number Of Question
+              Number Of Questions
             </FormField>
             <FormField
               htmlFor="markPerQuestion"
@@ -254,7 +241,7 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
           </div>
           <div className="flex items-center justify-between">
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md"
               onClick={handleSubmit}
             >
               Update Test
@@ -263,8 +250,8 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
         </div>
       </div>
       <button
-        onClick={() => setUpdateTest((perv) => !perv)}
-        className="border-2 rounded-lg border-transparent bg-red-500 py-2 px-4 text-sm font-semibold hover:bg-red-700 text-white transition-all duration-500 w-full md:w-auto"
+        onClick={() => setUpdateTest((prev) => !prev)}
+        className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md"
       >
         Close
       </button>

@@ -30,9 +30,7 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
           formData,
           { headers: { "content-type": "multipart/form-data" } }
         );
-        // console.log(response);
         setCourse(response.data.data);
-        // setCourseName(response.data.data.course_name);
         setCourseDescription(response.data.data.course_description);
         setDataLoaded(true);
       } catch (error) {
@@ -42,10 +40,6 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
 
     fetchCourse();
   }, [id]);
-
-  // console.log(course);
-  // console.log(courseName);
-  // console.log(courseDescription);
 
   // const getNameData = (html) => {
   //   setCourseName(html);
@@ -61,8 +55,6 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
       [name]: value,
     }));
   };
-
-  // console.log(updateCourseData);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -246,7 +238,7 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
           <div className="flex items-center justify-between">
             <button
               onClick={handleSubmit}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md"
             >
               Update Course
             </button>
@@ -254,7 +246,7 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
         </div>
         <button
           onClick={() => setUpdateCourse((perv) => !perv)}
-          className="border-2 rounded-lg border-transparent bg-red-500 py-2 px-4 text-sm font-semibold hover:bg-red-700 text-white transition-all duration-500 w-full md:w-auto"
+          className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md"
         >
           Close
         </button>

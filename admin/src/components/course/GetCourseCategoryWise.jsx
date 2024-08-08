@@ -12,11 +12,16 @@ import { CalendarClock, IndianRupee, SquarePlay } from "lucide-react";
 import ConfirmDelete from "../../utils/ConfirmDelete";
 import toast from "react-hot-toast";
 import * as Tabs from "@radix-ui/react-tabs";
+import {
+  deleteFullCourse,
+  setFullCourse,
+} from "../../redux/courses/fullCourseSlice";
 
 const GetCourseCategoryWise = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const courses = useSelector((state) => state.courses.courses);
+  const fullCourses = useSelector((state) => state.fullCourse.fullCourse);
 
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
@@ -32,9 +37,10 @@ const GetCourseCategoryWise = () => {
           formData,
           { headers: { "content-type": "multipart/form-data" } }
         );
-        console.log(response.data);
+        // console.log(response.data);
         if (response.status === 200) {
-          dispatch(setCourse(response.data));
+          dispatch(setCourse(response.data.data_course));
+          dispatch(setFullCourse(response.data.data_full_course));
         }
       } catch (error) {
         console.error("Error fetching courses:", error);
@@ -61,20 +67,25 @@ const GetCourseCategoryWise = () => {
       formData.append("course_type", courseType);
       formData.append("c_id", id);
       formData.append("course_id", courseId);
-      // console.log(courseId, id, formData);
       const response = await axios.post(
         `${API_URL}/admin/category/deletecourseandfcfromcategory.php`,
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );
 
-      console.log(response);
+      // console.log(response);
       if (response.status === 200) {
+        if (courseType === "1") {
+          dispatch(deleteCourse(courseId));
+        }
+        if (courseType === "0") {
+          dispatch(deleteFullCourse(courseId));
+        }
         toast.success("Course Deleted Sucessfully");
-        dispatch(deleteCourse(courseId));
       }
     } catch (error) {
       console.log(error);
+      toast.error(error.response?.data?.message || "Error deleting course");
     }
   };
 
@@ -113,9 +124,9 @@ const GetCourseCategoryWise = () => {
             >
               <div className="w-full flex flex-col justify-center items-center my-2">
                 <div className="w-full flex flex-col justify-center items-center">
-                  {courses.data_course ? (
+                  {courses.length > 0 ? (
                     <div className="flex flex-col justify-center items-center w-full">
-                      {courses.data_course.map((course, idx) => (
+                      {courses.map((course, idx) => (
                         <div
                           key={idx}
                           className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-2 gap-4"
@@ -190,9 +201,9 @@ const GetCourseCategoryWise = () => {
             >
               <div className="w-full flex flex-col justify-center items-center my-2">
                 <div className="w-full flex flex-col justify-center items-center">
-                  {courses.data_full_course ? (
+                  {fullCourses.length > 0 ? (
                     <div className="flex flex-col justify-center items-center w-full">
-                      {courses.data_full_course.map((course, idx) => (
+                      {fullCourses.map((course, idx) => (
                         <div
                           key={idx}
                           className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-2 gap-4"
