@@ -78,10 +78,6 @@ function AddVideoInCourse({ courseId }) {
     );
   }, [currentPage, courseId]);
 
-  // const isVideoAdded = (vid) => {
-  //   return addVideoInCourse.some((video) => video.id === vid);
-  // };
-
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
@@ -122,7 +118,6 @@ function AddVideoInCourse({ courseId }) {
                                   {idx + 1}
                                 </Avatar>
                               </div>
-                              {/* <div>Video ID: {item.video_id}</div> */}
                               <div className="flex flex-wrap text-wrap">
                                 {typeof item.video_title == "string"
                                   ? parser(item.video_title)
@@ -131,11 +126,9 @@ function AddVideoInCourse({ courseId }) {
                             </div>
                           </div>
                           <button
-                            // disabled={isVideoAdded(item.id)}
                             onClick={() => handleAddVideo(item.id, courseId)}
                             className="rounded-full bg-green-200 p-1 items-center"
                           >
-                            {/* {isVideoAdded(item.id) ? <Check /> : <Plus />} */}
                             <Plus />
                           </button>
                         </div>
