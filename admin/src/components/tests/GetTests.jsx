@@ -47,15 +47,14 @@ function GetTest() {
         `${API_URL}/admin/test/deletetest.php?testid=${testId}`
       );
       // console.log(response);
-      if (testId && response.data.success) {
-        dispatch(deleteTest(response.data));
-      }
+
       if (response.status == 201) {
+        dispatch(deleteTest(response.data));
         toast.success("Test Deleted Successfully");
       }
       fetchTest(dispatch, setLoading);
     } catch (error) {
-      toast.error(error.response.data.massage);
+      toast.error(error.response.data.massage || "Error deleting test");
       // console.error("Error fetching category:", error);
     }
   };
