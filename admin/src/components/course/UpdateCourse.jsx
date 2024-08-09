@@ -90,6 +90,7 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
       setUpdateCourse((perv) => !perv);
     } catch (error) {
       console.error("Error fetching courses:", error);
+      toast.error("Error Updating Course");
     }
   };
 
