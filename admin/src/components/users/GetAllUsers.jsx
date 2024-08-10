@@ -9,9 +9,11 @@ import ConfirmDelete from "../../utils/ConfirmDelete";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import Pagination from "../../utils/Pagination";
 import UpdateUser from "./UpdateUser";
+import Loader from "../../utils/Loader";
 
-const getUsers = async (dispatch, setPaginationData, page) => {
+const getUsers = async (dispatch, setPaginationData, page, setLoading) => {
   try {
+    setLoading(true);
     const formData = new FormData();
     formData.append("page", page);
     formData.append("limit", 10);
@@ -24,11 +26,13 @@ const getUsers = async (dispatch, setPaginationData, page) => {
     setPaginationData(response.data.pagination);
   } catch (error) {
     console.log("Error fetching users:", error);
-    // Handle error (e.g., show an error message)
+  } finally {
+    setLoading(false);
   }
 };
 
 function GetAllUsers() {
+  const [loading, setLoading] = useState(false);
   const [paginationData, setPaginationData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [updateUser, setUpdateUser] = useState(false);
@@ -37,7 +41,7 @@ function GetAllUsers() {
   const users = useSelector((state) => state.user.user);
 
   useEffect(() => {
-    getUsers(dispatch, setPaginationData, currentPage);
+    getUsers(dispatch, setPaginationData, currentPage, setLoading);
   }, [currentPage, dispatch]);
 
   const handleChangeStatus = useCallback(
@@ -77,88 +81,92 @@ function GetAllUsers() {
 
   return (
     <LayoutAdjuster>
-      <div
-        className={`${
-          updateUser
-            ? "hidden"
-            : "w-[80%] flex flex-col justify-center items-center mx-auto"
-        }`}
-      >
-        <div className="flex justify-center items-center space-x-10">
-          <h1 className="text-3xl font-bold text-center my-5">All Users</h1>
-          {/* <LinkButton to={"/add-user"}>Add Course</LinkButton> */}
-        </div>
-        {users.length > 0 ? (
-          <>
-            <table className="table-auto w-full m-5 border">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="p-2 text-sm">Id</th>
-                  <th className="p-2 text-sm">Name</th>
-                  <th className="p-2 text-sm">Mobile No.</th>
-                  <th className="p-2 text-sm">Active</th>
-                  <th className="p-2 text-sm">Update</th>
-                  <th className="p-2 text-sm">Delete</th>
-                </tr>
-              </thead>
-              <tbody className="text-center">
-                {users.map((user) => (
-                  <tr key={user.id} className="bg-gray-50">
-                    <td className="border p-2 text-sm">{user.id}</td>
-                    <td className="border p-2 text-sm">
-                      {user.firstname} {user.Lastname}
-                    </td>
-                    <td className="border p-2 text-sm">{user.mo_number}</td>
-                    <td className="border p-2 text-sm flex justify-center items-center">
-                      <button
-                        onClick={() => {
-                          handleChangeStatus(user.id, user.isactive);
-                        }}
-                        className="toggle-switch scale-75"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={user.isactive === "1"}
-                          readOnly
-                        />
-                        <div className="toggle-switch-background">
-                          <div className="toggle-switch-handle"></div>
-                        </div>
-                      </button>
-                    </td>
-                    <td className="border p-2 text-sm">
-                      <UpdateBtn
-                        handleClick={() => {
-                          setUpdateUserData(user);
-                          setUpdateUser(true);
-                        }}
-                      />
-                    </td>
-                    <td className="border p-2 text-sm">
-                      <ConfirmDelete
-                        handleClick={() => {
-                          // Handle delete button click
-                        }}
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <div className="mb-4">
-              <Pagination
-                totalPage={paginationData.total_pages}
-                currPage={currentPage}
-                setCurrPage={setCurrentPage}
-              />
-            </div>
-          </>
-        ) : (
-          <div className="text-2xl font-bold text-center mt-20">
-            No Data Available
+      {loading ? (
+        <Loader />
+      ) : (
+        <div
+          className={`${
+            updateUser
+              ? "hidden"
+              : "w-[80%] flex flex-col justify-center items-center mx-auto"
+          }`}
+        >
+          <div className="flex justify-center items-center space-x-10">
+            <h1 className="text-3xl font-bold text-center my-5">All Users</h1>
+            {/* <LinkButton to={"/add-user"}>Add Course</LinkButton> */}
           </div>
-        )}
-      </div>
+          {users.length > 0 ? (
+            <>
+              <table className="table-auto w-full m-5 border">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="p-2 text-sm">Id</th>
+                    <th className="p-2 text-sm">Name</th>
+                    <th className="p-2 text-sm">Mobile No.</th>
+                    <th className="p-2 text-sm">Active</th>
+                    <th className="p-2 text-sm">Update</th>
+                    <th className="p-2 text-sm">Delete</th>
+                  </tr>
+                </thead>
+                <tbody className="text-center">
+                  {users.map((user) => (
+                    <tr key={user.id} className="bg-gray-50">
+                      <td className="border p-2 text-sm">{user.id}</td>
+                      <td className="border p-2 text-sm">
+                        {user.firstname} {user.Lastname}
+                      </td>
+                      <td className="border p-2 text-sm">{user.mo_number}</td>
+                      <td className="border p-2 text-sm flex justify-center items-center">
+                        <button
+                          onClick={() => {
+                            handleChangeStatus(user.id, user.isactive);
+                          }}
+                          className="toggle-switch scale-75"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={user.isactive === "1"}
+                            readOnly
+                          />
+                          <div className="toggle-switch-background">
+                            <div className="toggle-switch-handle"></div>
+                          </div>
+                        </button>
+                      </td>
+                      <td className="border p-2 text-sm">
+                        <UpdateBtn
+                          handleClick={() => {
+                            setUpdateUserData(user);
+                            setUpdateUser(true);
+                          }}
+                        />
+                      </td>
+                      <td className="border p-2 text-sm">
+                        <ConfirmDelete
+                          handleClick={() => {
+                            // Handle delete button click
+                          }}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="mb-4">
+                <Pagination
+                  totalPage={paginationData.total_pages}
+                  currPage={currentPage}
+                  setCurrPage={setCurrentPage}
+                />
+              </div>
+            </>
+          ) : (
+            <div className="text-2xl font-bold text-center mt-20">
+              No Data Available
+            </div>
+          )}
+        </div>
+      )}
       {updateUser && (
         <UpdateUser
           setUpdateUser={setUpdateUser}

@@ -1,11 +1,11 @@
-import { TrendingUp } from "lucide-react";
+// import { TrendingUp } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
 
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
+  // CardFooter,
   CardHeader,
   CardTitle,
 } from "../ui/card";
@@ -26,12 +26,12 @@ const chartConfig = {
   },
 };
 
-function TotalRevnue() {
+function TotalRevenue() {
   return (
-    <Card>
+    <Card className="w-[33rem] h-[21.5rem] contain-content">
       <CardHeader>
-        <CardTitle>Bar Chart - Label</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Revnue</CardTitle>
+        <CardDescription>Last Six Months</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -39,7 +39,7 @@ function TotalRevnue() {
             accessibilityLayer
             data={chartData}
             margin={{
-              top: 20,
+              top: 10,
             }}
           >
             <CartesianGrid vertical={false} />
@@ -54,7 +54,12 @@ function TotalRevnue() {
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8}>
+            <Bar
+              dataKey="desktop"
+              fill="var(--color-desktop)"
+              radius={8}
+              maxBarSize={30}
+            >
               <LabelList
                 position="top"
                 offset={12}
@@ -65,16 +70,16 @@ function TotalRevnue() {
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
+      {/* <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
           Showing total visitors for the last 6 months
         </div>
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   );
 }
 
-export default TotalRevnue;
+export default TotalRevenue;

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setCategory,
@@ -6,16 +6,16 @@ import {
 } from "../../redux/categories/categorySlice";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import AddCategory from "./AddCategory";
-import { API_URL } from "../../url";
 import Loader from "../../utils/Loader";
 import toast from "react-hot-toast";
-import ConfirmDelete from "../../utils/ConfirmDelete";
 import UpdateBtn from "../../utils/UpdateBtn";
+import ConfirmDelete from "../../utils/ConfirmDelete";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
-import SeeAll from "../../utils/SeeAll";
+import { Avatar } from "antd";
 import AddCourseInCategory from "./AddCourseInCategory";
-// import parser from "html-react-parser";
+// import SeeAll from "../../utils/SeeAll";
+import { API_URL } from "../../url";
+import AddCategory from "./AddCategory";
 
 const fetchCategory = async (dispatch, setLoading) => {
   try {
@@ -40,32 +40,31 @@ function GetCategory() {
     fetchCategory(dispatch, setLoading);
   }, [dispatch]);
 
-  const handleDelete = async (categoryId) => {
-    try {
-      const response = await axios.delete(
-        `${API_URL}/admin/category/delcategory.php?id=${categoryId}`
-      );
-      // console.log(response);
-      if (categoryId && response.data.success) {
-        dispatch(deleteCategory(categoryId));
+  const handleDelete = useCallback(
+    async (categoryId) => {
+      try {
+        const response = await axios.delete(
+          `${API_URL}/admin/category/delcategory.php?id=${categoryId}`
+        );
+
+        if (response.status === 200) {
+          dispatch(deleteCategory(categoryId));
+          toast.success("Category Deleted Successfully");
+        }
+      } catch (error) {
+        toast.error(error.response?.data?.message || "Error deleting category");
       }
-      if (response.status == 200) {
-        dispatch(deleteCategory(response.data));
-        toast.success("Category Deleted Successfully");
-      }
-      fetchCategory(dispatch, setLoading);
-    } catch (error) {
-      toast.error(error.response.data.massage);
-    }
-  };
+    },
+    [dispatch]
+  );
 
   const handleChangeStatus = useCallback(
     async (categoryId, isactive) => {
       const confirmAlert = window.confirm(
         `${
           isactive === "1"
-            ? "Category will become Inactive. Do you want to proceed"
-            : "Category will become Active. Do you want to proceed"
+            ? "Category will become Inactive. Do you want to proceed?"
+            : "Category will become Active. Do you want to proceed?"
         }`
       );
       if (confirmAlert) {
@@ -80,14 +79,12 @@ function GetCategory() {
             { headers: { "content-type": "multipart/form-data" } }
           );
 
-          // Update local state instead of fetching users again
-          const updatedCategory = category.map((category) =>
-            category.id === categoryId ? { ...category, isactive } : category
+          const updatedCategory = category.map((cat) =>
+            cat.id === categoryId ? { ...cat, isactive } : cat
           );
           dispatch(setCategory(updatedCategory));
         } catch (error) {
-          console.log("Error updating user status:", error);
-          // Handle error (e.g., show an error message)
+          console.log("Error updating category status:", error);
         }
       }
     },
@@ -103,79 +100,72 @@ function GetCategory() {
           className={`${
             addNewCategory
               ? "hidden"
-              : "w-fit flex flex-col justify-center items-center mx-auto"
-          } `}
+              : "w-[80%] flex flex-col justify-center items-center mx-auto"
+          }`}
         >
-          <div className="flex justify-center items-center space-x-10">
-            <h1 className="text-center text-3xl font-bold my-5">
-              Category List
-            </h1>
+          <div className="flex justify-center items-center space-x-10 my-5">
+            <h1 className="text-3xl font-bold text-center">Category List</h1>
             <button
               onClick={() => setAddNewCategory((prev) => !prev)}
-              className="border rounded-md bg-blue-50 p-2 text-sm font-semibold text-black hover:bg-blue-100 border-blue-200 md:w-auto"
+              className="border rounded-md bg-blue-50 p-2 text-sm font-semibold text-black hover:bg-blue-100 border-blue-200"
             >
               Add Category
             </button>
           </div>
           {category.length > 0 ? (
-            <table className="table-auto w-full m-5 border-2">
-              <thead>
-                <tr className="bg-gray-200">
-                  <th className="p-2 text-sm">Id</th>
-                  <th className="p-2 text-sm">Name</th>
-                  <th className="p-2 text-sm">Update</th>
-                  <th className="p-2 text-sm">Delete</th>
-                  <th className="p-2 text-sm">Status</th>
-                  <th className="p-2 text-sm">Add Course</th>
-                  <th className="p-2 text-sm">All Course</th>
-                </tr>
-              </thead>
-              <tbody className="text-center">
-                {category.map((item) => (
-                  <tr key={item.id} className="bg-gray-100">
-                    <td className="border p-2 text-sm">{item.id}</td>
-                    <td className="border p-2 text-sm">{item.name}</td>
-                    <td className="border p-2 text-sm">
-                      <Link
-                        to={`/update-category?id=${item.id}&name=${item.name}`}
-                      >
-                        <UpdateBtn />
-                      </Link>
-                    </td>
-                    <td className="border p-2 text-sm">
-                      <ConfirmDelete
-                        handleClick={() => handleDelete(item.id)}
-                      />
-                    </td>
-                    <td className="border p-2 text-sm flex justify-center items-center">
-                      <button
-                        onClick={() => {
-                          handleChangeStatus(item.id, item.isactive);
-                        }}
-                        className="toggle-switch scale-75"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={item.isactive === "1"}
-                          readOnly
-                        />
-                        <div className="toggle-switch-background">
-                          <div className="toggle-switch-handle"></div>
+            <div className="flex flex-col justify-center items-center w-full">
+              {category.map(
+                (cat, idx) =>
+                  cat && (
+                    <div
+                      key={idx}
+                      className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-2 gap-4"
+                    >
+                      <div className="flex flex-col justify-center items-start gap-2 w-full">
+                        <div className="flex justify-between items-center w-full gap-4">
+                          <Avatar className="bg-gray-500 text-white">
+                            {cat.id}
+                          </Avatar>
+                          <AddCourseInCategory categoryId={cat.id} />
+                          <Link
+                            to={`/update-category?id=${cat.id}&name=${cat.name}`}
+                          >
+                            <UpdateBtn />
+                          </Link>
+                          <ConfirmDelete
+                            handleClick={() => handleDelete(cat.id)}
+                          />
+                          <button
+                            onClick={() => {
+                              handleChangeStatus(cat.id, cat.isactive);
+                            }}
+                            className="toggle-switch scale-75 align-middle"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={cat.isactive === "1"}
+                              readOnly
+                            />
+                            <div className="toggle-switch-background">
+                              <div className="toggle-switch-handle"></div>
+                            </div>
+                          </button>
                         </div>
-                      </button>
-                    </td>
-                    <td className="border p-2 text-sm">
-                      <AddCourseInCategory categoryId={item.id} />
-                    </td>
-                    <td className="border p-2 text-sm">
-                      <Link to={`/get-course-category-wise?id=${item.id}`}>
-                        <SeeAll childern={"Courses"} />
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                        <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
+                        <div className="flex justify-center items-center gap-6 w-full">
+                          <Link
+                            to={`/get-course-category-wise?id=${cat.id}`}
+                            className="flex flex-col justify-center items-start gap-3 w-full cursor-pointer"
+                          >
+                            <div className="text-start w-full">{cat.name}</div>
+                          </Link>
+                        </div>
+                      </div>
+                      <div className="flex flex-col justify-between items-end gap-10 w-fit"></div>
+                    </div>
+                  )
+              )}
+            </div>
           ) : (
             <div className="text-2xl font-bold text-center mt-20">
               No Data Available
@@ -183,6 +173,7 @@ function GetCategory() {
           )}
         </div>
       )}
+
       {addNewCategory && (
         <AddCategory
           fetchCategory={() => fetchCategory(dispatch, setLoading)}

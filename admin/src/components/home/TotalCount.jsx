@@ -1,10 +1,11 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import axios from "axios";
 import LinkButton from "../../utils/LinkButton";
 import { API_URL } from "../../url";
 import { Loader2 } from "lucide-react";
 
-function TotalUsers() {
+function TotalCount({ name, url, link, otherClass }) {
   const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(false);
 
@@ -12,9 +13,7 @@ function TotalUsers() {
     const getUserCount = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(
-          `${API_URL}/admin/dashbord/getusercount.php`
-        );
+        const res = await axios.get(`${API_URL}${url}`);
         // console.log(res.data)
         setCount(res.data.total_users);
       } catch (error) {
@@ -25,22 +24,24 @@ function TotalUsers() {
     };
 
     getUserCount();
-  }, []);
+  }, [url]);
   return (
     <div>
-      <div className="flex flex-col justify-center items-center gap-5 text-center px-8 py-8 border border-gray-200 rounded-lg shadow-md w-[350px]">
-        <p className="text-3xl font-semibold">Total Users</p>
+      <div
+        className={`${otherClass} flex flex-col justify-center items-center gap-3 text-center px-8 py-6 border border-gray-200 rounded-lg shadow-md w-[250px]`}
+      >
+        <p className="text-lg font-semibold">{name}</p>
         {loading ? (
-          <Loader2 className="h-10 w-10 text-blue-500 animate-spin" />
+          <Loader2 className="h-6 w-6 text-blue-500 animate-spin" />
         ) : (
-          <p className="text-3xl font-bold">{count}</p>
+          <p className="text-xl font-bold">{count}</p>
         )}
         <div>
-          <LinkButton to={"/get-users"}>See All Users</LinkButton>
+          <LinkButton to={link}>See All</LinkButton>
         </div>
       </div>
     </div>
   );
 }
 
-export default TotalUsers;
+export default TotalCount;
