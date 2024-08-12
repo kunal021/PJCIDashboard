@@ -28,7 +28,7 @@ function TotalCount({ name, url, link, otherClass }) {
   return (
     <div>
       <div
-        className={`${otherClass} flex flex-col justify-center items-center gap-3 text-center px-8 py-6 border border-gray-200 rounded-lg shadow-md w-[250px]`}
+        className={`${otherClass} flex flex-col justify-center items-center gap-3 text-center px-8 py-3 border border-gray-200 rounded-lg shadow-md w-[250px]`}
       >
         <p className="text-lg font-semibold">{name}</p>
         {loading ? (

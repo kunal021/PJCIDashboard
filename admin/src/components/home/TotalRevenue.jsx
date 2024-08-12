@@ -28,9 +28,9 @@ const chartConfig = {
 
 function TotalRevenue() {
   return (
-    <Card className="w-[33rem] h-[21.5rem] contain-content">
+    <Card className="w-[33rem]">
       <CardHeader>
-        <CardTitle>Revnue</CardTitle>
+        <CardTitle>Revenue</CardTitle>
         <CardDescription>Last Six Months</CardDescription>
       </CardHeader>
       <CardContent>

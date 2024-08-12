@@ -37,7 +37,9 @@ const fetchQuestions = async (
       { headers: "content-type/form-data" }
     );
 
-    if (response.data) {
+    console.log(response);
+
+    if (response.status === 200) {
       dispatch(setQuestion(response.data.data));
       setPaginationData(response.data.pagination);
     } else {
@@ -127,7 +129,7 @@ const GetQuestions = () => {
                   Add Question
                 </LinkButton>
               </div>
-              {question ? (
+              {question.length > 0 ? (
                 <div className="flex flex-col justify-center items-center w-full">
                   {question.map(
                     (question, idx) =>

@@ -16,8 +16,10 @@ const fetchTest = async (setTest, setLoading, testId) => {
       formData,
       { headers: { "Content-Type": "multipart/form-data" } }
     );
-    setTest(response.data.data);
-    // console.log(response.data.data);
+    // console.log(response);
+    if (response.status === 200) {
+      setTest(response.data.data);
+    }
   } catch (error) {
     console.error("Error fetching courses:", error);
   } finally {
