@@ -108,13 +108,13 @@ const GetFullCourseSubjects = () => {
                 Full Course List
               </h1>
               {courses.length ? (
-                <div className="flex flex-col justify-center items-center">
+                <div className="flex flex-col justify-center items-center w-full">
                   {courses.map(
                     (course, idx) =>
                       course && (
                         <div
                           key={idx}
-                          className="flex  justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-2 gap-4 cursor-pointer"
+                          className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-2 gap-4 cursor-pointer"
                         >
                           <div className="flex flex-col justify-center items-start gap-2 w-full">
                             <div className="flex justify-center items-center gap-6 w-full">

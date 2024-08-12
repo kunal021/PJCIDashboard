@@ -232,7 +232,7 @@ const SideBar = () => {
           onClick={() => {
             window.history.back();
           }}
-          className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-1 px-2.5 rounded-md align-middle transition-all duration-300"
+          className="bg-blue-500 text-white font-bold py-1 px-2.5 rounded-md align-middle transition-all duration-300"
         >
           <MoveLeft className="w-5" />
         </button>
@@ -240,7 +240,7 @@ const SideBar = () => {
           onClick={() => {
             window.history.forward();
           }}
-          className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-1 px-2.5 rounded-md align-middle transition-all duration-300"
+          className="bg-blue-500 text-white font-bold py-1 px-2.5 rounded-md align-middle transition-all duration-300"
         >
           <MoveRight className="w-5" />
         </button>
