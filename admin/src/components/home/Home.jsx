@@ -2,7 +2,7 @@ import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import TotalCount from "./TotalCount";
 // import TotalCourses from "./TotalCourses";
 // import TotalFullCourses from "./TotalFullCourses";
-import TotalRevenue from "./TotalRevenue";
+// import TotalRevenue from "./TotalRevenue";
 // import TotalUsers from "./TotalUsers";
 
 function Home() {
@@ -16,15 +16,15 @@ function Home() {
             link={"/get-users"}
             otherClass={"bg-blue-500 text-white"}
           />
-          <TotalCount
+          {/* <TotalCount
             name="August Revenue"
             url="/admin/dashbord/getusercount.php"
             link={"/get-test"}
             otherClass={"bg-purple-500 text-white"}
-          />
+          /> */}
         </div>
 
-        <TotalRevenue />
+        {/* <TotalRevenue /> */}
       </div>
     </LayoutAdjuster>
   );
