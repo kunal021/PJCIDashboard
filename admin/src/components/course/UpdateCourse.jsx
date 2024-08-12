@@ -19,6 +19,10 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
 
   const dispatch = useDispatch();
 
+  // const trim = (str) => {
+  //   return str.split(" ");
+  // };
+
   useEffect(() => {
     const fetchCourse = async () => {
       try {

@@ -10,13 +10,16 @@ import toast from "react-hot-toast";
 import ConfirmDelete from "../../utils/ConfirmDelete";
 import { useSearchParams } from "react-router-dom";
 import GetCourseById from "./GetCourseById";
+import { useDispatch, useSelector } from "react-redux";
+import { setVideo } from "../../redux/videos/videoSlice";
 
 const fetchData = async (
   setLoading,
   currentPage,
   setPaginationData,
   courseId,
-  setVideo
+  setVideo,
+  dispatch
 ) => {
   try {
     setLoading(true);
@@ -29,9 +32,9 @@ const fetchData = async (
       formData,
       { headers: "content-type/form-data" }
     );
-    // console.log(response);
+    console.log(response);
     if (response.status === 200) {
-      setVideo(response.data.data);
+      dispatch(setVideo(response.data.data));
       setPaginationData(response.data.pagination);
     }
   } catch (error) {
@@ -42,6 +45,7 @@ const fetchData = async (
 };
 
 function GetVideoInCourse() {
+  const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const courseId = searchParams.get("id");
   const [loading, setLoading] = useState(false);
@@ -49,11 +53,18 @@ function GetVideoInCourse() {
   const [currentPage, setCurrentPage] = useState(1);
   const [show, setShow] = useState(false);
 
-  const [video, setVideo] = useState([]);
+  const video = useSelector((state) => state.video.video);
 
   useEffect(() => {
-    fetchData(setLoading, currentPage, setPaginationData, courseId, setVideo);
-  }, [courseId, currentPage]);
+    fetchData(
+      setLoading,
+      currentPage,
+      setPaginationData,
+      courseId,
+      setVideo,
+      dispatch
+    );
+  }, [courseId, currentPage, dispatch]);
 
   const handleOpenAndFetchData = () => {
     setShow(true);
@@ -74,12 +85,12 @@ function GetVideoInCourse() {
       );
 
       if (response.status === 200) {
-        setVideo(video.filter((item) => item.id !== id));
+        dispatch(setVideo(video.filter((item) => item.id !== id)));
         toast.success("Video Deleted Successfully");
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.data.message);
+      toast.error(error.response?.data?.message || "Error deleting video");
     } finally {
       setLoading(false);
     }
@@ -142,7 +153,7 @@ function GetVideoInCourse() {
                       ))}
                       <div>
                         <Pagination
-                          totalPage={paginationData.total_pages}
+                          totalPage={paginationData.total_pages || 1}
                           currPage={currentPage}
                           setCurrPage={setCurrentPage}
                         />

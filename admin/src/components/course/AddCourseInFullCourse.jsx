@@ -9,6 +9,8 @@ import Pagination from "../../utils/Pagination";
 import parser from "html-react-parser";
 import { Avatar } from "antd";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { addCourse } from "../../redux/courses/courseSlice";
 
 const fetchData = async (
   setLoading,
@@ -40,6 +42,7 @@ const fetchData = async (
 };
 
 function AddCourseInFullCourse({ courseId: fullCourseId }) {
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [paginationData, setPaginationData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
@@ -57,21 +60,23 @@ function AddCourseInFullCourse({ courseId: fullCourseId }) {
     );
   }, [currentPage, fullCourseId]);
 
-  // console.log(fullCourseIsd);
-
   const handleAddCourse = async (fcid, cid) => {
     try {
       const formData = new FormData();
       formData.append("courseid", cid);
       formData.append("fullcourseid", fcid);
-      await axios.post(
+      const response = await axios.post(
         `${API_URL}/admin/courses/addcourseinfullcourse.php`,
         formData,
         { headers: "content-type/form-data" }
       );
 
-      setCourse(course.filter((items) => items.id !== cid));
-      toast.success("Course Added Successfully");
+      // console.log(response);
+      if (response.status === 201) {
+        dispatch(addCourse(course.find((items) => items.id === cid)));
+        setCourse(course.filter((items) => items.id !== cid));
+        toast.success("Course Added Successfully");
+      }
     } catch (error) {
       console.log(error);
     }

@@ -34,8 +34,10 @@ const GetFullCourseSubjects = () => {
         forData,
         { headers: { "content-type": "multipart/form-data" } }
       );
-      console.log(response);
-      dispatch(setCourse(response.data.data));
+      // console.log(response);
+      if (response.status === 200) {
+        dispatch(setCourse(response.data.data));
+      }
     } catch (error) {
       console.error("Error fetching courses:", error);
     } finally {

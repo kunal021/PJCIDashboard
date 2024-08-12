@@ -20,6 +20,7 @@ function AddCategory({ fetchCategory, setAddNewCategory }) {
         { c_name: categoryName },
         { headers: { "content-type": "multipart/form-data" } }
       );
+      // console.log(response);
       dispatch(addCategory(response.data));
       if (response.status == 201) {
         toast.success("Category Added Sucessfully");
@@ -27,9 +28,10 @@ function AddCategory({ fetchCategory, setAddNewCategory }) {
       fetchCategory();
     } catch (error) {
       console.error("Error fetching courses:", error);
+      toast.error(error.response.data.message || "Error adding category");
     }
     setCategoryName("");
-    setAddNewCategory((perv) => !perv);
+    // setAddNewCategory((perv) => !perv);
   };
 
   // const handleContentData = (html) => {

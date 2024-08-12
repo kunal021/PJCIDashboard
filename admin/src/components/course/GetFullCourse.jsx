@@ -29,7 +29,9 @@ const fetchFullCourse = async (dispatch, setLoading) => {
       { headers: { "content-type": "multipart/form-data" } }
     );
     // console.log(response);
-    dispatch(setFullCourse(response.data.data));
+    if (response.status === 200) {
+      dispatch(setFullCourse(response.data.data));
+    }
   } catch (error) {
     console.error("Error fetching courses:", error);
   } finally {

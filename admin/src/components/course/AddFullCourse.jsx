@@ -54,8 +54,9 @@ function AddFullCourse() {
       );
 
       // console.log(response);
-      dispatch(addFullCourse(response.data));
+
       if (response.status == 201) {
+        dispatch(addFullCourse(response.data));
         toast.success("Full Course Added Sucessfully");
       }
     } catch (error) {

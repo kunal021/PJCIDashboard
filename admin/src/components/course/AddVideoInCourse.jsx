@@ -3,20 +3,21 @@ import * as Dialog from "@radix-ui/react-dialog";
 import axios from "axios";
 import { Plus, SquarePlay, X } from "lucide-react";
 import { API_URL } from "../../url";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import Loader from "../../utils/Loader";
 import Pagination from "../../utils/Pagination";
 import parser from "html-react-parser";
 import { Avatar } from "antd";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { addVideo } from "../../redux/videos/videoSlice";
 
 const fetchData = async (
-  setLoading,
-  currentPage,
-  setPaginationData,
   courseId,
-  setVideo
-  // setError
+  currentPage,
+  setLoading,
+  setVideo,
+  setPaginationData
 ) => {
   try {
     setLoading(true);
@@ -24,28 +25,35 @@ const fetchData = async (
     formData.append("course_id", courseId);
     formData.append("page", currentPage);
     formData.append("limit", 10);
+
     const response = await axios.post(
       `${API_URL}/admin/courses/getvideoavailabletoadd.php`,
       formData,
-      { headers: { "Content-Type": "multipart/form-data" } }
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      }
     );
-    setVideo(response.data.data);
-    setPaginationData(response.data.pagination);
+
+    if (response.status === 200) {
+      setVideo(response.data.data);
+      setPaginationData(response.data.pagination);
+    }
   } catch (error) {
-    console.log(error.response);
-    // setError(error.response.data.massage);
+    console.error("Error fetching data:", error);
+    // toast.error(error.response.data.message || "Error fetching data");
   } finally {
     setLoading(false);
   }
 };
 
 function AddVideoInCourse({ courseId }) {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [paginationData, setPaginationData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-  // const [error, setError] = useState(null);
   const [video, setVideo] = useState([]);
+
+  const memoizedVideoList = useMemo(() => video, [video]);
 
   const handleAddVideo = useCallback(
     async (vid, cid) => {
@@ -53,30 +61,59 @@ function AddVideoInCourse({ courseId }) {
         const formData = new FormData();
         formData.append("c_id", cid);
         formData.append("v_id", vid);
-        await axios.post(
+        const response = await axios.post(
           `${API_URL}/admin/courses/addvideoincourse.php`,
           formData,
-          { headers: "content-type/form-data" }
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
         );
-        setVideo(video.filter((items) => items.id !== vid));
-        toast.success("Video Added Successfully");
+
+        if (response.status === 200) {
+          dispatch(addVideo(memoizedVideoList.find((item) => item.id === vid)));
+          setVideo(memoizedVideoList.filter((item) => item.id !== vid));
+          toast.success("Video added successfully");
+        }
       } catch (error) {
-        console.log(error);
+        console.error("Error adding video:", error);
+        toast.error("Failed to add video");
       }
     },
-    [video]
+    [dispatch, memoizedVideoList]
   );
 
   useEffect(() => {
-    fetchData(
-      setLoading,
-      currentPage,
-      setPaginationData,
-      courseId,
-      setVideo
-      // setError
+    fetchData(courseId, currentPage, setLoading, setVideo, setPaginationData);
+  }, [courseId, currentPage]);
+
+  const renderVideos = () => {
+    if (!memoizedVideoList.length) {
+      return (
+        <div className="text-2xl font-bold text-center mt-20">
+          No Data Found
+        </div>
+      );
+    }
+
+    return (
+      <>
+        {memoizedVideoList.map((item, idx) => (
+          <VideoItem
+            key={idx}
+            idx={idx}
+            item={item}
+            courseId={courseId}
+            handleAddVideo={handleAddVideo}
+          />
+        ))}
+        <Pagination
+          totalPage={paginationData.total_pages}
+          currPage={currentPage}
+          setCurrPage={setCurrentPage}
+        />
+      </>
     );
-  }, [currentPage, courseId]);
+  };
 
   return (
     <Dialog.Root>
@@ -94,63 +131,7 @@ function AddVideoInCourse({ courseId }) {
           <Dialog.Title className="text-mauve12 m-0 text-2xl font-bold">
             Add Video
           </Dialog.Title>
-          {loading ? (
-            <>
-              <Loader />
-            </>
-          ) : (
-            <div
-              className={`w-full flex flex-col justify-center items-center mx-auto`}
-            >
-              <div className="w-full flex flex-col justify-center items-center my-2">
-                <div className="w-full flex flex-col justify-center items-center">
-                  {video.length ? (
-                    <div className="flex flex-col justify-center items-center w-full">
-                      {video.map((item, idx) => (
-                        <div
-                          key={idx}
-                          className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-2 p-3 gap-3"
-                        >
-                          <div className="flex flex-col justify-center items-start gap-4 w-[90%]">
-                            <div className="flex justify-start items-center text-sm w-full gap-4">
-                              <div className="flex justify-center items-center">
-                                <Avatar className="bg-gray-500 text-white w-8 h-8">
-                                  {idx + 1}
-                                </Avatar>
-                              </div>
-                              <div className="flex flex-wrap text-wrap">
-                                {typeof item.video_title == "string"
-                                  ? parser(item.video_title)
-                                  : item.video_title}
-                              </div>
-                            </div>
-                          </div>
-                          <button
-                            onClick={() => handleAddVideo(item.id, courseId)}
-                            className="rounded-full bg-green-200 p-1 items-center"
-                          >
-                            <Plus />
-                          </button>
-                        </div>
-                      ))}
-                      <div>
-                        <Pagination
-                          totalPage={paginationData.total_pages}
-                          currPage={currentPage}
-                          setCurrPage={setCurrentPage}
-                        />
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="text-2xl font-bold text-center mt-20">
-                      No Data Found
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-
+          {loading ? <Loader /> : renderVideos()}
           <div className="mt-[25px] flex justify-end">
             <Dialog.Close asChild>
               <button
@@ -162,7 +143,7 @@ function AddVideoInCourse({ courseId }) {
             </Dialog.Close>
           </div>
           <Dialog.Close asChild>
-            <button className="text-black hover:bg-blue-100  absolute top-[10px] right-[10px] inline-flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-full">
+            <button className="text-black hover:bg-blue-100 absolute top-[10px] right-[10px] inline-flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-full">
               <X />
             </button>
           </Dialog.Close>
@@ -171,5 +152,26 @@ function AddVideoInCourse({ courseId }) {
     </Dialog.Root>
   );
 }
+
+const VideoItem = ({ idx, item, courseId, handleAddVideo }) => (
+  <div className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-2 p-3 gap-3">
+    <div className="flex flex-col justify-center items-start gap-4 w-[90%]">
+      <div className="flex justify-start items-center text-sm w-full gap-4">
+        <Avatar className="bg-gray-500 text-white w-8 h-8">{idx + 1}</Avatar>
+        <div className="flex flex-wrap text-wrap">
+          {typeof item.video_title === "string"
+            ? parser(item.video_title)
+            : item.video_title}
+        </div>
+      </div>
+    </div>
+    <button
+      onClick={() => handleAddVideo(item.id, courseId)}
+      className="rounded-full bg-green-200 p-1 items-center"
+    >
+      <Plus />
+    </button>
+  </div>
+);
 
 export default AddVideoInCourse;
