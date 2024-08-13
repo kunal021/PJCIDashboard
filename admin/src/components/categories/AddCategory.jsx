@@ -12,8 +12,12 @@ function AddCategory({ fetchCategory, setAddNewCategory }) {
   const [categoryName, setCategoryName] = useState("");
   const dispatch = useDispatch();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    if (categoryName.length > 255) {
+      toast.error("Category name should be less than 255 characters");
+      return;
+    }
+
     try {
       const response = await axios.post(
         `${API_URL}/admin/category/add.php`,
@@ -28,7 +32,7 @@ function AddCategory({ fetchCategory, setAddNewCategory }) {
       fetchCategory();
     } catch (error) {
       console.error("Error fetching courses:", error);
-      toast.error(error.response.data.message || "Error adding category");
+      toast.error(error.response?.data?.message || "Error adding category");
     }
     setCategoryName("");
     // setAddNewCategory((perv) => !perv);
@@ -55,6 +59,11 @@ function AddCategory({ fetchCategory, setAddNewCategory }) {
         >
           Category Name
         </FormField>
+        {categoryName.length > 255 && (
+          <p className="text-red-500">
+            Category name should be less than 255 characters
+          </p>
+        )}
         <button
           onClick={handleSubmit}
           className="rounded-md bg-blue-50 p-2 text-sm font-semibold hover:bg-blue-100 border-blue-200 text-black border w-full md:w-auto z-50"
