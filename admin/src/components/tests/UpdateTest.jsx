@@ -7,12 +7,13 @@ import toast from "react-hot-toast";
 import FormField from "../../utils/FormField";
 import { API_URL } from "../../url";
 import Tiptap from "../../utils/TextEditor";
+import { trim } from "../../utils/trim";
 
 function UpdateTest({ updateTestData, setUpdateTest }) {
   const [formData, setFormData] = useState({
     name: updateTestData.test_name,
     price: updateTestData.price,
-    duration: updateTestData.duration,
+    duration: trim(updateTestData.duration)[0],
     numberOfQuestion: updateTestData.number_of_questions,
     markPerQuestion: updateTestData.mark_per_qns,
     negativeMark: updateTestData.negative_mark,
@@ -24,8 +25,12 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
   const [testDescription, setTestDescription] = useState(
     updateTestData.description
   );
-  const [durationUnit, setDurationUnit] = useState("Day");
+  const [durationUnit, setDurationUnit] = useState(
+    trim(updateTestData.duration)[1]
+  );
   const dispatch = useDispatch();
+
+  console.log(durationUnit);
 
   const getDescriptionData = (html) => {
     setTestDescription(html);
@@ -96,6 +101,8 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
       toast.error("Failed to update test");
     }
   };
+
+  // console.log(formData);
 
   return (
     <div className="w-[80%] h-full flex flex-col justify-center items-center my-5">

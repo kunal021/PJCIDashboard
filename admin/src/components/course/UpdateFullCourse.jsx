@@ -8,6 +8,7 @@ import FormField from "../../utils/FormField";
 import { API_URL } from "../../url";
 import Tiptap from "../../utils/TextEditor";
 import { Loader, UploadCloud } from "lucide-react";
+import { trim } from "../../utils/trim";
 
 function UpdateFullCourse({ setUpdateCourse, updateCourseData: id }) {
   const [course, setCourse] = useState([]);
@@ -30,10 +31,18 @@ function UpdateFullCourse({ setUpdateCourse, updateCourseData: id }) {
           { headers: { "content-type": "multipart/form-data" } }
         );
         // console.log(response);
-        setCourse(response.data.data);
-        // setCourseName(response.data.data.full_course_name);
-        setCourseDescription(response.data.data.full_course_description);
-        setDataLoaded(true);
+        if (response.status == 200) {
+          const duration = trim(response.data.data.full_course_duration);
+          setDurationunit(duration[1]);
+          setCourse((prev) => ({
+            ...prev,
+            ...response.data.data,
+            full_course_duration: duration[0],
+          }));
+          // setCourseName(response.data.data.full_course_name);
+          setCourseDescription(response.data.data.full_course_description);
+          setDataLoaded(true);
+        }
       } catch (error) {
         console.error("Error fetching courses:", error);
       }
