@@ -19,8 +19,11 @@ function UpdateCategory() {
   const [categoryName, setCategoryName] = useState(name);
   const dispatch = useDispatch();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    if (categoryName.length > 255) {
+      toast.error("Category name should be less than 255 characters");
+      return;
+    }
     try {
       const response = await axios.post(
         `${API_URL}/admin/category/updatecategory.php`,
@@ -64,6 +67,11 @@ function UpdateCategory() {
           >
             Category Name
           </FormField>
+          {categoryName.length > 255 && (
+            <p className="text-red-500">
+              Category name should be less than 255 characters
+            </p>
+          )}
           <button
             onClick={handleSubmit}
             className="border rounded-md bg-blue-50 p-2 text-sm font-semibold border-blue-200 hover:bg-blue-100 text-black w-full md:w-auto"
