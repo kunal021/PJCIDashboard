@@ -35,7 +35,9 @@ function TotalRevenue() {
           `${API_URL}/admin/dashbord/getrevenue.php`
         );
         console.log(response);
-        setCount(response.data.data);
+        if (response.status === 200) {
+          setCount(response.data.data);
+        }
       } catch (error) {
         console.log(error);
       } finally {
@@ -67,41 +69,45 @@ function TotalRevenue() {
         </div>
       ) : (
         <CardContent>
-          <ChartContainer config={chartConfig}>
-            <BarChart
-              accessibilityLayer
-              data={chartData}
-              margin={{
-                top: 10,
-              }}
-            >
-              <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="month"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-                tickFormatter={(value) => value.slice(0, 3)}
-              />
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent hideLabel />}
-              />
-              <Bar
-                dataKey="desktop"
-                fill="var(--color-desktop)"
-                radius={8}
-                maxBarSize={30}
+          {!count || count.length === 0 ? (
+            <div>No Data Found</div>
+          ) : (
+            <ChartContainer config={chartConfig}>
+              <BarChart
+                accessibilityLayer
+                data={chartData}
+                margin={{
+                  top: 10,
+                }}
               >
-                <LabelList
-                  position="top"
-                  offset={12}
-                  className="fill-foreground"
-                  fontSize={12}
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="month"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                  tickFormatter={(value) => value.slice(0, 3)}
                 />
-              </Bar>
-            </BarChart>
-          </ChartContainer>
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent hideLabel />}
+                />
+                <Bar
+                  dataKey="desktop"
+                  fill="var(--color-desktop)"
+                  radius={8}
+                  maxBarSize={30}
+                >
+                  <LabelList
+                    position="top"
+                    offset={12}
+                    className="fill-foreground"
+                    fontSize={12}
+                  />
+                </Bar>
+              </BarChart>
+            </ChartContainer>
+          )}
         </CardContent>
       )}
       {/* <CardFooter className="flex-col items-start gap-2 text-sm">

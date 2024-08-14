@@ -34,16 +34,17 @@ function More({ user }) {
         <Ellipsis className="w-6 h-6" />
       </PopoverTrigger>
       <PopoverContent className="w-fit">
-        <div className="flex flex-col justify-center items-center gap-4">
-          <p className="font-semibold">
+        <div className="flex flex-col justify-center items-center gap-3">
+          <p className="font-semibold text-lg">
             {user.firstname} {user.Lastname}
           </p>
-          <button
+          <p
             onClick={handleGrantUserLogin}
-            className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black py-1 px-2 rounded-md w-full"
+            // className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black py-1 px-2 rounded-md w-full"
+            className="cursor-pointer text-sm"
           >
             {loading ? "Granting..." : "Grant User Login"}
-          </button>
+          </p>
           {/* <button className="bg-red-50 hover:bg-red-100 border border-red-200 text-black py-1 px-2 rounded-md w-full">
             Delete User
           </button> */}
