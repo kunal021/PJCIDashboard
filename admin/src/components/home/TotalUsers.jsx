@@ -34,7 +34,7 @@ function TotalUsers() {
       >
         <p className="text-lg font-semibold">Total Users</p>
         {loading ? (
-          <Loader2 className="h-6 w-6 text-blue-500 animate-spin" />
+          <Loader2 className="h-6 w-6 animate-spin" />
         ) : (
           <p className="text-xl font-bold">{count}</p>
         )}
