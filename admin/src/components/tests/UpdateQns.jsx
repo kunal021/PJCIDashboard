@@ -89,7 +89,7 @@ function UpdateQns({ setUpdateQuestion, updatedQuestionData }) {
     <div className="w-[80%] flex flex-col justify-center items-center">
       <h1 className="text-center my-5 text-3xl font-bold">Add Question</h1>
       <div className="flex flex-col justify-center items-center mt-5 w-full">
-        <div className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border-2 border-gray-900 w-full">
+        <div className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border border-gray-400 w-full">
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold my-2">
               Question
@@ -223,7 +223,7 @@ function UpdateQns({ setUpdateQuestion, updatedQuestionData }) {
           </div>
           <div className="flex items-center justify-between">
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md"
               onClick={handleSubmit}
             >
               Update Question
@@ -234,7 +234,7 @@ function UpdateQns({ setUpdateQuestion, updatedQuestionData }) {
         <div className="flex justify-center items-center mb-5 space-x-16 ">
           <button
             onClick={() => setUpdateQuestion((perv) => !perv)}
-            className="border-2 rounded-lg border-transparent bg-red-500 py-2 px-4 text-sm font-semibold hover:bg-red-700 text-white transition-all duration-500 w-full md:w-auto"
+            className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md"
           >
             Close
           </button>
