@@ -8,6 +8,8 @@ function FormField({
   name,
   value = "",
   onChange,
+  maxLength,
+  minLength,
 }) {
   const className = `appearance-none border w-full rounded-md border-gray-300 focus:border-black/50 focus:ring-2 focus:ring-black/50 py-2 px-3 text-gray-700 leading-tight focus:outline-none`;
   return (
@@ -39,6 +41,8 @@ function FormField({
           name={name}
           value={value}
           onChange={onChange}
+          maxLength={maxLength || undefined}
+          minLength={minLength || undefined}
         />
       )}
     </div>

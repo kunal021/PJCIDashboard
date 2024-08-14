@@ -5,11 +5,11 @@ import axios from "axios";
 import "../../utils/toggleBtn.css";
 import { API_URL } from "../../url";
 import UpdateBtn from "../../utils/UpdateBtn";
-import ConfirmDelete from "../../utils/ConfirmDelete";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import Pagination from "../../utils/Pagination";
 import UpdateUser from "./UpdateUser";
 import Loader from "../../utils/Loader";
+import More from "./More";
 
 const getUsers = async (dispatch, setPaginationData, page, setLoading) => {
   try {
@@ -79,6 +79,8 @@ function GetAllUsers() {
     [dispatch, users]
   );
 
+  console.log(users);
+
   return (
     <LayoutAdjuster>
       {loading ? (
@@ -103,9 +105,11 @@ function GetAllUsers() {
                     <th className="p-2 text-sm">Id</th>
                     <th className="p-2 text-sm">Name</th>
                     <th className="p-2 text-sm">Mobile No.</th>
-                    <th className="p-2 text-sm">Active</th>
+                    <th className="p-2 text-sm">Email</th>
+                    <th className="p-2 text-sm">Status</th>
                     <th className="p-2 text-sm">Update</th>
-                    <th className="p-2 text-sm">Delete</th>
+                    {/* <th className="p-2 text-sm">Delete</th> */}
+                    <th className="p-2 text-sm">More</th>
                   </tr>
                 </thead>
                 <tbody className="text-center">
@@ -116,6 +120,7 @@ function GetAllUsers() {
                         {user.firstname} {user.Lastname}
                       </td>
                       <td className="border p-2 text-sm">{user.mo_number}</td>
+                      <td className="border p-2 text-sm">{user.email}</td>
                       <td className="border p-2 text-sm flex justify-center items-center">
                         <button
                           onClick={() => {
@@ -141,12 +146,18 @@ function GetAllUsers() {
                           }}
                         />
                       </td>
-                      <td className="border p-2 text-sm">
+                      {/* <td className="border p-2 text-sm">
                         <ConfirmDelete
                           handleClick={() => {
                             // Handle delete button click
                           }}
                         />
+                      </td> */}
+                      <td className="border p-2 text-sm ">
+                        <More user={user} />
+                        {/* <div className="flex justify-center items-center">
+                          <Ellipsis className="cursor-pointer" />
+                        </div> */}
                       </td>
                     </tr>
                   ))}

@@ -25,7 +25,21 @@ function UpdateUser({ updateUserData, setUpdateUser }) {
     }));
   };
 
+  // console.log(user);
+
   const handleSubmit = async () => {
+    if (user.mobile.length !== 10 || !/^[6789]/.test(user.mobile)) {
+      toast.error("Please enter a valid mobile number");
+      return;
+    }
+    if (
+      !user.email ||
+      user.email.length < 5 ||
+      !/\S+@\S+\.\S+/.test(user.email)
+    ) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
     try {
       setLoading(true);
       const formData = new FormData();
@@ -40,7 +54,7 @@ function UpdateUser({ updateUserData, setUpdateUser }) {
         { headers: { "content-type": "multipart/form-data" } }
       );
 
-      console.log(response);
+      // console.log(response);
       if (response.status === 201) {
         dispatch(
           updateUser({
@@ -99,9 +113,16 @@ function UpdateUser({ updateUserData, setUpdateUser }) {
                 name={"mobile"}
                 value={user.mobile}
                 onChange={handleChange}
+                maxLength={10}
+                minLength={10}
               >
                 Mobile Number
               </FormField>
+              {(user.mobile.length > 10 ||
+                user.mobile.length < 10 ||
+                !/^[6789]/.test(user.mobile)) && (
+                <p className="text-red-500">Invalid Mobile Number</p>
+              )}
               <FormField
                 htmlFor={"email"}
                 id={"email"}

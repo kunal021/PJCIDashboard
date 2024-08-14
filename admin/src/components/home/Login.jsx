@@ -39,8 +39,8 @@ function Login() {
   }, [countdown]);
 
   const handleGetOTP = async () => {
-    if (number.length < 10) {
-      toast.error("Please enter a valid 10-digit number");
+    if (number.length !== 10 || !/^[6789]/.test(number)) {
+      toast.error("Please enter a valid mobile number");
       return;
     }
     try {
@@ -66,7 +66,7 @@ function Login() {
       console.log(response);
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message);
     } finally {
       setLoading(false);
     }
@@ -147,12 +147,15 @@ function Login() {
       <h1 className="text-3xl font-bold">Log In to Continue</h1>
       <div className="flex flex-col justify-center items-center border border-gray-200 p-6 rounded-lg gap-2 m-2">
         <div className="flex justify-start items-center gap-2 mt-2">
+          <div className="border border-gray-200 px-2 py-1.5 rounded-md focus:outline-none focus:border focus:border-black/50">
+            + 91
+          </div>
           <input
             value={number}
             onChange={(e) => setNumber(e.target.value)}
             required
             id="number"
-            type="number"
+            type="text"
             minLength={10}
             maxLength={10}
             placeholder="Enter Number"
