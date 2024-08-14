@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Ellipsis } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import ConfirmDelete from "../../utils/ConfirmDelete";
 import { useState } from "react";
 import { API_URL } from "../../url";
 import axios from "axios";
@@ -35,21 +34,19 @@ function More({ user }) {
         <Ellipsis className="w-6 h-6" />
       </PopoverTrigger>
       <PopoverContent className="w-fit">
-        <div className="flex flex-col justify-center items-center gap-2">
+        <div className="flex flex-col justify-center items-center gap-4">
           <p className="font-semibold">
             {user.firstname} {user.Lastname}
           </p>
-          <ConfirmDelete
-            handleClick={() => {
-              // Handle delete button click
-            }}
-          />
           <button
             onClick={handleGrantUserLogin}
-            className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-1 px-2 rounded-md"
+            className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black py-1 px-2 rounded-md w-full"
           >
             {loading ? "Granting..." : "Grant User Login"}
           </button>
+          {/* <button className="bg-red-50 hover:bg-red-100 border border-red-200 text-black py-1 px-2 rounded-md w-full">
+            Delete User
+          </button> */}
         </div>
       </PopoverContent>
     </Popover>
