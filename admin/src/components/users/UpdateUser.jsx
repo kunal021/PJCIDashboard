@@ -32,11 +32,7 @@ function UpdateUser({ updateUserData, setUpdateUser }) {
       toast.error("Please enter a valid mobile number");
       return;
     }
-    if (
-      !user.email ||
-      user.email.length < 5 ||
-      !/\S+@\S+\.\S+/.test(user.email)
-    ) {
+    if (!user.email || !/\S+@\S+\.\S+/.test(user.email)) {
       toast.error("Please enter a valid email address");
       return;
     }
