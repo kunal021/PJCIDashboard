@@ -77,6 +77,11 @@ const items = [
         label: "Add Video",
         link: "/add-video",
       },
+      {
+        key: "11",
+        label: "Free Video",
+        link: "/free-video",
+      },
     ],
   },
   {
@@ -85,7 +90,7 @@ const items = [
     icon: <UserOutlined />,
     children: [
       {
-        key: "12",
+        key: "13",
         label: "All Users",
         link: "/get-users",
       },
@@ -97,17 +102,17 @@ const items = [
     icon: <SettingOutlined />,
     children: [
       {
-        key: "14",
+        key: "15",
         label: "About Us",
         link: "/about-us",
       },
       {
-        key: "15",
+        key: "16",
         label: "Terms & Conditions",
         link: "/terms-and-conditions",
       },
       {
-        key: "16",
+        key: "17",
         label: "Privacy Policy",
         link: "/privacy-policy",
       },
@@ -119,7 +124,7 @@ const items = [
     icon: <Server className="h-4 w-4" />,
     children: [
       {
-        key: "18",
+        key: "19",
         label: <UpdateServerStatus />,
       },
     ],
@@ -130,7 +135,7 @@ const items = [
     icon: <LogoutOutlined className="h-4 w-4" />,
     children: [
       {
-        key: "20",
+        key: "21",
         label: <Logout />,
       },
     ],

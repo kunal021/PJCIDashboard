@@ -3,16 +3,13 @@ import { useState } from "react";
 import { API_URL } from "../../url";
 import FormField from "../../utils/FormField";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
-// import Loader from "../../utils/Loader";
-// import Tiptap from "../../utils/TextEditor";
 import toast from "react-hot-toast";
 
-function AddVideo() {
+function AddFreeVideo() {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
-    videoid: "",
+    video_id: "",
     video_title: "",
-    video_duration: "",
   });
 
   // const [videoTitle, setVideoTitle] = useState("");
@@ -25,18 +22,18 @@ function AddVideo() {
     }));
   };
   const handleAddVideo = async () => {
-    if (!data.videoid || !data.video_title || !data.video_duration) {
+    if (!data.video_id || !data.video_title) {
       toast.error("Please fill all fields");
       return;
     }
     try {
       setLoading(true);
       const formData = new FormData();
-      formData.append("videoid", data.videoid);
+      formData.append("videoid", data.video_id);
       formData.append("video_title", data.video_title);
-      formData.append("video_duration", data.video_duration);
+
       const response = await axios.post(
-        `${API_URL}/admin/video/addvideo.php`,
+        `${API_URL}/admin/video/addfreevideo.php`,
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );
@@ -52,9 +49,8 @@ function AddVideo() {
       setLoading(false);
     }
     setData({
-      videoid: "",
+      video_id: "",
       video_title: "",
-      video_duration: "",
     });
     // setVideoTitle("");
   };
@@ -64,28 +60,17 @@ function AddVideo() {
   // };
   return (
     <LayoutAdjuster>
-      <div className="w-[80%] flex flex-col justify-center items-center p-5 border rounded-lg border-gray-500">
+      <div className="w-[60%] flex flex-col justify-center items-center p-5 border rounded-lg border-gray-500">
         <FormField
           id={"videoid"}
           type={"text"}
           placeholder={"Enter Video Id"}
           htmlFor={"videoid"}
           name={"videoid"}
-          value={data.videoid}
+          value={data.video_id}
           onChange={handleChange}
         >
           Video Id
-        </FormField>
-        <FormField
-          id={"video_duration"}
-          type={"time"}
-          placeholder={"Enter Video Duration"}
-          htmlFor={"video_duration"}
-          name={"video_duration"}
-          value={data.video_duration}
-          onChange={handleChange}
-        >
-          Video Duration
         </FormField>
         <FormField
           id={"video_title"}
@@ -99,25 +84,15 @@ function AddVideo() {
           Video Tile
         </FormField>
 
-        {/* <div className="w-full flex flex-col justify-center items-start m-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Video Title:
-            </label>
-            <Tiptap
-              // initialContent={data}
-              getHtmlData={getVideoData}
-              placeholder="Write the question here..."
-            />
-          </div> */}
         <button
           onClick={handleAddVideo}
           className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md"
         >
-          {loading ? "Adding..." : "Add Video"}
+          {loading ? "Adding..." : "Add Free Video"}
         </button>
       </div>
     </LayoutAdjuster>
   );
 }
 
-export default AddVideo;
+export default AddFreeVideo;
