@@ -79,7 +79,7 @@ function GetAllUsers() {
     [dispatch, users]
   );
 
-  console.log(users);
+  // console.log(users);
 
   return (
     <LayoutAdjuster>
@@ -113,9 +113,11 @@ function GetAllUsers() {
                   </tr>
                 </thead>
                 <tbody className="text-center">
-                  {users.map((user) => (
+                  {users.map((user, idx) => (
                     <tr key={user.id} className="bg-gray-50">
-                      <td className="border p-2 text-sm">{user.id}</td>
+                      <td className="border p-2 text-sm">
+                        {(currentPage - 1) * 10 + (idx + 1)}
+                      </td>
                       <td className="border p-2 text-sm">
                         {user.firstname} {user.Lastname}
                       </td>

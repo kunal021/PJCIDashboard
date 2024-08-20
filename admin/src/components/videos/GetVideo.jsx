@@ -71,7 +71,7 @@ function GetVideo() {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.data.message);
+      toast.error(error.response.data.message || "Error while deleting video");
     } finally {
       setLoading(false);
     }
@@ -137,7 +137,7 @@ function GetVideo() {
                       <div className="flex flex-col justify-center items-start gap-4 w-full">
                         <div className="flex justify-between items-center w-full gap-4">
                           <Avatar className="bg-gray-500 text-white">
-                            {item.id}
+                            {(currentPage - 1) * 10 + (idx + 1)}
                           </Avatar>
                           <div>Video ID: {item.video_id}</div>
                           <div>

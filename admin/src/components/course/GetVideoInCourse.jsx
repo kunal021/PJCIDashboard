@@ -136,7 +136,7 @@ function GetVideoInCourse() {
                         >
                           <div className="flex justify-center items-center gap-4 w-full">
                             <Avatar className="bg-gray-500 text-white w-8">
-                              {item.id}
+                              {(currentPage - 1) * 10 + (idx + 1)}
                             </Avatar>
                             <div className="flex flex-wrap text-wrap w-full">
                               {typeof item.video_title == "string"

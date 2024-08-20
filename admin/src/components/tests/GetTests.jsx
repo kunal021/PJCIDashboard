@@ -123,7 +123,7 @@ function GetTest() {
                   <div className="flex justify-start items-center gap-4 w-full">
                     <div className="flex justify-center items-center w-[10%] text-">
                       <Avatar className="bg-gray-500 text-white">
-                        {test.test_id}
+                        {idx + 1}
                       </Avatar>
                     </div>
                     <div className="flex flex-col justify-start items-center gap-2 w-full">

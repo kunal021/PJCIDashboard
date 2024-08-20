@@ -141,7 +141,7 @@ function GetCourse() {
                       <div className="flex flex-col justify-center items-start gap-2 w-full">
                         <div className="flex justify-between items-center w-full gap-4">
                           <Avatar className="bg-gray-500 text-white">
-                            {course.id}
+                            {idx + 1}
                           </Avatar>
                           <button
                             onClick={() => {

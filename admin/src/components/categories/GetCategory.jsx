@@ -131,9 +131,9 @@ function GetCategory() {
                 </tr>
               </thead>
               <tbody className="text-center">
-                {category.map((item) => (
+                {category.map((item, idx) => (
                   <tr key={item.id} className="bg-gray-100">
-                    <td className="border p-2 text-sm">{item.id}</td>
+                    <td className="border p-2 text-sm">{idx + 1}</td>
                     <td className="border p-2 text-sm">{item.name}</td>
                     <td className="border p-2 text-sm">
                       <Link

@@ -144,7 +144,7 @@ const GetCourseCategoryWise = () => {
                                 <div className="flex justify-center items-center gap-2 w-full">
                                   <div>
                                     <Avatar className="bg-gray-500 text-white w-8">
-                                      {course.id}
+                                      {idx + 1}
                                     </Avatar>
                                   </div>
                                   <div className="text-start w-full">

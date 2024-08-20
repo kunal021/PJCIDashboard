@@ -142,7 +142,10 @@ const GetQuestions = () => {
                             <div className="flex justify-between items-center w-full gap-4">
                               {/* <div>Test ID: {question.testid}</div>
                           <div>Subject ID: {question.subid}</div> */}
-                              <div>Question Number: {idx + 1}</div>
+                              <div>
+                                Question Number:{" "}
+                                {(currentPage - 1) * 10 + (idx + 1)}
+                              </div>
                               <div>Question ID: {question.qnsid}</div>
                             </div>
                             <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />

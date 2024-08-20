@@ -160,7 +160,7 @@ function Tab({ categoryId }) {
                           <div className="flex justify-start items-center text-sm w-full gap-4">
                             <div className="flex justify-center items-center">
                               <Avatar className="bg-gray-500 text-white w-8 h-8">
-                                {idx + 1}
+                                {(currentPage - 1) * 10 + (idx + 1)}
                               </Avatar>
                             </div>
                             <div className="flex flex-wrap text-wrap">
@@ -221,7 +221,7 @@ function Tab({ categoryId }) {
                           <div className="flex justify-start items-center text-sm w-full gap-4">
                             <div className="flex justify-center items-center">
                               <Avatar className="bg-gray-500 text-white w-8 h-8">
-                                {idx + 1}
+                                {(currentPage - 1) * 10 + (idx + 1)}
                               </Avatar>
                             </div>
                             <div className="flex flex-wrap text-wrap">
