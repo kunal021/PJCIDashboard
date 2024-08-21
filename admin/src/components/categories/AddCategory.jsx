@@ -43,7 +43,7 @@ function AddCategory({ fetchCategory, setAddNewCategory }) {
   // };
 
   return (
-    <div className="w-[70vw] flex flex-col justify-center items-center">
+    <div className="w-[60%] flex flex-col justify-center items-center">
       <h1 className="text-center text-3xl font-bold">Add Category</h1>
       <div className="flex flex-col justify-between items-center border rounded-xl border-gray-400 w-full my-10 p-5">
         {/* <div className="w-full my-2">

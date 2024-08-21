@@ -127,7 +127,7 @@ function AddTest() {
               <FormField
                 htmlFor="price"
                 id="price"
-                type="text"
+                type={"number"}
                 placeholder="Price"
                 name="price"
                 value={formData.price}
@@ -138,7 +138,7 @@ function AddTest() {
               <FormField
                 htmlFor="duration"
                 id="duration"
-                type="text"
+                type={"number"}
                 placeholder="Duration"
                 name="duration"
                 value={formData.duration}
@@ -149,7 +149,7 @@ function AddTest() {
               <select
                 value={durationUnit}
                 onChange={(e) => setDurationunit(e.target.value)}
-                className="w-fit h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
+                className="w-96 h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
               >
                 <option value={"Day"}>Day</option>
                 <option value={"Month"}>Month</option>
@@ -160,7 +160,7 @@ function AddTest() {
               <FormField
                 htmlFor="numberOfQuestion"
                 id="numberOfQuestion"
-                type="text"
+                type={"number"}
                 placeholder="Number Of Questions"
                 name="numberOfQuestion"
                 value={formData.numberOfQuestion}
@@ -171,7 +171,7 @@ function AddTest() {
               <FormField
                 htmlFor="markPerQuestion"
                 id="markPerQuestion"
-                type="text"
+                type={"number"}
                 placeholder="Mark Per Question"
                 name="markPerQuestion"
                 value={formData.markPerQuestion}
@@ -184,7 +184,7 @@ function AddTest() {
               <FormField
                 htmlFor="negativeMark"
                 id="negativeMark"
-                type="text"
+                type={"number"}
                 placeholder="Negative Mark"
                 name="negativeMark"
                 value={formData.negativeMark}
@@ -195,7 +195,7 @@ function AddTest() {
               <FormField
                 htmlFor="totalMark"
                 id="totalMark"
-                type="text"
+                type={"number"}
                 placeholder="Total Mark"
                 name="totalMark"
                 value={formData.totalMark}

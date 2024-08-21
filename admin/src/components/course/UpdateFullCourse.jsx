@@ -184,7 +184,7 @@ function UpdateFullCourse({ setUpdateCourse, updateCourseData: id }) {
             <FormField
               htmlFor={"duration"}
               id={"duration"}
-              type={"text"}
+              type={"number"}
               placeholder={"Duration"}
               name={"full_course_duration"}
               value={course.full_course_duration}
@@ -195,7 +195,7 @@ function UpdateFullCourse({ setUpdateCourse, updateCourseData: id }) {
             <select
               value={durationUnit}
               onChange={(e) => setDurationunit(e.target.value)}
-              className="w-fit h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
+              className="w-96 h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
             >
               <option value={"Day"}>Day</option>
               <option value={"Month"}>Month</option>

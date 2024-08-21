@@ -11,6 +11,7 @@ function FormField({
   maxLength,
   minLength,
 }) {
+  console.log(typeof type);
   const className = `appearance-none border w-full rounded-md border-gray-300 focus:border-black/50 focus:ring-2 focus:ring-black/50 py-2 px-3 text-gray-700 leading-tight focus:outline-none`;
   return (
     <div className="mb-4 w-full">
@@ -23,9 +24,7 @@ function FormField({
       {type === "textarea" ? (
         <textarea
           className={className}
-          required
           id={id}
-          type={type}
           placeholder={placeholder}
           name={name}
           value={value}
@@ -34,7 +33,6 @@ function FormField({
       ) : (
         <input
           className={className}
-          required
           id={id}
           type={type}
           placeholder={placeholder}
