@@ -28,6 +28,7 @@ import {
   UpdateCategory,
   UpdateVideo,
 } from "./app.import";
+import Get from "./components/slider/Get";
 
 function App() {
   return (
@@ -125,6 +126,7 @@ function App() {
             path="/add-free-video"
             element={<PrivateRoute element={AddFreeVideo} />}
           />
+          <Route path="/get-slider" element={<PrivateRoute element={Get} />} />
         </Routes>
       </Layout>
     </BrowserRouter>

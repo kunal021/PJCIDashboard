@@ -3,6 +3,7 @@ import {
   AppstoreOutlined,
   BookOutlined,
   DashboardOutlined,
+  FileImageOutlined,
   FormOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
@@ -86,56 +87,78 @@ const items = [
   },
   {
     key: "sub4",
+    label: "Slider",
+    icon: <FileImageOutlined />,
+    children: [
+      {
+        key: "13",
+        label: "All Images",
+        link: "/get-slider",
+      },
+      // {
+      //   key: "14",
+      //   label: "Add Image",
+      //   link: "/add-video",
+      // },
+      // {
+      //   key: "15",
+      //   label: "Free Video",
+      //   link: "/free-video",
+      // },
+    ],
+  },
+  {
+    key: "sub5",
     label: "User",
     icon: <UserOutlined />,
     children: [
       {
-        key: "13",
+        key: "17",
         label: "All Users",
         link: "/get-users",
       },
     ],
   },
   {
-    key: "sub5",
+    key: "sub6",
     label: "Settings",
     icon: <SettingOutlined />,
     children: [
       {
-        key: "15",
+        key: "19",
         label: "About Us",
         link: "/about-us",
       },
       {
-        key: "16",
+        key: "20",
         label: "Terms & Conditions",
         link: "/terms-and-conditions",
       },
       {
-        key: "17",
+        key: "21",
         label: "Privacy Policy",
         link: "/privacy-policy",
       },
     ],
   },
   {
-    key: "sub6",
+    key: "sub7",
     label: "Server Status",
     icon: <Server className="h-4 w-4" />,
     children: [
       {
-        key: "19",
+        key: "23",
         label: <UpdateServerStatus />,
       },
     ],
   },
   {
-    key: "sub7",
+    key: "sub8",
     label: "Logout",
     icon: <LogoutOutlined className="h-4 w-4" />,
     children: [
       {
-        key: "21",
+        key: "25",
         label: <Logout />,
       },
     ],

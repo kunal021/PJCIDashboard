@@ -9,6 +9,7 @@ import userReducer from "./users/userSlice";
 import sidebarReducer from "./sidebar/sidebarSlice";
 import videoReducer from "./videos/videoSlice";
 import addVideoInCourseReducer from "./addvideoincourse/addVideoInCourseSlice";
+import sliderReducer from "./slider/sliderSlice";
 
 export default configureStore({
   reducer: {
@@ -21,5 +22,6 @@ export default configureStore({
     sidebar: sidebarReducer,
     video: videoReducer,
     addVideoInCourse: addVideoInCourseReducer,
+    slider: sliderReducer,
   },
 });
