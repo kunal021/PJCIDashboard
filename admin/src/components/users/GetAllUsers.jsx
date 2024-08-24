@@ -10,6 +10,7 @@ import Pagination from "../../utils/Pagination";
 import UpdateUser from "./UpdateUser";
 import Loader from "../../utils/Loader";
 import More from "./More";
+import SearchUser from "./SearchUser";
 
 const getUsers = async (dispatch, setPaginationData, page, setLoading) => {
   try {
@@ -97,6 +98,7 @@ function GetAllUsers() {
             <h1 className="text-3xl font-bold text-center my-5">All Users</h1>
             {/* <LinkButton to={"/add-user"}>Add Course</LinkButton> */}
           </div>
+          <SearchUser />
           {users.length > 0 ? (
             <>
               <table className="table-auto w-full m-5 border">

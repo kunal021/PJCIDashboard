@@ -120,6 +120,7 @@ function Add() {
               handleChange={handleChange}
               value={data.type_id}
               setValue={setData}
+              useType={"add"}
             />
           </div>
           <div className="my-4 flex justify-between items-center">

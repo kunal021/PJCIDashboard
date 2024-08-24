@@ -54,11 +54,6 @@ function Update({ item }) {
         dispatch(updateSlider(data));
         toast.success("Slider Updated Successfully");
         addCloseRef.current.click();
-        setData({
-          img_url: "",
-          type: "0",
-          type_id: "",
-        });
       }
     } catch (error) {
       console.log(error);
@@ -92,25 +87,7 @@ function Update({ item }) {
     }
   };
 
-  //   const renderTitle = (data) => {
-  //     let title;
-  //     switch (data) {
-  //       case "1":
-  //         title = "Course";
-  //         break;
-  //       case "2":
-  //         title = "Batch";
-  //         break;
-  //       case "3":
-  //         title = "Test";
-  //         break;
-  //       default:
-  //         title = "Slider";
-  //     }
-  //     return <p>For {title}</p>;
-  //   };
-
-  //   console.log(data.type);
+  // console.log(data);
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
@@ -147,6 +124,7 @@ function Update({ item }) {
               handleChange={handleChange}
               value={data.type_id}
               setValue={setData}
+              useType={"update"}
             />
           </div>
           <div className="my-4 flex justify-between items-center">

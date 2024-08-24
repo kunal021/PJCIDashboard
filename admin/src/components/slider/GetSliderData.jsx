@@ -20,13 +20,15 @@ const getDataToAdd = async (type, setData) => {
   }
 };
 
-function GetSliderData({ type, handleChange, value, setValue }) {
+function GetSliderData({ type, handleChange, value, setValue, useType }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
     getDataToAdd(type, setData);
-    setValue((prev) => ({ ...prev, type_id: "" }));
-  }, [setValue, type]);
+    if (useType === "add") {
+      setValue((prev) => ({ ...prev, type_id: "" }));
+    }
+  }, [setValue, type, useType]);
 
   const renderOptions = () => {
     if (type == 1) {
@@ -62,9 +64,11 @@ function GetSliderData({ type, handleChange, value, setValue }) {
           onChange={handleChange}
           className="w-96 h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
         >
-          <option value="" disabled>
-            Select an option
-          </option>
+          {!value && (
+            <option value="" disabled>
+              Select an option
+            </option>
+          )}
           {renderOptions()}
         </select>
       )}

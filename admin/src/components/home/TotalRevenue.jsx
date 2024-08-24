@@ -34,7 +34,7 @@ function TotalRevenue() {
         const response = await axios.post(
           `${API_URL}/admin/dashbord/getrevenue.php`
         );
-        console.log(response);
+        // console.log(response);
         if (response.status === 200) {
           setCount(response.data.data);
         }
@@ -69,7 +69,7 @@ function TotalRevenue() {
         </div>
       ) : (
         <CardContent>
-          {!count || count.length === 0 ? (
+          {!count || count.length < 2 ? (
             <div>No Data Found</div>
           ) : (
             <ChartContainer config={chartConfig}>
