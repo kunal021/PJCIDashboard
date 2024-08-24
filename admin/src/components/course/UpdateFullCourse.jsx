@@ -124,6 +124,7 @@ function UpdateFullCourse({ setUpdateCourse, updateCourseData: id }) {
       if (response.status === 200) {
         setCourse((prev) => ({ ...prev, img_url: response.data.url }));
         toast.success("Image Uploaded Successfully");
+        setUpdateCourse((prev) => !prev);
       }
     } catch (error) {
       console.log(error);
@@ -197,9 +198,8 @@ function UpdateFullCourse({ setUpdateCourse, updateCourseData: id }) {
               onChange={(e) => setDurationunit(e.target.value)}
               className="w-96 h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
             >
-              <option value={"Day"}>Day</option>
-              <option value={"Month"}>Month</option>
-              <option value={"Year"}>Year</option>
+              <option value={"Minutes"}>Minutes</option>
+              <option value={"Hours"}>Hours</option>
             </select>
           </div>
           <div className="my-4 flex justify-between items-center">

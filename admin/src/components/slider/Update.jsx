@@ -2,21 +2,29 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { Loader, SquarePen, UploadCloud, X } from "lucide-react";
 import FormField from "../../utils/FormField";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../../url";
 import toast from "react-hot-toast";
+import GetSliderData from "./GetSliderData";
+import { useDispatch } from "react-redux";
+import { updateSlider } from "../../redux/slider/sliderSlice";
 
 function Update({ item }) {
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
+    id: item.id,
     img_url: item.img_url,
-    // title: item.title,
     type: item.type,
     type_id: item.type_id,
+    is_active: item.is_active,
+    date: item.date,
   });
 
-  console.log(data);
+  const addCloseRef = useRef();
+
+  // console.log(data);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,7 +34,37 @@ function Update({ item }) {
     }));
   };
 
-  //   const handleSubmit = async () => {};
+  const handleSubmit = async () => {
+    if (!data.img_url || !data.type) {
+      toast.error("Please fill all fields");
+      return;
+    }
+    try {
+      const formData = new FormData();
+      formData.append("img_url", data.img_url);
+      formData.append("type", data.type);
+      formData.append("type_id", data.type_id);
+      const response = await axios.post(
+        `${API_URL}/admin/slider/addslider.php`,
+        formData,
+        { headers: { "content-type": "multipart/form-data" } }
+      );
+      console.log(response);
+      if (response.status === 200) {
+        dispatch(updateSlider(data));
+        toast.success("Slider Added Successfully");
+        addCloseRef.current.click();
+        setData({
+          img_url: "",
+          type: "0",
+          type_id: "",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message || "Error adding slider");
+    }
+  };
 
   const handleUploadImage = async (e) => {
     const file = e.target.files[0];
@@ -103,6 +141,14 @@ function Update({ item }) {
               <option value={"3"}>Test</option>
             </select>
           </div>
+          <div>
+            <GetSliderData
+              type={data.type}
+              handleChange={handleChange}
+              value={data.type_id}
+              setValue={setData}
+            />
+          </div>
           <div className="my-4 flex justify-between items-center">
             <input
               id="fileinput"
@@ -157,13 +203,17 @@ function Update({ item }) {
               </button>
             </Dialog.Close>
             <Dialog.Close asChild>
-              <button className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md w-1/2">
+              <button
+                onClick={handleSubmit}
+                className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md w-1/2"
+              >
                 Update
               </button>
             </Dialog.Close>
           </div>
           <Dialog.Close asChild>
             <button
+              ref={addCloseRef}
               className="text-red-500 hover:bg-violet4 focus:shadow-violet7 absolute top-[10px] right-[10px] inline-flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-full focus:shadow-[0_0_0_2px] focus:outline-none"
               aria-label="Close"
             >

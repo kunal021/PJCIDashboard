@@ -3,7 +3,7 @@ import {
   AppstoreOutlined,
   BookOutlined,
   DashboardOutlined,
-  FileImageOutlined,
+  // FileImageOutlined,
   FormOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
@@ -86,28 +86,6 @@ const items = [
     ],
   },
   {
-    key: "sub4",
-    label: "Slider",
-    icon: <FileImageOutlined />,
-    children: [
-      {
-        key: "13",
-        label: "All Images",
-        link: "/get-slider",
-      },
-      // {
-      //   key: "14",
-      //   label: "Add Image",
-      //   link: "/add-video",
-      // },
-      // {
-      //   key: "15",
-      //   label: "Free Video",
-      //   link: "/free-video",
-      // },
-    ],
-  },
-  {
     key: "sub5",
     label: "User",
     icon: <UserOutlined />,
@@ -124,6 +102,11 @@ const items = [
     label: "Settings",
     icon: <SettingOutlined />,
     children: [
+      {
+        key: "13",
+        label: "App Slider",
+        link: "/get-slider",
+      },
       {
         key: "19",
         label: "About Us",

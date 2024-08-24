@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addCourse } from "../../redux/courses/courseSlice";
+// import { useDispatch } from "react-redux";
+// import { addCourse } from "../../redux/courses/courseSlice";
 import axios from "axios";
 import FormField from "../../utils/FormField";
 import LinkButton from "../../utils/LinkButton";
@@ -9,8 +9,10 @@ import toast from "react-hot-toast";
 import Tiptap from "../../utils/TextEditor";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import { Loader, UploadCloud } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function AddCourse() {
+  const navigate = useNavigate();
   const [course, setCourse] = useState({
     name: "",
     price: "",
@@ -21,8 +23,8 @@ function AddCourse() {
   const [loading, setLoading] = useState(false);
   // const [courseName, setCourseName] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
-  const [durationUnit, setDurationunit] = useState("Day");
-  const dispatch = useDispatch();
+  const [durationUnit, setDurationunit] = useState("Minutes");
+  // const dispatch = useDispatch();
 
   // const getNameData = (html) => {
   //   setCourseName(html);
@@ -53,9 +55,10 @@ function AddCourse() {
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );
-      dispatch(addCourse(response.data));
+      // dispatch(addCourse(response.data));
       if (response.status == 201) {
         toast.success("Course Added Sucessfully");
+        navigate("/get-course");
       }
     } catch (error) {
       console.error("Error fetching courses:", error);
@@ -153,9 +156,8 @@ function AddCourse() {
                 onChange={(e) => setDurationunit(e.target.value)}
                 className="w-96 h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
               >
-                <option value={"Day"}>Day</option>
-                <option value={"Month"}>Month</option>
-                <option value={"Year"}>Year</option>
+                <option value={"Minutes"}>Minutes</option>
+                <option value={"Hours"}>Hours</option>
               </select>
             </div>
             <div className="my-4 flex justify-between items-center">

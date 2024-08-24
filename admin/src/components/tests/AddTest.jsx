@@ -24,7 +24,7 @@ function AddTest() {
   });
   // const [testName, setTestName] = useState("");
   const [testDescription, setTestDescription] = useState("");
-  const [durationUnit, setDurationunit] = useState("Day");
+  const [durationUnit, setDurationunit] = useState("Minutes");
 
   const dispatch = useDispatch();
 
@@ -151,9 +151,8 @@ function AddTest() {
                 onChange={(e) => setDurationunit(e.target.value)}
                 className="w-96 h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
               >
-                <option value={"Day"}>Day</option>
-                <option value={"Month"}>Month</option>
-                <option value={"Year"}>Year</option>
+                <option value={"Minutes"}>Minutes</option>
+                <option value={"Hours"}>Hours</option>
               </select>
             </div>
             <div className="flex flex-col md:flex-row md:space-x-6">

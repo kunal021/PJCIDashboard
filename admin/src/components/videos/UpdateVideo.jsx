@@ -50,11 +50,11 @@ function UpdateVideo({ setUpdateVideo, updateVideoData }) {
           })
         );
         toast.success("Video Updated Successfully");
+        setUpdateVideo((prev) => !prev);
       }
     } catch (error) {
       console.log(error);
     }
-    setUpdateVideo((prev) => !prev);
   };
 
   // const getVideoData = (html) => {
@@ -63,7 +63,7 @@ function UpdateVideo({ setUpdateVideo, updateVideoData }) {
   return (
     <div className="w-[80%] h-full flex flex-col justify-center items-center my-5">
       <div className="flex flex-col justify-center items-center w-full">
-        <h1 className="text-center text-3xl font-bold">Update Course</h1>
+        <h1 className="text-center text-3xl font-bold">Update Video</h1>
         <div className="w-full flex flex-col justify-center items-center ml-2">
           <FormField
             id={"videoid"}

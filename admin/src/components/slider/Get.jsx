@@ -83,8 +83,6 @@ function Get() {
           { headers: { "content-type": "multipart/form-data" } }
         );
 
-        // console.log(res);
-        // Update local state instead of fetching users again
         const updatedSlider = slider.map((slider) =>
           slider.id === sliderId ? { ...slider, is_active } : slider
         );

@@ -29,7 +29,7 @@ function AddFreeVideo() {
     try {
       setLoading(true);
       const formData = new FormData();
-      formData.append("videoid", data.video_id);
+      formData.append("video_id", data.video_id);
       formData.append("video_title", data.video_title);
 
       const response = await axios.post(
@@ -62,11 +62,11 @@ function AddFreeVideo() {
     <LayoutAdjuster>
       <div className="w-[60%] flex flex-col justify-center items-center p-5 border rounded-lg border-gray-500">
         <FormField
-          id={"videoid"}
+          id={"video_id"}
           type={"text"}
           placeholder={"Enter Video Id"}
-          htmlFor={"videoid"}
-          name={"videoid"}
+          htmlFor={"video_id"}
+          name={"video_id"}
           value={data.video_id}
           onChange={handleChange}
         >

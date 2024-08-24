@@ -6,8 +6,10 @@ import LayoutAdjuster from "../../utils/LayoutAdjuster";
 // import Loader from "../../utils/Loader";
 // import Tiptap from "../../utils/TextEditor";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 function AddVideo() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
     videoid: "",
@@ -41,13 +43,13 @@ function AddVideo() {
         { headers: { "content-type": "multipart/form-data" } }
       );
 
-      console.log(response);
       if (response.status === 201) {
         toast.success("Video Added Successfully");
+        navigate("/get-videos");
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.data.message || "Error adding video");
+      toast.error(error.response.data.message || "Error adding video");
     } finally {
       setLoading(false);
     }
