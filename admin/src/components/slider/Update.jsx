@@ -52,7 +52,7 @@ function Update({ item }) {
       console.log(response);
       if (response.status === 200) {
         dispatch(updateSlider(data));
-        toast.success("Slider Added Successfully");
+        toast.success("Slider Updated Successfully");
         addCloseRef.current.click();
         setData({
           img_url: "",
@@ -62,7 +62,7 @@ function Update({ item }) {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.message || "Error adding slider");
+      toast.error(error.response.data.message || "Error updating slider");
     }
   };
 
