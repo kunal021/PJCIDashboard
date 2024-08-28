@@ -121,7 +121,7 @@ function GetAllUsers() {
                         {(currentPage - 1) * 10 + (idx + 1)}
                       </td>
                       <td className="border p-2 text-sm">
-                        {user.firstname} {user.Lastname}
+                        {user.firstname} {user.lastname}
                       </td>
                       <td className="border p-2 text-sm">{user.mo_number}</td>
                       <td className="border p-2 text-sm">{user.email}</td>

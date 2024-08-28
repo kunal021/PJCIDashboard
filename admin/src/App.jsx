@@ -29,6 +29,7 @@ import {
   UpdateVideo,
 } from "./app.import";
 import Get from "./components/slider/Get";
+import MakeUserPurchase from "./components/setting/MakeUserPurchase";
 
 function App() {
   return (
@@ -127,6 +128,10 @@ function App() {
             element={<PrivateRoute element={AddFreeVideo} />}
           />
           <Route path="/get-slider" element={<PrivateRoute element={Get} />} />
+          <Route
+            path="/user-purchase"
+            element={<PrivateRoute element={MakeUserPurchase} />}
+          />
         </Routes>
       </Layout>
     </BrowserRouter>

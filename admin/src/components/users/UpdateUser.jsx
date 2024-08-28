@@ -10,7 +10,7 @@ import { updateUser } from "../../redux/users/userSlice";
 function UpdateUser({ updateUserData, setUpdateUser }) {
   const [user, setUser] = useState({
     first_name: updateUserData.firstname,
-    last_name: updateUserData.Lastname,
+    last_name: updateUserData.lastname,
     email: updateUserData.email,
     mobile: updateUserData.mo_number,
   });
@@ -56,7 +56,7 @@ function UpdateUser({ updateUserData, setUpdateUser }) {
           updateUser({
             id: updateUserData.id,
             firstname: user.first_name,
-            Lastname: user.last_name,
+            lastname: user.last_name,
             email: user.email,
             mo_number: user.mobile,
             isactive: updateUserData.isactive,
@@ -73,7 +73,7 @@ function UpdateUser({ updateUserData, setUpdateUser }) {
     }
   };
   return (
-    <div className="w-[80%] h-full flex flex-col justify-center items-center my-5">
+    <div className="w-[80%] h-full flex flex-col justify-center items-center my-5 z-[150]">
       <h1 className="text-center text-3xl font-bold">Update Student</h1>
       <div className="flex flex-col justify-center items-center mt-5 w-full">
         <div className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border border-gray-400 w-full">

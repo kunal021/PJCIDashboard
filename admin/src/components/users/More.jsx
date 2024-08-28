@@ -33,10 +33,10 @@ function More({ user }) {
       <PopoverTrigger>
         <Ellipsis className="w-6 h-6" />
       </PopoverTrigger>
-      <PopoverContent className="w-fit">
+      <PopoverContent className="w-fit z-[150]">
         <div className="flex flex-col justify-center items-center gap-3">
           <p className="font-semibold text-lg">
-            {user.firstname} {user.Lastname}
+            {user.firstname} {user.lastname}
           </p>
           <p
             onClick={handleGrantUserLogin}

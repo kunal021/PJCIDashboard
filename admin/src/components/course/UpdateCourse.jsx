@@ -196,6 +196,9 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
             >
               <option value={"Minutes"}>Minutes</option>
               <option value={"Hours"}>Hours</option>
+              <option value={"Day"}>Day</option>
+              <option value={"Month"}>Month</option>
+              <option value={"Year"}>Year</option>
             </select>
           </div>
           <div className="my-4 flex justify-between items-center">

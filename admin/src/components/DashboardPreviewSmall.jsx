@@ -108,6 +108,11 @@ const items = [
         link: "/get-slider",
       },
       {
+        key: "15",
+        label: "Make User Purchase",
+        link: "/user-purchase",
+      },
+      {
         key: "19",
         label: "About Us",
         link: "/about-us",
