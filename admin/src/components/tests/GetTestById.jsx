@@ -5,6 +5,7 @@ import { API_URL } from "../../url";
 import Loader from "../../utils/Loader";
 import parser from "html-react-parser";
 import { Avatar } from "antd";
+import MakeUserPurchase from "../setting/MakeUserPurchase";
 
 const fetchTest = async (setTest, setLoading, testId) => {
   try {
@@ -16,7 +17,7 @@ const fetchTest = async (setTest, setLoading, testId) => {
       formData,
       { headers: { "Content-Type": "multipart/form-data" } }
     );
-    // console.log(response);
+
     if (response.status === 200) {
       setTest(response.data.data);
     }
@@ -30,7 +31,6 @@ const fetchTest = async (setTest, setLoading, testId) => {
 function GetTestById({ testId }) {
   const [loading, setLoading] = useState(false);
   const [test, setTest] = useState([]);
-  // console.log(test);
 
   useEffect(() => {
     fetchTest(setTest, setLoading, testId);
@@ -46,15 +46,24 @@ function GetTestById({ testId }) {
         >
           {test ? (
             <div className="flex flex-col justify-center items-center w-full">
-              <h1 className="text-3xl font-bold text-center my-2">
-                Test Details
-              </h1>
+              <div className="flex justify-center items-center gap-5">
+                <h1 className="text-3xl font-bold text-center my-2">
+                  Test Details
+                </h1>
+                <MakeUserPurchase
+                  id={test.id}
+                  amount={test.price}
+                  expiryDate={"2024/09/11"}
+                  productInfo={test.test_name}
+                  type={3}
+                />
+              </div>
               <div className="flex justify-center items-center w-full border rounded-md border-gray-300 m-2 p-3">
                 <div className="flex justify-start items-center gap-4 w-full">
                   <div className="flex flex-col justify-start items-center gap-2 w-full">
                     <div className="flex justify-between items-center w-full">
                       <Avatar className="bg-gray-500 text-white">
-                        {test.test_id}
+                        {test.id}
                       </Avatar>
                       <div className="flex justify-start items-start gap-1 w-fit">
                         <p>Start Date:</p>

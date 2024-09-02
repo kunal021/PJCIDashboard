@@ -1,20 +1,23 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import * as XLSX from "xlsx";
-import LayoutAdjuster from "../../utils/LayoutAdjuster";
-import { Loader, UploadCloud } from "lucide-react";
 
-const MakeUserPurchase = () => {
-  const [jsonData, setJsonData] = useState(null);
+import { Loader } from "lucide-react";
+import axios from "axios";
+import { API_URL } from "../../url";
+
+const MakeUserPurchase = ({ id, type, amount, expiryDate, productInfo }) => {
+  // const [jsonData, setJsonData] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleFileUpload = (event) => {
+  const handleFileUpload = async (event) => {
     const file = event.target.files[0];
 
     if (file) {
       const reader = new FileReader();
 
-      reader.onload = (e) => {
+      reader.onload = async (e) => {
         try {
           const data = new Uint8Array(e.target.result);
           const workbook = XLSX.read(data, { type: "array" });
@@ -42,29 +45,57 @@ const MakeUserPurchase = () => {
             number: row.number,
           }));
 
-          setJsonData(jsonWithNumberKey);
+          // setJsonData(jsonWithNumberKey);
           setError("");
+          await handleUploadUser(jsonWithNumberKey);
         } catch (err) {
           setError(err.message);
-          setJsonData(null);
+          // setJsonData(null);
         }
       };
 
       reader.readAsArrayBuffer(file);
     }
+  };
 
+  const handleUploadUser = async (jsonData) => {
     try {
       setLoading(true);
+      const data = {
+        purchase_id: id,
+        purchase_type: type,
+        amount: amount,
+        expiry_date: expiryDate,
+        product_info: productInfo,
+        numbers: jsonData,
+      };
+
+      const response = await axios.post(
+        `${API_URL}/admin/payment/makeuserpurchase.php`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
+      );
+      console.log("Response:", response);
+      if (response.status === 200 && response.data === "") {
+        console.log("Request was successful, but no content returned.");
+      } else {
+        console.log("Response:", response);
+      }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  console.log(jsonData);
-
   return (
-    <LayoutAdjuster>
-      <div className="border border-gray-300 rounded-md">
+    <div>
+      <div className="">
         <input
           id="fileinput"
           type="file"
@@ -74,28 +105,23 @@ const MakeUserPurchase = () => {
         />
         <label
           htmlFor="fileinput"
-          className="flex flex-col justify-center items-center w-36 h-14 cursor-pointer bg-gray-50 text-black px-4 py-2 rounded-lg border-2 border-gray-300 border-dashed hover:bg-blue-50"
+          className="flex flex-col justify-center items-center w-36 h-10 cursor-pointer bg-indigo-50 text-black px-4 py-2 rounded-lg border-2 border-indigo-200 hover:bg-indigo-100"
         >
           {!loading ? (
-            <>
-              <UploadCloud />
-              <p className="text-xs">Upload File</p>
-            </>
+            <p>Upload File</p>
           ) : (
             <>
               <Loader className="animate-spin h-6 w-6" />
-              <p className="text-xs">Uploading...</p>
+              <p>Uploading...</p>
             </>
           )}
         </label>
         {error && <div className="text-red-600 mb-4">{error}</div>}
-        <pre className="text-xs text-center w-96">
-          {jsonData
-            ? JSON.stringify(jsonData, null, 2)
-            : "No file uploaded yet"}
-        </pre>
+        {/* <pre className="text-xs text-center w-96">
+          {JSON.stringify(jsonData, null, 2)}
+        </pre> */}
       </div>
-    </LayoutAdjuster>
+    </div>
   );
 };
 

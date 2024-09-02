@@ -37,7 +37,7 @@ const fetchQuestions = async (
       { headers: "content-type/form-data" }
     );
 
-    console.log(response);
+    // console.log(response);
 
     if (response.status === 200) {
       dispatch(setQuestion(response.data.data));
@@ -54,8 +54,8 @@ const fetchQuestions = async (
 
 const GetQuestions = () => {
   const [loading, setLoading] = useState(false);
-  const [updatedQuestion, setUpdateQuestion] = useState(false);
-  const [updatedQuestionData, setUpdateQuestionData] = useState({});
+  const [updatedQuestion, setUpdatedQuestion] = useState(false);
+  const [updatedQuestionData, setUpdatedQuestionData] = useState({});
   const [paginationData, setPaginationData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [show, setShow] = useState(false);
@@ -185,8 +185,8 @@ const GetQuestions = () => {
                           <div className="flex flex-col justify-between items-end gap-10 w-fit">
                             <UpdateBtn
                               handleClick={() => {
-                                setUpdateQuestion((prev) => !prev);
-                                setUpdateQuestionData(question);
+                                setUpdatedQuestion((prev) => !prev);
+                                setUpdatedQuestionData(question);
                               }}
                             />
                             <ConfirmDelete
@@ -216,7 +216,7 @@ const GetQuestions = () => {
       {updatedQuestion && (
         <UpdateQns
           fetchQuestions={() => fetchQuestions(dispatch, setLoading, id)}
-          setUpdateQuestion={setUpdateQuestion}
+          setUpdateQuestion={setUpdatedQuestion}
           updatedQuestionData={updatedQuestionData}
         />
       )}
