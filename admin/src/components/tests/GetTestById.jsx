@@ -55,7 +55,7 @@ function GetTestById({ testId }) {
                   amount={test.price}
                   expiryDate={"2024/09/11"}
                   productInfo={test.test_name}
-                  type={3}
+                  type={"3"}
                 />
               </div>
               <div className="flex justify-center items-center w-full border rounded-md border-gray-300 m-2 p-3">

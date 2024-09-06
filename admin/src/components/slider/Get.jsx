@@ -22,12 +22,12 @@ function Get() {
       try {
         setLoading(true);
         const response = await axios.post(
-          `${API_URL}/public/slider/getslider.php`
+          `${API_URL}/admin/slider/getslider.php`
 
           //   { headers: "content-type/form-data" }
         );
 
-        // console.log(response);
+        console.log(response);
         if (response.status === 200) {
           dispatch(setSlider(response.data.data));
         }

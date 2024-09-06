@@ -51,6 +51,8 @@ const MakeUserPurchase = ({ id, type, amount, expiryDate, productInfo }) => {
         } catch (err) {
           setError(err.message);
           // setJsonData(null);
+        } finally {
+          event.target.value = "";
         }
       };
 
@@ -62,30 +64,24 @@ const MakeUserPurchase = ({ id, type, amount, expiryDate, productInfo }) => {
     try {
       setLoading(true);
       const data = {
-        purchase_id: id,
-        purchase_type: type,
-        amount: amount,
+        purchase_id: +id,
+        purchase_type: +type,
+        amount: +amount,
         expiry_date: expiryDate,
         product_info: productInfo,
         numbers: jsonData,
       };
-
+      console.log(data);
       const response = await axios.post(
         `${API_URL}/admin/payment/makeuserpurchase.php`,
         data,
         {
           headers: {
             "Content-Type": "application/json",
-            Accept: "application/json",
           },
         }
       );
       console.log("Response:", response);
-      if (response.status === 200 && response.data === "") {
-        console.log("Request was successful, but no content returned.");
-      } else {
-        console.log("Response:", response);
-      }
     } catch (error) {
       console.log(error);
     } finally {

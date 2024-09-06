@@ -243,6 +243,9 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
       .setLink({ href: url, target: "_blank" })
       .run();
   };
+  const insertMathSymbol = (symbol) => {
+    editor.chain().focus().insertContent(symbol).run();
+  };
 
   return (
     <div className="flex flex-col justify-center items-center h-full w-full border border-gray-300 rounded-md">
@@ -275,6 +278,27 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
               </label>
             </div>
             <button onChange={toggleEditing}></button> */}
+            <button onClick={() => insertMathSymbol("$\\frac{a}{b}$")}>
+              F
+            </button>
+            <button onClick={() => insertMathSymbol("$\\sqrt{a^2 + b^2}$")}>
+              R
+            </button>
+            <button onClick={() => insertMathSymbol("$\\int_{a}^{b} f(x)dx$")}>
+              I
+            </button>
+            <button onClick={() => insertMathSymbol("$\\sqrt[n]{x}$")}>
+              Root
+            </button>
+            <button
+              onClick={() =>
+                insertMathSymbol(
+                  "$\\left\\{\\begin{matrix}x&\\text{if }x>0\\\\0&\\text{otherwise}\\end{matrix}\\right.$"
+                )
+              }
+            >
+              Fun
+            </button>
             <button
               onClick={handleToggleBold}
               className={editor.isActive("bold") ? "is-active" : "not-active"}

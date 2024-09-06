@@ -33,6 +33,10 @@ function Add() {
       toast.error("Please fill all fields");
       return;
     }
+    if (data.type == "0") {
+      data.type_id = "0";
+    }
+    console.log(data);
     try {
       const formData = new FormData();
       formData.append("img_url", data.img_url);
