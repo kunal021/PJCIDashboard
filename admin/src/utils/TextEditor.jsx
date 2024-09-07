@@ -16,7 +16,6 @@ import { FontSize } from "./fontSizeExtension";
 import FileHandler from "@tiptap-pro/extension-file-handler";
 import { Mathematics } from "@tiptap-pro/extension-mathematics";
 import CodeBlock from "@tiptap/extension-code-block";
-// import { CustomImage } from "./TipTapImage";
 import {
   Bold,
   Italic,
@@ -36,23 +35,94 @@ import {
   ChevronDown,
   ALargeSmall,
   X,
-  // Plus,
-  // Minus,
   Link2,
   Link2Off,
-  // Code,
-  // ImageIcon,
-  // Trash2,
-  // Loader,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { API_URL } from "../url";
 import axios from "axios";
+import MathEditor from "./MathsEditor";
+import katex from "katex";
+
+const MathModal = ({ isOpen, onClose, onInsertSymbol }) => {
+  const mathSymbols = [
+    { latex: "\\frac{a}{b}", symbol: "Fraction" },
+    { latex: "\\sqrt{x}", symbol: "Square Root" },
+    { latex: "\\int_{a}^{b} f(x)dx", symbol: "Integral" },
+    // Add more symbols as needed
+  ];
+
+  const [selectedSymbol, setSelectedSymbol] = useState(null);
+  const [latexCode, setLatexCode] = useState("");
+
+  const handleSymbolClick = (item) => {
+    setSelectedSymbol(item);
+    setLatexCode(item.latex);
+  };
+
+  const handleLatexChange = (e) => {
+    setLatexCode(e.target.value);
+  };
+
+  return isOpen ? (
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-md mx-auto shadow-lg">
+        <h2 className="text-xl font-semibold mb-4 text-center">
+          Select Math Symbol
+        </h2>
+        <div className="grid grid-cols-3 gap-4 mb-4">
+          {mathSymbols.map((item) => (
+            <button
+              key={item.latex}
+              onClick={() => handleSymbolClick(item)}
+              className="bg-gray-100 text-gray-800 font-medium py-2 px-4 rounded hover:bg-gray-200"
+            >
+              {item.symbol}
+            </button>
+          ))}
+        </div>
+        {selectedSymbol && (
+          <div className="mb-4">
+            <h3 className="text-lg font-medium mb-2">Preview</h3>
+            <div
+              className="border p-4 mb-2"
+              dangerouslySetInnerHTML={{
+                __html: katex.renderToString(latexCode),
+              }}
+            ></div>
+            <textarea
+              value={latexCode}
+              onChange={handleLatexChange}
+              className="w-full border p-2 rounded mb-2"
+              rows="3"
+            />
+            <p className="text-sm text-gray-500">Edit LaTeX Code Above</p>
+          </div>
+        )}
+        <div className="flex justify-end space-x-4">
+          <button
+            onClick={() => onInsertSymbol(latexCode)}
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+          >
+            Insert
+          </button>
+          <button
+            onClick={onClose}
+            className="bg-gray-300 text-gray-800 py-2 px-4 rounded hover:bg-gray-400"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  ) : null;
+};
 
 const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
   const [headingOptionOpen, setHeadingOptionOpen] = useState(false);
   const [fontSizeOpen, setFontSizeOpen] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [isMathModalOpen, setMathModalOpen] = useState(false);
 
   const editor = useEditor({
     extensions: [
@@ -69,6 +139,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
       TextStyle,
       FontSize,
       FontFamily,
+      MathEditor,
       Mathematics,
       FileHandler.configure({
         allowedMimeTypes: [
@@ -105,7 +176,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
         async onPaste(currentEditor, files, htmlContent) {
           for (const file of files) {
             if (htmlContent) {
-              console.log(htmlContent); // eslint-disable-line no-console
+              console.log(htmlContent);
               return false;
             }
 
@@ -145,25 +216,10 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
     },
   });
 
-  // const toggleEditing = useCallback(
-  //   (e) => {
-  //     if (!editor) {
-  //       return;
-  //     }
-
-  //     const { checked } = e.target;
-
-  //     editor.setEditable(!checked, true);
-  //     editor.view.dispatch(editor.view.state.tr.scrollIntoView());
-  //   },
-  //   [editor]
-  // );
-
   useEffect(() => {
     if (editor) {
       const handleFocus = () => setIsFocused(true);
       const handleBlur = (event) => {
-        // Only hide the toolbar if the blur event is not triggered by clicking on the toolbar
         if (!event.relatedTarget?.closest(".toolbar")) {
           setIsFocused(false);
         }
@@ -243,8 +299,23 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
       .setLink({ href: url, target: "_blank" })
       .run();
   };
-  const insertMathSymbol = (symbol) => {
-    editor.chain().focus().insertContent(symbol).run();
+  const handleInsertSymbol = (latex) => {
+    if (latex && editor) {
+      // Insert an atomic equation node with the LaTeX content
+      editor
+        .chain()
+        .focus()
+        .insertContent({
+          type: "equation",
+          attrs: {
+            latex, // Set the LaTeX code as an attribute
+          },
+        })
+        .run();
+    }
+
+    // Close the modal after inserting the symbol
+    setMathModalOpen(false);
   };
 
   return (
@@ -254,31 +325,8 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
           onMouseDown={(e) => e.preventDefault()}
           className="sticky top-0 bg-gray-50 z-50 flex flex-wrap justify-center items-center gap-2 px-2 py-1 border-b border-b-gray-200 w-full"
         >
-          {/* <div
-          onClick={() => setShowToolBar((prev) => !prev)}
-          className="flex justify-center items-center z-30 border rounded-full py-1 md:p-[2px] border-gray-300 cursor-pointer"
-        >
-          {showToolBar ? (
-            <Minus color="#475569" className="h-4 md:h-6" />
-          ) : (
-            <Plus color="#475569" className="h-4 md:h-6" />
-          )}
-        </div> */}
-          {/* {showToolBar && ( */}
-
-          {/* <div className="flex flex-col flex-wrap md:flex-row justify-center lg:justify-between items-center z-30 lg:border lg:border-gray-300 gap-[6px] lg:rounded-lg px-[2px]"> */}
           <div className="flex justify-between items-center gap-[2px]">
-            {/* <div className="control-group">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={!editor.isEditable}
-                  onChange={toggleEditing}
-                />
-              </label>
-            </div>
-            <button onChange={toggleEditing}></button> */}
-            <button onClick={() => insertMathSymbol("$\\frac{a}{b}$")}>
+            {/* <button onClick={() => insertMathSymbol("$\\frac{a}{b}$")}>
               F
             </button>
             <button onClick={() => insertMathSymbol("$\\sqrt{a^2 + b^2}$")}>
@@ -289,8 +337,14 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
             </button>
             <button onClick={() => insertMathSymbol("$\\sqrt[n]{x}$")}>
               Root
-            </button>
+            </button> */}
             <button
+              onClick={() => setMathModalOpen(true)}
+              className="mb-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+            >
+              M
+            </button>
+            {/* <button
               onClick={() =>
                 insertMathSymbol(
                   "$\\left\\{\\begin{matrix}x&\\text{if }x>0\\\\0&\\text{otherwise}\\end{matrix}\\right.$"
@@ -298,7 +352,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
               }
             >
               Fun
-            </button>
+            </button> */}
             <button
               onClick={handleToggleBold}
               className={editor.isActive("bold") ? "is-active" : "not-active"}
@@ -319,14 +373,6 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
             >
               <ULIcon className="h-4 md:h-5" />
             </button>
-            {/* <button
-                onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-                className={
-                  editor.isActive("codeBlock") ? "is-active" : "not-active"
-                }
-              >
-                <Code className="h-4 md:h-8" />
-              </button> */}
             <div className="relative flex justify-between items-center space-y-1">
               <button
                 onClick={handleToggleHeadingOptions}
@@ -522,35 +568,17 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                 <X className="h-4" />
               </button>
             </div>
-            {/* <div className="flex justify-center items-center cursor-pointer bg-gray-50 text-black p-1.5 rounded-lg border border-gray-300 border-dashed hover:bg-blue-50">
-                <input
-                  id="fileinput"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleUploadImage}
-                  className="hidden"
-                />
-                {loading ? (
-                  <div>
-                    <Loader className="animate-spin h-4 w-4" />
-                  </div>
-                ) : (
-                  <label htmlFor="fileinput" className="cursor-pointer">
-                    <ImageIcon className="h-4" />
-                  </label>
-                )}
-                <button onClick={handleRemoveImage}>
-                  <Trash2 className="h-4" />
-                </button>
-              </div> */}
           </div>
-          {/* </div> */}
-          {/* )} */}
         </div>
       )}
       <div className={`w-full overflow-y-auto`}>
         <EditorContent editor={editor} />
       </div>
+      <MathModal
+        isOpen={isMathModalOpen}
+        onClose={() => setMathModalOpen(false)}
+        onInsertSymbol={handleInsertSymbol}
+      />
     </div>
   );
 };
