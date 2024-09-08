@@ -42,87 +42,13 @@ import { useEffect, useState } from "react";
 import { API_URL } from "../url";
 import axios from "axios";
 import MathEditor from "./MathsEditor";
-import katex from "katex";
-
-const MathModal = ({ isOpen, onClose, onInsertSymbol }) => {
-  const mathSymbols = [
-    { latex: "\\frac{a}{b}", symbol: "Fraction" },
-    { latex: "\\sqrt{x}", symbol: "Square Root" },
-    { latex: "\\int_{a}^{b} f(x)dx", symbol: "Integral" },
-    // Add more symbols as needed
-  ];
-
-  const [selectedSymbol, setSelectedSymbol] = useState(null);
-  const [latexCode, setLatexCode] = useState("");
-
-  const handleSymbolClick = (item) => {
-    setSelectedSymbol(item);
-    setLatexCode(item.latex);
-  };
-
-  const handleLatexChange = (e) => {
-    setLatexCode(e.target.value);
-  };
-
-  return isOpen ? (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md mx-auto shadow-lg">
-        <h2 className="text-xl font-semibold mb-4 text-center">
-          Select Math Symbol
-        </h2>
-        <div className="grid grid-cols-3 gap-4 mb-4">
-          {mathSymbols.map((item) => (
-            <button
-              key={item.latex}
-              onClick={() => handleSymbolClick(item)}
-              className="bg-gray-100 text-gray-800 font-medium py-2 px-4 rounded hover:bg-gray-200"
-            >
-              {item.symbol}
-            </button>
-          ))}
-        </div>
-        {selectedSymbol && (
-          <div className="mb-4">
-            <h3 className="text-lg font-medium mb-2">Preview</h3>
-            <div
-              className="border p-4 mb-2"
-              dangerouslySetInnerHTML={{
-                __html: katex.renderToString(latexCode),
-              }}
-            ></div>
-            <textarea
-              value={latexCode}
-              onChange={handleLatexChange}
-              className="w-full border p-2 rounded mb-2"
-              rows="3"
-            />
-            <p className="text-sm text-gray-500">Edit LaTeX Code Above</p>
-          </div>
-        )}
-        <div className="flex justify-end space-x-4">
-          <button
-            onClick={() => onInsertSymbol(latexCode)}
-            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-          >
-            Insert
-          </button>
-          <button
-            onClick={onClose}
-            className="bg-gray-300 text-gray-800 py-2 px-4 rounded hover:bg-gray-400"
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
-    </div>
-  ) : null;
-};
+import MathModal from "./MathModel";
 
 const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
   const [headingOptionOpen, setHeadingOptionOpen] = useState(false);
   const [fontSizeOpen, setFontSizeOpen] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
-  const [isMathModalOpen, setMathModalOpen] = useState(false);
+  const [isMathModalOpen, setIsMathModalOpen] = useState(false);
 
   const editor = useEditor({
     extensions: [
@@ -315,7 +241,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
     }
 
     // Close the modal after inserting the symbol
-    setMathModalOpen(false);
+    setIsMathModalOpen(false);
   };
 
   return (
@@ -326,33 +252,6 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
           className="sticky top-0 bg-gray-50 z-50 flex flex-wrap justify-center items-center gap-2 px-2 py-1 border-b border-b-gray-200 w-full"
         >
           <div className="flex justify-between items-center gap-[2px]">
-            {/* <button onClick={() => insertMathSymbol("$\\frac{a}{b}$")}>
-              F
-            </button>
-            <button onClick={() => insertMathSymbol("$\\sqrt{a^2 + b^2}$")}>
-              R
-            </button>
-            <button onClick={() => insertMathSymbol("$\\int_{a}^{b} f(x)dx$")}>
-              I
-            </button>
-            <button onClick={() => insertMathSymbol("$\\sqrt[n]{x}$")}>
-              Root
-            </button> */}
-            <button
-              onClick={() => setMathModalOpen(true)}
-              className="mb-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-            >
-              M
-            </button>
-            {/* <button
-              onClick={() =>
-                insertMathSymbol(
-                  "$\\left\\{\\begin{matrix}x&\\text{if }x>0\\\\0&\\text{otherwise}\\end{matrix}\\right.$"
-                )
-              }
-            >
-              Fun
-            </button> */}
             <button
               onClick={handleToggleBold}
               className={editor.isActive("bold") ? "is-active" : "not-active"}
@@ -569,6 +468,12 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
               </button>
             </div>
           </div>
+          <button
+            onClick={() => setIsMathModalOpen(true)}
+            className="bg-blue-500 text-white py-1 px-4 rounded hover:bg-blue-600"
+          >
+            M
+          </button>
         </div>
       )}
       <div className={`w-full overflow-y-auto`}>
@@ -576,7 +481,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
       </div>
       <MathModal
         isOpen={isMathModalOpen}
-        onClose={() => setMathModalOpen(false)}
+        onClose={() => setIsMathModalOpen(false)}
         onInsertSymbol={handleInsertSymbol}
       />
     </div>
