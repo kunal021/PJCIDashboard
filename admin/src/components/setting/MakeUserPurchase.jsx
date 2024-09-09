@@ -6,7 +6,15 @@ import { Loader } from "lucide-react";
 import axios from "axios";
 import { API_URL } from "../../url";
 
-const MakeUserPurchase = ({ id, type, amount, expiryDate, productInfo }) => {
+const MakeUserPurchase = ({
+  id,
+  type,
+  amount,
+  expiryDate,
+  productInfo,
+  setMakePurchaseStatus,
+  setMakePurchaseData,
+}) => {
   // const [jsonData, setJsonData] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -71,7 +79,7 @@ const MakeUserPurchase = ({ id, type, amount, expiryDate, productInfo }) => {
         product_info: productInfo,
         numbers: jsonData,
       };
-      console.log(data);
+      // console.log(data);
       const response = await axios.post(
         `${API_URL}/admin/payment/makeuserpurchase.php`,
         data,
@@ -82,6 +90,10 @@ const MakeUserPurchase = ({ id, type, amount, expiryDate, productInfo }) => {
         }
       );
       console.log("Response:", response);
+      if (response.status === 200) {
+        setMakePurchaseData(response.data);
+        setMakePurchaseStatus(true);
+      }
     } catch (error) {
       console.log(error);
     } finally {

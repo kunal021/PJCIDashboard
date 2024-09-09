@@ -6,6 +6,8 @@ import Loader from "../../utils/Loader";
 import parser from "html-react-parser";
 import { Avatar } from "antd";
 import MakeUserPurchase from "../setting/MakeUserPurchase";
+import expiryDate from "../../utils/ExpiryDate";
+import MakeUserPurchaseResponse from "../../utils/MakeUserPurchaseResponse";
 
 const fetchTest = async (setTest, setLoading, testId) => {
   try {
@@ -31,6 +33,8 @@ const fetchTest = async (setTest, setLoading, testId) => {
 function GetTestById({ testId }) {
   const [loading, setLoading] = useState(false);
   const [test, setTest] = useState([]);
+  const [makePurchaseStatus, setMakePurchaseStatus] = useState(false);
+  const [makePurchaseData, setMakePurchaseData] = useState(null);
 
   useEffect(() => {
     fetchTest(setTest, setLoading, testId);
@@ -50,14 +54,24 @@ function GetTestById({ testId }) {
                 <h1 className="text-3xl font-bold text-center my-2">
                   Test Details
                 </h1>
-                <MakeUserPurchase
-                  id={test.id}
-                  amount={test.price}
-                  expiryDate={"2024/09/11"}
-                  productInfo={test.test_name}
-                  type={"3"}
-                />
+                {test.test_date && (
+                  <MakeUserPurchase
+                    id={test.id}
+                    amount={test.price}
+                    expiryDate={expiryDate(test?.test_date, 7)}
+                    productInfo={test.test_name}
+                    type={"3"}
+                    setMakePurchaseStatus={setMakePurchaseStatus}
+                    setMakePurchaseData={setMakePurchaseData}
+                  />
+                )}
               </div>
+              {makePurchaseStatus && (
+                <MakeUserPurchaseResponse
+                  data={makePurchaseData}
+                  onClose={() => setMakePurchaseStatus(false)}
+                />
+              )}
               <div className="flex justify-center items-center w-full border rounded-md border-gray-300 m-2 p-3">
                 <div className="flex justify-start items-center gap-4 w-full">
                   <div className="flex flex-col justify-start items-center gap-2 w-full">

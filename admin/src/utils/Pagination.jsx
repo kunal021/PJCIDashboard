@@ -1,7 +1,26 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 const Pagination = ({ totalPage, currPage, setCurrPage }) => {
+  const [inputPage, setInputPage] = useState("");
+
   const handlePageClick = (page) => {
+    if (page >= 1 && page <= totalPage) {
+      setCurrPage(page);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setInputPage(e.target.value);
+  };
+
+  const handleInputSubmit = () => {
+    const page = Number(inputPage);
+    if (page < 1 || page > totalPage) {
+      toast.error("Please enter a valid page number");
+    }
     if (page >= 1 && page <= totalPage) {
       setCurrPage(page);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -10,35 +29,29 @@ const Pagination = ({ totalPage, currPage, setCurrPage }) => {
 
   const getPageNumbers = () => {
     const pageNumbers = [];
-    const visiblePages = 1; // Number of pages to show around the current page
+    const visiblePages = 2;
 
     if (totalPage <= 5) {
-      // Show all pages if totalPage is less than or equal to 5
       for (let i = 1; i <= totalPage; i++) {
         pageNumbers.push(i);
       }
     } else {
-      // Show first two pages
       pageNumbers.push(1, 2);
 
-      // Add ellipsis if current page is further than visiblePages from the start
       if (currPage > visiblePages + 1) {
         pageNumbers.push("...");
       }
 
-      // Show pages around the current page
       for (let i = currPage - visiblePages; i <= currPage + visiblePages; i++) {
         if (i > 2 && i < totalPage - 1) {
           pageNumbers.push(i);
         }
       }
 
-      // Add ellipsis if current page is further than visiblePages from the end
       if (currPage < totalPage - visiblePages) {
         pageNumbers.push("...");
       }
 
-      // Show last two pages
       pageNumbers.push(totalPage - 1, totalPage);
     }
 
@@ -87,6 +100,23 @@ const Pagination = ({ totalPage, currPage, setCurrPage }) => {
           ></path>
         </svg>
       </button>
+
+      {/* Input field to go directly to a specific page */}
+      <div className="ml-4 flex items-center">
+        <input
+          type="number"
+          className="h-10 w-16 text-center border-2 border-gray-300 rounded-lg"
+          value={inputPage}
+          onChange={handleInputChange}
+          placeholder="Go to"
+        />
+        <button
+          onClick={handleInputSubmit}
+          className="ml-2 h-10 px-4 border-2 border-gray-300 rounded-lg hover:bg-gray-300 hover:text-white"
+        >
+          Go
+        </button>
+      </div>
     </div>
   );
 };

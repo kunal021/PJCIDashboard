@@ -29,7 +29,7 @@ function Add() {
   };
 
   const handleSubmit = async () => {
-    if (!data.img_url || !data.type) {
+    if (!data.img_url || !data.type || !data.type_id) {
       toast.error("Please fill all fields");
       return;
     }

@@ -30,6 +30,7 @@ import {
 } from "./app.import";
 import Get from "./components/slider/Get";
 import MakeUserPurchase from "./components/setting/MakeUserPurchase";
+import CourseTab from "./components/course/CourseTab";
 
 function App() {
   return (
@@ -49,7 +50,7 @@ function App() {
           />
           <Route
             path="/get-course-videos"
-            element={<PrivateRoute element={GetVideoInCourse} />}
+            element={<PrivateRoute element={CourseTab} />}
           />
           <Route
             path="/get-full-course"
