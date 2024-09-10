@@ -72,12 +72,26 @@ const MathModal = ({ isOpen, onClose, onInsertSymbol }) => {
         {selectedSymbol && (
           <div className="mb-4">
             <h3 className="text-lg font-medium mb-2">Preview</h3>
-            <div
-              className="border p-4 mb-2"
-              dangerouslySetInnerHTML={{
-                __html: katex.renderToString(latexCode),
-              }}
-            ></div>
+            <div className="border p-4 mb-2">
+              {(() => {
+                try {
+                  return (
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: katex.renderToString(latexCode),
+                      }}
+                    />
+                  );
+                } catch (error) {
+                  console.error("Invalid LaTeX input:", error);
+                  return (
+                    <p className="text-red-500">
+                      Invalid LaTeX code. Please correct it.
+                    </p>
+                  );
+                }
+              })()}
+            </div>
             <textarea
               value={latexCode}
               onChange={handleLatexChange}

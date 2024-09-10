@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 const MakeUserPurchaseResponse = ({ data, onClose }) => {
-  const obj = JSON.parse(data?.users_notfound);
-  const valuesArray = Object.values(obj);
-  console.log(valuesArray);
+  // const obj = JSON.stringify(data?.users_notfound);
+  const valuesArray = Object.values(data?.users_notfound);
+  // console.log(valuesArray);
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50 ml-20">
       <div className="bg-white rounded-lg p-6 w-full max-w-[500px] mx-auto shadow-lg">
@@ -39,7 +39,7 @@ const MakeUserPurchaseResponse = ({ data, onClose }) => {
         </div>
         <button
           onClick={onClose}
-          className="bg-gray-300 text-gray-800 py-2 px-4 rounded hover:bg-gray-400"
+          className="bg-red-50 border border-red-200 py-2 px-4 rounded hover:bg-red-100"
         >
           Close
         </button>
