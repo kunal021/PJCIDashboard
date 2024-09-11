@@ -40,6 +40,8 @@ function GetTestById({ testId }) {
     fetchTest(setTest, setLoading, testId);
   }, [testId]);
 
+  console.log(test);
+
   return (
     <div className="w-full">
       {loading ? (
@@ -54,7 +56,7 @@ function GetTestById({ testId }) {
                 <h1 className="text-3xl font-bold text-center my-2">
                   Test Details
                 </h1>
-                {test.test_date && (
+                {test.test_date != "0000-00-00" && test.test_date && (
                   <MakeUserPurchase
                     id={test.id}
                     amount={test.price}
