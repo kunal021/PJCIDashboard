@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { API_URL } from "@/url";
 import axios from "axios";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Folder } from "lucide-react";
 import { useEffect, useState } from "react";
 import CreateDir from "./CreateDir";
 import ConfirmDelete from "@/utils/ConfirmDelete";
@@ -19,6 +19,8 @@ function GetDir({ parentId, directoryType, directoryTypeId, contentType }) {
     }));
   };
 
+  // console.log(parentId, directoryType, directoryTypeId, contentType);
+
   useEffect(() => {
     const getDir = async () => {
       try {
@@ -34,7 +36,7 @@ function GetDir({ parentId, directoryType, directoryTypeId, contentType }) {
             headers: { "content-type": "multipart/form-data" },
           }
         );
-        console.log(response.data.data);
+        console.log(response);
         setDirData(response.data.data);
       } catch (error) {
         console.log(error);
@@ -71,8 +73,9 @@ function GetDir({ parentId, directoryType, directoryTypeId, contentType }) {
           <div className="flex items-center justify-between bg-gray-50 hover:bg-gray-100 transition duration-200 ease-in-out text-gray-800 px-2 rounded-lg shadow-sm border border-gray-200">
             <span
               onClick={() => handleDirClick(data.id)}
-              className="cursor-pointer font-medium py-2 w-full"
+              className="cursor-pointer flex justify-start gap-2 items-center font-medium py-2 w-full"
             >
+              <Folder fill="#facc15" className="w-5 h-5" />
               {data.directory_name}
             </span>
             <div className="flex justify-end items-center py-2 gap-2 w-[30%]">

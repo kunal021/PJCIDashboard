@@ -41,8 +41,11 @@ function AddCourse() {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    if (!course.name || !course.price || !course.duration || !course.imgurl) {
+      toast.error("All fields are required");
+      return;
+    }
     try {
       const formData = new FormData();
       formData.append("name", course.name);
@@ -55,6 +58,7 @@ function AddCourse() {
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );
+      console.log(response);
       // dispatch(addCourse(response.data));
       if (response.status == 201) {
         toast.success("Course Added Sucessfully");

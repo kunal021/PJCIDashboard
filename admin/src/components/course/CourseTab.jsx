@@ -50,7 +50,7 @@ function CourseTab() {
                 contentType={"4"}
                 directoryType={"1"}
                 directoryTypeId={"1"}
-                parentId={null}
+                parentId={"1"}
               />
             </TabsContent>
             <TabsContent value="Test">Change your Test here.</TabsContent>
