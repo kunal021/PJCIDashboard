@@ -75,7 +75,7 @@ function GetDir({ parentId, directoryType, directoryTypeId, contentType }) {
               onClick={() => handleDirClick(data.id)}
               className="cursor-pointer flex justify-start gap-2 items-center font-medium py-2 w-full"
             >
-              <Folder fill="#facc15" className="w-5 h-5" />
+              <Folder fill="#60a5fa" className="w-5 h-5 text-blue-400" />
               {data.directory_name}
             </span>
             <div className="flex justify-end items-center py-2 gap-2 w-[30%]">
