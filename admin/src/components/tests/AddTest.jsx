@@ -25,7 +25,7 @@ function AddTest() {
   });
   // const [testName, setTestName] = useState("");
   const [testDescription, setTestDescription] = useState("");
-  const [durationUnit, setDurationUnit] = useState("Minutes");
+  const [durationUnit, setDurationUnit] = useState("Minute");
 
   const dispatch = useDispatch();
 
@@ -184,8 +184,8 @@ function AddTest() {
                 onChange={(e) => setDurationUnit(e.target.value)}
                 className="w-96 h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
               >
-                <option value={"Minutes"}>Minutes</option>
-                <option value={"Hours"}>Hours</option>
+                <option value={"Minute"}>Minute</option>
+                <option value={"Hour"}>Hour</option>
               </select>
             </div>
             <div className="flex flex-col md:flex-row md:space-x-6">

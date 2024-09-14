@@ -2,8 +2,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import LayoutAdjuster from "@/utils/LayoutAdjuster";
 import GetDir from "../directory/GetDir";
 import CreateDir from "../directory/CreateDir";
+import { useState } from "react";
+import Breadcrumbs from "../directory/BreadCrumbs";
+import { useSearchParams } from "react-router-dom";
 
 function CourseTab() {
+  const [searchParams] = useSearchParams();
+  const courseId = searchParams.get("id");
+  const [dirData, setDirData] = useState();
+  const [breadcrumbData, setBreadcrumbData] = useState([
+    { name: "Home", id: courseId, parentId: courseId },
+  ]);
+  console.log(breadcrumbData);
   return (
     <LayoutAdjuster>
       <div className="w-[80%] mx-auto mt-20">
@@ -42,7 +52,7 @@ function CourseTab() {
               />
             </TabsTrigger>
           </TabsList>
-
+          <Breadcrumbs data={breadcrumbData} />
           {/* Tabs Content */}
           <div className="flex-grow overflow-y-auto">
             <TabsContent value="Video">
@@ -50,7 +60,9 @@ function CourseTab() {
                 contentType={"4"}
                 directoryType={"1"}
                 directoryTypeId={"1"}
-                parentId={null}
+                dirData={dirData}
+                setDirData={setDirData}
+                setBreadcrumbData={setBreadcrumbData}
               />
             </TabsContent>
             <TabsContent value="Test">Change your Test here.</TabsContent>
