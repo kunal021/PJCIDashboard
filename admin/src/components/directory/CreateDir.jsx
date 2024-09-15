@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Plus } from "lucide-react";
+import { FolderPlus } from "lucide-react";
 import {
   Dialog,
   DialogClose,
@@ -62,7 +62,11 @@ function CreateDir({
   return (
     <Dialog>
       <DialogTrigger>
-        <Plus className="cursor-pointer w-5 h-5" />
+        <FolderPlus
+          strokeWidth={0.5}
+          strokeDasharray={1}
+          className="w-16 h-16"
+        />
       </DialogTrigger>
       <DialogContent className="z-[100]">
         <DialogHeader>

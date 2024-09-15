@@ -8,6 +8,7 @@ import { Avatar } from "antd";
 import MakeUserPurchase from "../setting/MakeUserPurchase";
 import expiryDate from "../../utils/ExpiryDate";
 import MakeUserPurchaseResponse from "../../utils/MakeUserPurchaseResponse";
+import * as XLSX from "xlsx";
 
 const fetchTest = async (setTest, setLoading, testId) => {
   try {
@@ -40,7 +41,49 @@ function GetTestById({ testId }) {
     fetchTest(setTest, setLoading, testId);
   }, [testId]);
 
-  console.log(test);
+  const handleDownload = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("testid", test.id);
+      const response = await axios.post(
+        `${API_URL}/admin/test/gettestresult.php`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      console.log(response.data.data);
+      if (response.status === 201) {
+        const data = response.data.data;
+
+        if (data && data.length > 0) {
+          const worksheet = XLSX.utils.json_to_sheet(data);
+          const workbook = XLSX.utils.book_new();
+          const columnWidths = [
+            null,
+            { wpx: 100 },
+            null,
+            { wpx: 100 },
+            null,
+            null,
+            { wpx: 100 },
+            { wpx: 100 },
+            { wpx: 100 },
+            { wpx: 150 },
+          ];
+
+          worksheet["!cols"] = columnWidths;
+          XLSX.utils.book_append_sheet(workbook, worksheet, "Test Results");
+          XLSX.writeFile(workbook, `${test.test_name}.xlsx`);
+        } else {
+          console.log("No data available for export.");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="w-full">
@@ -66,6 +109,14 @@ function GetTestById({ testId }) {
                     setMakePurchaseStatus={setMakePurchaseStatus}
                     setMakePurchaseData={setMakePurchaseData}
                   />
+                )}
+                {test.id && (
+                  <button
+                    onClick={handleDownload}
+                    className="px-4 py-2 bg-red-50 border border-red-200 rounded-md hover:bg-red-100"
+                  >
+                    Report
+                  </button>
                 )}
               </div>
               {makePurchaseStatus && (

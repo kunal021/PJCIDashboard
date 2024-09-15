@@ -7,10 +7,10 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
-function Breadcrumbs({ data }) {
-  const navigate = useNavigate();
+function Breadcrumbs({ data, handleNavigate }) {
+  // const navigate = useNavigate();
   const renderBreadcrumbs = (items) => {
     return items.map((item) => (
       <React.Fragment key={item.id}>
@@ -23,7 +23,7 @@ function Breadcrumbs({ data }) {
             <BreadcrumbPage>{item.name}</BreadcrumbPage>
           )} */}
           <BreadcrumbLink
-            onClick={() => navigate(`/get-course-videos?id=${item.id}`)}
+            onClick={() => handleNavigate(item.id, item.name, item.parentId)}
             className="cursor-pointer text-center pb-1"
           >
             {item.name}

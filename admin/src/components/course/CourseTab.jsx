@@ -1,19 +1,79 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import LayoutAdjuster from "@/utils/LayoutAdjuster";
 import GetDir from "../directory/GetDir";
-import CreateDir from "../directory/CreateDir";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Breadcrumbs from "../directory/BreadCrumbs";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+
+const insertBreadcrumb = (data, id, name, parentId) => {
+  const updateData = data.map((item) => {
+    if (item.id === parentId) {
+      return {
+        ...item,
+        children: [{ id, name, parentId }],
+      };
+    } else if (item.children) {
+      return {
+        ...item,
+        children: insertBreadcrumb(item.children, id, name, parentId),
+      };
+    }
+
+    return item;
+  });
+  return updateData;
+};
+
+const removeBreadCrumbChildren = (data, id) => {
+  console.log(data, id);
+  return data.map((item) => {
+    if (item.id === id) {
+      return {
+        ...item,
+        children: [],
+      };
+    } else if (item.children) {
+      return {
+        ...item,
+        children: removeBreadCrumbChildren(item.children, id),
+      };
+    }
+    return item;
+  });
+};
 
 function CourseTab() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const courseId = searchParams.get("id");
   const [dirData, setDirData] = useState();
-  const [breadcrumbData, setBreadcrumbData] = useState([
-    { name: "Home", id: courseId, parentId: courseId },
-  ]);
+  const [breadcrumbData, setBreadcrumbData] = useState(() => {
+    const savedBreadcrumbs = localStorage.getItem("breadcrumbData");
+    return savedBreadcrumbs
+      ? JSON.parse(savedBreadcrumbs)
+      : [{ name: "Home", id: courseId, parentId: courseId }];
+  });
   console.log(breadcrumbData);
+
+  useEffect(() => {
+    if (breadcrumbData.length > 0) {
+      localStorage.setItem("breadcrumbData", JSON.stringify(breadcrumbData));
+    }
+  }, [breadcrumbData]);
+
+  const handleNavigate = (id, name, parentId) => {
+    navigate(`/get-course-videos?id=${id}`);
+
+    setBreadcrumbData((prevData) => {
+      let updatedData;
+      if (parentId) {
+        updatedData = insertBreadcrumb(prevData, id, name, parentId);
+      } else {
+        updatedData = [...prevData, { id, name, parentId }];
+      }
+      return removeBreadCrumbChildren(updatedData, id);
+    });
+  };
   return (
     <LayoutAdjuster>
       <div className="w-[80%] mx-auto mt-20">
@@ -25,22 +85,7 @@ function CourseTab() {
           <TabsList className="w-full justify-evenly">
             <TabsTrigger value="Video" className="w-full flex justify-between">
               <p>Video</p>
-              <CreateDir type={"directory"} />
-            </TabsTrigger>
-            <TabsTrigger value="Test" className="w-full flex justify-between">
-              <p>Test</p>
-              <CreateDir type={"directory"} />
-            </TabsTrigger>
-            <TabsTrigger value="Notes" className="w-full flex justify-between">
-              <p>Notes</p>
-              <CreateDir type={"directory"} />
-            </TabsTrigger>
-            <TabsTrigger
-              value="Materials"
-              className="w-full flex justify-between"
-            >
-              <p>Materials</p>
-              <CreateDir
+              {/* <CreateDir
                 type={"directory"}
                 directoryType={"1"}
                 parentId={"null"}
@@ -49,10 +94,27 @@ function CourseTab() {
 
                 // dirData={dirData}
                 // setDirData={setDirData}
-              />
+              /> */}
+            </TabsTrigger>
+            <TabsTrigger value="Test" className="w-full flex justify-between">
+              <p>Test</p>
+            </TabsTrigger>
+            <TabsTrigger value="Notes" className="w-full flex justify-between">
+              <p>Notes</p>
+            </TabsTrigger>
+            <TabsTrigger
+              value="Materials"
+              className="w-full flex justify-between"
+            >
+              <p>Materials</p>
             </TabsTrigger>
           </TabsList>
-          <Breadcrumbs data={breadcrumbData} />
+          <div className="w-full pt-2">
+            <Breadcrumbs
+              data={breadcrumbData}
+              handleNavigate={handleNavigate}
+            />
+          </div>
           {/* Tabs Content */}
           <div className="flex-grow overflow-y-auto">
             <TabsContent value="Video">
@@ -62,7 +124,7 @@ function CourseTab() {
                 directoryTypeId={"1"}
                 dirData={dirData}
                 setDirData={setDirData}
-                setBreadcrumbData={setBreadcrumbData}
+                handleNavigate={handleNavigate}
               />
             </TabsContent>
             <TabsContent value="Test">Change your Test here.</TabsContent>
