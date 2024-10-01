@@ -1,13 +1,11 @@
 /* eslint-disable react/prop-types */
-import { Pen } from "lucide-react";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import FormField from "@/utils/FormField";
 import { useState } from "react";
 import axios from "axios";
@@ -16,15 +14,17 @@ import toast from "react-hot-toast";
 
 function UpdateDir({
   name,
-  type,
   directoryType,
   parentId,
   contentType,
   directoryTypeId,
   id,
+  onClose,
 }) {
   const [dirName, setDirName] = useState(name);
   const [loading, setLoading] = useState(false);
+
+  console.log("Open");
 
   //   console.log(parentId, directoryType, contentType, directoryTypeId, dirName);
   //   console.log(name, id);
@@ -54,26 +54,22 @@ function UpdateDir({
       console.log(response);
 
       if (response.status === 201) {
-        type === "directory" && toast.success("Directory Updated Successfully");
+        toast.success("Directory Updated Successfully");
         setDirName("");
       }
     } catch (error) {
       console.log(error);
+      toast.error(error.response.data.message || "Failed to update directory");
     } finally {
       setLoading(false);
     }
   };
   return (
-    <Dialog>
-      <DialogTrigger>
-        <Pen className="cursor-pointer w-5 h-5 text-blue-500" />
-      </DialogTrigger>
-      <DialogContent className="z-[100]">
-        <DialogHeader>
-          <DialogTitle>
-            {type === "directory" && "Update Directory"}
-          </DialogTitle>
-        </DialogHeader>
+    <Sheet open onOpenChange={onClose}>
+      <SheetContent className="z-[100]">
+        <SheetHeader>
+          <SheetTitle>Update Directory</SheetTitle>
+        </SheetHeader>
         <div>
           <FormField
             htmlFor={"dir_name"}
@@ -87,9 +83,9 @@ function UpdateDir({
           </FormField>
         </div>
         <div className="mt-2 flex w-full gap-2.5">
-          <DialogClose className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md w-full">
+          <SheetClose className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md w-full">
             Close
-          </DialogClose>
+          </SheetClose>
           <button
             disabled={loading}
             onClick={handleUpdate}
@@ -98,8 +94,8 @@ function UpdateDir({
             {loading ? "Updating..." : "Update"}
           </button>
         </div>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }
 

@@ -25,7 +25,6 @@ const insertBreadcrumb = (data, id, name, parentId) => {
 };
 
 const removeBreadCrumbChildren = (data, id) => {
-  console.log(data, id);
   return data.map((item) => {
     if (item.id === id) {
       return {
@@ -53,7 +52,8 @@ function CourseTab() {
       ? JSON.parse(savedBreadcrumbs)
       : [{ name: "Home", id: courseId, parentId: courseId }];
   });
-  console.log(breadcrumbData);
+
+  console.log(dirData);
 
   useEffect(() => {
     if (breadcrumbData.length > 0) {

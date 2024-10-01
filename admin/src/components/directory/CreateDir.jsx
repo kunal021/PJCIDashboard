@@ -9,22 +9,23 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import FormField from "@/utils/FormField";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import axios from "axios";
 import { API_URL } from "@/url";
 import toast from "react-hot-toast";
 
 function CreateDir({
-  type,
   directoryType,
   parentId,
   contentType,
   directoryTypeId,
+  setDirData,
 }) {
   const [dirName, setDirName] = useState("");
   const [loading, setLoading] = useState(false);
+  const closeRef = useRef(null);
 
-  //   console.log(parentId, directoryType, contentType, directoryTypeId, dirName);
+  // console.log(parentId, directoryType, contentType, directoryTypeId, dirName);
 
   const handleCreate = async () => {
     if (!dirName) {
@@ -47,11 +48,25 @@ function CreateDir({
         }
       );
 
-      console.log(response);
-
       if (response.status === 201) {
-        type === "directory" && toast.success("Directory Created Successfully");
+        toast.success("Directory Created Successfully");
+        setDirData((prev) => [
+          ...prev,
+          {
+            id: response.data.directory_id,
+            content_type: contentType,
+            directory_name: dirName,
+            directory_type: directoryType,
+            directory_type_id: directoryTypeId,
+            parent_id: parentId,
+            has_subdirectories: "-1",
+            is_active: "0",
+            created_at: Date.now().toString(),
+            updated_at: Date.now().toString(),
+          },
+        ]);
         setDirName("");
+        closeRef.current?.click();
       }
     } catch (error) {
       console.log(error);
@@ -70,9 +85,7 @@ function CreateDir({
       </DialogTrigger>
       <DialogContent className="z-[100]">
         <DialogHeader>
-          <DialogTitle>
-            {type === "directory" && "Create Directory"}
-          </DialogTitle>
+          <DialogTitle>Create Directory</DialogTitle>
         </DialogHeader>
         <div>
           <FormField
@@ -87,7 +100,10 @@ function CreateDir({
           </FormField>
         </div>
         <div className="mt-2 flex w-full gap-2.5">
-          <DialogClose className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md w-full">
+          <DialogClose
+            ref={closeRef}
+            className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md w-full"
+          >
             Close
           </DialogClose>
           <button

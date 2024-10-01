@@ -52,9 +52,17 @@ function GetDir({
   return (
     <div className="p-2 flex flex-wrap gap-8">
       {dirData?.map((data) => (
-        <div key={data.id} className="my-2">
+        <div key={data?.id} className="my-2">
           <div className="flex items-center justify-between ">
-            <Actions>
+            <Actions
+              id={data?.id}
+              name={data?.directory_name}
+              contentType={data?.content_type}
+              directoryType={data?.directory_type}
+              parentId={data?.parent_id}
+              directoryTypeId={data?.directory_type_id}
+              setDirData={setDirData}
+            >
               <div className="cursor-pointer relative w-20">
                 <div
                   onClick={() =>
@@ -64,7 +72,7 @@ function GetDir({
                 >
                   <Folder fill="#60a5fa" className="w-16 h-16 text-blue-400" />
                   <span className="text-xs break-words text-center">
-                    {data.directory_name}
+                    {data?.directory_name}
                   </span>
                 </div>
               </div>
@@ -73,7 +81,13 @@ function GetDir({
         </div>
       ))}
       <div className="cursor-pointer flex justify-center items-center w-20 pb-8 ">
-        <CreateDir />
+        <CreateDir
+          contentType={contentType}
+          directoryType={directoryType}
+          directoryTypeId={directoryTypeId}
+          parentId={courseId}
+          setDirData={setDirData}
+        />
       </div>
     </div>
   );

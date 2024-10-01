@@ -46,7 +46,7 @@ function GetTestById({ testId }) {
       const formData = new FormData();
       formData.append("testid", test.id);
       const response = await axios.post(
-        `${API_URL}/admin/test/gettestresult.php`,
+        `${API_URL}/admin/test/gettestreport.php`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -54,23 +54,25 @@ function GetTestById({ testId }) {
       );
 
       console.log(response.data.data);
-      if (response.status === 201) {
+      if (response.status === 200) {
         const data = response.data.data;
 
         if (data && data.length > 0) {
           const worksheet = XLSX.utils.json_to_sheet(data);
           const workbook = XLSX.utils.book_new();
           const columnWidths = [
-            null,
-            { wpx: 100 },
-            null,
-            { wpx: 100 },
-            null,
-            null,
+            { wpx: 120 },
+            { wpx: 120 },
             { wpx: 100 },
             { wpx: 100 },
             { wpx: 100 },
-            { wpx: 150 },
+            { wpx: 100 },
+            { wpx: 100 },
+            { wpx: 100 },
+            { wpx: 100 },
+            { wpx: 100 },
+            { wpx: 100 },
+            { wpx: 100 },
           ];
 
           worksheet["!cols"] = columnWidths;

@@ -107,11 +107,11 @@ const items = [
         label: "App Slider",
         link: "/get-slider",
       },
-      {
-        key: "15",
-        label: "Make User Purchase",
-        link: "/user-purchase",
-      },
+      // {
+      //   key: "15",
+      //   label: "Make User Purchase",
+      //   link: "/user-purchase",
+      // },
       {
         key: "19",
         label: "About Us",
