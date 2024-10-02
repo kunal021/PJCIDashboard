@@ -44,11 +44,11 @@ const items = [
         label: "Course",
         link: "/get-course",
       },
-      {
-        key: "5",
-        label: "Full Course",
-        link: "/get-full-course",
-      },
+      // {
+      //   key: "5",
+      //   label: "Full Course",
+      //   link: "/get-full-course",
+      // },
     ],
   },
   {
@@ -56,6 +56,11 @@ const items = [
     label: "Test",
     icon: <FormOutlined />,
     children: [
+      {
+        key: "15",
+        label: "Test Series",
+        link: "/get-testseries",
+      },
       {
         key: "7",
         label: "Test",

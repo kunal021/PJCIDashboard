@@ -9,18 +9,13 @@ import { API_URL } from "../../url";
 import Tiptap from "../../utils/TextEditor";
 import { trim } from "../../utils/trim";
 
-function UpdateTest({ updateTestData, setUpdateTest }) {
+function UpdateTestSeries({ updateTestData, setUpdateTest }) {
   const [formData, setFormData] = useState({
-    name: updateTestData.test_name,
+    name: updateTestData.name,
     price: updateTestData.price,
     duration: trim(updateTestData.duration)[0],
-    numberOfQuestion: updateTestData.number_of_questions,
-    markPerQuestion: updateTestData.mark_per_qns,
-    negativeMark: updateTestData.negative_mark,
-    totalMark: updateTestData.total_mark,
-    testDate: updateTestData.test_date,
-    startTime: updateTestData.start_time,
-    endTime: updateTestData.end_time,
+    totalQuestion: updateTestData.total_question,
+    totalTest: updateTestData.total_test,
   });
   const [testDescription, setTestDescription] = useState(
     updateTestData.description
@@ -29,8 +24,6 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
     trim(updateTestData.duration)[1]
   );
   const dispatch = useDispatch();
-
-  console.log(durationUnit);
 
   const getDescriptionData = (html) => {
     setTestDescription(html);
@@ -50,19 +43,14 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
     try {
       const formDataToSend = new FormData();
       const formDataObject = {
-        testid: updateTestData.test_id,
-        test_name: formData.name,
-        flag: updateTestData.flag,
+        id: updateTestData.id,
+        name: formData.name,
+        is_active: updateTestData.is_active,
         description: testDescription,
         price: formData.price,
         duration: formData.duration + " " + durationUnit,
-        number_of_questions: formData.numberOfQuestion,
-        markperqns: formData.markPerQuestion,
-        negative_mark: formData.negativeMark,
-        total_mark: formData.totalMark,
-        test_date: formData.testDate,
-        start_time: formData.startTime,
-        end_time: formData.endTime,
+        total_question: formData.totalQuestion,
+        total_test: formData.totalTest,
       };
 
       Object.entries(formDataObject).forEach(([key, value]) => {
@@ -70,7 +58,7 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
       });
 
       const response = await axios.post(
-        `${API_URL}/admin/test/updatetest.php`,
+        `${API_URL}/admin/testseries/updatetestseries.php`,
         formDataToSend,
         { headers: { "content-type": "multipart/form-data" } }
       );
@@ -78,19 +66,14 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
       if (response.status === 201) {
         dispatch(
           updateTest({
-            test_id: updateTestData.test_id,
-            flag: updateTestData.flag,
-            test_name: formData.name,
+            id: updateTestData.id,
+            is_active: updateTestData.is_active,
+            name: formData.name,
             description: testDescription,
             price: formData.price,
             duration: formData.duration,
-            number_of_questions: formData.numberOfQuestion,
-            mark_per_qns: formData.markPerQuestion,
-            negative_mark: formData.negativeMark,
-            total_mark: formData.totalMark,
-            test_date: formData.testDate,
-            start_time: formData.startTime,
-            end_time: formData.endTime,
+            total_question: formData.totalQuestion,
+            total_test: formData.totalTest,
           })
         );
         toast.success("Test Updated Successfully");
@@ -98,7 +81,7 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
       setUpdateTest((prev) => !prev);
     } catch (error) {
       console.error("Error updating test:", error);
-      toast.error("Failed to update test");
+      toast.error(error.response.data.massage || "Failed to update test");
     }
   };
 
@@ -106,7 +89,7 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
 
   return (
     <div className="w-[80%] h-full flex flex-col justify-center items-center my-5">
-      <h1 className="text-center text-3xl font-bold">Update Test</h1>
+      <h1 className="text-center text-3xl font-bold">Update Test Series</h1>
       <div className="flex flex-col justify-center items-center mt-5 w-full">
         <div className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border border-gray-400 w-full">
           <div className="w-full my-2">
@@ -158,91 +141,33 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
               onChange={(e) => setDurationUnit(e.target.value)}
               className="w-96 h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
             >
-              <option value="Minute">Minute</option>
-              <option value="Hour">Hour</option>
+              <option value="Day">Day</option>
+              <option value="Month">Month</option>
+              <option value="Year">Year</option>
             </select>
           </div>
           <div className="flex flex-col md:flex-row md:space-x-6">
             <FormField
-              htmlFor="numberOfQuestion"
-              id="numberOfQuestion"
-              type={"number"}
-              placeholder="Number Of Questions"
-              name="numberOfQuestion"
-              value={formData.numberOfQuestion}
+              htmlFor="totalQuestion"
+              id="totalQuestion"
+              type="number"
+              placeholder="Total Questions"
+              name="totalQuestion"
+              value={formData.totalQuestion}
               onChange={handleChange}
             >
-              Number Of Questions
+              Total Questions
             </FormField>
             <FormField
-              htmlFor="markPerQuestion"
-              id="markPerQuestion"
-              type={"number"}
-              placeholder="Mark Per Question"
-              name="markPerQuestion"
-              value={formData.markPerQuestion}
+              htmlFor="totalTest"
+              id="totalTest"
+              type="number"
+              placeholder="Total Tests"
+              name="totalTest"
+              value={formData.totalTest}
               onChange={handleChange}
             >
-              Mark Per Question
-            </FormField>
-          </div>
-          <div className="flex flex-col md:flex-row md:space-x-6">
-            <FormField
-              htmlFor="negativeMark"
-              id="negativeMark"
-              type={"number"}
-              placeholder="Negative Mark"
-              name="negativeMark"
-              value={formData.negativeMark}
-              onChange={handleChange}
-            >
-              Negative Mark
-            </FormField>
-            <FormField
-              htmlFor="totalMark"
-              id="totalMark"
-              type={"number"}
-              placeholder="Total Mark"
-              name="totalMark"
-              value={formData.totalMark}
-              onChange={handleChange}
-            >
-              Total Mark
-            </FormField>
-          </div>
-          <div className="flex flex-col md:flex-row md:space-x-6">
-            <FormField
-              htmlFor="testDate"
-              id="testDate"
-              type="date"
-              placeholder="Test Date"
-              name="testDate"
-              value={formData.testDate}
-              onChange={handleChange}
-            >
-              Test Date
-            </FormField>
-            <FormField
-              htmlFor="startTime"
-              id="startTime"
-              type="time"
-              placeholder="Start Time"
-              name="startTime"
-              value={formData.startTime}
-              onChange={handleChange}
-            >
-              Start Time
-            </FormField>
-            <FormField
-              htmlFor="endTime"
-              id="endTime"
-              type="time"
-              placeholder="End Time"
-              name="endTime"
-              value={formData.endTime}
-              onChange={handleChange}
-            >
-              End Time
+              Total Tests
             </FormField>
           </div>
           <div className="flex items-center justify-between">
@@ -265,4 +190,4 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
   );
 }
 
-export default UpdateTest;
+export default UpdateTestSeries;

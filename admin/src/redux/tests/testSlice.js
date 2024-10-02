@@ -15,15 +15,23 @@ export const testSlice = createSlice({
       state.test.push(action.payload);
     },
     updateTest: (state, action) => {
-      const index = state.test.findIndex(
-        (test) => test.test_id === action.payload.test_id
-      );
+      const index = state.test.findIndex((test) => {
+        if (test.test_id) {
+          return test.test_id === action.payload.test_id;
+        }
+
+        if (test.id) {
+          return test.id === action.payload.id;
+        }
+      });
       if (index !== -1) {
         state.test[index] = action.payload;
       }
     },
     deleteTest: (state, action) => {
-      state.test = state.test.filter((test) => test.test_id !== action.payload);
+      state.test = state.test.filter(
+        (test) => test.test_id || test.id !== action.payload
+      );
     },
   },
 });

@@ -6,6 +6,7 @@ import {
   AddFreeVideo,
   AddFullCourse,
   AddTest,
+  AddTestSeries,
   AddVideo,
   FreeVideos,
   GetAllUsers,
@@ -16,8 +17,10 @@ import {
   GetFullCourseSubjects,
   GetQuestions,
   GetTest,
+  GetTestSeries,
+  GetTestSeriesTests,
   GetVideo,
-  GetVideoInCourse,
+  // GetVideoInCourse,
   Home,
   Layout,
   Login,
@@ -91,6 +94,18 @@ function App() {
           <Route
             path="/add-test"
             element={<PrivateRoute element={AddTest} />}
+          />
+          <Route
+            path="/get-testseries"
+            element={<PrivateRoute element={GetTestSeries} />}
+          />
+          <Route
+            path="/get-testseries-tests"
+            element={<PrivateRoute element={GetTestSeriesTests} />}
+          />
+          <Route
+            path="/add-testseries"
+            element={<PrivateRoute element={AddTestSeries} />}
           />
           <Route
             path="/get-users"

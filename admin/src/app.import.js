@@ -24,6 +24,9 @@ import PrivateRoute from "./components/home/PrivateRoute";
 import Layout from "./components/home/Layout";
 import FreeVideos from "./components/videos/FreeVideos";
 import AddFreeVideo from "./components/videos/AddFreeVideo";
+import GetTestSeries from "./components/testseries/Get";
+import GetTestSeriesTests from "./components/testseries/GetTests";
+import AddTestSeries from "./components/testseries/Add";
 
 export {
   GetCategory,
@@ -52,4 +55,7 @@ export {
   Layout,
   FreeVideos,
   AddFreeVideo,
+  GetTestSeries,
+  GetTestSeriesTests,
+  AddTestSeries,
 };
