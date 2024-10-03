@@ -125,7 +125,10 @@ function GetAllUsers() {
                       </td>
                       <td className="border p-2 text-sm">{user.mo_number}</td>
                       <td className="border p-2 text-sm">{user.email}</td>
-                      <td className="border p-2 text-sm flex justify-center items-center">
+                      <td className="border p-1 text-sm flex flex-col justify-center items-center">
+                        <p className="text-xs font-bold">
+                          {user.isactive === "1" ? "Public" : "Private"}
+                        </p>
                         <button
                           onClick={() => {
                             handleChangeStatus(user.id, user.isactive);

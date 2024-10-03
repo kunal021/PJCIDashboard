@@ -147,7 +147,10 @@ function GetCategory() {
                         handleClick={() => handleDelete(item.id)}
                       />
                     </td>
-                    <td className="border p-2 text-sm flex justify-center items-center">
+                    <td className="border p-1 text-sm flex flex-col justify-center items-center">
+                      <p className="text-xs font-bold">
+                        {item.isactive === "1" ? "Public" : "Private"}
+                      </p>
                       <button
                         onClick={() => {
                           handleChangeStatus(item.id, item.isactive);

@@ -17,8 +17,8 @@ import {
   GetFullCourseSubjects,
   GetQuestions,
   GetTest,
+  GetTestData,
   GetTestSeries,
-  GetTestSeriesTests,
   GetVideo,
   // GetVideoInCourse,
   Home,
@@ -101,7 +101,7 @@ function App() {
           />
           <Route
             path="/get-testseries-tests"
-            element={<PrivateRoute element={GetTestSeriesTests} />}
+            element={<PrivateRoute element={GetTestData} />}
           />
           <Route
             path="/add-testseries"

@@ -142,7 +142,10 @@ function GetTestSeries() {
                         >
                           {test.name}
                         </div>
-                        <div className="w-[20%]">
+                        <div className="w-[20%] flex flex-col justify-center items-center">
+                          <p className="text-xs font-bold">
+                            {test.is_active === "1" ? "Public" : "Private"}
+                          </p>
                           <button
                             onClick={() => {
                               handleChangeStatus(test.id, test.is_active);
@@ -158,6 +161,17 @@ function GetTestSeries() {
                               <div className="toggle-switch-handle"></div>
                             </div>
                           </button>
+                        </div>
+                      </div>
+                      <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
+                      <div className="flex justify-start items-center gap-1 w-full text-xs font-medium">
+                        <div className="flex justify-start items-start gap-1 w-full">
+                          <p>Total Tests:</p>
+                          <p>{test.total_test}</p>
+                        </div>
+                        <div className="flex justify-start items-start gap-1 w-full">
+                          <p>Total Questions:</p>
+                          <p>{test.total_question}</p>
                         </div>
                       </div>
                     </div>

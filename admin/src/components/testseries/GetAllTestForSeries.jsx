@@ -1,26 +1,36 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setTest } from "../../redux/tests/testSlice";
-import { deleteTest } from "../../redux/tests/testSlice";
+import { deleteTest, setTest } from "../../redux/tests/testSlice";
+// import { deleteTest } from "../../redux/tests/testSlice";
 import axios from "axios";
-import LinkButton from "../../utils/LinkButton";
-import UpdateTest from "./UpdateTest";
+// import LinkButton from "../../utils/LinkButton";
+// import UpdateTest from "./UpdateTest";
 import { API_URL } from "../../url";
 import Loader from "../../utils/Loader";
-import UpdateBtn from "../../utils/UpdateBtn";
-import ConfirmDelete from "../../utils/ConfirmDelete";
-import toast from "react-hot-toast";
-import LayoutAdjuster from "../../utils/LayoutAdjuster";
+// import UpdateBtn from "../../utils/UpdateBtn";
+// import ConfirmDelete from "../../utils/ConfirmDelete";
+// import toast from "react-hot-toast";
+// import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import parser from "html-react-parser";
 import { Avatar } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Card } from "../ui/card";
+import toast from "react-hot-toast";
+import ConfirmDelete from "@/utils/ConfirmDelete";
 
-const fetchTest = async (dispatch, setLoading) => {
+const fetchTest = async (dispatch, setLoading, directory_id) => {
   try {
     setLoading(true);
-    const response = await axios.post(`${API_URL}/admin/test/getalltest.php`);
-    dispatch(setTest(response.data.data));
+    const formData = new FormData();
+    formData.append("directory_id", directory_id);
+    formData.append("content_type", 3);
+    const response = await axios.post(
+      `${API_URL}/admin/directory/getdirectorycontent.php`,
+      formData,
+      { headers: "multipart/form-data" }
+    );
     // console.log(response);
+    dispatch(setTest(response.data.data));
   } catch (error) {
     console.error("Error fetching courses:", error);
   } finally {
@@ -28,23 +38,31 @@ const fetchTest = async (dispatch, setLoading) => {
   }
 };
 
-function GetTest() {
+function GetAllTestForSeries() {
+  const location = useLocation();
+  const { testData } = location.state || {};
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [updateTest, setUpdateTest] = useState(false);
-  const [updateTestData, setUpdateTestData] = useState({});
+  //   const [updateTest, setUpdateTest] = useState(false);
+  //   const [updateTestData, setUpdateTestData] = useState({});
 
   const dispatch = useDispatch();
   const test = useSelector((state) => state.test.test);
 
   useEffect(() => {
-    fetchTest(dispatch, setLoading);
-  }, [dispatch]);
+    fetchTest(dispatch, setLoading, testData.directory_id);
+  }, [dispatch, testData.directory_id]);
 
   const handleDelete = async (testId) => {
     try {
-      const response = await axios.delete(
-        `${API_URL}/admin/test/deletetest.php?testid=${testId}`
+      const formData = new FormData();
+      formData.append("directory_id", testData.directory_id);
+      formData.append("content_type", 3);
+      formData.append("content_id", testId);
+      const response = await axios.post(
+        `${API_URL}/admin/directory/deletecontentfromdir.php`,
+        formData,
+        { headers: "multipart/form-data" }
       );
       // console.log(response);
 
@@ -58,66 +76,62 @@ function GetTest() {
     }
   };
 
-  const handleChangeStatus = useCallback(
-    async (testId, flag) => {
-      const confirmAlert = window.confirm(
-        `${
-          flag === "1"
-            ? "Test will become Inactive. Do you want to proceed"
-            : "Test will become Active. Do you want to proceed"
-        }`
-      );
-      if (confirmAlert) {
-        try {
-          flag = flag === "1" ? "0" : "1";
-          const formData = new FormData();
-          formData.append("test_id", testId);
-          formData.append("statuscode", flag);
-          await axios.post(
-            `${API_URL}/admin/test/updateteststatus.php`,
-            formData,
-            { headers: { "content-type": "multipart/form-data" } }
-          );
-          // console.log(res);
+  //   const handleChangeStatus = useCallback(
+  //     async (testId, flag) => {
+  //       const confirmAlert = window.confirm(
+  //         `${
+  //           flag === "1"
+  //             ? "Test will become Inactive. Do you want to proceed"
+  //             : "Test will become Active. Do you want to proceed"
+  //         }`
+  //       );
+  //       if (confirmAlert) {
+  //         try {
+  //           flag = flag === "1" ? "0" : "1";
+  //           const formData = new FormData();
+  //           formData.append("test_id", testId);
+  //           formData.append("statuscode", flag);
+  //           await axios.post(
+  //             `${API_URL}/admin/test/updateteststatus.php`,
+  //             formData,
+  //             { headers: { "content-type": "multipart/form-data" } }
+  //           );
+  //           // console.log(res);
 
-          // Update local state instead of fetching users again
-          const updatedTest = test.map((test) =>
-            test.test_id === testId ? { ...test, flag } : test
-          );
-          dispatch(setTest(updatedTest));
-        } catch (error) {
-          console.log("Error updating user status:", error);
-          // Handle error (e.g., show an error message)
-        }
-      }
-    },
-    [dispatch, test]
-  );
+  //           // Update local state instead of fetching users again
+  //           const updatedTest = test.map((test) =>
+  //             test.test_id === testId ? { ...test, flag } : test
+  //           );
+  //           dispatch(setTest(updatedTest));
+  //         } catch (error) {
+  //           console.log("Error updating user status:", error);
+  //           // Handle error (e.g., show an error message)
+  //         }
+  //       }
+  //     },
+  //     [dispatch, test]
+  //   );
 
   // console.log(test);
 
   return (
-    <LayoutAdjuster>
+    <Card className="w-full border-gray-300">
       {loading ? (
         <Loader />
       ) : (
         <div
-          className={`${
-            updateTest
-              ? "hidden"
-              : "w-[80%] flex flex-col justify-center items-center mx-auto"
-          } `}
+          className={`${"w-full flex flex-col justify-center items-center my-5"} `}
         >
-          <div className="flex justify-center items-center my-5 space-x-10">
-            <h1 className="text-3xl font-bold text-center">Test List</h1>
-            <LinkButton to={"/add-test"}>Add Test</LinkButton>
+          <div className="flex justify-center items-center gap-10">
+            {/* <h1 className="text-3xl font-bold text-center">Test List</h1>
+            <LinkButton to={"/add-test"}>Add Test</LinkButton> */}
           </div>
           {test.length > 0 ? (
             <div className="flex flex-col justify-center items-center w-full">
               {test.map((test, idx) => (
                 <div
                   key={idx}
-                  className="flex justify-center items-center w-[80%] border rounded-md border-gray-300 m-2 p-3"
+                  className="flex justify-center items-center w-[90%] border rounded-md border-gray-300 m-2 p-3"
                 >
                   <div className="flex justify-start items-center gap-4 w-full">
                     <div className="flex justify-center items-center w-[10%] text-">
@@ -137,10 +151,7 @@ function GetTest() {
                             ? parser(test.test_name)
                             : test.test_name}
                         </div>
-                        <div className="w-[20%] flex flex-col justify-center items-center">
-                          <p className="text-xs font-bold">
-                            {test.is_active === "1" ? "Public" : "Private"}
-                          </p>
+                        {/* <div className="w-[20%]">
                           <button
                             onClick={() => {
                               handleChangeStatus(test.test_id, test.flag);
@@ -156,7 +167,7 @@ function GetTest() {
                               <div className="toggle-switch-handle"></div>
                             </div>
                           </button>
-                        </div>
+                        </div> */}
                       </div>
                       <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
                       <div className="flex justify-start items-center gap-1 w-full text-xs font-medium">
@@ -172,12 +183,12 @@ function GetTest() {
                     </div>
                   </div>
                   <div className="flex flex-col justify-center items-end gap-4 w-[10%]">
-                    <UpdateBtn
+                    {/* <UpdateBtn
                       handleClick={() => {
                         setUpdateTest((prev) => !prev);
-                        setUpdateTestData(test);
+                        // setUpdateTestData(test);
                       }}
-                    />
+                    /> */}
                     <ConfirmDelete
                       handleClick={() => handleDelete(test.test_id)}
                     />
@@ -192,14 +203,8 @@ function GetTest() {
           )}
         </div>
       )}
-      {updateTest && (
-        <UpdateTest
-          setUpdateTest={setUpdateTest}
-          updateTestData={updateTestData}
-        />
-      )}
-    </LayoutAdjuster>
+    </Card>
   );
 }
 
-export default GetTest;
+export default GetAllTestForSeries;

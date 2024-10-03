@@ -10,7 +10,7 @@ const LayoutAdjuster = ({ children }) => {
     <div
       className={`w-full ${
         sidebarCollapsed ? "ml-20" : `ml-[15.5rem]`
-      } transition-all px-4 min-h-screen flex justify-center items-center`}
+      } transition-all px-4 min-h-screen flex justify-center items-center relative`}
     >
       {children}
     </div>

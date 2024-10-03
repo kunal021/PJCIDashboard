@@ -143,21 +143,26 @@ function GetCourse() {
                           <Avatar className="bg-gray-500 text-white">
                             {idx + 1}
                           </Avatar>
-                          <button
-                            onClick={() => {
-                              handleChangeStatus(course.id, course.isactive);
-                            }}
-                            className="toggle-switch scale-75 align-middle"
-                          >
-                            <input
-                              type="checkbox"
-                              checked={course.isactive === "1"}
-                              readOnly
-                            />
-                            <div className="toggle-switch-background">
-                              <div className="toggle-switch-handle"></div>
-                            </div>
-                          </button>
+                          <div className="flex flex-col justify-center items-center">
+                            <p className="text-xs font-bold">
+                              {course.isactive === "1" ? "Public" : "Private"}
+                            </p>
+                            <button
+                              onClick={() => {
+                                handleChangeStatus(course.id, course.isactive);
+                              }}
+                              className="toggle-switch scale-75 align-middle"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={course.isactive === "1"}
+                                readOnly
+                              />
+                              <div className="toggle-switch-background">
+                                <div className="toggle-switch-handle"></div>
+                              </div>
+                            </button>
+                          </div>
                         </div>
                         {/* <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" /> */}
                         <div className="flex justify-center items-center gap-6 w-full">

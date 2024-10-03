@@ -29,9 +29,14 @@ export const testSlice = createSlice({
       }
     },
     deleteTest: (state, action) => {
-      state.test = state.test.filter(
-        (test) => test.test_id || test.id !== action.payload
-      );
+      state.test = state.test.filter((test) => {
+        if (test.test_id) {
+          return test.test_id !== action.payload;
+        }
+        if (test.id) {
+          return test.id !== action.payload;
+        }
+      });
     },
   },
 });

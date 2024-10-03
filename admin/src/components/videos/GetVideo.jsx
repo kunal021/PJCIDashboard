@@ -140,7 +140,10 @@ function GetVideo() {
                             {(currentPage - 1) * 10 + (idx + 1)}
                           </Avatar>
                           <div>Video ID: {item.video_id}</div>
-                          <div>
+                          <div className="flex flex-col justify-center items-center">
+                            <p className="text-xs font-bold">
+                              {item.is_active === "1" ? "Public" : "Private"}
+                            </p>
                             <button
                               onClick={() => {
                                 handleChangeStatus(item.id, item.is_active);

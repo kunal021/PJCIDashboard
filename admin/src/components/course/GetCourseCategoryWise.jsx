@@ -11,7 +11,7 @@ import { Avatar } from "antd";
 import { CalendarClock, IndianRupee, SquarePlay } from "lucide-react";
 import ConfirmDelete from "../../utils/ConfirmDelete";
 import toast from "react-hot-toast";
-import * as Tabs from "@radix-ui/react-tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   deleteFullCourse,
   setFullCourse,
@@ -37,7 +37,6 @@ const GetCourseCategoryWise = () => {
           formData,
           { headers: { "content-type": "multipart/form-data" } }
         );
-        // console.log(response.data);
         if (response.status === 200) {
           dispatch(setCourse(response.data.data_course));
           dispatch(setFullCourse(response.data.data_full_course));
@@ -73,7 +72,8 @@ const GetCourseCategoryWise = () => {
         { headers: { "content-type": "multipart/form-data" } }
       );
 
-      // console.log(response);
+      console.log(response);
+
       if (response.status === 200) {
         if (courseType === "1") {
           dispatch(deleteCourse(courseId));
@@ -81,7 +81,7 @@ const GetCourseCategoryWise = () => {
         if (courseType === "0") {
           dispatch(deleteFullCourse(courseId));
         }
-        toast.success("Course Deleted Sucessfully");
+        toast.success("Course Deleted Successfully");
       }
     } catch (error) {
       console.log(error);
@@ -91,182 +91,169 @@ const GetCourseCategoryWise = () => {
 
   return (
     <LayoutAdjuster>
-      <Tabs.Root
-        className="flex flex-col w-[80%] shadow-[0_2px_10px] shadow-blackA2 mt-2"
-        defaultValue="tab1"
-      >
-        <Tabs.List
-          className="shrink-0 flex border-b border-mauve6"
-          aria-label="Manage your account"
-        >
-          <Tabs.Trigger
-            className="bg-white px-5 h-[45px] flex-1 flex items-center justify-center text-[15px] leading-none text-mauve11 select-none first:rounded-tl-md last:rounded-tr-md hover:text-violet11 data-[state=active]:text-violet11 data-[state=active]:shadow-[inset_0_-1px_0_0,0_1px_0_0] data-[state=active]:shadow-current data-[state=active]:focus:relative data-[state=active]:focus:shadow-[0_0_0_2px] data-[state=active]:focus:shadow-black outline-none cursor-default"
-            value="tab1"
-          >
-            Course
-          </Tabs.Trigger>
-          <Tabs.Trigger
-            className="bg-white px-5 h-[45px] flex-1 flex items-center justify-center text-[15px] leading-none text-mauve11 select-none first:rounded-tl-md last:rounded-tr-md hover:text-violet11 data-[state=active]:text-violet11 data-[state=active]:shadow-[inset_0_-1px_0_0,0_1px_0_0] data-[state=active]:shadow-current data-[state=active]:focus:relative data-[state=active]:focus:shadow-[0_0_0_2px] data-[state=active]:focus:shadow-black outline-none cursor-default"
-            value="tab2"
-          >
-            Full Course
-          </Tabs.Trigger>
-        </Tabs.List>
-        <Tabs.Content
-          className="grow p-5 bg-white rounded-b-md outline-none focus:shadow-[0_0_0_2px] focus:shadow-black"
-          value="tab1"
-        >
-          {loading ? (
-            <Loader className="animate-spin text-blue-500 text-center w-full" />
-          ) : (
-            <div
-              className={`w-full flex flex-col justify-center items-center mx-auto`}
-            >
-              <div className="w-full flex flex-col justify-center items-center my-2">
-                <div className="w-full flex flex-col justify-center items-center">
-                  {courses.length > 0 ? (
-                    <div className="flex flex-col justify-center items-center w-full">
-                      {courses.map((course, idx) => (
-                        <div
-                          key={idx}
-                          className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-2 gap-4"
-                        >
-                          <div className="flex flex-col justify-center items-start gap-2 w-full">
-                            <div className="flex justify-center items-center gap-6 w-full">
-                              <div className="flex justify-center items-center w-48">
-                                <img
-                                  src={course.img_url}
-                                  alt={"image"}
-                                  className="rounded-lg border-transparent w-full h-24"
-                                />
-                              </div>
-                              <div className="flex flex-col justify-center items-start gap-3 w-full cursor-pointer">
-                                <div className="flex justify-center items-center gap-2 w-full">
-                                  <div>
+      <div className="flex flex-col justify-center items-center gap-6 w-[80%] absolute top-10">
+        <h1 className="text-3xl font-bold ">Courses</h1>
+        <Tabs defaultValue="course" className="w-full">
+          <TabsList className="w-full flex justify-center">
+            <TabsTrigger value="course" className="flex-1">
+              Course
+            </TabsTrigger>
+            <TabsTrigger value="full-course" className="flex-1">
+              Full Course
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="course">
+            {loading ? (
+              <Loader className="animate-spin text-blue-500 text-center w-full" />
+            ) : (
+              <div className="w-full flex flex-col justify-center items-center mx-auto">
+                <div className="w-full flex flex-col justify-center items-center my-2">
+                  <div className="w-full flex flex-col justify-center items-center">
+                    {courses.length > 0 ? (
+                      <div className="flex flex-col justify-center items-center w-full">
+                        {courses.map((course, idx) => (
+                          <div
+                            key={idx}
+                            className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-2 gap-4"
+                          >
+                            <div className="flex flex-col justify-center items-start gap-2 w-full">
+                              <div className="flex justify-center items-center gap-6 w-full">
+                                <div className="flex justify-center items-center w-48">
+                                  <img
+                                    src={course.img_url}
+                                    alt={"image"}
+                                    className="rounded-lg border-transparent w-full h-24"
+                                  />
+                                </div>
+                                <div className="flex flex-col justify-center items-start gap-3 w-full cursor-pointer">
+                                  <div className="flex justify-center items-center gap-2 w-full">
                                     <Avatar className="bg-gray-500 text-white w-8">
                                       {idx + 1}
                                     </Avatar>
+                                    <div className="text-start w-full">
+                                      {renderCourseData(course.course_name)}
+                                    </div>
                                   </div>
-                                  <div className="text-start w-full">
-                                    {renderCourseData(course.course_name)}
+                                  <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
+                                  <div className="flex justify-between items-center w-full gap-2">
+                                    <div className="flex justify-center items-center gap-0.5">
+                                      <CalendarClock className="scale-75" />
+                                      <p>{course.course_duration}</p>
+                                    </div>
+                                    <div className="flex justify-center items-center gap-0.5">
+                                      <SquarePlay className="scale-75" />
+                                      <p>{course.total_number_of_videos}</p>
+                                    </div>
+                                    <div className="flex justify-center items-center gap-0.5">
+                                      <IndianRupee className="scale-75" />
+                                      <p>{course.price}</p>
+                                    </div>
                                   </div>
                                 </div>
-                                <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                                <div className="flex justify-between items-center w-full gap-2">
-                                  <div className="flex justify-center items-center gap-0.5">
-                                    <CalendarClock className="scale-75" />
-                                    <p>{course.course_duration}</p>
-                                  </div>
-                                  <div className="flex justify-center items-center gap-0.5">
-                                    <SquarePlay className="scale-75" />
-                                    <p>{course.total_number_of_videos}</p>
-                                  </div>
-                                  <div className="flex justify-center items-center gap-0.5">
-                                    <IndianRupee className="scale-75" />
-                                    <p>{course.price}</p>
-                                  </div>
+                                <div>
+                                  <ConfirmDelete
+                                    handleClick={() =>
+                                      handleDelete(
+                                        course.id,
+                                        course.course_type
+                                      )
+                                    }
+                                  />
                                 </div>
-                              </div>
-                              <div>
-                                <ConfirmDelete
-                                  handleClick={() =>
-                                    handleDelete(course.id, course.course_type)
-                                  }
-                                />
                               </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-2xl font-bold text-center mt-20">
-                      No Data Available
-                    </div>
-                  )}
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-2xl font-bold text-center mt-20">
+                        No Data Available
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-        </Tabs.Content>
-        <Tabs.Content
-          className="grow p-5 bg-white rounded-b-md outline-none focus:shadow-[0_0_0_2px] focus:shadow-black"
-          value="tab2"
-        >
-          {loading ? (
-            <Loader className="animate-spin text-blue-500" />
-          ) : (
-            <div
-              className={`w-full flex flex-col justify-center items-center mx-auto`}
-            >
-              <div className="w-full flex flex-col justify-center items-center my-2">
-                <div className="w-full flex flex-col justify-center items-center">
-                  {fullCourses.length > 0 ? (
-                    <div className="flex flex-col justify-center items-center w-full">
-                      {fullCourses.map((course, idx) => (
-                        <div
-                          key={idx}
-                          className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-2 gap-4"
-                        >
-                          <div className="flex flex-col justify-center items-start gap-2 w-full">
-                            <div className="flex justify-center items-center gap-6 w-full">
-                              <div className="flex justify-center items-center w-48">
-                                <img
-                                  src={course.img_url}
-                                  alt={"image"}
-                                  className="rounded-lg border-transparent w-full h-24"
-                                />
-                              </div>
-                              <div className="flex flex-col justify-center items-start gap-3 w-full cursor-pointer">
-                                <div className="flex justify-center items-center gap-2 w-full">
-                                  <div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="full-course">
+            {loading ? (
+              <Loader className="animate-spin text-blue-500" />
+            ) : (
+              <div className="w-full flex flex-col justify-center items-center mx-auto">
+                <div className="w-full flex flex-col justify-center items-center my-2">
+                  <div className="w-full flex flex-col justify-center items-center">
+                    {fullCourses.length > 0 ? (
+                      <div className="flex flex-col justify-center items-center w-full">
+                        {fullCourses.map((course, idx) => (
+                          <div
+                            key={idx}
+                            className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-2 gap-4"
+                          >
+                            <div className="flex flex-col justify-center items-start gap-2 w-full">
+                              <div className="flex justify-center items-center gap-6 w-full">
+                                <div className="flex justify-center items-center w-48">
+                                  <img
+                                    src={course.img_url}
+                                    alt={"image"}
+                                    className="rounded-lg border-transparent w-full h-24"
+                                  />
+                                </div>
+                                <div className="flex flex-col justify-center items-start gap-3 w-full cursor-pointer">
+                                  <div className="flex justify-center items-center gap-2 w-full">
                                     <Avatar className="bg-gray-500 text-white w-8">
                                       {course.id}
                                     </Avatar>
+                                    <div className="text-start w-full">
+                                      {renderCourseData(
+                                        course.full_course_name
+                                      )}
+                                    </div>
                                   </div>
-                                  <div className="text-start w-full">
-                                    {renderCourseData(course.full_course_name)}
+                                  <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
+                                  <div className="flex justify-between items-center w-full gap-2">
+                                    <div className="flex justify-center items-center gap-0.5">
+                                      <CalendarClock className="scale-75" />
+                                      <p>{course.full_course_duration}</p>
+                                    </div>
+                                    <div className="flex justify-center items-center gap-0.5">
+                                      <SquarePlay className="scale-75" />
+                                      <p>{course.total_number_of_videos}</p>
+                                    </div>
+                                    <div className="flex justify-center items-center gap-0.5">
+                                      <IndianRupee className="scale-75" />
+                                      <p>{course.full_course_price}</p>
+                                    </div>
                                   </div>
                                 </div>
-                                <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                                <div className="flex justify-between items-center w-full gap-2">
-                                  <div className="flex justify-center items-center gap-0.5">
-                                    <CalendarClock className="scale-75" />
-                                    <p>{course.full_course_duration}</p>
-                                  </div>
-                                  <div className="flex justify-center items-center gap-0.5">
-                                    <SquarePlay className="scale-75" />
-                                    <p>{course.total_number_of_videos}</p>
-                                  </div>
-                                  <div className="flex justify-center items-center gap-0.5">
-                                    <IndianRupee className="scale-75" />
-                                    <p>{course.full_course_price}</p>
-                                  </div>
+                                <div>
+                                  <ConfirmDelete
+                                    handleClick={() =>
+                                      handleDelete(
+                                        course.id,
+                                        course.course_type
+                                      )
+                                    }
+                                  />
                                 </div>
-                              </div>
-                              <div>
-                                <ConfirmDelete
-                                  handleClick={() =>
-                                    handleDelete(course.id, course.course_type)
-                                  }
-                                />
                               </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-2xl font-bold text-center mt-20">
-                      No Data Available
-                    </div>
-                  )}
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-2xl font-bold text-center mt-20">
+                        No Data Available
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-        </Tabs.Content>
-      </Tabs.Root>
+            )}
+          </TabsContent>
+        </Tabs>
+      </div>
     </LayoutAdjuster>
   );
 };

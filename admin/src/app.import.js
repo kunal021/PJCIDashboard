@@ -25,8 +25,8 @@ import Layout from "./components/home/Layout";
 import FreeVideos from "./components/videos/FreeVideos";
 import AddFreeVideo from "./components/videos/AddFreeVideo";
 import GetTestSeries from "./components/testseries/Get";
-import GetTestSeriesTests from "./components/testseries/GetTests";
 import AddTestSeries from "./components/testseries/Add";
+import GetTestData from "./components/testseries/GetTestData";
 
 export {
   GetCategory,
@@ -56,6 +56,6 @@ export {
   FreeVideos,
   AddFreeVideo,
   GetTestSeries,
-  GetTestSeriesTests,
   AddTestSeries,
+  GetTestData,
 };

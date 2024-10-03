@@ -1,53 +1,15 @@
-/* eslint-disable react/prop-types */
-// import { useState } from "react";
-// import axios from "axios";
-// import { API_URL } from "../../url";
-// import Loader from "../../utils/Loader";
 import parser from "html-react-parser";
 import { Avatar } from "antd";
-// import MakeUserPurchase from "../setting/MakeUserPurchase";
-// import expiryDate from "../../utils/ExpiryDate";
-// import MakeUserPurchaseResponse from "../../utils/MakeUserPurchaseResponse";
 import { useLocation } from "react-router-dom";
-import LayoutAdjuster from "@/utils/LayoutAdjuster";
-
-// const fetchTest = async (setTest, setLoading, testId) => {
-//   try {
-//     setLoading(true);
-//     const formData = new FormData();
-//     formData.append("test_id", testId);
-//     const response = await axios.post(
-//       `${API_URL}/admin/test/gettestbyid.php`,
-//       formData,
-//       { headers: { "Content-Type": "multipart/form-data" } }
-//     );
-
-//     if (response.status === 200) {
-//       setTest(response.data.data);
-//     }
-//   } catch (error) {
-//     console.error("Error fetching courses:", error);
-//   } finally {
-//     setLoading(false);
-//   }
-// };
 
 function GetTestSeriesTests() {
   const location = useLocation();
   const { testData } = location.state || {};
-  //   const [loading, setLoading] = useState(false);
-  //   const [test, setTest] = useState([]);
-  //   const [makePurchaseStatus, setMakePurchaseStatus] = useState(false);
-  //   const [makePurchaseData, setMakePurchaseData] = useState(null);
-
-  //   useEffect(() => {
-  //     fetchTest(setTest, setLoading, testData?.id);
-  //   }, [testData?.id]);
 
   return (
-    <LayoutAdjuster>
+    <div className="w-full">
       <div
-        className={`w-[80%] flex flex-col justify-center items-center mx-auto`}
+        className={`w-full flex flex-col justify-center items-center mx-auto`}
       >
         {testData ? (
           <div className="flex flex-col justify-center items-center w-full">
@@ -55,17 +17,6 @@ function GetTestSeriesTests() {
               <h1 className="text-3xl font-bold text-center my-2">
                 Test Series Details
               </h1>
-              {/* {testData.test_date != "0000-00-00" && testData.test_date && (
-                  <MakeUserPurchase
-                    id={testData.id}
-                    amount={testData.price}
-                    expiryDate={expiryDate(testData?.test_date, 7)}
-                    productInfo={testData.test_name}
-                    type={"3"}
-                    setMakePurchaseStatus={setMakePurchaseStatus}
-                    setMakePurchaseData={setMakePurchaseData}
-                  />
-                )} */}
             </div>
             {/* {makePurchaseStatus && (
                 <MakeUserPurchaseResponse
@@ -80,18 +31,6 @@ function GetTestSeriesTests() {
                     <Avatar className="bg-gray-500 text-white">
                       {testData.id}
                     </Avatar>
-                    {/* <div className="flex justify-start items-start gap-1 w-fit">
-                      <p>Start Date:</p>
-                      <p>{testData.test_date}</p>
-                    </div>
-                    <div className="flex justify-start items-start gap-1 w-fit">
-                      <p>Start Time:</p>
-                      <p>{testData.start_time}</p>
-                    </div>
-                    <div className="flex justify-start items-start gap-1 w-fit">
-                      <p>End Time:</p>
-                      <p>{testData.end_time}</p>
-                    </div> */}
                     <div className="flex justify-start items-start gap-1 w-fit">
                       <p>Duration:</p>
                       <p>{testData.duration}</p>
@@ -118,18 +57,10 @@ function GetTestSeriesTests() {
                       <p>No. Of Qns:</p>
                       <p>{testData.total_question}</p>
                     </div>
-                    {/* <div className="flex justify-start items-start gap-1 w-fit">
-                      <p>Mark per Qns:</p>
-                      <p>{testData.mark_per_qns}</p>
-                    </div> */}
                     <div className="flex justify-start items-start gap-1 w-fit">
                       <p>Total Tests:</p>
                       <p>{testData.total_test}</p>
                     </div>
-                    {/* <div className="flex justify-start items-start gap-1 w-fit">
-                      <p>Negative Mark:</p>
-                      <p>{testData.negative_mark}</p>
-                    </div> */}
                   </div>
                 </div>
               </div>
@@ -141,7 +72,7 @@ function GetTestSeriesTests() {
           </div>
         )}
       </div>
-    </LayoutAdjuster>
+    </div>
   );
 }
 
