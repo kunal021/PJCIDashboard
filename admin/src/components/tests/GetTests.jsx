@@ -139,7 +139,7 @@ function GetTest() {
                         </div>
                         <div className="w-[20%] flex flex-col justify-center items-center">
                           <p className="text-xs font-bold">
-                            {test.is_active === "1" ? "Public" : "Private"}
+                            {test.flag === "1" ? "Public" : "Private"}
                           </p>
                           <button
                             onClick={() => {

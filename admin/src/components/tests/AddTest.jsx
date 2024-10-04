@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addTest } from "../../redux/tests/testSlice";
 import axios from "axios";
 import toast from "react-hot-toast";
 import FormField from "../../utils/FormField";
@@ -26,8 +24,6 @@ function AddTest() {
   // const [testName, setTestName] = useState("");
   const [testDescription, setTestDescription] = useState("");
   const [durationUnit, setDurationUnit] = useState("Minute");
-
-  const dispatch = useDispatch();
 
   // const getNameData = (html) => {
   //   setTestName(html);
@@ -90,7 +86,6 @@ function AddTest() {
       );
       // console.log(response);
       if (response.status == 201) {
-        dispatch(addTest(response.data));
         toast.success("Test Added Successfully");
       }
     } catch (error) {

@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addQuestion } from "../../redux/questions/questionSlice";
 import FormField from "../../utils/FormField";
 import "../../utils/addQns.css";
 import axios from "axios";
@@ -44,8 +42,6 @@ function AddQns() {
   //     [name]: checked,
   //   }));
   // };
-
-  const dispatch = useDispatch();
 
   // const handleChange = (e) => {
   //   const { name, value, type, checked } = e.target;
@@ -105,7 +101,6 @@ function AddQns() {
         `${API_URL}/admin/test/addqnsintest.php`,
         dataToSend
       );
-      dispatch(addQuestion(response.data));
       if (response.status == 201) {
         toast.success("Question Added Sucessfully");
       }

@@ -27,7 +27,7 @@ function Get() {
           //   { headers: "content-type/form-data" }
         );
 
-        console.log(response);
+        // console.log(response);
         if (response.status === 200) {
           dispatch(setSlider(response.data.data));
         }
@@ -52,7 +52,7 @@ function Get() {
         `${API_URL}/admin/slider/deleteslider.php`,
         formData
       );
-      console.log(response);
+      // console.log(response);
       if (response.status === 200) {
         dispatch(deleteSlider(id));
         toast.success("Slider deleted successfully");
@@ -112,8 +112,6 @@ function Get() {
     return <p>For {title}</p>;
   };
 
-  console.log(slider);
-
   return (
     <LayoutAdjuster>
       {loading ? (
@@ -136,21 +134,26 @@ function Get() {
                     <div className="flex justify-between items-center w-full">
                       <Avatar className="scale-[85%] text-lg">{idx + 1}</Avatar>
                       {renderTitle(item.type)}
-                      <button
-                        onClick={() => {
-                          handleChangeStatus(item.id, item.is_active);
-                        }}
-                        className="toggle-switch scale-[60%] align-middle"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={item.is_active === "1"}
-                          readOnly
-                        />
-                        <div className="toggle-switch-background">
-                          <div className="toggle-switch-handle"></div>
-                        </div>
-                      </button>
+                      <div className="w-[20%] flex flex-col justify-center items-center">
+                        <p className="text-xs font-bold">
+                          {item.is_active === "1" ? "Public" : "Private"}
+                        </p>
+                        <button
+                          onClick={() => {
+                            handleChangeStatus(item.id, item.is_active);
+                          }}
+                          className="toggle-switch scale-[60%] align-middle"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={item.is_active === "1"}
+                            readOnly
+                          />
+                          <div className="toggle-switch-background">
+                            <div className="toggle-switch-handle"></div>
+                          </div>
+                        </button>
+                      </div>
                       <ConfirmDelete
                         handleClick={() => handleDelete(item.id)}
                       />
