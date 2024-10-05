@@ -100,17 +100,37 @@ function NewAddQns() {
               key={index}
               className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border border-gray-400 w-full"
             >
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Question {index + 1}
-                </label>
-                <Tiptap
-                  initialContent={formData.question}
-                  getHtmlData={(content) =>
-                    handleChange(content, index, "question")
-                  }
-                  placeholder="Write the question here..."
-                />
+              <div className="mb-4 flex justify-center items-center gap-2">
+                <div className="w-full">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">
+                    Question {index + 1}
+                  </label>
+                  <Tiptap
+                    initialContent={formData.question}
+                    getHtmlData={(content) =>
+                      handleChange(content, index, "question")
+                    }
+                    placeholder="Write the question here..."
+                  />
+                </div>
+                {/* <div>
+                  <select
+                    // onChange={(e) =>
+                    //   setFormData((prevTest) => ({
+                    //     ...prevTest,
+                    //     type: e.target.value,
+                    //   }))
+                    // }
+                    defaultValue={""}
+                    className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md"
+                  >
+                    <option value="" disabled>
+                      Select Subject
+                    </option>
+                    {/* <option value="1">Schedule Test</option>
+                  <option value="2">Stored Test</option> */}
+                {/* </select> */}
+                {/* </div> */}
               </div>
 
               {["a", "b", "c", "d", "e"].map((option) => (
@@ -148,6 +168,25 @@ function NewAddQns() {
                   </label>
                 </div>
               ))}
+
+              <div className="w-full mt-4">
+                <select
+                  // onChange={(e) =>
+                  //   setFormData((prevTest) => ({
+                  //     ...prevTest,
+                  //     type: e.target.value,
+                  //   }))
+                  // }
+                  defaultValue={""}
+                  className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md w-2/4"
+                >
+                  <option value="" disabled>
+                    Select Subject
+                  </option>
+                  {/* <option value="1">Schedule Test</option>
+                  <option value="2">Stored Test</option> */}
+                </select>
+              </div>
 
               {index === questions.length - 1 && (
                 <div className="flex items-center justify-between mt-5">

@@ -21,6 +21,7 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
     testDate: updateTestData.test_date,
     startTime: updateTestData.start_time,
     endTime: updateTestData.end_time,
+    type: updateTestData.type,
   });
   const [testDescription, setTestDescription] = useState(
     updateTestData.description
@@ -30,23 +31,35 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
   );
   const dispatch = useDispatch();
 
-  console.log(durationUnit);
-
   const getDescriptionData = (html) => {
     setTestDescription(html);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setFormData((prevTest) => ({
       ...prevTest,
       [name]: value,
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  console.log(formData);
+
+  const handleSubmit = async () => {
+    if (
+      !formData.name ||
+      !formData.price ||
+      !formData.duration ||
+      !formData.numberOfQuestion ||
+      !formData.markPerQuestion ||
+      !formData.negativeMark ||
+      !formData.totalMark ||
+      !formData.testDate ||
+      !formData.type
+    ) {
+      toast.error("Please fill all fields");
+      return;
+    }
     try {
       const formDataToSend = new FormData();
       const formDataObject = {
@@ -60,9 +73,10 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
         markperqns: formData.markPerQuestion,
         negative_mark: formData.negativeMark,
         total_mark: formData.totalMark,
-        test_date: formData.testDate,
-        start_time: formData.startTime,
-        end_time: formData.endTime,
+        test_date: formData.type === "2" ? "0000-00-00" : formData.testDate,
+        start_time: formData.type === "2" ? "00:00:00" : formData.startTime,
+        end_time: formData.type === "2" ? "00:00:00" : formData.endTime,
+        type: formData.type, // Add this in submission
       };
 
       Object.entries(formDataObject).forEach(([key, value]) => {
@@ -83,7 +97,7 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
             test_name: formData.name,
             description: testDescription,
             price: formData.price,
-            duration: formData.duration,
+            duration: formData.duration + " " + durationUnit,
             number_of_questions: formData.numberOfQuestion,
             mark_per_qns: formData.markPerQuestion,
             negative_mark: formData.negativeMark,
@@ -91,6 +105,7 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
             test_date: formData.testDate,
             start_time: formData.startTime,
             end_time: formData.endTime,
+            type: formData.type, // Dispatch test type
           })
         );
         toast.success("Test Updated Successfully");
@@ -102,11 +117,21 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
     }
   };
 
-  // console.log(formData);
-
   return (
     <div className="w-[80%] h-full flex flex-col justify-center items-center my-5">
       <h1 className="text-center text-3xl font-bold">Update Test</h1>
+      <div className="flex justify-center items-center my-5 space-x-10">
+        <select
+          onChange={(e) =>
+            setFormData((prevTest) => ({ ...prevTest, type: e.target.value }))
+          }
+          value={formData.type}
+          className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md"
+        >
+          <option value="1">Schedule Test</option>
+          <option value="2">Stored Test</option>
+        </select>
+      </div>
       <div className="flex flex-col justify-center items-center mt-5 w-full">
         <div className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border border-gray-400 w-full">
           <div className="w-full my-2">
@@ -210,41 +235,44 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
               Total Mark
             </FormField>
           </div>
-          <div className="flex flex-col md:flex-row md:space-x-6">
-            <FormField
-              htmlFor="testDate"
-              id="testDate"
-              type="date"
-              placeholder="Test Date"
-              name="testDate"
-              value={formData.testDate}
-              onChange={handleChange}
-            >
-              Test Date
-            </FormField>
-            <FormField
-              htmlFor="startTime"
-              id="startTime"
-              type="time"
-              placeholder="Start Time"
-              name="startTime"
-              value={formData.startTime}
-              onChange={handleChange}
-            >
-              Start Time
-            </FormField>
-            <FormField
-              htmlFor="endTime"
-              id="endTime"
-              type="time"
-              placeholder="End Time"
-              name="endTime"
-              value={formData.endTime}
-              onChange={handleChange}
-            >
-              End Time
-            </FormField>
-          </div>
+          {formData.type === "1" && (
+            <div className="flex flex-col md:flex-row md:space-x-6">
+              <FormField
+                htmlFor="testDate"
+                id="testDate"
+                type="date"
+                placeholder="Test Date"
+                name="testDate"
+                value={formData.testDate}
+                onChange={handleChange}
+              >
+                Test Date
+              </FormField>
+              <FormField
+                htmlFor="startTime"
+                id="startTime"
+                type="time"
+                placeholder="Start Time"
+                name="startTime"
+                value={formData.startTime}
+                onChange={handleChange}
+              >
+                Start Time
+              </FormField>
+              <FormField
+                htmlFor="endTime"
+                id="endTime"
+                type="time"
+                placeholder="End Time"
+                name="endTime"
+                value={formData.endTime}
+                onChange={handleChange}
+              >
+                End Time
+              </FormField>
+            </div>
+          )}
+
           <div className="flex items-center justify-between">
             <button
               className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md"
@@ -255,12 +283,14 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
           </div>
         </div>
       </div>
-      <button
-        onClick={() => setUpdateTest((prev) => !prev)}
-        className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md"
-      >
-        Close
-      </button>
+      <div className="my-5">
+        <button
+          onClick={() => setUpdateTest((prev) => !prev)}
+          className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md"
+        >
+          Close
+        </button>
+      </div>
     </div>
   );
 }

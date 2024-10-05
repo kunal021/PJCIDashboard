@@ -2,6 +2,7 @@
 import axios from "axios";
 import { API_URL } from "../../url";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const getDataToAdd = async (type, setData) => {
   try {
@@ -18,6 +19,7 @@ const getDataToAdd = async (type, setData) => {
     }
   } catch (error) {
     console.log(error);
+    toast.error(error.response.data.message || "Error fetching data");
   }
 };
 

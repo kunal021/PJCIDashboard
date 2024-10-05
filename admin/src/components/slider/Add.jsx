@@ -29,14 +29,14 @@ function Add() {
   };
 
   const handleSubmit = async () => {
+    if (data.type == "0") {
+      data.type_id = "0";
+    }
     if (!data.img_url || !data.type || !data.type_id) {
       toast.error("Please fill all fields");
       return;
     }
-    if (data.type == "0") {
-      data.type_id = "0";
-    }
-    console.log(data);
+    // console.log(data);
     try {
       const formData = new FormData();
       formData.append("img_url", data.img_url);
@@ -47,7 +47,7 @@ function Add() {
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );
-      console.log(response);
+      // console.log(response);
       if (response.status === 200) {
         dispatch(addSlider(data));
         toast.success("Slider Added Successfully");

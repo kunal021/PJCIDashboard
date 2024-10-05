@@ -14,12 +14,12 @@ function Update({ item }) {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
-    id: item.id,
-    img_url: item.img_url,
-    type: item.type,
-    type_id: item.type_id,
-    is_active: item.is_active,
-    date: item.date,
+    id: item?.id || "",
+    img_url: item?.img_url || "",
+    type: item?.type || "0",
+    type_id: item?.type_id || "",
+    is_active: item?.is_active || false,
+    date: item?.date || "",
   });
 
   const addCloseRef = useRef();
@@ -28,14 +28,22 @@ function Update({ item }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    if (name === "type") {
+      setData((prev) => ({
+        ...prev,
+        [name]: value,
+        type_id: value === "0" ? "0" : "",
+      }));
+    } else {
+      setData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = async () => {
-    if (!data.img_url || !data.type) {
+    if (!data.img_url || !data.type || (!data.type_id && data.type !== "0")) {
       toast.error("Please fill all fields");
       return;
     }
@@ -53,11 +61,13 @@ function Update({ item }) {
       if (response.status === 200) {
         dispatch(updateSlider(data));
         toast.success("Slider Updated Successfully");
-        addCloseRef.current.click();
+        if (addCloseRef.current) {
+          addCloseRef.current.click();
+        }
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.message || "Error updating slider");
+      toast.error(error?.response?.data?.message || "Error updating slider");
     }
   };
 
@@ -180,14 +190,13 @@ function Update({ item }) {
                 Close
               </button>
             </Dialog.Close>
-            <Dialog.Close asChild>
-              <button
-                onClick={handleSubmit}
-                className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md w-1/2"
-              >
-                Update
-              </button>
-            </Dialog.Close>
+
+            <button
+              onClick={handleSubmit}
+              className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md w-1/2"
+            >
+              Update
+            </button>
           </div>
           <Dialog.Close asChild>
             <button
