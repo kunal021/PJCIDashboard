@@ -3,6 +3,7 @@ import {
   AppstoreOutlined,
   BookOutlined,
   DashboardOutlined,
+  FileOutlined,
   // FileImageOutlined,
   FormOutlined,
   LogoutOutlined,
@@ -87,6 +88,18 @@ const items = [
         key: "11",
         label: "Free Video",
         link: "/free-video",
+      },
+    ],
+  },
+  {
+    key: "sub9",
+    label: "Docs",
+    icon: <FileOutlined />,
+    children: [
+      {
+        key: "27",
+        label: "Documnets",
+        link: "/get-documents",
       },
     ],
   },

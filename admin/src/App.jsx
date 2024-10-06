@@ -13,6 +13,7 @@ import {
   GetCategory,
   GetCourse,
   GetCourseCategoryWise,
+  GetDocuments,
   GetFullCourse,
   GetFullCourseSubjects,
   GetQuestions,
@@ -106,6 +107,10 @@ function App() {
           <Route
             path="/add-testseries"
             element={<PrivateRoute element={AddTestSeries} />}
+          />
+          <Route
+            path="/get-documents"
+            element={<PrivateRoute element={GetDocuments} />}
           />
           <Route
             path="/get-users"
