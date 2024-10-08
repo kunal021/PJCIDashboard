@@ -133,7 +133,6 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
       let html = editor.getHTML();
 
       // Preserve multiple spaces by replacing them with non-breaking spaces
-      html = html.replace(/ {2}/g, "&nbsp; ");
 
       if (getHtmlData) {
         getHtmlData(html);
