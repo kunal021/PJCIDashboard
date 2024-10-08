@@ -30,6 +30,7 @@ function AddTest() {
   // };
   const getDescriptionData = (html) => {
     setTestDescription(html);
+    console.log("Editor content:", html);
   };
 
   const handleChange = (e) => {
@@ -84,26 +85,27 @@ function AddTest() {
         formDataToSend,
         { headers: { "content-type": "multipart/form-data" } }
       );
-      // console.log(response);
+      console.log(response);
       if (response.status == 201) {
         toast.success("Test Added Successfully");
+        setFormData({
+          name: "",
+          price: "",
+          duration: "",
+          numberOfQuestion: "",
+          markPerQuestion: "",
+          negativeMark: "",
+          totalMark: "",
+          testDate: "",
+          startTime: "",
+          endTime: "",
+          type: "",
+        });
       }
     } catch (error) {
       console.error("Error adding test:", error);
     }
-    setFormData({
-      name: "",
-      price: "",
-      duration: "",
-      numberOfQuestion: "",
-      markPerQuestion: "",
-      negativeMark: "",
-      totalMark: "",
-      testDate: "",
-      startTime: "",
-      endTime: "",
-      type: "",
-    });
+
     // setTestName("");
     setTestDescription("");
   };

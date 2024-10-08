@@ -7,12 +7,13 @@ import { API_URL } from "../../url";
 import Loader from "../../utils/Loader";
 // import toast from "react-hot-toast";
 // import UpdateBtn from "../../utils/UpdateBtn";
-import parser from "html-react-parser";
+// import parser from "html-react-parser";
 import { Avatar } from "antd";
 // import AddVideoInCourse from "./AddVideoInCourse";
 // import SeeAll from "../../utils/SeeAll";
 import { CalendarClock, IndianRupee, SquarePlay } from "lucide-react";
 import AddVideoInCourse from "./AddVideoInCourse";
+import { LatexParser } from "@/utils/LatexParser";
 
 const fetchCourse = async (setCourses, setLoading, id) => {
   try {
@@ -102,7 +103,7 @@ function GetCourseById({ id }) {
 
   const renderCourseData = (data) => {
     if (typeof data === "string") {
-      return parser(data);
+      return LatexParser(data);
     }
     return data;
   };
@@ -154,7 +155,7 @@ function GetCourseById({ id }) {
                       />
                     </div>
                     <div className="flex flex-col justify-center items-start gap-3 w-full">
-                      <div className="text-start w-full">
+                      <div className="text-start w-full whitespace-pre-wrap">
                         {renderCourseData(courses.course_name)}
                       </div>
                       <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
@@ -175,7 +176,7 @@ function GetCourseById({ id }) {
                     </div>
                   </div>
                   <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                  <div className="flex justify-between items-center w-full gap-2">
+                  <div className="flex justify-between items-center w-full gap-2 whitespace-pre-wrap">
                     {renderCourseData(courses.course_description)}
                   </div>
                 </div>

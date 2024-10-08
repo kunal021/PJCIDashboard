@@ -15,7 +15,6 @@ import Placeholder from "@tiptap/extension-placeholder";
 import { FontSize } from "./fontSizeExtension";
 import FileHandler from "@tiptap-pro/extension-file-handler";
 import { Mathematics } from "@tiptap-pro/extension-mathematics";
-import CodeBlock from "@tiptap/extension-code-block";
 import {
   Bold,
   Italic,
@@ -49,13 +48,13 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
   const [fontSizeOpen, setFontSizeOpen] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [isMathModalOpen, setIsMathModalOpen] = useState(false);
+  const [isInitialContentSet, setIsInitialContentSet] = useState(false);
 
   const editor = useEditor({
     extensions: [
       Placeholder.configure({ placeholder: placeholder || "Start typing..." }),
       StarterKit,
       Underline,
-      CodeBlock,
       Link,
       Subscript,
       Superscript,
@@ -102,7 +101,6 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
         async onPaste(currentEditor, files, htmlContent) {
           for (const file of files) {
             if (htmlContent) {
-              console.log(htmlContent);
               return false;
             }
 
@@ -132,18 +130,32 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
     ],
     content: initialContent || "",
     onUpdate({ editor }) {
-      const html = editor.getHTML();
-      getHtmlData(html);
+      let html = editor.getHTML();
+
+      // Preserve multiple spaces by replacing them with non-breaking spaces
+      html = html.replace(/ {2}/g, "&nbsp; ");
+
+      if (getHtmlData) {
+        getHtmlData(html);
+      }
     },
     editorProps: {
       attributes: {
-        class: `p-2 focus:outline-none`,
+        class: `p-2 focus:outline-none whitespace-pre-wrap`,
       },
     },
   });
 
   useEffect(() => {
     if (editor) {
+      if (initialContent && !isInitialContentSet) {
+        const cleanText = initialContent; // Process if necessary
+        editor.commands.setContent(cleanText, false, {
+          preserveWhitespace: "full",
+        });
+        setIsInitialContentSet(true);
+      }
+
       const handleFocus = () => setIsFocused(true);
       const handleBlur = (event) => {
         if (!event.relatedTarget?.closest(".toolbar")) {
@@ -166,7 +178,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
         editor.off("update", updateContent);
       };
     }
-  }, [editor, getHtmlData]);
+  }, [editor, getHtmlData, initialContent, isInitialContentSet]);
 
   if (!editor) return null;
 

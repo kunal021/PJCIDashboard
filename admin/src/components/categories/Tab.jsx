@@ -5,7 +5,7 @@ import { API_URL } from "../../url";
 import { useEffect, useState } from "react";
 import { Loader, Plus } from "lucide-react";
 import { Avatar } from "antd";
-import parser from "html-react-parser";
+// import parser from "html-react-parser";
 import Pagination from "../../utils/Pagination";
 import toast from "react-hot-toast";
 
@@ -131,9 +131,7 @@ function Tab({ categoryId }) {
                             </Avatar>
                           </div>
                           <div className="flex flex-wrap text-wrap">
-                            {typeof item.course_name == "string"
-                              ? parser(item.course_name)
-                              : item.course_name}
+                            {item.course_name}
                           </div>
                         </div>
                       </div>
@@ -181,9 +179,7 @@ function Tab({ categoryId }) {
                             </Avatar>
                           </div>
                           <div className="flex flex-wrap text-wrap">
-                            {typeof item.full_course_name == "string"
-                              ? parser(item.full_course_name)
-                              : item.full_course_name}
+                            {item.full_course_name}
                           </div>
                         </div>
                       </div>

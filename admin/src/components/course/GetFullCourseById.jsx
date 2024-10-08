@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../../url";
 import Loader from "../../utils/Loader";
-import parser from "html-react-parser";
+// import parser from "html-react-parser";
 import { Avatar } from "antd";
 import { CalendarClock, IndianRupee, SquarePlay } from "lucide-react";
 import AddCourseInFullCourse from "./AddCourseInFullCourse";
+import { LatexParser } from "@/utils/LatexParser";
 
 const fetchCourse = async (setCourses, setLoading, id) => {
   try {
@@ -91,7 +92,7 @@ function GetFullCourseById({ id }) {
 
   const renderCourseData = (data) => {
     if (typeof data === "string") {
-      return parser(data);
+      return LatexParser(data);
     }
     return data;
   };
@@ -141,7 +142,7 @@ function GetFullCourseById({ id }) {
                       />
                     </div>
                     <div className="flex flex-col justify-center items-start gap-3 w-full">
-                      <div className="text-start w-full">
+                      <div className="text-start w-full whitespace-pre-wrap">
                         {renderCourseData(courses.full_course_name)}
                       </div>
                       <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
@@ -162,7 +163,7 @@ function GetFullCourseById({ id }) {
                     </div>
                   </div>
                   <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                  <div className="flex justify-between items-center w-full gap-2">
+                  <div className="flex justify-between items-center w-full gap-2 whitespace-pre-wrap">
                     {renderCourseData(courses.full_course_description)}
                   </div>
                 </div>

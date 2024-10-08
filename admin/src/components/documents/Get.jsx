@@ -6,12 +6,12 @@ import Loader from "../../utils/Loader";
 import { Avatar } from "antd";
 import toast from "react-hot-toast";
 import ConfirmDelete from "../../utils/ConfirmDelete";
-import UpdateBtn from "../../utils/UpdateBtn";
+import UpdateDoc from "./Update";
 
 const fetchData = async (
   setLoading,
   //   currentPage,
-  setVideo
+  setDoc
   //   setPaginationData
 ) => {
   try {
@@ -24,7 +24,7 @@ const fetchData = async (
       //   formData,
       //   { headers: "content-type/form-data" }
     );
-    setVideo(response.data.data);
+    setDoc(response.data.data);
     // setPaginationData(response.data.pagination);
   } catch (error) {
     console.log(error);
@@ -40,24 +40,24 @@ function GetDocuments() {
   //   const [updateVideo, setUpdateVideo] = useState(false);
   //   const [updateVideoData, setUpdateVideoData] = useState({});
 
-  const [video, setVideo] = useState([]);
+  const [doc, setDoc] = useState([]);
 
   useEffect(() => {
     fetchData(
       setLoading,
       //  currentPage,
-      setVideo
+      setDoc
       //  setPaginationData
     );
   }, []);
 
   const handleDelete = async (id) => {
     try {
-      setLoading(true);
+      // setLoading(true);
       const formData = new FormData();
-      formData.append("video_id", id);
+      formData.append("id", id);
       const response = await axios.post(
-        `${API_URL}/admin/video/deletevideo.php`,
+        `${API_URL}/admin/docs/deletedoc.php`,
         formData,
         {
           headers: "content-type/form-data",
@@ -66,48 +66,55 @@ function GetDocuments() {
 
       if (response.status === 201) {
         // dispatch(deleteVideo(id));
-        toast.success("Video Deleted Successfully");
+        const newdoc = doc.filter((doc) => doc.id !== id);
+        setDoc(newdoc);
+        toast.success("Document Deleted Successfully");
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.message || "Error while deleting video");
-    } finally {
-      setLoading(false);
+      toast.error(
+        error.response.data.message || "Error while deleting document"
+      );
     }
+    // finally {
+    //   setLoading(false);
+    // }
   };
 
-  const handleChangeStatus = async (videoId, is_active) => {
+  const handleChangeStatus = async (docId, is_active) => {
     const confirmAlert = window.confirm(
       `${
         is_active === "1"
-          ? "Video will become Inactive. Do you want to proceed"
-          : "Video will become Active. Do you want to proceed"
+          ? "Document will become Inactive. Do you want to proceed"
+          : "Document will become Active. Do you want to proceed"
       }`
     );
     if (confirmAlert) {
       try {
         is_active = is_active === "1" ? "0" : "1";
         const formData = new FormData();
-        formData.append("videoid", videoId);
+        formData.append("videoid", docId);
         formData.append("status", is_active);
         await axios.post(
-          `${API_URL}/admin/video/updatevideostatus.php`,
+          `${API_URL}/admin/doc/updatevideostatus.php`,
           formData,
           { headers: { "content-type": "multipart/form-data" } }
         );
 
         // console.log(res);
         // Update local state instead of fetching users again
-        const updatedVideo = video.map((video) =>
-          video.id === videoId ? { ...video, is_active } : video
+        const updatedVideo = doc.map((doc) =>
+          doc.id === docId ? { ...doc, is_active } : doc
         );
-        setVideo(updatedVideo);
+        setDoc(updatedVideo);
       } catch (error) {
         console.log("Error updating user status:", error);
         // Handle error (e.g., show an error message)
       }
     }
   };
+
+  // console.log(doc);
 
   return (
     <LayoutAdjuster>
@@ -122,9 +129,9 @@ function GetDocuments() {
           <div className="w-full flex flex-col justify-center items-center my-5">
             <h1 className="text-3xl font-bold text-center">Documnets List</h1>
             <div className="w-full flex flex-col justify-center items-center">
-              {video.length > 0 ? (
+              {doc.length > 0 ? (
                 <div className="flex flex-col justify-center items-center w-full">
-                  {video.map((item, idx) => (
+                  {doc.map((item, idx) => (
                     <div
                       key={idx}
                       className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-3 gap-3"
@@ -135,7 +142,16 @@ function GetDocuments() {
                             {/* {(currentPage - 1) * 10 + (idx + 1)} */}
                             {idx + 1}
                           </Avatar>
-                          {/* <div>Video ID: {item.video_id}</div> */}
+                          {/* <div>Doc ID: {item.video_id}</div> */}
+                          <div>
+                            <select
+                              defaultValue={item.type}
+                              className="border rounded-md border-lime-100 hover:border-lime-200 bg-lime-50 p-2"
+                            >
+                              <option value="0">Real</option>
+                              <option value="1">Demo</option>
+                            </select>
+                          </div>
                           <div className="flex flex-col justify-center items-center">
                             <p className="text-xs font-bold">
                               {item.is_active === "1" ? "Public" : "Private"}
@@ -177,15 +193,13 @@ function GetDocuments() {
                           <div className="flex justify-center items-center">
                             Price: {item.price}
                           </div>
+                          <div className="flex justify-center items-center">
+                            Duration: {item.duration}
+                          </div>
                         </div>
                       </div>
                       <div className="flex flex-col justify-between items-end gap-10 w-fit">
-                        <UpdateBtn
-                        //   handleClick={() => {
-                        //     setUpdateVideo((prev) => !prev);
-                        //     setUpdateVideoData(item);
-                        //   }}
-                        />
+                        <UpdateDoc data={item} setData={setDoc} />
                         <ConfirmDelete
                           handleClick={() => handleDelete(item.id)}
                         />

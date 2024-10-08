@@ -9,13 +9,14 @@ import { API_URL } from "../../url";
 import Loader from "../../utils/Loader";
 import toast from "react-hot-toast";
 import UpdateBtn from "../../utils/UpdateBtn";
-import parser from "html-react-parser";
+// import parser from "html-react-parser";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import { Avatar } from "antd";
 // import AddVideoInCourse from "./AddVideoInCourse";
 // import SeeAll from "../../utils/SeeAll";
 import { useNavigate } from "react-router-dom";
 import { CalendarClock, IndianRupee, SquarePlay } from "lucide-react";
+import { LatexParser } from "@/utils/LatexParser";
 
 const fetchCourse = async (dispatch, setLoading) => {
   try {
@@ -106,7 +107,7 @@ function GetCourse() {
 
   const renderCourseData = (data) => {
     if (typeof data === "string") {
-      return parser(data);
+      return LatexParser(data);
     }
     return data;
   };
@@ -179,7 +180,7 @@ function GetCourse() {
                             }
                             className="flex flex-col justify-center items-start gap-3 w-full cursor-pointer"
                           >
-                            <div className="text-start w-full">
+                            <div className="text-start w-full whitespace-pre-wrap">
                               {renderCourseData(course.course_name)}
                             </div>
                             <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />

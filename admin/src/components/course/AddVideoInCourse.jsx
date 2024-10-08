@@ -6,7 +6,7 @@ import { API_URL } from "../../url";
 import { useCallback, useEffect, useState, useMemo } from "react";
 import Loader from "../../utils/Loader";
 import Pagination from "../../utils/Pagination";
-import parser from "html-react-parser";
+// import parser from "html-react-parser";
 import { Avatar } from "antd";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
@@ -158,11 +158,7 @@ const VideoItem = ({ idx, item, courseId, handleAddVideo }) => (
     <div className="flex flex-col justify-center items-start gap-4 w-[90%]">
       <div className="flex justify-start items-center text-sm w-full gap-4">
         <Avatar className="bg-gray-500 text-white w-8 h-8">{idx + 1}</Avatar>
-        <div className="flex flex-wrap text-wrap">
-          {typeof item.video_title === "string"
-            ? parser(item.video_title)
-            : item.video_title}
-        </div>
+        <div className="flex flex-wrap text-wrap">{item.video_title}</div>
       </div>
     </div>
     <button

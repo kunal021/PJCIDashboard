@@ -6,12 +6,13 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { API_URL } from "../../url";
 import Loader from "../../utils/Loader";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
-import parser from "html-react-parser";
+// import parser from "html-react-parser";
 import { Avatar } from "antd";
 import { CalendarClock, IndianRupee, SquarePlay } from "lucide-react";
 import GetFullCourseById from "./GetFullCourseById";
 import ConfirmDelete from "../../utils/ConfirmDelete";
 import toast from "react-hot-toast";
+import { LatexParser } from "@/utils/LatexParser";
 
 const GetFullCourseSubjects = () => {
   const navigate = useNavigate();
@@ -75,7 +76,7 @@ const GetFullCourseSubjects = () => {
 
   const renderCourseData = (data) => {
     if (typeof data === "string") {
-      return parser(data);
+      return LatexParser(data);
     }
     return data;
   };
@@ -137,7 +138,7 @@ const GetFullCourseSubjects = () => {
                                       {idx + 1}
                                     </Avatar>
                                   </div>
-                                  <div className="text-start w-full">
+                                  <div className="text-start w-full whitespace-pre-wrap">
                                     {renderCourseData(course.course_name)}
                                   </div>
                                 </div>

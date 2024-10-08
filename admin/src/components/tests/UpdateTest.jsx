@@ -43,7 +43,7 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
     }));
   };
 
-  console.log(formData);
+  // console.log(testDescription);
 
   const handleSubmit = async () => {
     if (
@@ -55,7 +55,8 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
       !formData.negativeMark ||
       !formData.totalMark ||
       !formData.testDate ||
-      !formData.type
+      !formData.type ||
+      !testDescription
     ) {
       toast.error("Please fill all fields");
       return;
@@ -116,6 +117,8 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
       toast.error("Failed to update test");
     }
   };
+
+  // console.log(testDescription);
 
   return (
     <div className="w-[80%] h-full flex flex-col justify-center items-center my-5">

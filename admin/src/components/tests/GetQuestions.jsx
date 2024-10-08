@@ -13,10 +13,11 @@ import Loader from "../../utils/Loader";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import UpdateBtn from "../../utils/UpdateBtn";
 import UpdateQns from "./UpdateQns";
-import parser from "html-react-parser";
+// import parser from "html-react-parser";
 import ConfirmDelete from "../../utils/ConfirmDelete";
 import Pagination from "../../utils/Pagination";
 import GetTestById from "./GetTestById";
+import { LatexParser } from "@/utils/LatexParser";
 
 const fetchQuestions = async (
   dispatch,
@@ -78,17 +79,19 @@ const GetQuestions = () => {
       const response = await axios.delete(
         `${API_URL}/admin/test/deleteqns.php?qns_id=${qnsid}`
       );
-      if (qnsid && response.data.success) {
-        dispatch(deleteQuestion(response.data));
-      }
+
+      // console.log(response);
       if (response.status == 200) {
         toast.success("Question Deleted Successfully");
+        dispatch(deleteQuestion(qnsid));
       }
-      fetchQuestions(dispatch, setLoading, id, setPaginationData, currentPage);
+      // fetchQuestions(dispatch, setLoading, id, setPaginationData, currentPage);
     } catch (error) {
-      toast.error(error.response.data.massage);
+      toast.error(error?.response?.data?.massage || "Error deleting question");
     }
   };
+
+  // console.log(question);
   return (
     <LayoutAdjuster>
       {loading ? (
@@ -150,11 +153,12 @@ const GetQuestions = () => {
                             </div>
                             <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
                             <div>
-                              <div className="flex flex-wrap text-wrap">
+                              <div className="flex flex-wrap text-wrap whitespace-pre-wrap">
                                 Question:{" "}
                                 {typeof question.question_text === "string"
-                                  ? parser(question.question_text)
-                                  : question.question_text}
+                                  ? LatexParser(question.question_text)
+                                  : null}
+                                {console.log(question.question_text)}
                               </div>
                             </div>
                             <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
@@ -166,18 +170,19 @@ const GetQuestions = () => {
                               {["a", "b", "c", "d", "e"].map((option) => (
                                 <div
                                   className={`${
-                                    question.answer === option
+                                    question.answer === question.a
                                       ? "bg-green-500"
                                       : "hover:bg-gray-200"
                                   } flex justify-center items-center w-[80%] p-2 gap-2 border rounded-md border-gray-200`}
                                   key={option}
                                 >
-                                  <span className="w-32">Option {option}:</span>
-                                  <span className="w-full">
+                                  <div className="w-32">Option a:</div>
+                                  <div className="w-full whitespace-pre-wrap">
                                     {typeof question[option] === "string"
-                                      ? parser(question[option])
-                                      : question[option]}
-                                  </span>
+                                      ? LatexParser(question[option])
+                                      : null}
+                                  </div>
+                                  {console.log(question[option])}
                                 </div>
                               ))}
                             </div>
@@ -215,9 +220,9 @@ const GetQuestions = () => {
       )}
       {updatedQuestion && (
         <UpdateQns
-          fetchQuestions={() => fetchQuestions(dispatch, setLoading, id)}
           setUpdateQuestion={setUpdatedQuestion}
           updatedQuestionData={updatedQuestionData}
+          testId={id}
         />
       )}
     </LayoutAdjuster>

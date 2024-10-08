@@ -57,7 +57,7 @@ function Update({ item }) {
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );
-      console.log(response);
+      // console.log(response);
       if (response.status === 200) {
         dispatch(updateSlider(data));
         toast.success("Slider Updated Successfully");

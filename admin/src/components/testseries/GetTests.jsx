@@ -1,4 +1,5 @@
-import parser from "html-react-parser";
+// import parser from "html-react-parser";
+import { LatexParser } from "@/utils/LatexParser";
 import { Avatar } from "antd";
 import { useLocation } from "react-router-dom";
 
@@ -40,12 +41,8 @@ function GetTestSeriesTests() {
                     <div>{testData.name}</div>
                   </div>
                   <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                  <div className="flex justify-start items-center font-bold w-full">
-                    <div>
-                      {typeof testData.description === "string"
-                        ? parser(testData.description)
-                        : testData.description}
-                    </div>
+                  <div className="flex justify-start items-center font-bold w-full whitespace-pre-wrap">
+                    <LatexParser latex={testData.description} />
                   </div>
                   <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
                   <div className="flex justify-between items-center gap-1 w-full">

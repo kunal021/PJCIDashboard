@@ -11,7 +11,7 @@ import Loader from "../../utils/Loader";
 // import ConfirmDelete from "../../utils/ConfirmDelete";
 // import toast from "react-hot-toast";
 // import LayoutAdjuster from "../../utils/LayoutAdjuster";
-import parser from "html-react-parser";
+// import parser from "html-react-parser";
 import { Avatar } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Card } from "../ui/card";
@@ -147,9 +147,7 @@ function GetAllTestForSeries() {
                           }
                           className="w-full"
                         >
-                          {typeof test.test_name === "string"
-                            ? parser(test.test_name)
-                            : test.test_name}
+                          {test.test_name}
                         </div>
                         {/* <div className="w-[20%]">
                           <button

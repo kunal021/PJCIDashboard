@@ -105,7 +105,9 @@ function NewAddQns() {
         const formData = new FormData();
         formData.append("testid", id);
         const response = await axios.post(
-          `${API_URL}/admin/test/gettestsubject.php`
+          `${API_URL}/admin/test/gettestsubject.php`,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
         );
         // console.log(response);
         if (response.status === 200) {
@@ -124,7 +126,7 @@ function NewAddQns() {
   }, [id]);
 
   // console.log(questions);
-  console.log(subjects);
+  // console.log(questions);
 
   return (
     <LayoutAdjuster>

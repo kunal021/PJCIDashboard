@@ -11,7 +11,6 @@ import UpdateBtn from "../../utils/UpdateBtn";
 import ConfirmDelete from "../../utils/ConfirmDelete";
 import toast from "react-hot-toast";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
-import parser from "html-react-parser";
 import { Avatar } from "antd";
 import { useNavigate } from "react-router-dom";
 
@@ -133,9 +132,7 @@ function GetTest() {
                           }
                           className="w-full"
                         >
-                          {typeof test.test_name === "string"
-                            ? parser(test.test_name)
-                            : test.test_name}
+                          {test.test_name}
                         </div>
                         <div className="w-[20%] flex flex-col justify-center items-center">
                           <p className="text-xs font-bold">

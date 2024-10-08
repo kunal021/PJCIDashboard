@@ -6,12 +6,9 @@ const MathEditor = Node.create({
   name: "equation",
 
   group: "inline", // This makes it inline so it can appear within a line of text
-
-  inline: true, // Ensures that the node is inline
-
-  selectable: true, // Allows selection of the node
-
-  draggable: false, // Prevents dragging unless you want to allow it
+  inline: true,
+  selectable: true,
+  draggable: false,
 
   addAttributes() {
     return {
@@ -24,13 +21,17 @@ const MathEditor = Node.create({
   parseHTML() {
     return [
       {
-        tag: "equation",
+        tag: "span[data-type='equation']", // Use span with a data-type to distinguish it
       },
     ];
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ["equation", mergeAttributes(HTMLAttributes), HTMLAttributes.latex];
+    return [
+      "span",
+      mergeAttributes(HTMLAttributes, { "data-type": "equation" }),
+      HTMLAttributes.latex,
+    ];
   },
 
   renderText({ node }) {
@@ -39,7 +40,7 @@ const MathEditor = Node.create({
 
   addNodeView() {
     return ({ node }) => {
-      const dom = document.createElement("span"); // Use <span> for inline behavior
+      const dom = document.createElement("span");
       const equationContainer = document.createElement("span");
 
       try {

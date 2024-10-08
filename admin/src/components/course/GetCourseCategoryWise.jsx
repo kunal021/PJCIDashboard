@@ -6,7 +6,7 @@ import { API_URL } from "../../url";
 import { useSearchParams } from "react-router-dom";
 import Loader from "../../utils/Loader";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
-import parser from "html-react-parser";
+// import parser from "html-react-parser";
 import { Avatar } from "antd";
 import { CalendarClock, IndianRupee, SquarePlay } from "lucide-react";
 import ConfirmDelete from "../../utils/ConfirmDelete";
@@ -16,6 +16,7 @@ import {
   deleteFullCourse,
   setFullCourse,
 } from "../../redux/courses/fullCourseSlice";
+import { LatexParser } from "@/utils/LatexParser";
 
 const GetCourseCategoryWise = () => {
   const [loading, setLoading] = useState(false);
@@ -55,7 +56,7 @@ const GetCourseCategoryWise = () => {
 
   const renderCourseData = (data) => {
     if (typeof data === "string") {
-      return parser(data);
+      return LatexParser(data);
     }
     return data;
   };
@@ -72,7 +73,7 @@ const GetCourseCategoryWise = () => {
         { headers: { "content-type": "multipart/form-data" } }
       );
 
-      console.log(response);
+      // console.log(response);
 
       if (response.status === 200) {
         if (courseType === "1") {
@@ -131,7 +132,7 @@ const GetCourseCategoryWise = () => {
                                     <Avatar className="bg-gray-500 text-white w-8">
                                       {idx + 1}
                                     </Avatar>
-                                    <div className="text-start w-full">
+                                    <div className="text-start w-full whitespace-pre-wrap">
                                       {renderCourseData(course.course_name)}
                                     </div>
                                   </div>
@@ -205,7 +206,7 @@ const GetCourseCategoryWise = () => {
                                     <Avatar className="bg-gray-500 text-white w-8">
                                       {course.id}
                                     </Avatar>
-                                    <div className="text-start w-full">
+                                    <div className="text-start w-full whitespace-pre-wrap">
                                       {renderCourseData(
                                         course.full_course_name
                                       )}

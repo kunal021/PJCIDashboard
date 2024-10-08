@@ -5,7 +5,7 @@ import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import Loader from "../../utils/Loader";
 import { Avatar } from "antd";
 import Pagination from "../../utils/Pagination";
-import parser from "html-react-parser";
+// import parser from "html-react-parser";
 import toast from "react-hot-toast";
 import ConfirmDelete from "../../utils/ConfirmDelete";
 import { useSearchParams } from "react-router-dom";
@@ -139,9 +139,7 @@ function GetVideoInCourse() {
                               {(currentPage - 1) * 10 + (idx + 1)}
                             </Avatar>
                             <div className="flex flex-wrap text-wrap w-full">
-                              {typeof item.video_title == "string"
-                                ? parser(item.video_title)
-                                : item.video_title}
+                              {item.video_title}
                             </div>
                           </div>
                           <div className="flex flex-col justify-between items-end gap-10 w-fit">

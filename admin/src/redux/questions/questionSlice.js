@@ -16,7 +16,7 @@ export const questionSlice = createSlice({
     },
     updateQuestion: (state, action) => {
       const index = state.question.findIndex(
-        (question) => question.id === action.payload.id
+        (question) => question.qnsid === action.payload.qnsid
       );
       if (index !== -1) {
         state.question[index] = action.payload;
@@ -26,7 +26,7 @@ export const questionSlice = createSlice({
     },
     deleteQuestion: (state, action) => {
       state.question = state.question.filter(
-        (question) => question.id !== action.payload
+        (question) => question.qnsid !== action.payload
       );
     },
   },

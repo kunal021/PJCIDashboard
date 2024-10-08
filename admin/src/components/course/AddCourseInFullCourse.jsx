@@ -6,7 +6,7 @@ import { API_URL } from "../../url";
 import { useEffect, useState } from "react";
 import Loader from "../../utils/Loader";
 import Pagination from "../../utils/Pagination";
-import parser from "html-react-parser";
+// import parser from "html-react-parser";
 import { Avatar } from "antd";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
@@ -124,9 +124,7 @@ function AddCourseInFullCourse({ courseId: fullCourseId }) {
                               </div>
                               {/* <div>Video ID: {item.video_id}</div> */}
                               <div className="flex flex-wrap text-wrap">
-                                {typeof item.course_name == "string"
-                                  ? parser(item.course_name)
-                                  : item.course_name}
+                                {item.course_name}
                               </div>
                             </div>
                           </div>

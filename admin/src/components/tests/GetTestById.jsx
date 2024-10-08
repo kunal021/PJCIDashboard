@@ -3,12 +3,13 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../../url";
 import Loader from "../../utils/Loader";
-import parser from "html-react-parser";
 import { Avatar } from "antd";
 import MakeUserPurchase from "../setting/MakeUserPurchase";
 import expiryDate from "../../utils/ExpiryDate";
 import MakeUserPurchaseResponse from "../../utils/MakeUserPurchaseResponse";
 import * as XLSX from "xlsx";
+import { LatexParser } from "@/utils/LatexParser";
+// import parser from "html-react-parser";
 
 const fetchTest = async (setTest, setLoading, testId) => {
   try {
@@ -86,7 +87,7 @@ function GetTestById({ testId }) {
       console.log(error);
     }
   };
-
+  // console.log(test);
   return (
     <div className="w-full">
       {loading ? (
@@ -152,19 +153,14 @@ function GetTestById({ testId }) {
                       </div>
                     </div>
                     <div className="flex justify-start items-center font-bold w-full">
-                      <div>
-                        {typeof test.test_name === "string"
-                          ? parser(test.test_name)
-                          : test.test_name}
-                      </div>
+                      <div>{test.test_name}</div>
                     </div>
                     <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                    <div className="flex justify-start items-center font-bold w-full">
-                      <div>
-                        {typeof test.description === "string"
-                          ? parser(test.description)
-                          : test.description}
-                      </div>
+                    <div className="flex justify-start items-center font-bold w-full whitespace-pre-wrap">
+                      {/* {console.log(test.description)} */}
+                      {typeof test.description === "string"
+                        ? LatexParser(test.description)
+                        : null}
                     </div>
                     <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
                     <div className="flex justify-between items-center gap-1 w-full">
