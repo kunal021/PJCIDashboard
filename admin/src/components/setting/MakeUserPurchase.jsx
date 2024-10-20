@@ -2,7 +2,7 @@
 import { useState } from "react";
 import * as XLSX from "xlsx";
 
-import { Loader } from "lucide-react";
+import { Loader, Plus } from "lucide-react";
 import axios from "axios";
 import { API_URL } from "../../url";
 
@@ -113,14 +113,13 @@ const MakeUserPurchase = ({
         />
         <label
           htmlFor="fileinput"
-          className="flex flex-col justify-center items-center w-36 h-10 cursor-pointer bg-indigo-50 text-black px-4 py-2 rounded-lg border-2 border-indigo-200 hover:bg-indigo-100"
+          className="flex flex-col justify-center items-center w-12 h-10 cursor-pointer bg-lime-50 text-black px-4 py-2 rounded-lg border-2 border-lime-200 hover:bg-lime-100"
         >
           {!loading ? (
-            <p>Upload File</p>
+            <Plus />
           ) : (
             <>
-              <Loader className="animate-spin h-6 w-6" />
-              <p>Uploading...</p>
+              <Loader className="animate-spin h-8 w-8" />
             </>
           )}
         </label>

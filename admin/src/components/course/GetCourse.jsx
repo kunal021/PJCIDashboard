@@ -32,6 +32,7 @@ const fetchCourse = async (dispatch, setLoading) => {
     dispatch(setCourse(response.data.data));
   } catch (error) {
     console.error("Error fetching courses:", error);
+    toast.error(error.response?.data?.message || "Error fetching courses");
   } finally {
     setLoading(false);
   }
@@ -176,7 +177,9 @@ function GetCourse() {
                           </div>
                           <div
                             onClick={() =>
-                              navigate(`/get-course-videos?id=${course.id}`)
+                              navigate(`/get-course-videos?id=${course.id}`, {
+                                state: { dirId: course.directory_id },
+                              })
                             }
                             className="flex flex-col justify-center items-start gap-3 w-full cursor-pointer"
                           >

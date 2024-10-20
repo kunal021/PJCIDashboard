@@ -87,7 +87,7 @@ function AddTestInSeries() {
       <DialogTrigger>
         <Plus />
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="h-[500px] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add Test</DialogTitle>
         </DialogHeader>

@@ -14,10 +14,9 @@ import { Loader, SquarePen, UploadCloud } from "lucide-react";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 
-function UpdateDoc({ data, setData }) {
+function Update({ data, setData }) {
   const id = data?.id;
   const closeRef = useRef(null);
-  const dur = data?.duration ? data?.duration.split(" ") : ["", ""];
   const [loading, setLoading] = useState(false);
   const [newData, setNewData] = useState({
     id: data?.id,
@@ -25,14 +24,9 @@ function UpdateDoc({ data, setData }) {
     price: data?.price,
     type: data?.type,
     img_url: data?.img_url,
-    duration: dur[0],
+    author: data?.author,
+    description: data?.description,
   });
-
-  // console.log(data.duration[0]);
-
-  // console.log(dur[1]);
-
-  const [durationUnit, setDurationunit] = useState(dur[1]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,8 +42,8 @@ function UpdateDoc({ data, setData }) {
       !newData.type ||
       !newData.price ||
       !newData.name ||
-      !newData.duration ||
-      !durationUnit
+      !newData.author ||
+      !newData.description
     ) {
       toast.error("Please fill all fields");
       return;
@@ -61,8 +55,9 @@ function UpdateDoc({ data, setData }) {
       formData.append("image_url", newData.img_url);
       formData.append("name", newData.name);
       formData.append("type", newData.type);
-      formData.append("duration", `${newData.duration} ${durationUnit}`);
+      formData.append("author", newData.author);
       formData.append("price", newData.price);
+      formData.append("description", newData.description);
       const response = await axios.post(
         `${API_URL}/admin/docs/updatedoc.php`,
         formData,
@@ -70,7 +65,7 @@ function UpdateDoc({ data, setData }) {
       );
       // console.log(response);
       if (response.status === 200) {
-        toast.success("Document Updated Successfully");
+        toast.success("Book Updated Successfully");
 
         setData((prevData) => {
           // Check if prevData is an array
@@ -91,7 +86,7 @@ function UpdateDoc({ data, setData }) {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error?.response?.data?.message || "Error updating Document");
+      toast.error(error?.response?.data?.message || "Error updating Book");
     } finally {
       setLoading(false);
     }
@@ -127,9 +122,9 @@ function UpdateDoc({ data, setData }) {
           Update
         </p>
       </SheetTrigger>
-      <SheetContent className="z-[100] w-[70%]">
+      <SheetContent className="z-[100] w-[70%] overflow-auto">
         <SheetHeader>
-          <SheetTitle>Edit Document</SheetTitle>
+          <SheetTitle>Edit Book</SheetTitle>
         </SheetHeader>
         {/* <div>
           <select
@@ -159,6 +154,19 @@ function UpdateDoc({ data, setData }) {
         </div>
         <div className="my-4 gap-5 flex justify-between items-center">
           <FormField
+            htmlFor={"description"}
+            id={"description"}
+            type={"text"}
+            placeholder={"Description"}
+            name={"description"}
+            value={newData.description}
+            onChange={handleChange}
+          >
+            Description
+          </FormField>
+        </div>
+        <div className="my-4 gap-5 flex justify-between items-center">
+          <FormField
             htmlFor={"price"}
             id={"price"}
             type={"text"}
@@ -170,25 +178,16 @@ function UpdateDoc({ data, setData }) {
             Price
           </FormField>
           <FormField
-            htmlFor={"duration"}
-            id={"duration"}
+            htmlFor={"author"}
+            id={"author"}
             type={"text"}
             placeholder={"Duration"}
-            name={"duration"}
-            value={newData.duration}
+            name={"author"}
+            value={newData.author}
             onChange={handleChange}
           >
             Duration
           </FormField>
-          <select
-            value={durationUnit}
-            onChange={(e) => setDurationunit(e.target.value)}
-            className="w-96 h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
-          >
-            <option value={"Day"}>Day</option>
-            <option value={"Month"}>Month</option>
-            <option value={"Year"}>Year</option>
-          </select>
         </div>
         <div className="my-4 flex justify-between items-center">
           <input
@@ -239,9 +238,8 @@ function UpdateDoc({ data, setData }) {
           Image Url
         </FormField>
         <div className="mt-[25px] flex w-full gap-2.5">
-          <SheetClose asChild>
+          <SheetClose ref={closeRef} asChild>
             <button
-              ref={closeRef}
               disabled={loading}
               className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md w-1/2"
             >
@@ -262,4 +260,4 @@ function UpdateDoc({ data, setData }) {
   );
 }
 
-export default UpdateDoc;
+export default Update;

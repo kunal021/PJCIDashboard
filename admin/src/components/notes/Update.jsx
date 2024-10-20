@@ -28,10 +28,6 @@ function UpdateDoc({ data, setData }) {
     duration: dur[0],
   });
 
-  // console.log(data.duration[0]);
-
-  // console.log(dur[1]);
-
   const [durationUnit, setDurationunit] = useState(dur[1]);
 
   const handleChange = (e) => {
@@ -48,8 +44,7 @@ function UpdateDoc({ data, setData }) {
       !newData.type ||
       !newData.price ||
       !newData.name ||
-      !newData.duration ||
-      !durationUnit
+      !newData.duration
     ) {
       toast.error("Please fill all fields");
       return;
@@ -239,9 +234,8 @@ function UpdateDoc({ data, setData }) {
           Image Url
         </FormField>
         <div className="mt-[25px] flex w-full gap-2.5">
-          <SheetClose asChild>
+          <SheetClose ref={closeRef} asChild>
             <button
-              ref={closeRef}
               disabled={loading}
               className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md w-1/2"
             >

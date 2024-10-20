@@ -2,10 +2,26 @@
 import { LatexParser } from "@/utils/LatexParser";
 import { Avatar } from "antd";
 import { useLocation } from "react-router-dom";
+import MakeUserPurchase from "../setting/MakeUserPurchase";
+import { useState } from "react";
+import expiryDate from "@/utils/ExpiryDate";
+import MakeUserPurchaseResponse from "@/utils/MakeUserPurchaseResponse";
 
 function GetTestSeriesTests() {
   const location = useLocation();
   const { testData } = location.state || {};
+
+  const [makePurchaseData, setMakePurchaseData] = useState(null);
+  const [makePurchaseStatus, setMakePurchaseStatus] = useState(false);
+
+  // console.log(testData);
+
+  const renderData = (data) => {
+    if (typeof data === "string") {
+      return LatexParser(data);
+    }
+    return data;
+  };
 
   return (
     <div className="w-full">
@@ -18,13 +34,25 @@ function GetTestSeriesTests() {
               <h1 className="text-3xl font-bold text-center my-2">
                 Test Series Details
               </h1>
-            </div>
-            {/* {makePurchaseStatus && (
-                <MakeUserPurchaseResponse
-                  data={makePurchaseData}
-                  onClose={() => setMakePurchaseStatus(false)}
+              {testData && (
+                <MakeUserPurchase
+                  id={testData.id}
+                  amount={testData.price}
+                  expiryDate={expiryDate(testData?.duration, 7)}
+                  productInfo={testData.name}
+                  type={"3"}
+                  setMakePurchaseStatus={setMakePurchaseStatus}
+                  setMakePurchaseData={setMakePurchaseData}
                 />
-              )} */}
+              )}
+            </div>
+
+            {makePurchaseStatus && (
+              <MakeUserPurchaseResponse
+                data={makePurchaseData}
+                onClose={() => setMakePurchaseStatus(false)}
+              />
+            )}
             <div className="flex justify-center items-center w-full border rounded-md border-gray-300 m-2 p-3">
               <div className="flex justify-start items-center gap-4 w-full">
                 <div className="flex flex-col justify-start items-center gap-2 w-full">
@@ -42,7 +70,7 @@ function GetTestSeriesTests() {
                   </div>
                   <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
                   <div className="flex justify-start items-center font-bold w-full whitespace-pre-wrap">
-                    <LatexParser latex={testData.description} />
+                    {renderData(testData.description)}
                   </div>
                   <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
                   <div className="flex justify-between items-center gap-1 w-full">

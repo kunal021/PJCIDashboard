@@ -58,7 +58,7 @@ function AddCourse() {
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );
-      console.log(response);
+      // console.log(response);
       // dispatch(addCourse(response.data));
       if (response.status == 201) {
         toast.success("Course Added Sucessfully");

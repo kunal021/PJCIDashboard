@@ -4,9 +4,9 @@ import axios from "axios";
 import { API_URL } from "../../url";
 import Loader from "../../utils/Loader";
 import { Avatar } from "antd";
-import MakeUserPurchase from "../setting/MakeUserPurchase";
-import expiryDate from "../../utils/ExpiryDate";
-import MakeUserPurchaseResponse from "../../utils/MakeUserPurchaseResponse";
+// import MakeUserPurchase from "../setting/MakeUserPurchase";
+// import expiryDate from "../../utils/ExpiryDate";
+// import MakeUserPurchaseResponse from "../../utils/MakeUserPurchaseResponse";
 import * as XLSX from "xlsx";
 import { LatexParser } from "@/utils/LatexParser";
 // import parser from "html-react-parser";
@@ -35,8 +35,8 @@ const fetchTest = async (setTest, setLoading, testId) => {
 function GetTestById({ testId }) {
   const [loading, setLoading] = useState(false);
   const [test, setTest] = useState([]);
-  const [makePurchaseStatus, setMakePurchaseStatus] = useState(false);
-  const [makePurchaseData, setMakePurchaseData] = useState(null);
+  // const [makePurchaseStatus, setMakePurchaseStatus] = useState(false);
+  // const [makePurchaseData, setMakePurchaseData] = useState(null);
 
   useEffect(() => {
     fetchTest(setTest, setLoading, testId);
@@ -54,7 +54,7 @@ function GetTestById({ testId }) {
         }
       );
 
-      console.log(response.data.data);
+      // console.log(response.data.data);
       if (response.status === 200) {
         const data = response.data.data;
 
@@ -102,7 +102,7 @@ function GetTestById({ testId }) {
                 <h1 className="text-3xl font-bold text-center my-2">
                   Test Details
                 </h1>
-                {test.test_date != "0000-00-00" && test.test_date && (
+                {/* {test.test_date != "0000-00-00" && test.test_date && (
                   <MakeUserPurchase
                     id={test.id}
                     amount={test.price}
@@ -112,7 +112,7 @@ function GetTestById({ testId }) {
                     setMakePurchaseStatus={setMakePurchaseStatus}
                     setMakePurchaseData={setMakePurchaseData}
                   />
-                )}
+                )} */}
                 {test.id && (
                   <button
                     onClick={handleDownload}
@@ -122,12 +122,12 @@ function GetTestById({ testId }) {
                   </button>
                 )}
               </div>
-              {makePurchaseStatus && (
+              {/* {makePurchaseStatus && (
                 <MakeUserPurchaseResponse
                   data={makePurchaseData}
                   onClose={() => setMakePurchaseStatus(false)}
                 />
-              )}
+              )} */}
               <div className="flex justify-center items-center w-full border rounded-md border-gray-300 m-2 p-3">
                 <div className="flex justify-start items-center gap-4 w-full">
                   <div className="flex flex-col justify-start items-center gap-2 w-full">

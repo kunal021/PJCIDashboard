@@ -124,8 +124,8 @@ function Update({ item }) {
             >
               <option value={"0"}>None</option>
               <option value={"1"}>Course</option>
-              <option value={"2"}>Batch</option>
-              <option value={"3"}>Test</option>
+              {/* <option value={"2"}>Batch</option> */}
+              {/* <option value={"3"}>Test</option> */}
             </select>
           </div>
           <div>

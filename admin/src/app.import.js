@@ -28,6 +28,10 @@ import GetTestSeries from "./components/testseries/Get";
 import AddTestSeries from "./components/testseries/Add";
 import GetTestData from "./components/testseries/GetTestData";
 import GetDocuments from "./components/documents/Get";
+import GetNotes from "./components/notes/Get";
+import GetBooks from "./components/books/Get";
+import GetImage from "./components/images/Get";
+import GetFreeMaterial from "./components/freedocument/Get";
 
 export {
   GetCategory,
@@ -60,4 +64,8 @@ export {
   AddTestSeries,
   GetTestData,
   GetDocuments,
+  GetNotes,
+  GetBooks,
+  GetImage,
+  GetFreeMaterial,
 };

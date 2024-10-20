@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import LayoutAdjuster from "@/utils/LayoutAdjuster";
 import GetDir from "../directory/GetDir";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Breadcrumbs from "../directory/BreadCrumbs";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
@@ -47,22 +47,27 @@ function CourseTab() {
   const courseId = searchParams.get("id");
   const [dirData, setDirData] = useState();
   const [breadcrumbData, setBreadcrumbData] = useState(() => {
-    const savedBreadcrumbs = localStorage.getItem("breadcrumbData");
-    return savedBreadcrumbs
-      ? JSON.parse(savedBreadcrumbs)
-      : [{ name: "Home", id: courseId, parentId: courseId }];
+    return [{ name: "Home", id: courseId, parentId: courseId }];
   });
 
-  console.log(dirData);
+  // console.log(breadcrumbData);
+  // const [breadcrumbData, setBreadcrumbData] = useState(() => {
+  //   const savedBreadcrumbs = localStorage.getItem("breadcrumbData");
+  //   return savedBreadcrumbs
+  //     ? JSON.parse(savedBreadcrumbs)
+  //     : [{ name: "Home", id: courseId, parentId: courseId }];
+  // });
 
-  useEffect(() => {
-    if (breadcrumbData.length > 0) {
-      localStorage.setItem("breadcrumbData", JSON.stringify(breadcrumbData));
-    }
-  }, [breadcrumbData]);
+  // console.log(dirData);
+
+  // useEffect(() => {
+  //   if (breadcrumbData.length > 0) {
+  //     localStorage.setItem("breadcrumbData", JSON.stringify(breadcrumbData));
+  //   }
+  // }, [breadcrumbData]);
 
   const handleNavigate = (id, name, parentId) => {
-    navigate(`/get-course-videos?id=${id}`);
+    navigate(`/get-course-videos?id=${id}`, { state: { dirId: id } });
 
     setBreadcrumbData((prevData) => {
       let updatedData;

@@ -10,12 +10,16 @@ import {
   AddVideo,
   FreeVideos,
   GetAllUsers,
+  GetBooks,
   GetCategory,
   GetCourse,
   GetCourseCategoryWise,
   GetDocuments,
+  GetFreeMaterial,
   GetFullCourse,
   GetFullCourseSubjects,
+  GetImage,
+  GetNotes,
   GetQuestions,
   GetTest,
   GetTestData,
@@ -109,8 +113,24 @@ function App() {
             element={<PrivateRoute element={AddTestSeries} />}
           />
           <Route
-            path="/get-documents"
+            path="/get-materials"
             element={<PrivateRoute element={GetDocuments} />}
+          />
+          <Route
+            path="/get-free-materials"
+            element={<PrivateRoute element={GetFreeMaterial} />}
+          />
+          <Route
+            path="/get-notes"
+            element={<PrivateRoute element={GetNotes} />}
+          />
+          <Route
+            path="/get-books"
+            element={<PrivateRoute element={GetBooks} />}
+          />
+          <Route
+            path="/get-images"
+            element={<PrivateRoute element={GetImage} />}
           />
           <Route
             path="/get-users"

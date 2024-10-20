@@ -20,7 +20,7 @@ const fetchData = async (
     const formData = new FormData();
     // formData.append("page", currentPage);
     // formData.append("limit", 10);
-    formData.append("type", 1);
+    formData.append("type", 2);
     const response = await axios.post(
       `${API_URL}/admin/docs/getdoc.php`,
       formData,
@@ -35,7 +35,7 @@ const fetchData = async (
   }
 };
 
-function GetDocuments() {
+function GetNotes() {
   const [loading, setLoading] = useState(false);
   //   const [paginationData, setPaginationData] = useState({});
   //   const [currentPage, setCurrentPage] = useState(1);
@@ -66,11 +66,11 @@ function GetDocuments() {
         }
       );
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         // dispatch(deleteVideo(id));
         const newdoc = doc.filter((doc) => doc.id !== id);
         setDoc(newdoc);
-        toast.success("Material Deleted Successfully");
+        toast.success("Document Deleted Successfully");
       }
     } catch (error) {
       console.log(error);
@@ -87,8 +87,8 @@ function GetDocuments() {
     const confirmAlert = window.confirm(
       `${
         is_active === "1"
-          ? "Material will become Inactive. Do you want to proceed"
-          : "Material will become Active. Do you want to proceed"
+          ? "Notes will become Inactive. Do you want to proceed"
+          : "Notes will become Active. Do you want to proceed"
       }`
     );
     if (confirmAlert) {
@@ -105,10 +105,10 @@ function GetDocuments() {
 
         // console.log(res);
         // Update local state instead of fetching users again
-        const updatedDoc = doc.map((doc) =>
+        const updatedVideo = doc.map((doc) =>
           doc.id === docId ? { ...doc, is_active } : doc
         );
-        setDoc(updatedDoc);
+        setDoc(updatedVideo);
       } catch (error) {
         console.log("Error updating Doc status:", error);
         // Handle error (e.g., show an error message)
@@ -148,49 +148,6 @@ function GetDocuments() {
     }
   };
 
-  // const handleToggleDocType = async (docId) => {
-  //   if (
-  //     !doc.img_url ||
-  //     !doc.type ||
-  //     !doc.price ||
-  //     !doc.name ||
-  //     !doc.duration ||
-  //     !docId
-  //   ) {
-  //     toast.error("Please fill all fields");
-  //     return;
-  //   }
-  //   try {
-  //     setLoading(true);
-  //     const formData = new FormData();
-  //     formData.append("id", docId);
-  //     formData.append("image_url", doc.img_url);
-  //     formData.append("name", doc.name);
-  //     formData.append("type", doc.type);
-  //     formData.append("duration", doc.duration);
-  //     formData.append("price", doc.price);
-  //     const response = await axios.post(
-  //       `${API_URL}/admin/docs/updatedoc.php`,
-  //       formData,
-  //       { headers: { "content-type": "multipart/form-data" } }
-  //     );
-  //     // console.log(response);
-  //     if (response.status === 200) {
-  //       toast.success("Document Updated Successfully");
-
-  //       const updatedDoc = doc.map((doc) =>
-  //         doc.id === docId ? { ...doc, is_active } : doc
-  //       );
-  //       setDoc(updatedDoc);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast.error(error?.response?.data?.message || "Error updating Document");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   // console.log(doc);
 
   return (
@@ -205,7 +162,7 @@ function GetDocuments() {
         >
           <div className="w-full flex flex-col justify-center items-center my-5">
             <div className="w-full flex justify-center items-center gap-5">
-              <h1 className="text-3xl font-bold text-center">Materilas List</h1>
+              <h1 className="text-3xl font-bold text-center">Notes List</h1>
               <Add doc={doc} setDoc={setDoc} />
             </div>
             <div className="w-full flex flex-col justify-center items-center">
@@ -223,31 +180,14 @@ function GetDocuments() {
                             {idx + 1}
                           </Avatar>
                           {/* <div>Doc ID: {item.video_id}</div> */}
-                          {/* <div className="flex gap-5">
-                            <label>
-                              <input
-                                type="radio"
-                                value="0"
-                                name={`type-${item.id}`}
-                                checked={item.type === "0"}
-                                onChange={() => {
-                                  handleToggleDocType(item.id);
-                                }}
-                              />
-                              Real
-                            </label>
-                            <label>
-                              <input
-                                type="radio"
-                                value="1"
-                                name={`type-${item.id}`}
-                                checked={item.type === "1"}
-                                onChange={() => {
-                                  handleToggleDocType(item.id);
-                                }}
-                              />
-                              Demo
-                            </label>
+                          {/* <div>
+                            <select
+                              defaultValue={item.type}
+                              className="border rounded-md border-lime-100 hover:border-lime-200 bg-lime-50 p-2"
+                            >
+                              <option value="0">Real</option>
+                              <option value="1">Demo</option>
+                            </select>
                           </div> */}
                           <div className="flex flex-col justify-center items-center">
                             <p className="text-xs font-bold">
@@ -330,4 +270,4 @@ function GetDocuments() {
   );
 }
 
-export default GetDocuments;
+export default GetNotes;

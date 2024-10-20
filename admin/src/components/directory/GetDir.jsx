@@ -3,9 +3,10 @@ import { API_URL } from "@/url";
 import axios from "axios";
 import { Folder } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import Actions from "./Actions";
 import CreateDir from "./CreateDir";
+import toast from "react-hot-toast";
 
 function GetDir({
   directoryType,
@@ -16,16 +17,20 @@ function GetDir({
   handleNavigate,
 }) {
   const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const { dirId } = location.state || {};
   const courseId = searchParams.get("id");
   const [loading, setLoading] = useState(false);
 
+  // console.log(dirId);
+
   useEffect(() => {
     const getDir = async () => {
-      if (!courseId) return;
+      if (!dirId) return;
       try {
         setLoading(true);
         const formData = new FormData();
-        formData.append("parent_id", courseId);
+        formData.append("parent_id", dirId);
         formData.append("directory_type", directoryType);
         formData.append("directory_type_id", directoryTypeId);
         formData.append("content_type", contentType);
@@ -39,12 +44,13 @@ function GetDir({
         setDirData(response.data.data);
       } catch (error) {
         console.log(error);
+        toast.error(error?.response?.data?.message || "Error fetching data");
       } finally {
         setLoading(false);
       }
     };
     getDir();
-  }, [contentType, courseId, directoryType, directoryTypeId, setDirData]);
+  }, [contentType, dirId, directoryType, directoryTypeId, setDirData]);
 
   if (loading) {
     return <p className="text-center m-auto h-full">Loading...</p>;

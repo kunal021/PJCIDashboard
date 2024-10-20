@@ -6,27 +6,27 @@ import Loader from "../../utils/Loader";
 import { Avatar } from "antd";
 import toast from "react-hot-toast";
 import ConfirmDelete from "../../utils/ConfirmDelete";
-import UpdateDoc from "./Update";
+import Update from "./Update";
 import Add from "./Add";
 
 const fetchData = async (
   setLoading,
   //   currentPage,
-  setDoc
+  setBook
   //   setPaginationData
 ) => {
   try {
     setLoading(true);
-    const formData = new FormData();
+    // const formData = new FormData();
     // formData.append("page", currentPage);
     // formData.append("limit", 10);
-    formData.append("type", 1);
+    // formData.append("type", 2);
     const response = await axios.post(
-      `${API_URL}/admin/docs/getdoc.php`,
-      formData,
-      { headers: "content-type/form-data" }
+      `${API_URL}/admin/book/getallbook.php`
+      //   formData,
+      //   { headers: "content-type/form-data" }
     );
-    setDoc(response.data.data);
+    setBook(response.data.data);
     // setPaginationData(response.data.pagination);
   } catch (error) {
     console.log(error);
@@ -35,20 +35,20 @@ const fetchData = async (
   }
 };
 
-function GetDocuments() {
+function GetBooks() {
   const [loading, setLoading] = useState(false);
   //   const [paginationData, setPaginationData] = useState({});
   //   const [currentPage, setCurrentPage] = useState(1);
   //   const [updateVideo, setUpdateVideo] = useState(false);
   //   const [updateVideoData, setUpdateVideoData] = useState({});
 
-  const [doc, setDoc] = useState([]);
+  const [book, setBook] = useState([]);
 
   useEffect(() => {
     fetchData(
       setLoading,
       //  currentPage,
-      setDoc
+      setBook
       //  setPaginationData
     );
   }, []);
@@ -59,18 +59,18 @@ function GetDocuments() {
       const formData = new FormData();
       formData.append("id", id);
       const response = await axios.post(
-        `${API_URL}/admin/docs/deletedoc.php`,
+        `${API_URL}/admin/book/deletebook.php`,
         formData,
         {
           headers: "content-type/form-data",
         }
       );
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         // dispatch(deleteVideo(id));
-        const newdoc = doc.filter((doc) => doc.id !== id);
-        setDoc(newdoc);
-        toast.success("Material Deleted Successfully");
+        const newBook = book.filter((book) => book.id !== id);
+        setBook(newBook);
+        toast.success("Document Deleted Successfully");
       }
     } catch (error) {
       console.log(error);
@@ -83,115 +83,43 @@ function GetDocuments() {
     // }
   };
 
-  const handleChangeStatus = async (docId, is_active) => {
+  const handleChangeStatus = async (bookId, is_active) => {
     const confirmAlert = window.confirm(
       `${
         is_active === "1"
-          ? "Material will become Inactive. Do you want to proceed"
-          : "Material will become Active. Do you want to proceed"
+          ? "Document will become Inactive. Do you want to proceed"
+          : "Document will become Active. Do you want to proceed"
       }`
     );
     if (confirmAlert) {
       try {
         is_active = is_active === "1" ? "0" : "1";
         const formData = new FormData();
-        formData.append("id", docId);
-        formData.append("status_code", is_active);
+        formData.append("id", bookId);
+        formData.append("status", is_active);
         await axios.post(
-          `${API_URL}/admin/docs/updatedocstatus.php`,
+          `${API_URL}/admin/book/updatebookstatus.php`,
           formData,
           { headers: { "content-type": "multipart/form-data" } }
         );
 
         // console.log(res);
         // Update local state instead of fetching users again
-        const updatedDoc = doc.map((doc) =>
-          doc.id === docId ? { ...doc, is_active } : doc
+        const updatedBook = book.map((book) =>
+          book.id === bookId ? { ...book, is_active } : book
         );
-        setDoc(updatedDoc);
+        setBook(updatedBook);
       } catch (error) {
-        console.log("Error updating Doc status:", error);
+        console.log("Error updating user status:", error);
         // Handle error (e.g., show an error message)
+        toast.error(
+          error?.response?.data?.message || "Error updating user status"
+        );
       }
     }
   };
 
-  const handleViewDoc = async (id) => {
-    if (!id) {
-      toast.error("Please select a document");
-      return;
-    }
-    try {
-      const formData = new FormData();
-      formData.append("doc_id", id);
-      // formData.append("start_range", 0);
-      // formData.append("end_range", 524287);
-
-      const response = await axios.post(
-        `${API_URL}/admin/docs/getdocurl.php`,
-        formData,
-        {
-          headers: {
-            "content-type": "multipart/form-data",
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        window.open(response.data.url, "_blank");
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(
-        error.response.data.message || "Error while fetching document"
-      );
-    }
-  };
-
-  // const handleToggleDocType = async (docId) => {
-  //   if (
-  //     !doc.img_url ||
-  //     !doc.type ||
-  //     !doc.price ||
-  //     !doc.name ||
-  //     !doc.duration ||
-  //     !docId
-  //   ) {
-  //     toast.error("Please fill all fields");
-  //     return;
-  //   }
-  //   try {
-  //     setLoading(true);
-  //     const formData = new FormData();
-  //     formData.append("id", docId);
-  //     formData.append("image_url", doc.img_url);
-  //     formData.append("name", doc.name);
-  //     formData.append("type", doc.type);
-  //     formData.append("duration", doc.duration);
-  //     formData.append("price", doc.price);
-  //     const response = await axios.post(
-  //       `${API_URL}/admin/docs/updatedoc.php`,
-  //       formData,
-  //       { headers: { "content-type": "multipart/form-data" } }
-  //     );
-  //     // console.log(response);
-  //     if (response.status === 200) {
-  //       toast.success("Document Updated Successfully");
-
-  //       const updatedDoc = doc.map((doc) =>
-  //         doc.id === docId ? { ...doc, is_active } : doc
-  //       );
-  //       setDoc(updatedDoc);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast.error(error?.response?.data?.message || "Error updating Document");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // console.log(doc);
+  // console.log(book);
 
   return (
     <LayoutAdjuster>
@@ -205,13 +133,13 @@ function GetDocuments() {
         >
           <div className="w-full flex flex-col justify-center items-center my-5">
             <div className="w-full flex justify-center items-center gap-5">
-              <h1 className="text-3xl font-bold text-center">Materilas List</h1>
-              <Add doc={doc} setDoc={setDoc} />
+              <h1 className="text-3xl font-bold text-center">Books List</h1>
+              <Add book={book} setBook={setBook} />
             </div>
             <div className="w-full flex flex-col justify-center items-center">
-              {doc.length > 0 ? (
+              {book.length > 0 ? (
                 <div className="flex flex-col justify-center items-center w-full">
-                  {doc.map((item, idx) => (
+                  {book.map((item, idx) => (
                     <div
                       key={idx}
                       className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-3 gap-3"
@@ -223,32 +151,15 @@ function GetDocuments() {
                             {idx + 1}
                           </Avatar>
                           {/* <div>Doc ID: {item.video_id}</div> */}
-                          {/* <div className="flex gap-5">
-                            <label>
-                              <input
-                                type="radio"
-                                value="0"
-                                name={`type-${item.id}`}
-                                checked={item.type === "0"}
-                                onChange={() => {
-                                  handleToggleDocType(item.id);
-                                }}
-                              />
-                              Real
-                            </label>
-                            <label>
-                              <input
-                                type="radio"
-                                value="1"
-                                name={`type-${item.id}`}
-                                checked={item.type === "1"}
-                                onChange={() => {
-                                  handleToggleDocType(item.id);
-                                }}
-                              />
-                              Demo
-                            </label>
-                          </div> */}
+                          <div>
+                            {/* <select
+                              defaultValue={item.type}
+                              className="border rounded-md border-lime-100 hover:border-lime-200 bg-lime-50 p-2"
+                            >
+                              <option value="0">Real</option>
+                              <option value="1">Demo</option>
+                            </select> */}
+                          </div>
                           <div className="flex flex-col justify-center items-center">
                             <p className="text-xs font-bold">
                               {item.is_active === "1" ? "Public" : "Private"}
@@ -272,7 +183,7 @@ function GetDocuments() {
                         </div>
                         <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
                         <div
-                          onClick={() => handleViewDoc(item.id)}
+                          //   onClick={() => window.open(item.url, "_blank")}
                           className="cursor-pointer flex justify-between items-center w-full gap-6"
                         >
                           <div className="flex justify-center items-center w-48">
@@ -287,16 +198,20 @@ function GetDocuments() {
                         </div>
                         <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
                         <div className=" cursor-pointer flex justify-between items-center w-full gap-6">
+                          Description: {item.description}
+                        </div>
+                        <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
+                        <div className=" cursor-pointer flex justify-between items-center w-full gap-6">
                           <div className="flex justify-center items-center">
                             Price: {item.price}
                           </div>
                           <div className="flex justify-center items-center">
-                            Duration: {item.duration}
+                            Author: {item.author}
                           </div>
                         </div>
                       </div>
                       <div className="flex flex-col justify-between items-end gap-10 w-fit">
-                        <UpdateDoc data={item} setData={setDoc} />
+                        <Update data={item} setData={setBook} />
                         <ConfirmDelete
                           handleClick={() => handleDelete(item.id)}
                         />
@@ -320,14 +235,8 @@ function GetDocuments() {
           </div>
         </div>
       )}
-      {/* {updateVideo && (
-        <UpdateVideo
-          setUpdateVideo={setUpdateVideo}
-          updateVideoData={updateVideoData}
-        />
-      )} */}
     </LayoutAdjuster>
   );
 }
 
-export default GetDocuments;
+export default GetBooks;

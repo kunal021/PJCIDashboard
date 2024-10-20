@@ -53,6 +53,8 @@ function GetAllTestForSeries() {
     fetchTest(dispatch, setLoading, testData.directory_id);
   }, [dispatch, testData.directory_id]);
 
+  // console.log(test);
+
   const handleDelete = async (testId) => {
     try {
       const formData = new FormData();

@@ -4,6 +4,7 @@ import {
   BookOutlined,
   DashboardOutlined,
   FileOutlined,
+  FolderOutlined,
   // FileImageOutlined,
   FormOutlined,
   LogoutOutlined,
@@ -38,7 +39,7 @@ const items = [
   {
     key: "sub1",
     label: "Courses",
-    icon: <BookOutlined />,
+    icon: <FolderOutlined />,
     children: [
       {
         key: "4",
@@ -98,11 +99,33 @@ const items = [
     children: [
       {
         key: "27",
-        label: "Documnets",
-        link: "/get-documents",
+        label: "Materials",
+        link: "/get-materials",
+      },
+      {
+        key: "31",
+        label: "Free Materials",
+        link: "/get-free-materials",
+      },
+      {
+        key: "28",
+        label: "Notes",
+        link: "/get-notes",
       },
     ],
   },
+  // {
+  //   key: "sub10",
+  //   label: "Books",
+  //   icon: <BookOutlined />,
+  //   children: [
+  //     {
+  //       key: "30",
+  //       label: "Books",
+  //       link: "/get-books",
+  //     },
+  //   ],
+  // },
   {
     key: "sub5",
     label: "User",
@@ -120,6 +143,11 @@ const items = [
     label: "Settings",
     icon: <SettingOutlined />,
     children: [
+      // {
+      //   key: "29",
+      //   label: "Images",
+      //   link: "/get-images",
+      // },
       {
         key: "13",
         label: "App Slider",
