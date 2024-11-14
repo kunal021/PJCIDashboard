@@ -1,22 +1,22 @@
 import LayoutAdjuster from "@/utils/LayoutAdjuster";
-import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import Breadcrumbs from "./BreadCrumbs";
 import GetDir from "./GetDir";
 
-const insertBreadcrumb = (data, id, name, parentId) => {
+const insertBreadcrumb = (data, id, name, parentId, subDir) => {
   const updateData = data.map((item) => {
     if (item.id === parentId) {
-      console.log(data, id, name, parentId);
+      // console.log(data, id, name, parentId);
       return {
         ...item,
-        children: [{ id, name, parentId }],
+        children: [{ id, name, parentId, subDir }],
       };
     } else if (item.children) {
-      console.log(data, id, name, parentId);
+      // console.log(data, id, name, parentId);
       return {
         ...item,
-        children: insertBreadcrumb(item.children, id, name, parentId),
+        children: insertBreadcrumb(item.children, id, name, parentId, subDir),
       };
     }
 
@@ -44,30 +44,43 @@ const removeBreadCrumbChildren = (data, id) => {
 
 function GetFreeMaterial() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [dirData, setDirData] = useState();
   const [searchParams] = useSearchParams();
-  const docId = searchParams.get("id") ? searchParams.get("id") : 49;
-  const [breadcrumbData, setBreadcrumbData] = useState(() => {
-    return [{ name: "Home", id: 86, parentId: docId }];
-  });
+  const docId = searchParams.get("id") ? searchParams.get("id") : "49";
+  const [breadcrumbData, setBreadcrumbData] = useState([
+    { name: "Home", id: docId, parentId: docId, subDir: "1" },
+  ]);
 
-  // console.log(breadcrumbData);
+  // Update breadcrumbData when URL changes
+  useEffect(() => {
+    const id = searchParams.get("id") || "49";
+    const name = "Current Directory"; // Replace with dynamic name if possible
+    const parentId = "ParentID"; // Set a dynamic parentId if possible
+    const subDir = "1"; // Set subDir as needed
 
-  // useEffect(() => {
-  //   if (breadcrumbData.length > 0) {
-  //     localStorage.setItem("docBreadcrumbData", JSON.stringify(breadcrumbData));
-  //   }
-  // }, [breadcrumbData]);
-
-  const handleNavigate = (id, name, parentId) => {
-    navigate(`/get-free-materials?id=${id}`, { state: { dirId: id } });
+    setBreadcrumbData((prevData) => {
+      // Update breadcrumbs by adding or removing based on the new URL
+      let updatedData;
+      if (parentId) {
+        updatedData = insertBreadcrumb(prevData, id, name, parentId, subDir);
+      } else {
+        updatedData = [...prevData, { id, name, parentId, subDir }];
+      }
+      return removeBreadCrumbChildren(updatedData, id);
+    });
+  }, [location, searchParams]);
+  const handleNavigate = (id, name, parentId, subDir) => {
+    navigate(`/get-free-materials?id=${id}`, {
+      state: { dirId: id, subDir: subDir },
+    });
 
     setBreadcrumbData((prevData) => {
       let updatedData;
       if (parentId) {
-        updatedData = insertBreadcrumb(prevData, id, name, parentId);
+        updatedData = insertBreadcrumb(prevData, id, name, parentId, subDir);
       } else {
-        updatedData = [...prevData, { id, name, parentId }];
+        updatedData = [...prevData, { id, name, parentId, subDir }];
       }
       return removeBreadCrumbChildren(updatedData, id);
     });
@@ -77,7 +90,7 @@ function GetFreeMaterial() {
     <LayoutAdjuster>
       <div className="flex flex-col justify-start items-center w-full gap-5 m-5 mt-16">
         <div className="w-full pt-2 pl-5">
-          {/* <Breadcrumbs data={breadcrumbData} handleNavigate={handleNavigate} /> */}
+          <Breadcrumbs data={breadcrumbData} handleNavigate={handleNavigate} />
         </div>
         <div className="w-full">
           <GetDir

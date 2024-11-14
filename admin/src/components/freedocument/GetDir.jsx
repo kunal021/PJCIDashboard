@@ -19,15 +19,43 @@ function GetDir({
   setDirData,
   handleNavigate,
 }) {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const location = useLocation();
-  const navigate = useNavigate();
-  const { dirId } = location.state ? location.state : { dirId: 49 };
+  const { subDir } = location.state ? location.state : { subDir: "1" };
   const docId = searchParams.get("id") ? searchParams.get("id") : 49;
   const [loading, setLoading] = useState(false);
   const [getDataContent, setGetDataContent] = useState();
   const [showFolders, setShowFolders] = useState(true); // Track folder/content view
   const [contentDirId, setContentDirId] = useState();
+
+  const refreshDirContent = async (dirId) => {
+    if (!dirId) return;
+
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("directory_id", dirId);
+      formData.append("content_type", 5);
+      const response = await axios.post(
+        `${API_URL}/admin/directory/getdirectorycontent.php`,
+        formData,
+        {
+          headers: { "content-type": "multipart/form-data" },
+        }
+      );
+      if (response.status === 201) {
+        setGetDataContent(response.data.data || []);
+        setShowFolders(false);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error?.response?.data?.message || "Error fetching content");
+      setGetDataContent([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (
@@ -39,9 +67,8 @@ function GetDir({
 
   useEffect(() => {
     const getDir = async () => {
-      if (!docId) {
-        return;
-      }
+      if (!docId) return;
+
       try {
         setLoading(true);
         const formData = new FormData();
@@ -60,10 +87,6 @@ function GetDir({
         if (response.data.data.some((item) => item.has_subdirectories != 0)) {
           setShowFolders(true);
         }
-        // if (!getDataContent || getDataContent.length === 0) {
-        //   setShowFolders(true);
-        // }
-        // setShowFolders(true); // Ensure folders are shown initially
       } catch (error) {
         console.log(error);
         toast.error(error?.response?.data?.message || "Error fetching data");
@@ -72,46 +95,21 @@ function GetDir({
       }
     };
     getDir();
-  }, [
-    contentType,
-    docId,
-    directoryType,
-    directoryTypeId,
-    getDataContent,
-    setDirData,
-    dirId,
-  ]);
+  }, [contentType, docId, directoryType, directoryTypeId, setDirData]);
 
-  // Function to fetch directory content
   const getDirDataContent = async (dirId) => {
     setContentDirId(dirId);
-    console.log(dirId);
-    try {
-      setLoading(true);
-      const formData = new FormData();
-      formData.append("directory_id", dirId);
-      formData.append("content_type", 5);
-      const response = await axios.post(
-        `${API_URL}/admin/directory/getdirectorycontent.php`,
-        formData,
-        {
-          headers: { "content-type": "multipart/form-data" },
-        }
-      );
-      //   console.log(response);
-      if (response.status === 201) {
-        setGetDataContent(response.data.data); // Store the content data
-        setShowFolders(false);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(error?.response?.data?.message || "Error fetching content");
-    } finally {
-      setLoading(false);
-    }
+    await refreshDirContent(dirId);
   };
 
-  // Function to handle viewing document
+  // const handleContentUpdate = (newContent) => {
+  //   // Ensure we're always working with an array
+  //   setGetDataContent((prevContent) => {
+  //     const currentContent = Array.isArray(prevContent) ? prevContent : [];
+  //     return [...currentContent, newContent];
+  //   });
+  // };
+
   const handleViewDoc = async (id) => {
     if (!id) {
       toast.error("Please select a document");
@@ -182,67 +180,78 @@ function GetDir({
 
   return (
     <div className="p-2 flex flex-wrap gap-8">
-      {/* Conditionally render folder structure */}
-      {showFolders && (
-        <>
-          {dirData?.map((data) => (
-            <div key={data?.id} className="my-2">
-              <div className="flex items-center justify-between ">
-                <Actions
-                  id={data?.id}
-                  name={data?.directory_name}
-                  contentType={data?.content_type}
-                  directoryType={data?.directory_type}
-                  parentId={data?.parent_id}
-                  directoryTypeId={data?.directory_type_id}
-                  setDirData={setDirData}
-                >
-                  <div className="cursor-pointer relative w-20">
-                    <div
-                      onClick={() => {
-                        handleNavigate(
-                          data.id,
-                          data.directory_name,
-                          data.parent_id
-                        ); // Navigate to subdirectory
-                        if (data?.has_subdirectories == 0) {
-                          getDirDataContent(data.id); // Fetch content if no subdirectories
-                        }
-                      }}
-                      className="flex flex-col justify-center items-center w-full"
-                    >
-                      <Folder
-                        fill="#60a5fa"
-                        className="w-16 h-16 text-blue-400"
-                      />
-                      <span className="text-xs break-words text-center">
-                        {data?.directory_name}
-                      </span>
-                    </div>
+      {subDir == "1" &&
+        dirData?.map((data) => (
+          <div key={data?.id} className="my-2">
+            <div className="flex items-center justify-between ">
+              <Actions
+                id={data?.id}
+                name={data?.directory_name}
+                contentType={data?.content_type}
+                directoryType={data?.directory_type}
+                parentId={data?.parent_id}
+                directoryTypeId={data?.directory_type_id}
+                setDirData={setDirData}
+              >
+                <div className="cursor-pointer relative w-20">
+                  <div
+                    onClick={() => {
+                      handleNavigate(
+                        data.id,
+                        data.directory_name,
+                        data.parent_id,
+                        data.has_subdirectories
+                      ); // Navigate to subdirectory
+                      if (data?.has_subdirectories == 0) {
+                        getDirDataContent(data.id); // Fetch content if no subdirectories
+                      }
+                    }}
+                    className="flex flex-col justify-center items-center w-full"
+                  >
+                    <Folder
+                      fill="#60a5fa"
+                      className="w-16 h-16 text-blue-400"
+                    />
+                    <span className="text-xs break-words text-center">
+                      {data?.directory_name}
+                    </span>
                   </div>
-                </Actions>
-              </div>
-              {data?.has_subdirectories == 0 && (
-                <div className="flex justify-center items-center w-20 pb-8 ">
-                  <GetDataToAdd directory_id={contentDirId} />
                 </div>
-              )}
+              </Actions>
             </div>
-          ))}
-          <div className="cursor-pointer flex justify-center items-center w-20 pb-8 ">
-            <CreateDir
-              contentType={contentType}
-              directoryType={directoryType}
-              directoryTypeId={directoryTypeId}
-              parentId={docId}
-              setDirData={setDirData}
-            />
+            {/* {data?.has_subdirectories == 0 && (
+              <div className="flex justify-center items-center w-20 pb-8 ">
+                <GetDataToAdd directory_id={contentDirId} />
+              </div>
+            )} */}
           </div>
-        </>
+        ))}
+
+      {showFolders && (
+        <div className="cursor-pointer flex justify-center items-center w-20 pb-8 ">
+          <CreateDir
+            contentType={contentType}
+            directoryType={directoryType}
+            directoryTypeId={directoryTypeId}
+            parentId={docId}
+            setDirData={setDirData}
+          />
+        </div>
+      )}
+
+      {subDir != "1" && (
+        <div className="flex justify-center items-center w-20 pb-8 ">
+          <GetDataToAdd
+            directory_id={docId}
+            data={getDataContent || []}
+            setData={setGetDataContent}
+            onContentAdded={() => refreshDirContent(docId)}
+          />
+        </div>
       )}
 
       {/* Render content if has_subdirectories == 0 */}
-      {!showFolders && getDataContent && (
+      {!showFolders && getDataContent && subDir == "0" && (
         <div className="flex flex-col justify-center items-center w-full">
           {getDataContent?.map((item, idx) => (
             <div
@@ -289,11 +298,11 @@ function GetDir({
               </div>
             </div>
           ))}
-          <GetDataToAdd
+          {/* <GetDataToAdd
             directory_id={contentDirId}
             data={getDataContent}
             setData={setGetDataContent}
-          />
+          /> */}
         </div>
       )}
     </div>

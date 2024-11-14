@@ -153,12 +153,11 @@ const GetQuestions = () => {
                             </div>
                             <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
                             <div>
-                              <div className="flex flex-wrap text-wrap whitespace-pre-wrap">
-                                Question:{" "}
+                              Question
+                              <div className="tiptap">
                                 {typeof question.question_text === "string"
                                   ? LatexParser(question.question_text)
                                   : null}
-                                {console.log(question.question_text)}
                               </div>
                             </div>
                             <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
@@ -170,19 +169,19 @@ const GetQuestions = () => {
                               {["a", "b", "c", "d", "e"].map((option) => (
                                 <div
                                   className={`${
-                                    question.answer === question.a
+                                    question.answer === question[option]
                                       ? "bg-green-500"
                                       : "hover:bg-gray-200"
                                   } flex justify-center items-center w-[80%] p-2 gap-2 border rounded-md border-gray-200`}
                                   key={option}
                                 >
-                                  <div className="w-32">Option a:</div>
+                                  <div className="w-32">Option {option}:</div>
                                   <div className="w-full whitespace-pre-wrap">
                                     {typeof question[option] === "string"
                                       ? LatexParser(question[option])
                                       : null}
                                   </div>
-                                  {console.log(question[option])}
+                                  {/* {console.log(question[option])} */}
                                 </div>
                               ))}
                             </div>

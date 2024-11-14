@@ -19,6 +19,8 @@ import {
   GetFullCourse,
   GetFullCourseSubjects,
   GetImage,
+  GetNews,
+  GetNewsContent,
   GetNotes,
   GetQuestions,
   GetTest,
@@ -39,6 +41,7 @@ import {
 import Get from "./components/slider/Get";
 import MakeUserPurchase from "./components/setting/MakeUserPurchase";
 import CourseTab from "./components/course/CourseTab";
+import Demo from "./components/chat/Demo";
 
 function App() {
   return (
@@ -57,7 +60,7 @@ function App() {
             element={<PrivateRoute element={AddCourse} />}
           />
           <Route
-            path="/get-course-videos"
+            path="/get-course-content"
             element={<PrivateRoute element={CourseTab} />}
           />
           <Route
@@ -133,6 +136,14 @@ function App() {
             element={<PrivateRoute element={GetImage} />}
           />
           <Route
+            path="/get-news"
+            element={<PrivateRoute element={GetNews} />}
+          />
+          <Route
+            path="/get-news-content"
+            element={<PrivateRoute element={GetNewsContent} />}
+          />
+          <Route
             path="/get-users"
             element={<PrivateRoute element={GetAllUsers} />}
           />
@@ -173,6 +184,7 @@ function App() {
             path="/user-purchase"
             element={<PrivateRoute element={MakeUserPurchase} />}
           />
+          <Route path="/demo" element={<PrivateRoute element={Demo} />} />
         </Routes>
       </Layout>
     </BrowserRouter>

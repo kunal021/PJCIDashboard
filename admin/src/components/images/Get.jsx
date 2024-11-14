@@ -119,7 +119,7 @@ function GetImage() {
         >
           <div className="w-full flex flex-col justify-center items-center my-5">
             <div className="w-full flex justify-center items-center gap-5">
-              <h1 className="text-3xl font-bold text-center">Notes List</h1>
+              <h1 className="text-3xl font-bold text-center">Images List</h1>
               <Add image={image} setimage={setimage} />
             </div>
             <div className="w-full flex flex-col justify-center items-center">

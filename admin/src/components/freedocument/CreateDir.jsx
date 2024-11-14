@@ -48,6 +48,8 @@ function CreateDir({
         }
       );
 
+      // console.log(response);
+
       if (response.status === 201) {
         toast.success("Directory Created Successfully");
         setDirData((prev) => [
@@ -76,12 +78,18 @@ function CreateDir({
   };
   return (
     <Dialog>
-      <DialogTrigger>
-        <FolderPlus
-          strokeWidth={0.5}
-          strokeDasharray={1}
-          className="w-16 h-16"
-        />
+      <DialogTrigger className="group relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-gray-300 bg-white text-center transition-all hover:border-primary hover:shadow-md">
+        <div className="absolute inset-0 bg-primary/5 opacity-0 transition-opacity group-hover:opacity-100" />
+        <div className="z-10 flex flex-col items-center justify-center space-y-2">
+          <FolderPlus
+            strokeWidth={0.75}
+            strokeDasharray={4}
+            className="h-16 w-16 text-gray-400 transition-all group-hover:text-primary group-hover:stroke-[1]"
+          />
+          <span className="text-xs font-medium text-gray-500 transition-colors group-hover:text-primary">
+            Add Folder
+          </span>
+        </div>
       </DialogTrigger>
       <DialogContent className="z-[100]">
         <DialogHeader>

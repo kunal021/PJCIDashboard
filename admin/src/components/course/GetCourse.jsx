@@ -99,7 +99,6 @@ function GetCourse() {
           dispatch(setCourse(updatedCourse));
         } catch (error) {
           console.log("Error updating user status:", error);
-          // Handle error (e.g., show an error message)
         }
       }
     },
@@ -113,7 +112,13 @@ function GetCourse() {
     return data;
   };
 
-  // console.log(courses);
+  const handleNavigate = (id, directory_id) => {
+    navigate(`/get-course-content?id=${id}`, {
+      state: { dirId: directory_id },
+    });
+
+    localStorage.setItem("initialId", id);
+  };
 
   return (
     <LayoutAdjuster>
@@ -166,7 +171,7 @@ function GetCourse() {
                             </button>
                           </div>
                         </div>
-                        {/* <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" /> */}
+
                         <div className="flex justify-center items-center gap-6 w-full">
                           <div className="flex justify-center items-center w-48">
                             <img
@@ -177,9 +182,7 @@ function GetCourse() {
                           </div>
                           <div
                             onClick={() =>
-                              navigate(`/get-course-videos?id=${course.id}`, {
-                                state: { dirId: course.directory_id },
-                              })
+                              handleNavigate(course.id, course.directory_id)
                             }
                             className="flex flex-col justify-center items-start gap-3 w-full cursor-pointer"
                           >
@@ -205,13 +208,6 @@ function GetCourse() {
                         </div>
                       </div>
                       <div className="flex flex-col justify-between items-end gap-10 w-fit">
-                        {/* <AddVideoInCourse courseId={course.id} />
-                        <SeeAll
-                          handleClick={() =>
-                            navigate(`/get-course-videos?id=${course.id}`)
-                          }
-                          childern={"See All Videos"}
-                        /> */}
                         <UpdateBtn
                           handleClick={() => {
                             setUpdateCourse(true);

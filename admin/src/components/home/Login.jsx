@@ -1,20 +1,30 @@
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { useEffect, useState } from "react";
 import { UAParser } from "ua-parser-js";
-import { API_URL } from "../../url";
-import toast from "react-hot-toast";
-import { useLocation } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { Loader2, Send, ArrowRight } from "lucide-react";
+import { toast } from "react-hot-toast";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { API_URL } from "@/url";
+import { useNavigate } from "react-router-dom";
 
-function Login() {
+export default function LoginForm() {
+  const navigate = useNavigate();
   const [number, setNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [IP, setIP] = useState("");
   const [OS, setOS] = useState("");
-  const [otpStatus, setOtpStatus] = useState();
+  const [otpStatus, setOtpStatus] = useState(false);
   const [loading, setLoading] = useState(false);
   const [countdown, setCountdown] = useState(0);
-
   useEffect(() => {
     const parser = new UAParser();
     const getDeviceData = async () => {
@@ -23,13 +33,15 @@ function Login() {
         setIP(ip.data.ip);
         setOS(`${parser.getOS().name} ${parser.getOS().version}`);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     };
     getDeviceData();
 
-    localStorage.getItem("authToken") && (window.location.href = "/");
-  }, []);
+    if (typeof window !== "undefined" && localStorage.getItem("authToken")) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     if (countdown > 0) {
@@ -59,14 +71,13 @@ function Login() {
       );
 
       if (response.status === 201) {
-        setOtpStatus(201);
+        setOtpStatus(true);
         setCountdown(90);
         toast.success("OTP Sent Successfully");
       }
-      console.log(response);
     } catch (error) {
-      console.log(error);
-      toast.error(error.response?.data?.message);
+      console.error(error);
+      toast.error(error.response?.data?.message || "An error occurred");
     } finally {
       setLoading(false);
     }
@@ -89,17 +100,15 @@ function Login() {
           headers: { "content-type": "multipart/form-data" },
         }
       );
-      // console.log(response);
 
       if (response.status === 200) {
         toast.success("Login Successful");
-        // console.log(response.data);
         localStorage.setItem("authToken", JSON.stringify(response.data));
-        window.location.href = "/";
+        navigate("/");
       }
     } catch (error) {
-      console.log(error);
-      toast.error(error.response.data.message);
+      console.error(error);
+      toast.error(error.response?.data?.message || "An error occurred");
     } finally {
       setLoading(false);
     }
@@ -107,7 +116,7 @@ function Login() {
 
   const handleResendOTP = async () => {
     if (countdown > 0) {
-      toast.error(`Please wait for the ${countdown} seconds to resend OTP`);
+      toast.error(`Please wait for ${countdown} seconds to resend OTP`);
       return;
     }
     try {
@@ -127,82 +136,79 @@ function Login() {
         toast.success("OTP Resent Successfully");
       }
     } catch (error) {
-      console.log(error);
-      toast.error(error.response.data.message);
+      console.error(error);
+      toast.error(error.response?.data?.message || "An error occurred");
     } finally {
       setLoading(false);
     }
   };
 
-  const location = useLocation();
-  console.log(location.pathname === "/login");
-
   return (
-    <div className="flex flex-col justify-center items-center m-auto min-h-screen gap-10">
-      {loading && (
-        <div className="top-10 right-10 fixed">
-          <Loader2 className="text-blue-500 h-8 w-8 animate-spin" />
-        </div>
-      )}
-      <h1 className="text-3xl font-bold">Log In to Continue</h1>
-      <div className="flex flex-col justify-center items-center border border-gray-200 p-6 rounded-lg gap-2 m-2">
-        <div className="flex justify-start items-center gap-2 mt-2">
-          <div className="border border-gray-200 px-2 py-1.5 rounded-md focus:outline-none focus:border focus:border-black/50">
-            + 91
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 w-full">
+      <Card className="w-[350px]">
+        <CardHeader>
+          <CardTitle>Login</CardTitle>
+          <CardDescription>
+            Enter your mobile number to get started
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex space-x-2">
+              <div className="w-16">
+                <Input value="+91" disabled className="text-center" />
+              </div>
+              <Input
+                value={number}
+                onChange={(e) => setNumber(e.target.value)}
+                placeholder="Mobile Number"
+                type="tel"
+                maxLength={10}
+              />
+            </div>
+            {otpStatus && (
+              <Input
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                placeholder="Enter OTP"
+                type="text"
+                maxLength={6}
+              />
+            )}
           </div>
-          <input
-            value={number}
-            onChange={(e) => setNumber(e.target.value)}
-            required
-            id="number"
-            type="text"
-            minLength={10}
-            maxLength={10}
-            placeholder="Enter Number"
-            className="border border-gray-200 px-2 py-1.5 rounded-md focus:outline-none focus:border focus:border-black/50"
-          />
-          <button
-            onClick={otpStatus ? handleResendOTP : handleGetOTP}
-            // disabled={number.length < 10 || loading || countdown > 0}
-            className="bg-green-50 hover:bg-green-100 border border-green-200 text-black font-semibold py-1.5 px-2 rounded"
+        </CardContent>
+        <CardFooter className="flex flex-col space-y-2">
+          <Button
+            onClick={otpStatus ? handleLogin : handleGetOTP}
+            disabled={
+              loading || (otpStatus ? otp.length < 6 : number.length < 10)
+            }
+            className="w-full"
           >
-            {otpStatus && !loading ? "Resend" : "Get OTP"}
-          </button>
-        </div>
-        {countdown > 0 && (
-          <p>
-            Resend OTP in {Math.floor(countdown / 60)}:
-            {countdown % 60 < 10 ? `0${countdown % 60}` : countdown % 60}{" "}
-            seconds
-          </p>
-        )}
-        <div className="flex justify-start items-center">
+            {loading ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : otpStatus ? (
+              <>
+                Continue <ArrowRight className="ml-2 h-4 w-4" />
+              </>
+            ) : (
+              <>
+                Get OTP <Send className="ml-2 h-4 w-4" />
+              </>
+            )}
+          </Button>
           {otpStatus && (
-            <input
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              type="text"
-              required
-              id="otp"
-              placeholder="Enter OTP"
-              minLength={6}
-              maxLength={6}
-              className="border border-gray-200 px-2 py-1.5 rounded-md focus:outline-none focus:border focus:border-black/50"
-            />
+            <Button
+              variant="outline"
+              onClick={handleResendOTP}
+              disabled={loading || countdown > 0}
+              className="w-full"
+            >
+              {countdown > 0 ? `Resend OTP in ${countdown}s` : "Resend OTP"}
+            </Button>
           )}
-        </div>
-        {otpStatus && (
-          <button
-            onClick={handleLogin}
-            // disabled={otp.length < 6}
-            className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold p-1 rounded"
-          >
-            Continue
-          </button>
-        )}
-      </div>
+        </CardFooter>
+      </Card>
     </div>
   );
 }
-
-export default Login;

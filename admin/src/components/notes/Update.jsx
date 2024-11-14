@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/sheet";
 import { API_URL } from "@/url";
 import FormField from "@/utils/FormField";
+import Tiptap from "@/utils/TextEditor";
 import axios from "axios";
 import { Loader, SquarePen, UploadCloud } from "lucide-react";
 import { useRef, useState } from "react";
@@ -29,6 +30,8 @@ function UpdateDoc({ data, setData }) {
   });
 
   const [durationUnit, setDurationunit] = useState(dur[1]);
+
+  const [description, setDescription] = useState(data?.description);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -56,6 +59,7 @@ function UpdateDoc({ data, setData }) {
       formData.append("image_url", newData.img_url);
       formData.append("name", newData.name);
       formData.append("type", newData.type);
+      formData.append("description", description);
       formData.append("duration", `${newData.duration} ${durationUnit}`);
       formData.append("price", newData.price);
       const response = await axios.post(
@@ -114,6 +118,11 @@ function UpdateDoc({ data, setData }) {
       toast.error("Error Uploading Image");
     }
   };
+
+  const getDescriptionData = (html) => {
+    setDescription(html);
+  };
+
   return (
     <Sheet>
       <SheetTrigger className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-1 text-xs rounded group relative">
@@ -122,7 +131,7 @@ function UpdateDoc({ data, setData }) {
           Update
         </p>
       </SheetTrigger>
-      <SheetContent className="z-[100] w-[70%]">
+      <SheetContent className="z-[100] w-[70%] overflow-auto">
         <SheetHeader>
           <SheetTitle>Edit Document</SheetTitle>
         </SheetHeader>
@@ -139,24 +148,27 @@ function UpdateDoc({ data, setData }) {
             <option value={"3"}>Test</option>
           </select>
         </div> */}
-        <div className="my-4 gap-5 flex justify-between items-center">
-          <FormField
-            htmlFor={"name"}
-            id={"name"}
-            type={"text"}
-            placeholder={"Name"}
-            name={"name"}
-            value={newData.name}
-            onChange={handleChange}
-          >
-            Name
-          </FormField>
+
+        <FormField
+          htmlFor={"name"}
+          id={"name"}
+          type={"text"}
+          placeholder={"Name"}
+          name={"name"}
+          value={newData.name}
+          onChange={handleChange}
+        >
+          Name
+        </FormField>
+        <p className="block text-gray-700 text-sm font-bold">Description</p>
+        <div className=" w-full my-2">
+          <Tiptap placeholder={"Category"} getHtmlData={getDescriptionData} />
         </div>
         <div className="my-4 gap-5 flex justify-between items-center">
           <FormField
             htmlFor={"price"}
             id={"price"}
-            type={"text"}
+            type={"number"}
             placeholder={"Price"}
             name={"price"}
             value={newData.price}
@@ -167,7 +179,7 @@ function UpdateDoc({ data, setData }) {
           <FormField
             htmlFor={"duration"}
             id={"duration"}
-            type={"text"}
+            type={"number"}
             placeholder={"Duration"}
             name={"duration"}
             value={newData.duration}

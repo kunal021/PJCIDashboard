@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/sheet";
 import { API_URL } from "@/url";
 import FormField from "@/utils/FormField";
+import Tiptap from "@/utils/TextEditor";
 import axios from "axios";
 import { Loader, UploadCloud } from "lucide-react";
 import { useRef, useState } from "react";
@@ -20,13 +21,13 @@ function Add({ setDoc }) {
   const [newData, setNewData] = useState({
     name: "",
     price: "",
-    description: "",
     img_url: "",
     duration: "",
   });
 
   const [file, setFile] = useState(null);
   const [durationUnit, setDurationunit] = useState("Day");
+  const [description, setDescription] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -56,7 +57,6 @@ function Add({ setDoc }) {
       !newData.price ||
       !newData.name ||
       !newData.duration ||
-      !newData.description ||
       !file
     ) {
       toast.error("Please fill all fields");
@@ -68,7 +68,7 @@ function Add({ setDoc }) {
 
       formData.append("image_url", newData.img_url);
       formData.append("name", newData.name);
-      formData.append("description", newData.description);
+      formData.append("description", description);
       formData.append("type", "1");
       formData.append("duration", `${newData.duration} ${durationUnit}`);
       formData.append("price", newData.price);
@@ -139,6 +139,10 @@ function Add({ setDoc }) {
     }
   };
 
+  const getDescriptionData = (html) => {
+    setDescription(html);
+  };
+
   return (
     <Sheet>
       <SheetTrigger className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md ">
@@ -148,32 +152,24 @@ function Add({ setDoc }) {
         <SheetHeader>
           <SheetTitle>Add Document</SheetTitle>
         </SheetHeader>
-        <div className="my-4 gap-5 flex justify-between items-center">
-          <FormField
-            htmlFor={"name"}
-            id={"name"}
-            type={"text"}
-            placeholder={"Name"}
-            name={"name"}
-            value={newData.name}
-            onChange={handleChange}
-          >
-            Name
-          </FormField>
+
+        <FormField
+          htmlFor={"name"}
+          id={"name"}
+          type={"text"}
+          placeholder={"Name"}
+          name={"name"}
+          value={newData.name}
+          onChange={handleChange}
+        >
+          Name
+        </FormField>
+
+        <p className="block text-gray-700 text-sm font-bold">Description</p>
+        <div className=" w-full my-2">
+          <Tiptap placeholder={"Category"} getHtmlData={getDescriptionData} />
         </div>
-        <div className="my-4 gap-5 flex justify-between items-center">
-          <FormField
-            htmlFor={"description"}
-            id={"description"}
-            type={"text"}
-            placeholder={"Description"}
-            name={"description"}
-            value={newData.description}
-            onChange={handleChange}
-          >
-            Description
-          </FormField>
-        </div>
+
         <div className="my-4 gap-5 flex justify-between items-center">
           <FormField
             htmlFor={"price"}

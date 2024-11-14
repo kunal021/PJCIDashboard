@@ -7,6 +7,7 @@ import {
   FolderOutlined,
   // FileImageOutlined,
   FormOutlined,
+  LayoutOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -114,18 +115,30 @@ const items = [
       },
     ],
   },
-  // {
-  //   key: "sub10",
-  //   label: "Books",
-  //   icon: <BookOutlined />,
-  //   children: [
-  //     {
-  //       key: "30",
-  //       label: "Books",
-  //       link: "/get-books",
-  //     },
-  //   ],
-  // },
+  {
+    key: "sub10",
+    label: "Books",
+    icon: <BookOutlined />,
+    children: [
+      {
+        key: "30",
+        label: "Books",
+        link: "/get-books",
+      },
+    ],
+  },
+  {
+    key: "sub11",
+    label: "News",
+    icon: <LayoutOutlined />,
+    children: [
+      {
+        key: "33",
+        label: "News",
+        link: "/get-news",
+      },
+    ],
+  },
   {
     key: "sub5",
     label: "User",
@@ -143,11 +156,11 @@ const items = [
     label: "Settings",
     icon: <SettingOutlined />,
     children: [
-      // {
-      //   key: "29",
-      //   label: "Images",
-      //   link: "/get-images",
-      // },
+      {
+        key: "29",
+        label: "Images",
+        link: "/get-images",
+      },
       {
         key: "13",
         label: "App Slider",

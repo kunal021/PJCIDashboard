@@ -65,8 +65,8 @@ function GetNotes() {
           headers: "content-type/form-data",
         }
       );
-
-      if (response.status === 201) {
+      console.log(response);
+      if (response.status === 200) {
         // dispatch(deleteVideo(id));
         const newdoc = doc.filter((doc) => doc.id !== id);
         setDoc(newdoc);

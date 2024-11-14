@@ -36,12 +36,25 @@ import {
   X,
   Link2,
   Link2Off,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { API_URL } from "../url";
 import axios from "axios";
 import MathEditor from "./MathsEditor";
 import MathModal from "./MathModel";
+import Gapcursor from "@tiptap/extension-gapcursor";
+import Table from "@tiptap/extension-table";
+import TableRow from "@tiptap/extension-table-row";
+import TableHeader from "@tiptap/extension-table-header";
+import TableCell from "@tiptap/extension-table-cell";
+import TableActions from "./TableActions";
+import { CustomTableCell } from "./CustomTableCell";
+import Paragraph from "@tiptap/extension-paragraph";
+import Document from "@tiptap/extension-document";
+import Text from "@tiptap/extension-text";
 
 const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
   const [headingOptionOpen, setHeadingOptionOpen] = useState(false);
@@ -54,6 +67,9 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
     extensions: [
       Placeholder.configure({ placeholder: placeholder || "Start typing..." }),
       StarterKit,
+      Document,
+      Paragraph,
+      Text,
       Underline,
       Link,
       Subscript,
@@ -66,6 +82,14 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
       FontFamily,
       MathEditor,
       Mathematics,
+      Gapcursor,
+      Table.configure({
+        resizable: true,
+      }),
+      TableRow,
+      TableHeader,
+      TableCell,
+      CustomTableCell,
       FileHandler.configure({
         allowedMimeTypes: [
           "image/png",
@@ -129,10 +153,10 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
       }),
     ],
     content: initialContent || "",
+
     onUpdate({ editor }) {
       let html = editor.getHTML();
-
-      // Preserve multiple spaces by replacing them with non-breaking spaces
+      console.log(html);
 
       if (getHtmlData) {
         getHtmlData(html);
@@ -143,6 +167,8 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
         class: `p-2 focus:outline-none whitespace-pre-wrap`,
       },
     },
+
+    injectCSS: false,
   });
 
   useEffect(() => {
@@ -253,6 +279,17 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
 
     // Close the modal after inserting the symbol
     setIsMathModalOpen(false);
+  };
+
+  const removeTrailingSpaces = () => {
+    // Get the current content of the editor
+    let content = editor.getHTML();
+
+    // Use a regular expression to remove trailing spaces at the end of each line
+    content = content.replace(/(\d+)\s+<\/p>/g, "$1</p>");
+
+    // Update the editor with the cleaned-up content
+    editor.commands.setContent(content);
   };
 
   return (
@@ -448,6 +485,54 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
             >
               <SUPIcon className="h-4" />
             </button>
+            <div className="relative flex justify-between items-center border border-gray-400 rounded-md">
+              <button
+                onClick={() =>
+                  editor.chain().focus().setTextAlign("left").run()
+                }
+                className={
+                  editor.isActive({ textAlign: "left" }) ? "is-active" : ""
+                }
+              >
+                <AlignLeft className="h-4 md:h-5" />
+              </button>
+              <button
+                onClick={() =>
+                  editor.chain().focus().setTextAlign("center").run()
+                }
+                className={
+                  editor.isActive({ textAlign: "center" }) ? "is-active" : ""
+                }
+              >
+                <AlignCenter className="h-4 md:h-5" />
+              </button>
+              <button
+                onClick={() =>
+                  editor.chain().focus().setTextAlign("right").run()
+                }
+                className={
+                  editor.isActive({ textAlign: "right" }) ? "is-active" : ""
+                }
+              >
+                <AlignRight className="h-4 md:h-5" />
+              </button>
+              {/* <button
+                onClick={() =>
+                  editor.chain().focus().setTextAlign("justify").run()
+                }
+                className={
+                  editor.isActive({ textAlign: "justify" }) ? "is-active" : ""
+                }
+              >
+                Justify
+              </button> */}
+              <button onClick={removeTrailingSpaces}>Rmv</button>
+              <button
+                onClick={() => editor.chain().focus().unsetTextAlign().run()}
+              >
+                <X className="h-4 md:h-5" />
+              </button>
+            </div>
           </div>
           <hr className="hidden lg:block bg-gray-300 h-10 w-[1px]"></hr>
           <div className="relative flex justify-between items-center gap-[2px]">
@@ -485,10 +570,11 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
           >
             M
           </button>
+          <TableActions editor={editor} />
         </div>
       )}
       <div className={`w-full overflow-y-auto`}>
-        <EditorContent editor={editor} />
+        <EditorContent editor={editor} className="tiptap" />
       </div>
       <MathModal
         isOpen={isMathModalOpen}

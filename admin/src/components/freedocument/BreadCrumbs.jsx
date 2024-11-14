@@ -10,6 +10,7 @@ import {
 // import { useNavigate } from "react-router-dom";
 
 function Breadcrumbs({ data, handleNavigate }) {
+  // console.log(data);
   // const navigate = useNavigate();
   const renderBreadcrumbs = (items) => {
     return items.map((item) => (
@@ -23,7 +24,9 @@ function Breadcrumbs({ data, handleNavigate }) {
             <BreadcrumbPage>{item.name}</BreadcrumbPage>
           )} */}
           <BreadcrumbLink
-            onClick={() => handleNavigate(item.id, item.name, item.parentId)}
+            onClick={() =>
+              handleNavigate(item.id, item.name, item.parentId, item.subDir)
+            }
             className="cursor-pointer text-center pb-1"
           >
             {item.name}

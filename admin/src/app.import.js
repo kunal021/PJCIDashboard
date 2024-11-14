@@ -32,6 +32,8 @@ import GetNotes from "./components/notes/Get";
 import GetBooks from "./components/books/Get";
 import GetImage from "./components/images/Get";
 import GetFreeMaterial from "./components/freedocument/Get";
+import GetNews from "./components/news/Get";
+import GetNewsContent from "./components/news/GetContent";
 
 export {
   GetCategory,
@@ -68,4 +70,6 @@ export {
   GetBooks,
   GetImage,
   GetFreeMaterial,
+  GetNews,
+  GetNewsContent,
 };
