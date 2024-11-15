@@ -7,6 +7,8 @@ import axios from "axios";
 import { API_URL } from "@/url";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { LatexParser } from "@/utils/LatexParser";
+import { truncateData } from "@/utils/truncateData";
 
 const fetchData = async (
   setLoading,
@@ -108,6 +110,14 @@ function GetNews() {
       }
     }
   };
+
+  const renderData = (data) => {
+    if (typeof data === "string") {
+      return LatexParser(data);
+    }
+    return data;
+  };
+
   return (
     <LayoutAdjuster>
       {loading ? (
@@ -128,7 +138,7 @@ function GetNews() {
                       key={idx}
                       className="flex flex-col font-medium w-72 border rounded-md border-zinc-300 ml-2 my-5 p-4 gap-3"
                     >
-                      <div className="flex justify-between items-center w-full gap-4">
+                      {/* <div className="flex justify-between items-center w-full gap-4">
                         <Avatar className="bg-gray-500 text-white">
                           {idx + 1}
                         </Avatar>
@@ -157,9 +167,7 @@ function GetNews() {
                             </div>
                           </button>
                         </div>
-                      </div>
-
-                      <hr className="w-full bg-slate-300 border-slate-300" />
+                      </div> */}
 
                       <div
                         onClick={() =>
@@ -176,14 +184,16 @@ function GetNews() {
                         />
 
                         <p className="text-sm font-bold text-center">
-                          {item.title}
+                          {truncateData(renderData(item.title), 5)}
                         </p>
 
-                        <div className="text-center text-sm">
+                        <div className="text-center text-sm flex justify-between items-center w-full gap-2">
                           <p className="font-medium">
-                            Category: {item.category}
+                            By: {truncateData(item.author, 2)}
                           </p>
-                          <p>Author: {item.author}</p>
+                          <p className="font-medium bg-gray-200 rounded p-0.5">
+                            {item.category}
+                          </p>
                         </div>
                       </div>
                     </div>

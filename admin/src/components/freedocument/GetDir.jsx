@@ -243,7 +243,7 @@ function GetDir({
         <div className="flex justify-center items-center w-20 pb-8 ">
           <GetDataToAdd
             directory_id={docId}
-            data={getDataContent || []}
+            contentType={contentType}
             setData={setGetDataContent}
             onContentAdded={() => refreshDirContent(docId)}
           />

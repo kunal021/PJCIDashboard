@@ -158,7 +158,7 @@ const items = [
     children: [
       {
         key: "29",
-        label: "Images",
+        label: "Gallery",
         link: "/get-images",
       },
       {

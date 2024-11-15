@@ -68,7 +68,7 @@ function CourseTab() {
         subDir: "1",
       },
     ],
-    Notes: [
+    Note: [
       {
         name: "Home",
         id: initialId,
@@ -76,7 +76,7 @@ function CourseTab() {
         subDir: "1",
       },
     ],
-    Materials: [
+    Material: [
       {
         name: "Home",
         id: initialId,
@@ -107,7 +107,7 @@ function CourseTab() {
   }, [searchParams]);
 
   const handleNavigate = (id, name, parentId, subDir) => {
-    navigate(`/get-course-videos?id=${id}`, {
+    navigate(`/get-course-content?id=${id}`, {
       state: { dirId: id, subDir: subDir },
     });
 
@@ -153,11 +153,11 @@ function CourseTab() {
             <TabsTrigger value="Test" className="w-full flex justify-between">
               <p>Test</p>
             </TabsTrigger>
-            <TabsTrigger value="Notes" className="w-full flex justify-between">
+            <TabsTrigger value="Note" className="w-full flex justify-between">
               <p>Notes</p>
             </TabsTrigger>
             <TabsTrigger
-              value="Materials"
+              value="Material"
               className="w-full flex justify-between"
             >
               <p>Materials</p>
@@ -175,8 +175,8 @@ function CourseTab() {
               <GetDir
                 contentType={"4"}
                 directoryType={"1"}
-                directoryTypeId={"1"}
                 dirData={dirData}
+                value={"Video"}
                 setDirData={setDirData}
                 handleNavigate={handleNavigate}
               />
@@ -184,29 +184,29 @@ function CourseTab() {
             <TabsContent value="Test">
               <GetDir
                 contentType={"3"}
-                directoryType={"3"}
-                directoryTypeId={"-1"}
+                directoryType={"1"}
                 dirData={dirData}
+                value={"Test"}
                 setDirData={setDirData}
                 handleNavigate={handleNavigate}
               />
             </TabsContent>
-            <TabsContent value="Notes">
+            <TabsContent value="Note">
               <GetDir
                 contentType={"6"}
-                directoryType={"6"}
-                directoryTypeId={"-1"}
+                directoryType={"1"}
                 dirData={dirData}
+                value={"Note"}
                 setDirData={setDirData}
                 handleNavigate={handleNavigate}
               />
             </TabsContent>
-            <TabsContent value="Materials">
+            <TabsContent value="Material">
               <GetDir
                 contentType={"5"}
-                directoryType={"5"}
-                directoryTypeId={"-1"}
+                directoryType={"1"}
                 dirData={dirData}
+                value={"Material"}
                 setDirData={setDirData}
                 handleNavigate={handleNavigate}
               />

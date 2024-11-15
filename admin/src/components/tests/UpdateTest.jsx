@@ -61,6 +61,15 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
       toast.error("Please fill all fields");
       return;
     }
+    if (
+      formData.type == "1" &&
+      (formData.testDate == "0000-00-00" ||
+        formData.startTime == "00:00:00" ||
+        formData.endTime == "00:00:00")
+    ) {
+      toast.error("Please fill all fields");
+      return;
+    }
     try {
       const formDataToSend = new FormData();
       const formDataObject = {

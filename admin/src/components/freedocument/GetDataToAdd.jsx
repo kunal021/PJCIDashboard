@@ -38,7 +38,7 @@ const getData = async (type, is_paid, setLoading, setData) => {
   }
 };
 
-function GetDataToAdd({ directory_id, setData, onContentAdded }) {
+function GetDataToAdd({ directory_id, setData, onContentAdded, contentType }) {
   const [loading, setLoading] = useState(false);
   const [material, setMaterial] = useState([]);
   // const [note, setNote] = useState([]);
@@ -55,7 +55,7 @@ function GetDataToAdd({ directory_id, setData, onContentAdded }) {
       // console.log(id);
 
       formData.append("directory_id", directory_id);
-      formData.append("content_type", 5);
+      formData.append("content_type", contentType);
       formData.append("content_id", id);
 
       const response = await axios.post(

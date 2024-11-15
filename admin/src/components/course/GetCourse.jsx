@@ -113,11 +113,12 @@ function GetCourse() {
   };
 
   const handleNavigate = (id, directory_id) => {
-    navigate(`/get-course-content?id=${id}`, {
-      state: { dirId: directory_id },
+    navigate(`/get-course-content?id=${directory_id}`, {
+      state: { dirId: directory_id, subDir: "1" },
     });
 
-    localStorage.setItem("initialId", id);
+    localStorage.setItem("initialId", directory_id);
+    localStorage.setItem("courseId", id);
   };
 
   return (

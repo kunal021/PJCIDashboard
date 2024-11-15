@@ -13,16 +13,16 @@ import GetDataToAdd from "../freedocument/GetDataToAdd";
 
 function GetDir({
   directoryType,
-  directoryTypeId,
   contentType,
   dirData,
+  value,
   setDirData,
   handleNavigate,
 }) {
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const subDir = (location.state && location.state.subDir) || "1";
-
+  const courseId = localStorage.getItem("courseId");
   const docId = searchParams.get("id") ? searchParams.get("id") : "1";
   const [loading, setLoading] = useState(false);
   const [getDataContent, setGetDataContent] = useState();
@@ -36,7 +36,7 @@ function GetDir({
       setLoading(true);
       const formData = new FormData();
       formData.append("directory_id", dirId);
-      formData.append("content_type", 5);
+      formData.append("content_type", contentType);
       const response = await axios.post(
         `${API_URL}/admin/directory/getdirectorycontent.php`,
         formData,
@@ -44,6 +44,7 @@ function GetDir({
           headers: { "content-type": "multipart/form-data" },
         }
       );
+      console.log(response);
       if (response.status === 201) {
         setGetDataContent(response.data.data || []);
         setShowFolders(false);
@@ -65,7 +66,7 @@ function GetDir({
         const formData = new FormData();
         formData.append("parent_id", docId);
         formData.append("directory_type", directoryType);
-        formData.append("directory_type_id", directoryTypeId);
+        formData.append("directory_type_id", courseId);
         formData.append("content_type", contentType);
         const response = await axios.post(
           `${API_URL}/admin/directory/getdir.php`,
@@ -86,7 +87,7 @@ function GetDir({
       }
     };
     getDir();
-  }, [contentType, docId, directoryType, directoryTypeId, setDirData]);
+  }, [contentType, docId, directoryType, courseId, setDirData]);
 
   const getDirDataContent = async (dirId) => {
     setContentDirId(dirId);
@@ -154,7 +155,7 @@ function GetDir({
     //   setLoading(false);
     // }
   };
-  console.log(subDir);
+
   if (loading) {
     return <p className="text-center m-auto h-full">Loading...</p>;
   }
@@ -201,12 +202,13 @@ function GetDir({
             </div>
           </div>
         ))}
+
       {showFolders && (
         <div className="cursor-pointer flex justify-center items-center w-20 pb-8 ">
           <CreateDir
             contentType={contentType}
             directoryType={directoryType}
-            directoryTypeId={directoryTypeId}
+            directoryTypeId={courseId}
             parentId={docId}
             setDirData={setDirData}
           />
@@ -217,14 +219,110 @@ function GetDir({
         <div className="flex justify-center items-center w-20 pb-8 ">
           <GetDataToAdd
             directory_id={docId}
-            data={getDataContent || []}
+            contentType={contentType}
             setData={setGetDataContent}
             onContentAdded={() => refreshDirContent(docId)}
           />
         </div>
       )}
 
-      {!showFolders && getDataContent && subDir == "0" && (
+      {/* Material */}
+      {!showFolders &&
+        getDataContent &&
+        subDir == "0" &&
+        value === "Material" && (
+          <div className="flex flex-col justify-center items-center w-full">
+            {getDataContent?.map((item, idx) => (
+              <div
+                key={idx}
+                className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-3 gap-3"
+              >
+                <div className="flex flex-col justify-center items-start gap-4 w-full">
+                  <div className="flex justify-between items-center w-full gap-4">
+                    <Avatar className="bg-gray-500 text-white">
+                      {idx + 1}
+                    </Avatar>
+                  </div>
+                  <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
+                  <div
+                    onClick={() => handleViewDoc(item.doc_id)}
+                    className="cursor-pointer flex justify-between items-center w-full gap-6"
+                  >
+                    {/* <div className="flex justify-center items-center w-48">
+                    <img
+                      src={item.img_url}
+                      className="rounded-lg border-transparent h-24 w-full"
+                    />
+                  </div> */}
+                    <div className="flex flex-wrap text-wrap w-full">
+                      {item.name}
+                    </div>
+                  </div>
+                  <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
+                  <div className=" cursor-pointer flex justify-between items-center w-full gap-6">
+                    <div className="flex justify-center items-center">
+                      Price: {item.price}
+                    </div>
+                    <div className="flex justify-center items-center">
+                      Duration: {item.duration}
+                    </div>
+                    <div className="flex justify-center items-center">
+                      Size: {item.size}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col justify-between items-end gap-10 w-fit">
+                  <ConfirmDelete
+                    handleClick={() =>
+                      handleDelete(contentDirId, 5, item.doc_id)
+                    }
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      {/* {console.log(getDataContent, value, subDir)} */}
+
+      {/* Video */}
+      {!showFolders && getDataContent && subDir == "0" && value == "Video" && (
+        <div className="flex flex-wrap justify-center items-center w-72">
+          {getDataContent?.map((item, idx) => (
+            <div
+              key={idx}
+              className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-3 gap-3"
+            >
+              <div className="flex flex-col justify-between items-start gap-6 w-full p-4 border rounded-lg shadow-sm bg-white">
+                <div className="flex justify-between items-center w-full">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-lg font-semibold text-gray-800">
+                      {item.video_title}
+                    </h2>
+                  </div>
+                </div>
+
+                <div className="w-full space-y-4">
+                  <hr className="border-slate-300" />
+                  <div className="flex flex-col md:flex-row justify-between gap-4">
+                    <div className="flex items-center text-gray-700">
+                      <span className="font-medium">Duration:</span>
+                      <span className="ml-2">{item.video_duration}</span>
+                    </div>
+                    <ConfirmDelete
+                      handleClick={() =>
+                        handleDelete(contentDirId, 5, item.v_id)
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Test */}
+      {!showFolders && getDataContent && subDir == "0" && value == "Test" && (
         <div className="flex flex-col justify-center items-center w-full">
           {getDataContent?.map((item, idx) => (
             <div
@@ -232,50 +330,83 @@ function GetDir({
               className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-3 gap-3"
             >
               <div className="flex flex-col justify-center items-start gap-4 w-full">
+                {/* Test Name and ID */}
                 <div className="flex justify-between items-center w-full gap-4">
-                  <Avatar className="bg-gray-500 text-white">{idx + 1}</Avatar>
-                </div>
-                <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                <div
-                  onClick={() => handleViewDoc(item.doc_id)}
-                  className="cursor-pointer flex justify-between items-center w-full gap-6"
-                >
-                  {/* <div className="flex justify-center items-center w-48">
-                    <img
-                      src={item.img_url}
-                      className="rounded-lg border-transparent h-24 w-full"
-                    />
-                  </div> */}
+                  <Avatar className="bg-blue-500 text-white">
+                    {item.test_id} {/* Display the test ID */}
+                  </Avatar>
                   <div className="flex flex-wrap text-wrap w-full">
-                    {item.name}
+                    <h2 className="text-lg font-bold">{item.test_name}</h2>{" "}
+                    {/* Display test name */}
                   </div>
                 </div>
+
                 <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                <div className=" cursor-pointer flex justify-between items-center w-full gap-6">
-                  <div className="flex justify-center items-center">
-                    Price: {item.price}
+
+                {/* Description */}
+                <div className="flex flex-col gap-2 w-full">
+                  <div
+                    className="text-gray-700"
+                    dangerouslySetInnerHTML={{ __html: item.description }}
+                  />
+                </div>
+
+                <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
+
+                {/* Test Details */}
+                <div className="cursor-pointer flex justify-between items-center gap-4 w-full">
+                  <div className="flex justify-center gap-2 items-center">
+                    <span className="font-semibold">Duration:</span>
+                    <span>{item.duration}</span>
                   </div>
-                  <div className="flex justify-center items-center">
-                    Duration: {item.duration}
+                  <div className="flex justify-center gap-2 items-center">
+                    <span className="font-semibold">Price:</span>
+                    <span>{item.price === "0" ? "Free" : `${item.price}`}</span>
                   </div>
-                  <div className="flex justify-center items-center">
-                    Size: {item.size}
+                  {/* <div className="flex justify-between items-center">
+                    <span className="font-semibold">Number of Questions:</span>
+                    <span>{item.number_of_questions}</span>
                   </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold">Total Marks:</span>
+                    <span>{item.total_mark}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold">Marks Per Question:</span>
+                    <span>{item.mark_per_qns}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold">Negative Mark:</span>
+                    <span>{item.negative_mark}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold">Test Date:</span>
+                    <span>
+                      {item.test_date === "0000-00-00"
+                        ? "Not Scheduled"
+                        : item.test_date}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold">Start Time:</span>
+                    <span>{item.start_time}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold">End Time:</span>
+                    <span>{item.end_time}</span>
+                  </div> */}
                 </div>
               </div>
+
               <div className="flex flex-col justify-between items-end gap-10 w-fit">
-                {/* <UpdateDoc data={item} setData={setDoc} /> */}
                 <ConfirmDelete
-                  handleClick={() => handleDelete(contentDirId, 5, item.doc_id)}
+                  handleClick={
+                    () => handleDelete(item.test_id, "test", item.id) // Adjusted to use test_id and id
+                  }
                 />
               </div>
             </div>
           ))}
-          {/* <GetDataToAdd
-            directory_id={contentDirId}
-            data={getDataContent}
-            setData={setGetDataContent}
-          /> */}
         </div>
       )}
     </div>
