@@ -1,4 +1,5 @@
 import { API_URL } from "@/url";
+import { LatexParser } from "@/utils/LatexParser";
 import LayoutAdjuster from "@/utils/LayoutAdjuster";
 import axios from "axios";
 import { Loader } from "lucide-react";
@@ -31,11 +32,17 @@ function GetNewsContent() {
   const { title } = location.state || "";
   const [news, setNews] = useState("");
   const [loading, setLoading] = useState(false);
-  console.log(news);
 
   useEffect(() => {
     fetchData(setLoading, setNews, id);
   }, [id]);
+
+  const renderData = (data) => {
+    if (typeof data === "string") {
+      return LatexParser(data);
+    }
+    return data;
+  };
   return (
     <LayoutAdjuster>
       {loading ? (
@@ -44,12 +51,14 @@ function GetNewsContent() {
         </>
       ) : (
         <div className="w-[80%] flex flex-col justify-center items-center mx-auto">
-          <div className="w-full flex flex-col justify-center items-center my-5">
+          <div className="w-full flex flex-col justify-center items-center my-5 gap-10">
             <div className="w-full flex justify-center items-center gap-5">
-              <p className="text-lg font-bold text-center">{title}</p>
+              <p className="text-lg font-bold text-center">
+                {renderData(title)}
+              </p>
             </div>
             <div className="w-full flex flex-col justify-center items-center">
-              {news.content}
+              {renderData(news.content)}
             </div>
           </div>
         </div>

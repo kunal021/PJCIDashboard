@@ -24,8 +24,6 @@ function UpdateDir({
   const [dirName, setDirName] = useState(name);
   const [loading, setLoading] = useState(false);
 
-  console.log("Open");
-
   //   console.log(parentId, directoryType, contentType, directoryTypeId, dirName);
   //   console.log(name, id);
 

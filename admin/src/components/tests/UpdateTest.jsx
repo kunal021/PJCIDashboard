@@ -61,6 +61,7 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
       toast.error("Please fill all fields");
       return;
     }
+    console.log(formData);
     if (
       formData.type == "1" &&
       (formData.testDate == "0000-00-00" ||
@@ -98,6 +99,8 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
         formDataToSend,
         { headers: { "content-type": "multipart/form-data" } }
       );
+
+      console.log(response);
 
       if (response.status === 201) {
         dispatch(
