@@ -9,7 +9,7 @@ import CreateDir from "./CreateDir";
 import toast from "react-hot-toast";
 import ConfirmDelete from "@/utils/ConfirmDelete";
 import { Avatar } from "antd";
-import GetDataToAdd from "../freedocument/GetDataToAdd";
+import GetDataToAdd from "./GetDataToAdd";
 
 function GetDir({
   directoryType,
@@ -220,7 +220,6 @@ function GetDir({
           <GetDataToAdd
             directory_id={docId}
             contentType={contentType}
-            setData={setGetDataContent}
             onContentAdded={() => refreshDirContent(docId)}
           />
         </div>

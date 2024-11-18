@@ -244,7 +244,6 @@ function GetDir({
           <GetDataToAdd
             directory_id={docId}
             contentType={contentType}
-            setData={setGetDataContent}
             onContentAdded={() => refreshDirContent(docId)}
           />
         </div>

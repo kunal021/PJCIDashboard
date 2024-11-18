@@ -38,7 +38,7 @@ const getData = async (type, is_paid, setLoading, setData) => {
   }
 };
 
-function GetDataToAdd({ directory_id, setData, onContentAdded, contentType }) {
+function GetDataToAdd({ directory_id, onContentAdded, contentType }) {
   const [loading, setLoading] = useState(false);
   const [material, setMaterial] = useState([]);
   // const [note, setNote] = useState([]);
@@ -67,23 +67,6 @@ function GetDataToAdd({ directory_id, setData, onContentAdded, contentType }) {
       if (response.status === 201) {
         toast.success("Document Uploaded Successfully");
 
-        const item = material.find((mat) => mat.id == id);
-
-        setData((prev) => {
-          const currentData = Array.isArray(prev) ? prev : [];
-          return [
-            ...currentData,
-            {
-              id: item.id,
-              doc_id: item.id,
-              duration: item.duration,
-              name: item.name,
-              price: item.price,
-              size: item.size,
-              url: item.url,
-            },
-          ];
-        });
         if (onContentAdded) {
           onContentAdded();
         }
@@ -108,7 +91,7 @@ function GetDataToAdd({ directory_id, setData, onContentAdded, contentType }) {
       </DialogTrigger>
       <DialogContent className="h-[90%] z-[100] min-w-[60%] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Add Material</DialogTitle>
+          <DialogTitle>Add Content</DialogTitle>
         </DialogHeader>
         {loading ? (
           <Loader className="w-full h-full" />
