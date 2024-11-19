@@ -281,6 +281,56 @@ function GetDir({
             ))}
           </div>
         )}
+
+      {/* Note */}
+      {!showFolders && getDataContent && subDir == "0" && value === "Note" && (
+        <div className="flex flex-col justify-center items-center w-full">
+          {getDataContent?.map((item, idx) => (
+            <div
+              key={idx}
+              className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-3 gap-3"
+            >
+              <div className="flex flex-col justify-center items-start gap-4 w-full">
+                <div className="flex justify-between items-center w-full gap-4">
+                  <Avatar className="bg-gray-500 text-white">{idx + 1}</Avatar>
+                </div>
+                <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
+                <div
+                  onClick={() => handleViewDoc(item.doc_id)}
+                  className="cursor-pointer flex justify-between items-center w-full gap-6"
+                >
+                  {/* <div className="flex justify-center items-center w-48">
+                    <img
+                      src={item.img_url}
+                      className="rounded-lg border-transparent h-24 w-full"
+                    />
+                  </div> */}
+                  <div className="flex flex-wrap text-wrap w-full">
+                    {item.name}
+                  </div>
+                </div>
+                <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
+                <div className=" cursor-pointer flex justify-between items-center w-full gap-6">
+                  {/* <div className="flex justify-center items-center">
+                    Price: {item.price}
+                  </div> */}
+                  <div className="flex justify-center items-center">
+                    Duration: {item.duration}
+                  </div>
+                  <div className="flex justify-center items-center">
+                    Size: {item.size}
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col justify-between items-end gap-10 w-fit">
+                <ConfirmDelete
+                  handleClick={() => handleDelete(contentDirId, 5, item.doc_id)}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
       {/* {console.log(getDataContent, value, subDir)} */}
 
       {/* Video */}

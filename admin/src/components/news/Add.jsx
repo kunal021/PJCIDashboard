@@ -48,8 +48,8 @@ function Add({ setNews }) {
     category: "",
     img_url: "",
     author: "",
+    title: "",
   });
-  const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
   const handleChange = (e) => {
@@ -65,7 +65,7 @@ function Add({ setNews }) {
       !newData.img_url ||
       !newData.category ||
       !newData.author ||
-      !title ||
+      !newData.title ||
       !content
     ) {
       toast.error("Please fill all fields");
@@ -80,7 +80,7 @@ function Add({ setNews }) {
       formData.append("author", newData.author);
       formData.append("category", newData.category);
       formData.append("content", content);
-      formData.append("title", title);
+      formData.append("title", newData.title);
 
       const response = await axios.post(
         `${API_URL}/admin/news/addnews.php`,
@@ -101,8 +101,8 @@ function Add({ setNews }) {
           author: "",
           img_url: "",
           category: "",
+          title: "",
         });
-        setTitle("");
         setContent("");
       }
     } catch (error) {
@@ -139,9 +139,6 @@ function Add({ setNews }) {
   const getContentData = (html) => {
     setContent(html);
   };
-  const getTitleData = (html) => {
-    setTitle(html);
-  };
 
   return (
     <Sheet>
@@ -152,10 +149,18 @@ function Add({ setNews }) {
         <SheetHeader>
           <SheetTitle>Add News</SheetTitle>
         </SheetHeader>
-
-        <p className="block text-gray-700 text-sm font-bold">Title</p>
-        <div className=" w-full my-2">
-          <Tiptap placeholder={"Title"} getHtmlData={getTitleData} />
+        <div className="my-4 gap-5 flex justify-between items-center">
+          <FormField
+            htmlFor={"title"}
+            id={"title"}
+            type={"text"}
+            placeholder={"Title"}
+            name={"title"}
+            value={newData.title}
+            onChange={handleChange}
+          >
+            Title
+          </FormField>
         </div>
         <p className="block text-gray-700 text-sm font-bold">Content</p>
         <div className=" w-full my-2">

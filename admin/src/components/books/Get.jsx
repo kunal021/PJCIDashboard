@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { API_URL } from "../../url";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import Loader from "../../utils/Loader";
-import { Avatar } from "antd";
 import toast from "react-hot-toast";
 import ConfirmDelete from "../../utils/ConfirmDelete";
 import Update from "./Update";
@@ -142,24 +141,10 @@ function GetBooks() {
                   {book.map((item, idx) => (
                     <div
                       key={idx}
-                      className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-3 gap-3"
+                      className="flex justify-center items-center font-medium w-60 border rounded-md border-zinc-300 ml-2 my-5 p-3 gap-2"
                     >
-                      <div className="flex flex-col justify-center items-start gap-4 w-full">
-                        <div className="flex justify-between items-center w-full gap-4">
-                          <Avatar className="bg-gray-500 text-white">
-                            {/* {(currentPage - 1) * 10 + (idx + 1)} */}
-                            {idx + 1}
-                          </Avatar>
-                          {/* <div>Doc ID: {item.video_id}</div> */}
-                          <div>
-                            {/* <select
-                              defaultValue={item.type}
-                              className="border rounded-md border-lime-100 hover:border-lime-200 bg-lime-50 p-2"
-                            >
-                              <option value="0">Real</option>
-                              <option value="1">Demo</option>
-                            </select> */}
-                          </div>
+                      <div className="flex flex-col justify-center items-start gap-2 w-full">
+                        <div className="flex justify-between items-center w-full gap-2 scale-[90%]">
                           <div className="flex flex-col justify-center items-center">
                             <p className="text-xs font-bold">
                               {item.is_active === "1" ? "Public" : "Private"}
@@ -180,27 +165,28 @@ function GetBooks() {
                               </div>
                             </button>
                           </div>
+                          <Update data={item} setData={setBook} />
+                          <ConfirmDelete
+                            handleClick={() => handleDelete(item.id)}
+                          />
                         </div>
-                        <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                        <div
-                          //   onClick={() => window.open(item.url, "_blank")}
-                          className="cursor-pointer flex justify-between items-center w-full gap-6"
-                        >
-                          <div className="flex justify-center items-center w-48">
+
+                        <div className="cursor-pointer flex flex-col justify-between items-center w-full gap-2">
+                          <div className="flex justify-center items-center w-full">
                             <img
                               src={item.img_url}
-                              className="rounded-lg border-transparent h-24 w-full"
+                              className="rounded-lg border-transparent h-64 w-full"
                             />
                           </div>
-                          <div className="flex flex-wrap text-wrap w-full">
-                            {item.name}
-                          </div>
                         </div>
-                        <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
+
                         <div className=" cursor-pointer flex justify-between items-center w-full gap-6">
                           Description: {item.description}
                         </div>
-                        <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
+                        <div className="flex flex-wrap text-wrap w-full">
+                          {item.name}
+                        </div>
+
                         <div className=" cursor-pointer flex justify-between items-center w-full gap-6">
                           <div className="flex justify-center items-center">
                             Price: {item.price}
@@ -209,12 +195,6 @@ function GetBooks() {
                             Author: {item.author}
                           </div>
                         </div>
-                      </div>
-                      <div className="flex flex-col justify-between items-end gap-10 w-fit">
-                        <Update data={item} setData={setBook} />
-                        <ConfirmDelete
-                          handleClick={() => handleDelete(item.id)}
-                        />
                       </div>
                     </div>
                   ))}

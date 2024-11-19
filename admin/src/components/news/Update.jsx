@@ -50,8 +50,8 @@ function Update({ data, setData, onClose }) {
     category: data?.category,
     author: data?.author,
     img_url: data?.img_url,
+    title: data?.title,
   });
-  const [title, setTitle] = useState(data?.title);
   const [content, setContent] = useState(data?.content);
 
   const handleChange = (e) => {
@@ -67,7 +67,7 @@ function Update({ data, setData, onClose }) {
       !newData.img_url ||
       !newData.author ||
       !newData.category ||
-      !title ||
+      !newData.title ||
       !content
     ) {
       toast.error("Please fill all fields");
@@ -80,7 +80,7 @@ function Update({ data, setData, onClose }) {
       formData.append("img_url", newData.img_url);
       formData.append("author", newData.author);
       formData.append("category", newData.category);
-      formData.append("title", title);
+      formData.append("title", newData.title);
       formData.append("content", content);
       const response = await axios.post(
         `${API_URL}/admin/news/updatenews.php`,
@@ -130,9 +130,6 @@ function Update({ data, setData, onClose }) {
   const getContentData = (html) => {
     setContent(html);
   };
-  const getTitleData = (html) => {
-    setTitle(html);
-  };
 
   return (
     <Sheet open onOpenChange={onClose}>
@@ -147,13 +144,18 @@ function Update({ data, setData, onClose }) {
           <SheetTitle>Edit News</SheetTitle>
         </SheetHeader>
 
-        <p className="block text-gray-700 text-sm font-bold">Title</p>
-        <div className=" w-full my-2">
-          <Tiptap
+        <div className="my-4 gap-5 flex justify-between items-center">
+          <FormField
+            htmlFor={"title"}
+            id={"title"}
+            type={"text"}
             placeholder={"Title"}
-            getHtmlData={getTitleData}
-            initialContent={title}
-          />
+            name={"title"}
+            value={newData.title}
+            onChange={handleChange}
+          >
+            Title
+          </FormField>
         </div>
         <p className="block text-gray-700 text-sm font-bold">Content</p>
         <div className=" w-full my-2">

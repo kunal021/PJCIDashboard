@@ -142,10 +142,10 @@ function GetNews() {
 
                           <div className="text-center text-sm flex justify-between items-center w-full gap-2">
                             <p className="font-medium">
-                              By: {truncateData(item.author, 2)}
+                              By: {truncateData(item.author, 3)}
                             </p>
                             <p className="font-medium bg-gray-200 rounded p-0.5">
-                              {item.category}
+                              {truncateData(item.category, 3)}
                             </p>
                           </div>
                         </div>

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setTest } from "../../redux/tests/testSlice";
 import { deleteTest } from "../../redux/tests/testSlice";
@@ -57,41 +57,41 @@ function GetTest() {
     }
   };
 
-  const handleChangeStatus = useCallback(
-    async (testId, flag) => {
-      const confirmAlert = window.confirm(
-        `${
-          flag === "1"
-            ? "Test will become Inactive. Do you want to proceed"
-            : "Test will become Active. Do you want to proceed"
-        }`
-      );
-      if (confirmAlert) {
-        try {
-          flag = flag === "1" ? "0" : "1";
-          const formData = new FormData();
-          formData.append("test_id", testId);
-          formData.append("statuscode", flag);
-          await axios.post(
-            `${API_URL}/admin/test/updateteststatus.php`,
-            formData,
-            { headers: { "content-type": "multipart/form-data" } }
-          );
-          // console.log(res);
+  // const handleChangeStatus = useCallback(
+  //   async (testId, flag) => {
+  //     const confirmAlert = window.confirm(
+  //       `${
+  //         flag === "1"
+  //           ? "Test will become Inactive. Do you want to proceed"
+  //           : "Test will become Active. Do you want to proceed"
+  //       }`
+  //     );
+  //     if (confirmAlert) {
+  //       try {
+  //         flag = flag === "1" ? "0" : "1";
+  //         const formData = new FormData();
+  //         formData.append("test_id", testId);
+  //         formData.append("statuscode", flag);
+  //         await axios.post(
+  //           `${API_URL}/admin/test/updateteststatus.php`,
+  //           formData,
+  //           { headers: { "content-type": "multipart/form-data" } }
+  //         );
+  //         // console.log(res);
 
-          // Update local state instead of fetching users again
-          const updatedTest = test.map((test) =>
-            test.test_id === testId ? { ...test, flag } : test
-          );
-          dispatch(setTest(updatedTest));
-        } catch (error) {
-          console.log("Error updating user status:", error);
-          // Handle error (e.g., show an error message)
-        }
-      }
-    },
-    [dispatch, test]
-  );
+  //         // Update local state instead of fetching users again
+  //         const updatedTest = test.map((test) =>
+  //           test.test_id === testId ? { ...test, flag } : test
+  //         );
+  //         dispatch(setTest(updatedTest));
+  //       } catch (error) {
+  //         console.log("Error updating user status:", error);
+  //         // Handle error (e.g., show an error message)
+  //       }
+  //     }
+  //   },
+  //   [dispatch, test]
+  // );
 
   // console.log(test);
 
@@ -134,7 +134,7 @@ function GetTest() {
                         >
                           {test.test_name}
                         </div>
-                        <div className="w-[20%] flex flex-col justify-center items-center">
+                        {/* <div className="w-[20%] flex flex-col justify-center items-center">
                           <p className="text-xs font-bold">
                             {test.flag === "1" ? "Public" : "Private"}
                           </p>
@@ -153,17 +153,23 @@ function GetTest() {
                               <div className="toggle-switch-handle"></div>
                             </div>
                           </button>
-                        </div>
+                        </div> */}
                       </div>
                       <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                      <div className="flex justify-start items-center gap-1 w-full text-xs font-medium">
-                        <div className="flex justify-start items-start gap-1 w-full">
-                          <p>Start Date:</p>
-                          <p>{test.test_date}</p>
+                      <div className="flex justify-between items-center gap-1 w-full text-xs font-medium">
+                        <div className="flex justify-start items-center gap-1 w-full">
+                          <p>Duration:</p>
+                          <p>{test.duration}</p>
                         </div>
-                        <div className="flex justify-start items-start gap-1 w-full">
-                          <p>Start Time:</p>
-                          <p>{test.start_time}</p>
+                        {test.type === "1" && (
+                          <div className="flex justify-center items-center gap-1 w-full">
+                            <p>Start Date:</p>
+                            <p>{test.test_date}</p>
+                          </div>
+                        )}
+                        <div className="flex justify-end items-center gap-1 w-full">
+                          <p>Type:</p>
+                          <p>{test.type === "1" ? "Scheduled" : "Stored"}</p>
                         </div>
                       </div>
                     </div>

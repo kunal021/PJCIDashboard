@@ -290,6 +290,11 @@ function GetDocuments() {
                           <div className="flex justify-center items-center">
                             Price: {item.price}
                           </div>
+
+                          <div className="flex justify-center items-center">
+                            Size: {item.size}
+                          </div>
+
                           <div className="flex justify-center items-center">
                             Duration: {item.duration}
                           </div>
