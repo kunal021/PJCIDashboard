@@ -43,11 +43,12 @@ const fetchData = async (
 
 function Add({ setNews }) {
   const closeRef = useRef(null);
+  const loggedInUser = JSON.parse(localStorage.getItem("authToken"));
   const [loading, setLoading] = useState(false);
   const [newData, setNewData] = useState({
     category: "",
     img_url: "",
-    author: "",
+    author: loggedInUser?.name,
     title: "",
   });
   const [content, setContent] = useState("");

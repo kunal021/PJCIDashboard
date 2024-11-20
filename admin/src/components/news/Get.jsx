@@ -113,7 +113,7 @@ function GetNews() {
                   {news.map((item, idx) => (
                     <div
                       key={idx}
-                      className="flex flex-col font-medium w-72 h-72 border rounded-md border-zinc-300 ml-2 my-5 p-4 gap-3"
+                      className="flex flex-col font-medium w-64 border rounded-md border-zinc-300 ml-2 my-5 p-3 gap-3"
                     >
                       <Actions
                         id={item.id}
@@ -132,7 +132,7 @@ function GetNews() {
                         >
                           <img
                             src={item.img_url}
-                            className="rounded-lg border-transparent w-full h-40"
+                            className="rounded-lg border-transparent w-full h-64"
                             alt="News thumbnail"
                           />
 

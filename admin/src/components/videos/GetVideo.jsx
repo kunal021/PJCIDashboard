@@ -12,6 +12,7 @@ import UpdateBtn from "../../utils/UpdateBtn";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteVideo, setVideo } from "../../redux/videos/videoSlice";
 import UpdateVideo from "./UpdateVideo";
+import { useNavigate } from "react-router-dom";
 
 const fetchData = async (
   setLoading,
@@ -39,6 +40,7 @@ const fetchData = async (
 };
 
 function GetVideo() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [paginationData, setPaginationData] = useState({});
@@ -125,7 +127,15 @@ function GetVideo() {
           } `}
         >
           <div className="w-full flex flex-col justify-center items-center my-5">
-            <h1 className="text-3xl font-bold text-center">Videos List</h1>
+            <div className="w-full flex justify-center items-center gap-6">
+              <h1 className="text-3xl font-bold text-center">Videos List</h1>
+              <button
+                className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md"
+                onClick={() => navigate("/add-video")}
+              >
+                Add
+              </button>
+            </div>
             <div className="w-[80%] flex flex-col justify-center items-center">
               {video.length > 0 ? (
                 <div className="flex flex-col justify-center items-center w-full">

@@ -137,13 +137,13 @@ function GetAllUsers() {
                         <TableCell>{user.mo_number}</TableCell>
                         <TableCell>{user.email}</TableCell>
                         <TableCell>
-                          <div className="flex flex-col items-center space-y-1">
+                          <div className="flex flex-col items-center gap-0.5">
                             <span className="text-xs font-medium">
                               {user.isactive === "1" ? "Public" : "Private"}
                             </span>
-                            <p className="text-xs font-bold">
+                            {/* <p className="text-xs font-bold">
                               {user.isactive === "1" ? "Public" : "Private"}
-                            </p>
+                            </p> */}
                             <button
                               onClick={() => {
                                 handleChangeStatus(user.id, user.isactive);

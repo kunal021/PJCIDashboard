@@ -4,8 +4,10 @@ import { API_URL } from "../../url";
 import FormField from "../../utils/FormField";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 function AddFreeVideo() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
     video_id: "",
@@ -60,36 +62,48 @@ function AddFreeVideo() {
   // };
   return (
     <LayoutAdjuster>
-      <div className="w-[60%] flex flex-col justify-center items-center p-5 border rounded-lg border-gray-500">
-        <FormField
-          id={"video_id"}
-          type={"text"}
-          placeholder={"Enter Video Id"}
-          htmlFor={"video_id"}
-          name={"video_id"}
-          value={data.video_id}
-          onChange={handleChange}
-        >
-          Video Id
-        </FormField>
-        <FormField
-          id={"video_title"}
-          type={"text"}
-          placeholder={"Enter Video Title"}
-          htmlFor={"video_title"}
-          name={"video_title"}
-          value={data.video_title}
-          onChange={handleChange}
-        >
-          Video Tile
-        </FormField>
+      <div className="flex flex-col justify-center items-center w-full">
+        <h3 className="text-3xl font-bold my-5">Add Free Video</h3>
+        <div className="w-[60%] flex flex-col justify-center items-center p-5 my-10 border rounded-lg border-gray-500">
+          <FormField
+            id={"video_id"}
+            type={"text"}
+            placeholder={"Enter Video Id"}
+            htmlFor={"video_id"}
+            name={"video_id"}
+            value={data.video_id}
+            onChange={handleChange}
+          >
+            Video Id
+          </FormField>
+          <FormField
+            id={"video_title"}
+            type={"text"}
+            placeholder={"Enter Video Title"}
+            htmlFor={"video_title"}
+            name={"video_title"}
+            value={data.video_title}
+            onChange={handleChange}
+          >
+            Video Tile
+          </FormField>
 
-        <button
-          onClick={handleAddVideo}
-          className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md"
-        >
-          {loading ? "Adding..." : "Add Free Video"}
-        </button>
+          <div className="flex justify-between items-center gap-5 w-full">
+            <button
+              onClick={() => navigate("/free-video")}
+              className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md"
+            >
+              Cancel
+            </button>
+
+            <button
+              onClick={handleAddVideo}
+              className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md"
+            >
+              {loading ? "Adding..." : "Add Free Video"}
+            </button>
+          </div>
+        </div>
       </div>
     </LayoutAdjuster>
   );

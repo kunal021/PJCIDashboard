@@ -81,11 +81,11 @@ const items = [
         label: "All Videos",
         link: "/get-videos",
       },
-      {
-        key: "10",
-        label: "Add Video",
-        link: "/add-video",
-      },
+      // {
+      //   key: "10",
+      //   label: "Add Video",
+      //   link: "/add-video",
+      // },
       {
         key: "11",
         label: "Free Video",
