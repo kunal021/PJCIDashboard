@@ -67,7 +67,7 @@ function GetBooks() {
         }
       );
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         // dispatch(deleteVideo(id));
         const newBook = book.filter((book) => book.id !== id);
         setBook(newBook);
@@ -137,9 +137,9 @@ function GetBooks() {
               <h1 className="text-3xl font-bold text-center">Books List</h1>
               <Add book={book} setBook={setBook} />
             </div>
-            <div className="w-full flex flex-col justify-center items-center">
+            <div className="w-full flex justify-center items-center">
               {book.length > 0 ? (
-                <div className="flex flex-col justify-center items-center w-full">
+                <div className="flex flex-wrap justify-center items-center w-full">
                   {book.map((item, idx) => (
                     <div
                       key={idx}

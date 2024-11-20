@@ -9,6 +9,7 @@ import {
   AddTestSeries,
   AddVideo,
   BookOrders,
+  CreateNotification,
   FreeVideos,
   GetAllUsers,
   GetBooks,
@@ -151,6 +152,10 @@ function App() {
           <Route
             path="/get-users"
             element={<PrivateRoute element={GetAllUsers} />}
+          />
+          <Route
+            path="/notification"
+            element={<PrivateRoute element={CreateNotification} />}
           />
           <Route
             path="/about-us"

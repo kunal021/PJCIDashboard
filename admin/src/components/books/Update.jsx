@@ -22,7 +22,6 @@ function Update({ data, setData }) {
     id: data?.id,
     name: data?.name,
     price: data?.price,
-    type: data?.type,
     img_url: data?.img_url,
     author: data?.author,
     description: data?.description,
@@ -39,7 +38,6 @@ function Update({ data, setData }) {
   const handleSubmit = async () => {
     if (
       !newData.img_url ||
-      !newData.type ||
       !newData.price ||
       !newData.name ||
       !newData.author ||
@@ -49,21 +47,21 @@ function Update({ data, setData }) {
       return;
     }
     try {
+      console.log(newData);
       setLoading(true);
       const formData = new FormData();
       formData.append("id", id);
-      formData.append("image_url", newData.img_url);
+      formData.append("imgurl", newData.img_url);
       formData.append("name", newData.name);
-      formData.append("type", newData.type);
       formData.append("author", newData.author);
       formData.append("price", newData.price);
       formData.append("description", newData.description);
       const response = await axios.post(
-        `${API_URL}/admin/docs/updatedoc.php`,
+        `${API_URL}/admin/book/updatebook.php`,
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );
-      // console.log(response);
+      console.log(response);
       if (response.status === 200) {
         toast.success("Book Updated Successfully");
 

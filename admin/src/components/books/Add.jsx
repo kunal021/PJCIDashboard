@@ -14,7 +14,33 @@ import { Loader, UploadCloud } from "lucide-react";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 
-function Add({ setDoc }) {
+const fetchData = async (
+  setLoading,
+  //   currentPage,
+  setBook
+  //   setPaginationData
+) => {
+  try {
+    setLoading(true);
+    // const formData = new FormData();
+    // formData.append("page", currentPage);
+    // formData.append("limit", 10);
+    // formData.append("type", 2);
+    const response = await axios.post(
+      `${API_URL}/admin/book/getallbook.php`
+      //   formData,
+      //   { headers: "content-type/form-data" }
+    );
+    setBook(response.data.data);
+    // setPaginationData(response.data.pagination);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+function Add({ setBook }) {
   const closeRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [newData, setNewData] = useState({
@@ -49,7 +75,7 @@ function Add({ setDoc }) {
       setLoading(true);
       const formData = new FormData();
 
-      formData.append("image_url", newData.img_url);
+      formData.append("imgurl", newData.img_url);
       formData.append("name", newData.name);
       formData.append("type", "2");
       formData.append("author", newData.author);
@@ -61,21 +87,11 @@ function Add({ setDoc }) {
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );
-      // console.log(response);
-      if (response.status === 200) {
+      console.log(response);
+      if (response.status === 201) {
         toast.success("Book Uploaded Successfully");
 
-        setDoc((prev) => [
-          ...prev,
-          {
-            id: response.data.id,
-            name: newData.name,
-            price: newData.price,
-            type: "2",
-            img_url: newData.img_url,
-            author: newData.author,
-          },
-        ]);
+        fetchData(setLoading, setBook);
 
         if (closeRef.current) {
           closeRef.current.click();
@@ -234,7 +250,7 @@ function Add({ setDoc }) {
             onClick={handleSubmit}
             className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md w-1/2"
           >
-            Update
+            Add
           </button>
         </div>
       </SheetContent>

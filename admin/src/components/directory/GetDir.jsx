@@ -335,7 +335,7 @@ function GetDir({
 
       {/* Video */}
       {!showFolders && getDataContent && subDir == "0" && value == "Video" && (
-        <div className="flex flex-wrap justify-center items-center w-72">
+        <div className="flex flex-col justify-center items-center w-full">
           {getDataContent?.map((item, idx) => (
             <div
               key={idx}

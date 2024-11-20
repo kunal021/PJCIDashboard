@@ -113,20 +113,25 @@ function GetAllUsers() {
                 <Table className="border border-gray-200 rounded">
                   <TableHeader>
                     <TableRow className="divide-x divide-gray-200">
-                      <TableHead className="w-[50px]">Id</TableHead>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Mobile No.</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Update</TableHead>
-                      <TableHead>More</TableHead>
+                      <TableHead className="w-[50px]  text-center">
+                        Id
+                      </TableHead>
+                      <TableHead className="text-center">Name</TableHead>
+                      <TableHead className="text-center">Mobile No.</TableHead>
+                      <TableHead className="text-center">Email</TableHead>
+                      <TableHead className="text-center">
+                        Resgister Date
+                      </TableHead>
+                      <TableHead className="text-center">Status</TableHead>
+                      <TableHead className="text-center">Update</TableHead>
+                      <TableHead className="text-center">More</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody className="divide-y divide-gray-200">
                     {users.map((user, idx) => (
                       <TableRow
                         key={user.id}
-                        className="divide-x divide-gray-200"
+                        className="divide-x divide-gray-200 text-center"
                       >
                         <TableCell>
                           {(currentPage - 1) * 10 + (idx + 1)}
@@ -136,6 +141,9 @@ function GetAllUsers() {
                         </TableCell>
                         <TableCell>{user.mo_number}</TableCell>
                         <TableCell>{user.email}</TableCell>
+                        <TableCell>
+                          {user.registration_date.slice(0, 10)}
+                        </TableCell>
                         <TableCell>
                           <div className="flex flex-col items-center gap-0.5">
                             <span className="text-xs font-medium">
