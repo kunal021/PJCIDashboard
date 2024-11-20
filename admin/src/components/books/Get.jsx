@@ -7,6 +7,8 @@ import toast from "react-hot-toast";
 import ConfirmDelete from "../../utils/ConfirmDelete";
 import Update from "./Update";
 import Add from "./Add";
+import { truncateData } from "@/utils/truncateData";
+import { IndianRupee, UserRound } from "lucide-react";
 
 const fetchData = async (
   setLoading,
@@ -141,59 +143,75 @@ function GetBooks() {
                   {book.map((item, idx) => (
                     <div
                       key={idx}
-                      className="flex justify-center items-center font-medium w-60 border rounded-md border-zinc-300 ml-2 my-5 p-3 gap-2"
+                      className="flex flex-col w-64 border rounded-lg border-gray-300 shadow-md ml-2 my-5 p-3 gap-4 bg-white"
                     >
-                      <div className="flex flex-col justify-center items-start gap-2 w-full">
-                        <div className="flex justify-between items-center w-full gap-2 scale-[90%]">
-                          <div className="flex flex-col justify-center items-center">
-                            <p className="text-xs font-bold">
-                              {item.is_active === "1" ? "Public" : "Private"}
-                            </p>
-                            <button
-                              onClick={() => {
-                                handleChangeStatus(item.id, item.is_active);
-                              }}
-                              className="toggle-switch scale-75 align-middle"
-                            >
-                              <input
-                                type="checkbox"
-                                checked={item.is_active === "1"}
-                                readOnly
-                              />
-                              <div className="toggle-switch-background">
-                                <div className="toggle-switch-handle"></div>
-                              </div>
-                            </button>
-                          </div>
+                      {/* Header Section */}
+                      <div className="flex justify-between items-center w-full">
+                        {/* Status Section */}
+                        <div className="flex flex-col items-center">
+                          <p
+                            className={`text-xs font-bold ${
+                              item.is_active === "1"
+                                ? "text-green-500"
+                                : "text-red-500"
+                            }`}
+                          >
+                            {item.is_active === "1" ? "Public" : "Private"}
+                          </p>
+                          <button
+                            onClick={() => {
+                              handleChangeStatus(item.id, item.is_active);
+                            }}
+                            className="toggle-switch scale-75"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={item.is_active === "1"}
+                              readOnly
+                            />
+                            <div className="toggle-switch-background">
+                              <div className="toggle-switch-handle"></div>
+                            </div>
+                          </button>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex gap-2">
                           <Update data={item} setData={setBook} />
                           <ConfirmDelete
                             handleClick={() => handleDelete(item.id)}
                           />
                         </div>
+                      </div>
 
-                        <div className="cursor-pointer flex flex-col justify-between items-center w-full gap-2">
-                          <div className="flex justify-center items-center w-full">
-                            <img
-                              src={item.img_url}
-                              className="rounded-lg border-transparent h-64 w-full"
-                            />
-                          </div>
-                        </div>
+                      {/* Image Section */}
+                      <div className="flex justify-center items-center">
+                        <img
+                          src={item.img_url}
+                          alt="Book Cover"
+                          className="rounded-md border border-gray-200 h-64 w-full"
+                        />
+                      </div>
 
-                        <div className=" cursor-pointer flex justify-between items-center w-full gap-6">
-                          Description: {item.description}
-                        </div>
-                        <div className="flex flex-wrap text-wrap w-full">
-                          {item.name}
-                        </div>
+                      {/* Content Section */}
+                      <div className="flex flex-col gap-2">
+                        <h3 className="text-sm font-semibold text-gray-800 truncate">
+                          {truncateData(item.name, 5)}
+                        </h3>
+                        <p className="text-xs text-gray-600 truncate">
+                          {truncateData(item.description, 5)}
+                        </p>
+                      </div>
 
-                        <div className=" cursor-pointer flex justify-between items-center w-full gap-6">
-                          <div className="flex justify-center items-center">
-                            Price: {item.price}
-                          </div>
-                          <div className="flex justify-center items-center">
-                            Author: {item.author}
-                          </div>
+                      {/* Footer Section */}
+                      <div className="flex justify-between items-center text-sm text-gray-700">
+                        <div className="flex items-center gap-1">
+                          <IndianRupee className="h-4 w-4 text-green-500" />
+                          <span>{item.price}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <UserRound className="h-4 w-4 text-blue-500" />
+                          <span>{item.author}</span>
                         </div>
                       </div>
                     </div>

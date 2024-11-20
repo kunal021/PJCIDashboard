@@ -125,6 +125,11 @@ const items = [
         label: "Books",
         link: "/get-books",
       },
+      {
+        key: "34",
+        label: "Orders",
+        link: "/get-orders",
+      },
     ],
   },
   {

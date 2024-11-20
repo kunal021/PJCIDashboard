@@ -9,9 +9,9 @@ import {
 } from "@/components/ui/sheet";
 import { API_URL } from "@/url";
 import FormField from "@/utils/FormField";
-import Tiptap from "@/utils/TextEditor";
+// import Tiptap from "@/utils/TextEditor";
 import axios from "axios";
-import { Loader, SquarePen, UploadCloud } from "lucide-react";
+import { SquarePen } from "lucide-react";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -23,15 +23,15 @@ function UpdateDoc({ data, setData }) {
   const [newData, setNewData] = useState({
     id: data?.id,
     name: data?.name,
-    price: data?.price,
+    // price: data?.price,
     type: data?.type,
-    img_url: data?.img_url,
+    // img_url: data?.img_url,
     duration: dur[0],
   });
 
   const [durationUnit, setDurationunit] = useState(dur[1]);
 
-  const [description, setDescription] = useState(data?.description);
+  // const [description, setDescription] = useState(data?.description);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,9 +43,9 @@ function UpdateDoc({ data, setData }) {
 
   const handleSubmit = async () => {
     if (
-      !newData.img_url ||
+      // !newData.img_url ||
       !newData.type ||
-      !newData.price ||
+      // !newData.price ||
       !newData.name ||
       !newData.duration
     ) {
@@ -56,12 +56,12 @@ function UpdateDoc({ data, setData }) {
       setLoading(true);
       const formData = new FormData();
       formData.append("id", id);
-      formData.append("image_url", newData.img_url);
+      // formData.append("image_url", newData.img_url);
       formData.append("name", newData.name);
       formData.append("type", newData.type);
-      formData.append("description", description);
+      // formData.append("description", description);
       formData.append("duration", `${newData.duration} ${durationUnit}`);
-      formData.append("price", newData.price);
+      // formData.append("price", newData.price);
       const response = await axios.post(
         `${API_URL}/admin/docs/updatedoc.php`,
         formData,
@@ -96,32 +96,32 @@ function UpdateDoc({ data, setData }) {
     }
   };
 
-  const handleUploadImage = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    try {
-      const formData = new FormData();
-      formData.append("image", file);
-      const response = await axios.post(
-        `${API_URL}/admin/courses/uplodecourseimage.php`,
-        formData,
-        { headers: { "content-type": "multipart/form-data" } }
-      );
+  // const handleUploadImage = async (e) => {
+  //   const file = e.target.files[0];
+  //   if (!file) return;
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append("image", file);
+  //     const response = await axios.post(
+  //       `${API_URL}/admin/courses/uplodecourseimage.php`,
+  //       formData,
+  //       { headers: { "content-type": "multipart/form-data" } }
+  //     );
 
-      // console.log(response.data);
-      if (response.status === 200) {
-        setNewData((prev) => ({ ...prev, img_url: response.data.url }));
-        toast.success("Image Uploaded Successfully");
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Error Uploading Image");
-    }
-  };
+  //     // console.log(response.data);
+  //     if (response.status === 200) {
+  //       setNewData((prev) => ({ ...prev, img_url: response.data.url }));
+  //       toast.success("Image Uploaded Successfully");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error("Error Uploading Image");
+  //   }
+  // };
 
-  const getDescriptionData = (html) => {
-    setDescription(html);
-  };
+  // const getDescriptionData = (html) => {
+  //   setDescription(html);
+  // };
 
   return (
     <Sheet>
@@ -160,16 +160,16 @@ function UpdateDoc({ data, setData }) {
         >
           Name
         </FormField>
-        <p className="block text-gray-700 text-sm font-bold">Description</p>
+        {/* <p className="block text-gray-700 text-sm font-bold">Description</p>
         <div className=" w-full my-2">
           <Tiptap
             placeholder={"Category"}
             getHtmlData={getDescriptionData}
             initialContent={description}
           />
-        </div>
+        </div> */}
         <div className="my-4 gap-5 flex justify-between items-center">
-          <FormField
+          {/* <FormField
             htmlFor={"price"}
             id={"price"}
             type={"number"}
@@ -179,7 +179,7 @@ function UpdateDoc({ data, setData }) {
             onChange={handleChange}
           >
             Price
-          </FormField>
+          </FormField> */}
           <FormField
             htmlFor={"duration"}
             id={"duration"}
@@ -201,7 +201,7 @@ function UpdateDoc({ data, setData }) {
             <option value={"Year"}>Year</option>
           </select>
         </div>
-        <div className="my-4 flex justify-between items-center">
+        {/* <div className="my-4 flex justify-between items-center">
           <input
             disabled={loading}
             id="fileinput"
@@ -248,7 +248,7 @@ function UpdateDoc({ data, setData }) {
           onChange={handleChange}
         >
           Image Url
-        </FormField>
+        </FormField> */}
         <div className="mt-[25px] flex w-full gap-2.5">
           <SheetClose ref={closeRef} asChild>
             <button

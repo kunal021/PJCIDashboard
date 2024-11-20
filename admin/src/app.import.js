@@ -34,6 +34,7 @@ import GetImage from "./components/images/Get";
 import GetFreeMaterial from "./components/freedocument/Get";
 import GetNews from "./components/news/Get";
 import GetNewsContent from "./components/news/GetContent";
+import BookOrders from "./components/books/orders/Get";
 
 export {
   GetCategory,
@@ -72,4 +73,5 @@ export {
   GetFreeMaterial,
   GetNews,
   GetNewsContent,
+  BookOrders,
 };

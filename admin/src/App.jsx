@@ -8,6 +8,7 @@ import {
   AddTest,
   AddTestSeries,
   AddVideo,
+  BookOrders,
   FreeVideos,
   GetAllUsers,
   GetBooks,
@@ -130,6 +131,10 @@ function App() {
           <Route
             path="/get-books"
             element={<PrivateRoute element={GetBooks} />}
+          />
+          <Route
+            path="/get-orders"
+            element={<PrivateRoute element={BookOrders} />}
           />
           <Route
             path="/get-images"

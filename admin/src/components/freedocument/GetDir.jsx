@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
-import { Folder } from "lucide-react";
-import { Avatar } from "antd";
+import { Clock, FileBox, Folder } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
@@ -251,49 +250,58 @@ function GetDir({
 
       {/* Render content if has_subdirectories == 0 */}
       {!showFolders && getDataContent && subDir == "0" && (
-        <div className="flex flex-col justify-center items-center w-full">
+        <div className="flex flex-wrap justify-center items-center w-full">
           {getDataContent?.map((item, idx) => (
             <div
               key={idx}
-              className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-3 gap-3"
+              className="flex flex-col w-64 border rounded-lg border-gray-300 shadow-md ml-2 my-5 p-3 gap-4 bg-white"
             >
-              <div className="flex flex-col justify-center items-start gap-4 w-full">
-                <div className="flex justify-between items-center w-full gap-4">
-                  <Avatar className="bg-gray-500 text-white">{idx + 1}</Avatar>
+              {/* <div className="flex justify-between items-center">
+                Status and Actions
+                Actions
+                <div className="flex gap-2">
+                  <UpdateDoc data={item} setData={setDoc} />
+                  <ConfirmDelete
+                    handleClick={() =>
+                      handleDelete(contentDirId, 5, item.doc_id)
+                    }
+                  />
                 </div>
-                <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                <div
-                  onClick={() => handleViewDoc(item.doc_id)}
-                  className="cursor-pointer flex justify-between items-center w-full gap-6"
-                >
-                  {/* <div className="flex justify-center items-center w-48">
-                    <img
-                      src={item.img_url}
-                      className="rounded-lg border-transparent h-24 w-full"
-                    />
-                  </div> */}
-                  <div className="flex flex-wrap text-wrap w-full">
-                    {item.name}
-                  </div>
-                </div>
-                <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                <div className=" cursor-pointer flex justify-between items-center w-full gap-6">
-                  <div className="flex justify-center items-center">
-                    Price: {item.price}
-                  </div>
-                  <div className="flex justify-center items-center">
-                    Duration: {item.duration}
-                  </div>
-                  <div className="flex justify-center items-center">
-                    Size: {item.size}
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col justify-between items-end gap-10 w-fit">
-                {/* <UpdateDoc data={item} setData={setDoc} /> */}
-                <ConfirmDelete
-                  handleClick={() => handleDelete(contentDirId, 5, item.doc_id)}
+              </div> */}
+              {/* <div
+                onClick={() => handleViewDoc(item.doc_id)}
+                className="flex justify-center items-center"
+              >
+                <img
+                  src={item.img_url}
+                  alt="Document Thumbnail"
+                  className="rounded-lg border border-gray-200 object-cover w-full h-64"
                 />
+              </div> */}
+              <div className="flex flex-col gap-3">
+                <h3
+                  onClick={() => handleViewDoc(item.doc_id)}
+                  className="cursor-pointer text-sm font-semibold text-gray-800 truncate"
+                >
+                  {item.name}
+                </h3>
+                <div className="flex justify-between items-center gap-2">
+                  <div className="flex items-center gap-2 text-sm text-gray-700">
+                    <ConfirmDelete
+                      handleClick={() =>
+                        handleDelete(contentDirId, 5, item.doc_id)
+                      }
+                    />
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-700">
+                    <FileBox className="h-4 w-4 text-gray-500" />
+                    <span>{item.size}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-700">
+                    <Clock className="h-4 w-4 text-gray-500" />
+                    <span>{item.duration}</span>
+                  </div>
+                </div>
               </div>
             </div>
           ))}

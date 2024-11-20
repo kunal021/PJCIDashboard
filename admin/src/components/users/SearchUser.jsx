@@ -11,6 +11,14 @@ import UpdateBtn from "../../utils/UpdateBtn";
 import More from "./More";
 import { setUser } from "../../redux/users/userSlice";
 import UpdateUser from "./UpdateUser";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
 
 function SearchUser() {
   const dispatch = useDispatch();
@@ -183,7 +191,7 @@ function SearchUser() {
                   className={`${
                     updateUser
                       ? "hidden"
-                      : "w-[80%] flex flex-col justify-center items-center mx-auto"
+                      : "w-full flex flex-col justify-center items-center mx-auto"
                   }`}
                 >
                   <div className="flex justify-center items-center space-x-10">
@@ -195,74 +203,79 @@ function SearchUser() {
 
                   {data.length > 0 ? (
                     <>
-                      <table className="table-auto w-full m-5 border">
-                        <thead>
-                          <tr className="bg-gray-100">
-                            <th className="p-2 text-sm">Id</th>
-                            <th className="p-2 text-sm">Name</th>
-                            <th className="p-2 text-sm">Mobile No.</th>
-                            <th className="p-2 text-sm">Email</th>
-                            <th className="p-2 text-sm">Status</th>
-                            <th className="p-2 text-sm">Update</th>
-                            {/* <th className="p-2 text-sm">Delete</th> */}
-                            <th className="p-2 text-sm">More</th>
-                          </tr>
-                        </thead>
-                        <tbody className="text-center">
-                          {data.map((user, idx) => (
-                            <tr key={user.id} className="bg-gray-50">
-                              <td className="border p-2 text-sm">{idx + 1}</td>
-                              <td className="border p-2 text-sm">
-                                {user.firstname} {user.lastname}
-                              </td>
-                              <td className="border p-2 text-sm">
-                                {user.mo_number}
-                              </td>
-                              <td className="border p-2 text-sm">
-                                {user.email}
-                              </td>
-                              <td className="border p-2 text-sm flex justify-center items-center">
-                                <button
-                                  onClick={() => {
-                                    handleChangeStatus(user.id, user.isactive);
-                                  }}
-                                  className="toggle-switch scale-75"
-                                >
-                                  <input
-                                    type="checkbox"
-                                    checked={user.isactive === "1"}
-                                    readOnly
-                                  />
-                                  <div className="toggle-switch-background">
-                                    <div className="toggle-switch-handle"></div>
+                      <div className="w-full overflow-auto mt-4">
+                        <Table className="border border-gray-200 rounded">
+                          <TableHeader>
+                            <TableRow className="divide-x divide-gray-200">
+                              <TableHead className="w-[50px]">Id</TableHead>
+                              <TableHead>Name</TableHead>
+                              <TableHead>Mobile No.</TableHead>
+                              <TableHead>Email</TableHead>
+                              <TableHead>Status</TableHead>
+                              <TableHead>Update</TableHead>
+                              <TableHead>More</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody className="divide-y divide-gray-200">
+                            {data.map((user, idx) => (
+                              <TableRow
+                                key={user.id}
+                                className="divide-x divide-gray-200"
+                              >
+                                <TableCell>{idx + 1}</TableCell>
+                                <TableCell>
+                                  {user.firstname} {user.lastname}
+                                </TableCell>
+                                <TableCell>{user.mo_number}</TableCell>
+                                <TableCell>{user.email}</TableCell>
+                                <TableCell>
+                                  <div className="flex flex-col items-center space-y-1">
+                                    <span className="text-xs font-medium">
+                                      {user.isactive === "1"
+                                        ? "Public"
+                                        : "Private"}
+                                    </span>
+                                    <p className="text-xs font-bold">
+                                      {user.isactive === "1"
+                                        ? "Public"
+                                        : "Private"}
+                                    </p>
+                                    <button
+                                      onClick={() => {
+                                        handleChangeStatus(
+                                          user.id,
+                                          user.isactive
+                                        );
+                                      }}
+                                      className="toggle-switch scale-75"
+                                    >
+                                      <input
+                                        type="checkbox"
+                                        checked={user.isactive === "1"}
+                                        readOnly
+                                      />
+                                      <div className="toggle-switch-background">
+                                        <div className="toggle-switch-handle"></div>
+                                      </div>
+                                    </button>
                                   </div>
-                                </button>
-                              </td>
-                              <td className="border p-2 text-sm">
-                                <UpdateBtn
-                                  handleClick={() => {
-                                    setUpdateUserData(user);
-                                    setUpdateUser(true);
-                                  }}
-                                />
-                              </td>
-                              {/* <td className="border p-2 text-sm">
-                        <ConfirmDelete
-                          handleClick={() => {
-                            // Handle delete button click
-                          }}
-                        />
-                      </td> */}
-                              <td className="border p-2 text-sm ">
-                                <More user={user} />
-                                {/* <div className="flex justify-center items-center">
-                          <Ellipsis className="cursor-pointer" />
-                        </div> */}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                                </TableCell>
+                                <TableCell>
+                                  <UpdateBtn
+                                    handleClick={() => {
+                                      setUpdateUserData(user);
+                                      setUpdateUser(true);
+                                    }}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <More user={user} />
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
                     </>
                   ) : (
                     <div className="text-2xl font-bold text-center mt-20">
