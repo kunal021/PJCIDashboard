@@ -44,9 +44,10 @@ function GetDir({
           headers: { "content-type": "multipart/form-data" },
         }
       );
-      console.log(response);
+      // console.log(response);
       if (response.status === 201) {
         setGetDataContent(response.data.data || []);
+
         setShowFolders(false);
       }
     } catch (error) {
@@ -141,9 +142,8 @@ function GetDir({
 
       if (response.status === 201) {
         // dispatch(deleteVideo(id));
-        const newdoc = getDataContent.filter((doc) => doc.doc_id !== cid);
-        setGetDataContent(newdoc);
-        toast.success("Material Deleted Successfully");
+        refreshDirContent(did);
+        toast.success("Content Deleted Successfully");
       }
     } catch (error) {
       console.log(error);
@@ -273,7 +273,7 @@ function GetDir({
                 <div className="flex flex-col justify-between items-end gap-10 w-fit">
                   <ConfirmDelete
                     handleClick={() =>
-                      handleDelete(contentDirId, 5, item.doc_id)
+                      handleDelete(contentDirId, contentType, item.doc_id)
                     }
                   />
                 </div>
@@ -324,7 +324,9 @@ function GetDir({
               </div>
               <div className="flex flex-col justify-between items-end gap-10 w-fit">
                 <ConfirmDelete
-                  handleClick={() => handleDelete(contentDirId, 5, item.doc_id)}
+                  handleClick={() =>
+                    handleDelete(contentDirId, contentType, item.doc_id)
+                  }
                 />
               </div>
             </div>
@@ -359,7 +361,7 @@ function GetDir({
                     </div>
                     <ConfirmDelete
                       handleClick={() =>
-                        handleDelete(contentDirId, 5, item.v_id)
+                        handleDelete(contentDirId, contentType, item.v_id)
                       }
                     />
                   </div>
@@ -450,7 +452,7 @@ function GetDir({
               <div className="flex flex-col justify-between items-end gap-10 w-fit">
                 <ConfirmDelete
                   handleClick={
-                    () => handleDelete(item.test_id, "test", item.id) // Adjusted to use test_id and id
+                    () => handleDelete(item.test_id, contentType, item.id) // Adjusted to use test_id and id
                   }
                 />
               </div>

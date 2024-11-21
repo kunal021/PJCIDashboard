@@ -5,7 +5,7 @@ function Preview({ imgUrl, title, body }) {
       {/* Header Section */}
       <div className="flex items-center mb-3">
         <img
-          src={"../../../public/fav.jpg"}
+          src={"./fav.jpg"}
           alt="Icon"
           className="w-4 h-4 bg-gray-300 mr-2"
         />
