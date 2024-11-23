@@ -5,6 +5,7 @@ import * as XLSX from "xlsx";
 import { Loader, Plus } from "lucide-react";
 import axios from "axios";
 import { API_URL } from "../../url";
+import toast from "react-hot-toast";
 
 const MakeUserPurchase = ({
   id,
@@ -93,9 +94,11 @@ const MakeUserPurchase = ({
       if (response.status === 200) {
         setMakePurchaseData(response.data);
         setMakePurchaseStatus(true);
+        toast.success("Purchase Created Successfully");
       }
     } catch (error) {
       console.log(error);
+      toast.error(error?.response?.data?.message || "Error Creating Purchase");
     } finally {
       setLoading(false);
     }

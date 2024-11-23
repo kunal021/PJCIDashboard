@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/sheet";
 import { API_URL } from "@/url";
 import FormField from "@/utils/FormField";
+import Tiptap from "@/utils/TextEditor";
 import axios from "axios";
 import { Loader, SquarePen, UploadCloud } from "lucide-react";
 import { useRef, useState } from "react";
@@ -24,8 +25,8 @@ function Update({ data, setData }) {
     price: data?.price,
     img_url: data?.img_url,
     author: data?.author,
-    description: data?.description,
   });
+  const [description, setDescription] = useState(data?.description);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,7 +42,7 @@ function Update({ data, setData }) {
       !newData.price ||
       !newData.name ||
       !newData.author ||
-      !newData.description
+      !description
     ) {
       toast.error("Please fill all fields");
       return;
@@ -55,7 +56,7 @@ function Update({ data, setData }) {
       formData.append("name", newData.name);
       formData.append("author", newData.author);
       formData.append("price", newData.price);
-      formData.append("description", newData.description);
+      formData.append("description", description);
       const response = await axios.post(
         `${API_URL}/admin/book/updatebook.php`,
         formData,
@@ -112,6 +113,11 @@ function Update({ data, setData }) {
       toast.error("Error Uploading Image");
     }
   };
+
+  const getDescriptionData = (html) => {
+    setDescription(html);
+  };
+
   return (
     <Sheet>
       <SheetTrigger className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-1 text-xs rounded group relative">
@@ -150,18 +156,13 @@ function Update({ data, setData }) {
             Name
           </FormField>
         </div>
-        <div className="my-4 gap-5 flex justify-between items-center">
-          <FormField
-            htmlFor={"description"}
-            id={"description"}
-            type={"text"}
-            placeholder={"Description"}
-            name={"description"}
-            value={newData.description}
-            onChange={handleChange}
-          >
-            Description
-          </FormField>
+        <p className="block text-gray-700 text-sm font-bold">Description</p>
+        <div className=" w-full my-2">
+          <Tiptap
+            placeholder={"Category"}
+            getHtmlData={getDescriptionData}
+            initialContent={description}
+          />
         </div>
         <div className="my-4 gap-5 flex justify-between items-center">
           <FormField

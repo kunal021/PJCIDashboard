@@ -9,6 +9,7 @@ import Update from "./Update";
 import Add from "./Add";
 import { truncateData } from "@/utils/truncateData";
 import { IndianRupee, UserRound } from "lucide-react";
+import { LatexParser } from "@/utils/LatexParser";
 
 const fetchData = async (
   setLoading,
@@ -122,6 +123,13 @@ function GetBooks() {
 
   // console.log(book);
 
+  const renderData = (data) => {
+    if (typeof data === "string") {
+      return LatexParser(data);
+    }
+    return data;
+  };
+
   return (
     <LayoutAdjuster>
       {loading ? (
@@ -199,7 +207,7 @@ function GetBooks() {
                           {truncateData(item.name, 5)}
                         </h3>
                         <p className="text-xs text-gray-600 truncate">
-                          {truncateData(item.description, 5)}
+                          {truncateData(renderData(item.description), 5)}
                         </p>
                       </div>
 

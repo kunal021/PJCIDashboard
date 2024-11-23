@@ -4,6 +4,7 @@ import GetDir from "../directory/GetDir";
 import { useEffect, useState } from "react";
 import Breadcrumbs from "../directory/BreadCrumbs";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import GetCourseById from "./GetCourseById";
 
 const insertBreadcrumb = (data, id, name, parentId, subDir) => {
   const updateData = data.map((item) => {
@@ -51,6 +52,7 @@ function CourseTab() {
   );
 
   const initialId = localStorage.getItem("initialId");
+  const courseId = localStorage.getItem("courseId");
   const initialBreadcrumbs = {
     Video: [
       {
@@ -139,7 +141,8 @@ function CourseTab() {
 
   return (
     <LayoutAdjuster>
-      <div className="w-[80%] mx-auto mt-20">
+      <div className="w-[80%] mx-auto my-10">
+        <GetCourseById id={courseId} />
         <Tabs
           value={activeTab}
           onValueChange={handleTabChange}

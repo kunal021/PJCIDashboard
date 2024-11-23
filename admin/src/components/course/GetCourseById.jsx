@@ -8,12 +8,15 @@ import Loader from "../../utils/Loader";
 // import toast from "react-hot-toast";
 // import UpdateBtn from "../../utils/UpdateBtn";
 // import parser from "html-react-parser";
-import { Avatar } from "antd";
+// import { Avatar } from "antd";
 // import AddVideoInCourse from "./AddVideoInCourse";
 // import SeeAll from "../../utils/SeeAll";
 import { CalendarClock, IndianRupee, SquarePlay } from "lucide-react";
-import AddVideoInCourse from "./AddVideoInCourse";
+// import AddVideoInCourse from "./AddVideoInCourse";
 import { LatexParser } from "@/utils/LatexParser";
+import MakeUserPurchase from "../setting/MakeUserPurchase";
+import expiryDate from "@/utils/ExpiryDate";
+import MakeUserPurchaseResponse from "@/utils/MakeUserPurchaseResponse";
 
 const fetchCourse = async (setCourses, setLoading, id) => {
   try {
@@ -41,6 +44,8 @@ const fetchCourse = async (setCourses, setLoading, id) => {
 function GetCourseById({ id }) {
   const [loading, setLoading] = useState(false);
   const [courses, setCourses] = useState([]);
+  const [makePurchaseData, setMakePurchaseData] = useState(null);
+  const [makePurchaseStatus, setMakePurchaseStatus] = useState(false);
 
   //   console.log(courses);
 
@@ -116,19 +121,40 @@ function GetCourseById({ id }) {
         <Loader />
       ) : (
         <div
-          className={`w-[80%] flex flex-col justify-center items-center mx-auto`}
+          className={`w-full flex flex-col justify-center items-center mx-auto`}
         >
           {courses ? (
             <div className="flex flex-col justify-center items-center w-full">
-              <h1 className="text-3xl font-bold text-center my-2">
-                Course Detail
-              </h1>
+              <div className="flex justify-center items-center gap-5">
+                <h1 className="text-3xl font-bold text-center my-2">
+                  Course Detail
+                </h1>
+
+                {courses && (
+                  <MakeUserPurchase
+                    id={courses.id}
+                    amount={courses.price}
+                    expiryDate={expiryDate(courses?.course_duration, 7)}
+                    productInfo={courses.course_name}
+                    type={"1"}
+                    setMakePurchaseStatus={setMakePurchaseStatus}
+                    setMakePurchaseData={setMakePurchaseData}
+                  />
+                )}
+              </div>
+
+              {makePurchaseStatus && (
+                <MakeUserPurchaseResponse
+                  data={makePurchaseData}
+                  onClose={() => setMakePurchaseStatus(false)}
+                />
+              )}
               <div className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-2 gap-4">
                 <div className="flex flex-col justify-center items-start gap-2 w-full">
                   <div className="flex justify-between items-center w-full gap-4">
-                    <Avatar className="bg-gray-500 text-white">
+                    {/* <Avatar className="bg-gray-500 text-white">
                       {courses.id}
-                    </Avatar>
+                    </Avatar> */}
                     {/* <button
                             onClick={() => {
                               handleChangeStatus(course.id, course.isactive);
@@ -180,24 +206,22 @@ function GetCourseById({ id }) {
                     {renderCourseData(courses.course_description)}
                   </div>
                 </div>
-                <div className="flex flex-col justify-between items-end gap-10 w-fit">
+                {/* <div className="flex flex-col justify-between items-end gap-10 w-fit">
                   <AddVideoInCourse courseId={courses.id} />
-                  {/* <SeeAll
+                  <SeeAll
                     handleClick={() =>
                       navigate(`/get-course-videos?id=${course.id}`)
                     }
-                    childern={"See All Videos"} */}
-                  {/* /> */}
-                  {/* <UpdateBtn
-                          handleClick={() => {
-                            setUpdateCourse(true);
-                            setUpdateCourseData(course.id);
-                          }}
-                        />
-                        <ConfirmDelete
-                          handleClick={() => handleDelete(course.id)}
-                        /> */}
-                </div>
+                    childern={"See All Videos"}
+                  />
+                  <UpdateBtn
+                    handleClick={() => {
+                      setUpdateCourse(true);
+                      setUpdateCourseData(course.id);
+                    }}
+                  />
+                  <ConfirmDelete handleClick={() => handleDelete(course.id)} />
+                </div> */}
               </div>
             </div>
           ) : (
