@@ -19,8 +19,6 @@ const getData = async (type, directory_id, setLoading, setData) => {
   try {
     setLoading(true);
     const formData = new FormData();
-    // formData.append("page", currentPage);
-    // formData.append("limit", 10);
     formData.append("content_type", type);
     formData.append("directory_id", directory_id);
 
@@ -29,7 +27,6 @@ const getData = async (type, directory_id, setLoading, setData) => {
       formData,
       { headers: "content-type/form-data" }
     );
-    // console.log(response.data.data);
     setData(response.data.data);
   } catch (error) {
     console.log(error);
@@ -53,6 +50,31 @@ function renderContentItem(item, contentType) {
       );
 
     case "5": // Document Content
+      return (
+        <>
+          <div className="cursor-pointer flex justify-between items-center w-full gap-6">
+            <div className="flex justify-center items-center w-48">
+              <img
+                src={item.img_url}
+                alt={item.name}
+                className="rounded-lg border-transparent h-24 w-full"
+              />
+            </div>
+            <div className="flex flex-wrap text-wrap w-full">{item.name}</div>
+          </div>
+          <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
+          <div className="cursor-pointer flex justify-between items-center w-full gap-6">
+            <div className="flex justify-center items-center">
+              Price: {item.price}
+            </div>
+            <div className="flex justify-center items-center">
+              Duration: {item.duration}
+            </div>
+          </div>
+        </>
+      );
+
+    case "6": // Note Content
       return (
         <>
           <div className="cursor-pointer flex justify-between items-center w-full gap-6">
@@ -105,13 +127,31 @@ function renderContentItem(item, contentType) {
   }
 }
 
-function GetDataToAdd({ directory_id, onContentAdded, contentType }) {
+function GetDataToAdd({
+  directory_id,
+  onContentAdded,
+  contentType,
+  isOpen,
+  onOpenChange,
+}) {
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState([]);
+  const [hasAddedContent, setHasAddedContent] = useState(false);
 
   useEffect(() => {
-    getData(contentType, directory_id, setLoading, setContent);
-  }, [contentType, directory_id]);
+    if (isOpen) {
+      getData(contentType, directory_id, setLoading, setContent);
+      setHasAddedContent(false); // Reset the flag when dialog opens
+    }
+  }, [contentType, directory_id, isOpen]);
+
+  const handleDialogClose = () => {
+    if (hasAddedContent && onContentAdded) {
+      onContentAdded();
+    }
+    onOpenChange(false);
+    setHasAddedContent(false);
+  };
 
   const handleAddDoc = async (id) => {
     try {
@@ -129,7 +169,8 @@ function GetDataToAdd({ directory_id, onContentAdded, contentType }) {
 
       if (response.status === 201) {
         toast.success("Content added successfully");
-        if (onContentAdded) onContentAdded();
+        getData(contentType, directory_id, setLoading, setContent);
+        setHasAddedContent(true); // Set flag when content is successfully added
       }
     } catch (error) {
       toast.error(error?.response?.data?.message || "Error adding content");
@@ -140,7 +181,10 @@ function GetDataToAdd({ directory_id, onContentAdded, contentType }) {
 
   return (
     <Dialog>
-      <DialogTrigger className="group relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-gray-300 bg-white text-center transition-all hover:border-primary">
+      <DialogTrigger
+        onClick={() => onOpenChange(true)}
+        className="group relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-gray-300 bg-white text-center transition-all hover:border-primary"
+      >
         <div className="absolute inset-0 bg-primary/5 transition-opacity group-hover:opacity-100" />
         <div className="z-10 flex flex-col items-center justify-center space-y-2">
           <Plus className="h-8 w-8 text-gray-400 transition-colors group-hover:text-primary" />
@@ -149,7 +193,10 @@ function GetDataToAdd({ directory_id, onContentAdded, contentType }) {
           </span>
         </div>
       </DialogTrigger>
-      <DialogContent className="h-[90%] z-[100] min-w-[60%] overflow-y-auto">
+      <DialogContent
+        onCloseCallback={handleDialogClose}
+        className="h-[90%] z-[100] min-w-[60%] overflow-y-auto"
+      >
         <DialogHeader>
           <DialogTitle>Add Content</DialogTitle>
         </DialogHeader>
@@ -187,7 +234,10 @@ function GetDataToAdd({ directory_id, onContentAdded, contentType }) {
             )}
           </div>
         )}
-        <DialogClose className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md w-full">
+        <DialogClose
+          onClick={handleDialogClose}
+          className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md w-full"
+        >
           Close
         </DialogClose>
       </DialogContent>

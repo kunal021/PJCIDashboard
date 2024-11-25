@@ -11,6 +11,42 @@ import ConfirmDelete from "@/utils/ConfirmDelete";
 import { Avatar } from "antd";
 import GetDataToAdd from "./GetDataToAdd";
 
+const getDir = async (
+  docId,
+  directoryType,
+  courseId,
+  contentType,
+  setLoading,
+  setDirData,
+  setShowFolders
+) => {
+  if (!docId) return;
+  try {
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("parent_id", docId);
+    formData.append("directory_type", directoryType);
+    formData.append("directory_type_id", courseId);
+    formData.append("content_type", contentType);
+    const response = await axios.post(
+      `${API_URL}/admin/directory/getdir.php`,
+      formData,
+      {
+        headers: { "content-type": "multipart/form-data" },
+      }
+    );
+    setDirData(response.data.data);
+    if (response.data.data.some((item) => item.has_subdirectories != 0)) {
+      setShowFolders(true);
+    }
+  } catch (error) {
+    console.log(error);
+    toast.error(error?.response?.data?.message || "Error fetching data");
+  } finally {
+    setLoading(false);
+  }
+};
+
 function GetDir({
   directoryType,
   contentType,
@@ -21,13 +57,14 @@ function GetDir({
 }) {
   const [searchParams] = useSearchParams();
   const location = useLocation();
-  const subDir = (location.state && location.state.subDir) || "1";
+  const [subDir, setSubDir] = useState("1");
   const courseId = localStorage.getItem("courseId");
   const docId = searchParams.get("id") ? searchParams.get("id") : "1";
   const [loading, setLoading] = useState(false);
-  const [getDataContent, setGetDataContent] = useState();
+  const [getDataContent, setGetDataContent] = useState([]);
   const [showFolders, setShowFolders] = useState(true); // Track folder/content view
   const [contentDirId, setContentDirId] = useState();
+  const [isAddContentDialogOpen, setIsAddContentDialogOpen] = useState(false);
 
   const refreshDirContent = async (dirId) => {
     if (!dirId) return;
@@ -47,7 +84,6 @@ function GetDir({
       // console.log(response);
       if (response.status === 201) {
         setGetDataContent(response.data.data || []);
-
         setShowFolders(false);
       }
     } catch (error) {
@@ -60,34 +96,21 @@ function GetDir({
   };
 
   useEffect(() => {
-    const getDir = async () => {
-      if (!docId) return;
-      try {
-        setLoading(true);
-        const formData = new FormData();
-        formData.append("parent_id", docId);
-        formData.append("directory_type", directoryType);
-        formData.append("directory_type_id", courseId);
-        formData.append("content_type", contentType);
-        const response = await axios.post(
-          `${API_URL}/admin/directory/getdir.php`,
-          formData,
-          {
-            headers: { "content-type": "multipart/form-data" },
-          }
-        );
-        setDirData(response.data.data);
-        if (response.data.data.some((item) => item.has_subdirectories != 0)) {
-          setShowFolders(true);
-        }
-      } catch (error) {
-        console.log(error);
-        toast.error(error?.response?.data?.message || "Error fetching data");
-      } finally {
-        setLoading(false);
-      }
-    };
-    getDir();
+    if (location.state && location.state.subDir) {
+      setSubDir(location.state.subDir);
+    }
+  }, [location.state]);
+
+  useEffect(() => {
+    getDir(
+      docId,
+      directoryType,
+      courseId,
+      contentType,
+      setLoading,
+      setDirData,
+      setShowFolders
+    );
   }, [contentType, docId, directoryType, courseId, setDirData]);
 
   const getDirDataContent = async (dirId) => {
@@ -142,6 +165,9 @@ function GetDir({
 
       if (response.status === 201) {
         // dispatch(deleteVideo(id));
+        if (!getDataContent || getDataContent.length <= 1) {
+          setSubDir("-1");
+        }
         refreshDirContent(did);
         toast.success("Content Deleted Successfully");
       }
@@ -156,9 +182,18 @@ function GetDir({
     // }
   };
 
+  // console.log(subDir);
+  // console.log(location.state.subDir);
+
+  const handleContentAdded = () => {
+    setSubDir("0");
+    refreshDirContent(docId); // Refresh the content of the directory
+  };
+
   if (loading) {
     return <p className="text-center m-auto h-full">Loading...</p>;
   }
+
   return (
     <div className="p-2 flex flex-wrap gap-8">
       {subDir == "1" &&
@@ -203,7 +238,7 @@ function GetDir({
           </div>
         ))}
 
-      {showFolders && (
+      {subDir != "0" && (
         <div className="cursor-pointer flex justify-center items-center w-20 pb-8 ">
           <CreateDir
             contentType={contentType}
@@ -218,9 +253,11 @@ function GetDir({
       {subDir != "1" && (
         <div className="flex justify-center items-center w-20 pb-8 ">
           <GetDataToAdd
+            isOpen={isAddContentDialogOpen}
+            onOpenChange={setIsAddContentDialogOpen}
             directory_id={docId}
             contentType={contentType}
-            onContentAdded={() => refreshDirContent(docId)}
+            onContentAdded={handleContentAdded}
           />
         </div>
       )}

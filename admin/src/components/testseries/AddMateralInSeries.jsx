@@ -17,19 +17,19 @@ import { API_URL } from "@/url";
 import { addTest } from "@/redux/tests/testSlice";
 import toast from "react-hot-toast";
 
-const fetchTest = async (setTest, setLoading, directory_id) => {
+const fetchTest = async (setMaterial, setLoading, directory_id) => {
   try {
     setLoading(true);
     const formData = new FormData();
     formData.append("directory_id", directory_id);
-    formData.append("content_type", 3);
+    formData.append("content_type", 5);
     const response = await axios.post(
       `${API_URL}/admin/directory/getcontenttoaddindir.php`,
       formData,
       { headers: "multipart/form-data" }
     );
     // console.log(response);
-    setTest(response.data.data);
+    setMaterial(response.data.data);
   } catch (error) {
     console.error("Error fetching courses:", error);
   } finally {
@@ -37,25 +37,25 @@ const fetchTest = async (setTest, setLoading, directory_id) => {
   }
 };
 
-function AddTestInSeries() {
+function AddMaterialInSeries() {
   const location = useLocation();
   const { testData } = location.state || {};
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
-  const [test, setTest] = useState([]);
-  // console.log(test);
+  const [material, setMaterial] = useState([]);
+  // console.log(material);
 
   useEffect(() => {
-    fetchTest(setTest, setLoading, testData.directory_id);
+    fetchTest(setMaterial, setLoading, testData.directory_id);
   }, [testData.directory_id]);
 
-  const handleAddTest = async (testId) => {
+  const handleAddMaterial = async (materialId) => {
     try {
       const formData = new FormData();
       formData.append("directory_id", testData.directory_id);
-      formData.append("content_type", 3);
-      formData.append("content_id", testId);
+      formData.append("content_type", 5);
+      formData.append("content_id", materialId);
       const response = await axios.post(
         `${API_URL}/admin/directory/addcontentindirectory.php`,
         formData,
@@ -63,24 +63,26 @@ function AddTestInSeries() {
       );
       // console.log(response);
       if (response.status === 201) {
-        fetchTest(setTest, setLoading, testData.directory_id);
+        fetchTest(setMaterial, setLoading, testData.directory_id);
+        const addedMaterial = material.find((t) => t.id === materialId);
         dispatch(
           addTest({
-            test_id: testId,
-            test_name: test.find((t) => t.test_id === testId).test_name,
-            test_description: test.find((t) => t.test_id === testId)
-              .test_description,
-            test_date: test.find((t) => t.test_id === testId).test_date,
-            start_time: test.find((t) => t.test_id === testId).start_time,
-            end_time: test.find((t) => t.test_id === testId).end_time,
+            id: materialId,
+            name: addedMaterial.name,
+            description: addedMaterial.description,
+            price: addedMaterial.price,
+            size: addedMaterial.size,
+            duration: addedMaterial.duration,
           })
         );
-        setTest((prevTest) => prevTest.filter((t) => t.test_id !== testId));
+        setMaterial((prevTest) =>
+          prevTest.filter((t) => t.test_id !== material)
+        );
         toast.success("Test Added Successfully");
       }
     } catch (error) {
-      console.error("Error adding test:", error);
-      toast.error(error.response.data.massage || "Error adding test");
+      console.error("Error adding material:", error);
+      toast.error(error.response.data.massage || "Error adding material");
     }
   };
   return (
@@ -90,7 +92,7 @@ function AddTestInSeries() {
       </DialogTrigger>
       <DialogContent className="h-[500px] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Add Test</DialogTitle>
+          <DialogTitle>Add Material</DialogTitle>
         </DialogHeader>
         <div className="w-full border-gray-300">
           {loading ? (
@@ -101,11 +103,11 @@ function AddTestInSeries() {
             >
               <div className="flex justify-center items-center gap-10">
                 {/* <h1 className="text-3xl font-bold text-center">Test List</h1>
-            <LinkButton to={"/add-test"}>Add Test</LinkButton> */}
+            <LinkButton to={"/add-material"}>Add Test</LinkButton> */}
               </div>
-              {test.length > 0 ? (
+              {material.length > 0 ? (
                 <div className="flex flex-col justify-center items-center w-full">
-                  {test.map((test, idx) => (
+                  {material.map((material, idx) => (
                     <div
                       key={idx}
                       className="flex justify-center items-center w-[90%] border rounded-md border-gray-300 m-2 p-3"
@@ -118,17 +120,17 @@ function AddTestInSeries() {
                         </div>
                         <div className="flex flex-col justify-start items-center gap-2 w-full">
                           <div className="flex justify-start items-center font-bold w-full cursor-pointer">
-                            <div className="w-full">{test.test_name}</div>
+                            <div className="w-full">{material.name}</div>
                             {/* <div className="w-[20%]">
                           <button
                             onClick={() => {
-                              handleChangeStatus(test.test_id, test.flag);
+                              handleChangeStatus(material.test_id, material.flag);
                             }}
                             className="toggle-switch scale-75 align-middle"
                           >
                             <input
                               type="checkbox"
-                              checked={test.flag === "1"}
+                              checked={material.flag === "1"}
                               readOnly
                             />
                             <div className="toggle-switch-background">
@@ -140,19 +142,23 @@ function AddTestInSeries() {
                           <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
                           <div className="flex justify-start items-center gap-1 w-full text-xs font-medium">
                             <div className="flex justify-start items-start gap-1 w-full">
-                              <p>Start Date:</p>
-                              <p>{test.test_date}</p>
+                              <p>Price:</p>
+                              <p>{material.price}</p>
                             </div>
                             <div className="flex justify-start items-start gap-1 w-full">
-                              <p>Start Time:</p>
-                              <p>{test.start_time}</p>
+                              <p>Size:</p>
+                              <p>{material.size}</p>
+                            </div>
+                            <div className="flex justify-start items-start gap-1 w-full">
+                              <p>Duration:</p>
+                              <p>{material.duration}</p>
                             </div>
                           </div>
                         </div>
                       </div>
                       <div className="flex flex-col justify-center items-end gap-4 w-[10%]">
                         <Plus
-                          onClick={() => handleAddTest(test.test_id)}
+                          onClick={() => handleAddMaterial(material.id)}
                           className="cursor-pointer"
                         />
                       </div>
@@ -175,4 +181,4 @@ function AddTestInSeries() {
   );
 }
 
-export default AddTestInSeries;
+export default AddMaterialInSeries;

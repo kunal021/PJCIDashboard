@@ -14,6 +14,7 @@ function UpdateVideo({ setUpdateVideo, updateVideoData }) {
     video_duration: updateVideoData.video_duration,
     video_title: updateVideoData.video_title,
   });
+  const [loading, setLoading] = useState(false);
   // const [videoTitle, setVideoTitle] = useState(updateVideoData.video_title);
 
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ function UpdateVideo({ setUpdateVideo, updateVideoData }) {
   };
   const handleUpdateVideo = async () => {
     try {
+      setLoading(true);
       const formData = new FormData();
       formData.append("id", updateVideoData.id);
       formData.append("videoid", data.videoid);
@@ -54,6 +56,8 @@ function UpdateVideo({ setUpdateVideo, updateVideoData }) {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -108,12 +112,22 @@ function UpdateVideo({ setUpdateVideo, updateVideoData }) {
               placeholder="Write the question here..."
             />
           </div> */}
-          <button
-            onClick={handleUpdateVideo}
-            className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md"
-          >
-            Update Video
-          </button>
+          <div className="flex justify-between items-center gap-5 w-full">
+            <button
+              disabled={loading}
+              onClick={() => setUpdateVideo((prev) => !prev)}
+              className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md w-1/2"
+            >
+              Cancel
+            </button>
+            <button
+              disabled={loading}
+              onClick={handleUpdateVideo}
+              className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md w-1/2"
+            >
+              {loading ? "Updating..." : "Update"}
+            </button>
+          </div>
         </div>
       </div>
     </div>

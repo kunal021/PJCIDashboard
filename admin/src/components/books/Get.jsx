@@ -138,7 +138,7 @@ function GetBooks() {
         </>
       ) : (
         <div
-          className={`${"w-[80%] flex flex-col justify-center items-center mx-auto"} `}
+          className={`${"w-[90%] flex flex-col justify-center items-center mx-auto"} `}
         >
           <div className="w-full flex flex-col justify-center items-center my-5">
             <div className="w-full flex justify-center items-center gap-5">

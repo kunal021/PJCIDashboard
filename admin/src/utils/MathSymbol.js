@@ -1,8 +1,7 @@
 export const mathSymbols = [
   // Basic Maths
-  { latex: "\\frac{a}{b}", symbol: "a/b", category: "Basic Maths" },
-  { latex: "\\sqrt{x}", symbol: "√x", category: "Basic Maths" },
-  { latex: "\\pm", symbol: "±", category: "Basic Maths" },
+  { latex: "\\overline{A}", symbol: "Ā", category: "Basic Maths" },
+  { latex: "\\overline{a}", symbol: "ā", category: "Basic Maths" },
   { latex: "\\mp", symbol: "∓", category: "Basic Maths" },
   { latex: "\\times", symbol: "×", category: "Basic Maths" },
   { latex: "\\div", symbol: "÷", category: "Basic Maths" },
@@ -12,8 +11,6 @@ export const mathSymbols = [
   { latex: "\\triangle", symbol: "△", category: "Basic Maths" },
   { latex: "\\boxed{a}", symbol: "Boxed", category: "Basic Maths" },
   { latex: "\\pm", symbol: "±", category: "Basic Maths" },
-  { latex: "\\div", symbol: "÷", category: "Basic Maths" },
-  { latex: "\\times", symbol: "×", category: "Basic Maths" },
   { latex: "\\sqrt{x}", symbol: "√x", category: "Basic Maths" },
   { latex: "\\frac{a}{b}", symbol: "a/b", category: "Basic Maths" },
   { latex: "\\sum_{i=1}^{n} i", symbol: "∑_i=1^n i", category: "Basic Maths" },

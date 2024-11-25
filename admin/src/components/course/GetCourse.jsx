@@ -11,11 +11,11 @@ import toast from "react-hot-toast";
 import UpdateBtn from "../../utils/UpdateBtn";
 // import parser from "html-react-parser";
 import LayoutAdjuster from "../../utils/LayoutAdjuster";
-import { Avatar } from "antd";
+// import { Avatar } from "antd";
 // import AddVideoInCourse from "./AddVideoInCourse";
 // import SeeAll from "../../utils/SeeAll";
 import { useNavigate } from "react-router-dom";
-import { CalendarClock, IndianRupee, SquarePlay } from "lucide-react";
+import { CalendarClock, IndianRupee } from "lucide-react";
 import { LatexParser } from "@/utils/LatexParser";
 
 const fetchCourse = async (dispatch, setLoading) => {
@@ -130,36 +130,36 @@ function GetCourse() {
           className={`${
             updateCourse
               ? "hidden"
-              : "w-[80%] flex flex-col justify-center items-center mx-auto"
+              : "w-[90%] flex flex-col justify-center items-center mx-auto"
           }`}
         >
-          <div className="flex justify-center items-center space-x-10 my-5">
+          <div className="flex justify-center items-center gap-10 my-5">
             <h1 className="text-3xl font-bold text-center">Course List</h1>
             <LinkButton to="/add-course">Add Course</LinkButton>
           </div>
           {courses.length > 0 ? (
-            <div className="flex flex-col justify-center items-center w-full">
+            <div className="flex flex-wrap justify-center items-center w-full gap-4">
               {courses.map(
                 (course, idx) =>
                   course && (
                     <div
                       key={idx}
-                      className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-2 gap-4"
+                      className="flex justify-center items-center font-medium w-52 border rounded-md border-zinc-300 ml-2 my-4 py-2 px-1"
                     >
                       <div className="flex flex-col justify-center items-start gap-2 w-full">
-                        <div className="flex justify-between items-center w-full gap-4">
-                          <Avatar className="bg-gray-500 text-white">
+                        <div className="flex justify-between items-center w-full gap-2">
+                          {/* <Avatar className="bg-gray-500 text-white">
                             {idx + 1}
-                          </Avatar>
+                          </Avatar> */}
                           <div className="flex flex-col justify-center items-center">
-                            <p className="text-xs font-bold">
+                            <p className="text-[10px] font-bold">
                               {course.isactive === "1" ? "Public" : "Private"}
                             </p>
                             <button
                               onClick={() => {
                                 handleChangeStatus(course.id, course.isactive);
                               }}
-                              className="toggle-switch scale-75 align-middle"
+                              className="toggle-switch scale-50 align-middle"
                             >
                               <input
                                 type="checkbox"
@@ -171,53 +171,52 @@ function GetCourse() {
                               </div>
                             </button>
                           </div>
+                          <div className="flex scale-75 justify-between items-end gap-2 w-fit">
+                            <UpdateBtn
+                              handleClick={() => {
+                                setUpdateCourse(true);
+                                setUpdateCourseData(course.id);
+                              }}
+                            />
+                            <ConfirmDelete
+                              handleClick={() => handleDelete(course.id)}
+                            />
+                          </div>
                         </div>
 
-                        <div className="flex justify-center items-center gap-6 w-full">
-                          <div className="flex justify-center items-center w-48">
+                        <div
+                          onClick={() =>
+                            handleNavigate(course.id, course.directory_id)
+                          }
+                          className="flex flex-col justify-center items-center gap-2 w-full cursor-pointer"
+                        >
+                          <div className="flex justify-center items-center w-44">
                             <img
                               src={course.img_url}
                               alt={"image"}
-                              className="rounded-lg border-transparent w-full h-24"
+                              className="rounded-lg border-transparent w-full h-28"
                             />
                           </div>
-                          <div
-                            onClick={() =>
-                              handleNavigate(course.id, course.directory_id)
-                            }
-                            className="flex flex-col justify-center items-start gap-3 w-full cursor-pointer"
-                          >
-                            <div className="text-start w-full whitespace-pre-wrap">
-                              {renderCourseData(course.course_name)}
+                          <div className="text-center text-sm w-full whitespace-pre-wrap">
+                            {renderCourseData(course.course_name)}
+                          </div>
+                          <div className="flex justify-between items-center w-full gap-2">
+                            <div className="flex justify-center items-center gap-0.5">
+                              <CalendarClock className="scale-[60%]" />
+                              <p className="text-xs">
+                                {course.course_duration}
+                              </p>
                             </div>
-                            <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                            <div className="flex justify-between items-center w-full gap-2">
-                              <div className="flex justify-center items-center gap-0.5">
-                                <CalendarClock className="scale-75" />
-                                <p>{course.course_duration}</p>
-                              </div>
-                              <div className="flex justify-center items-center gap-0.5">
-                                <SquarePlay className="scale-75" />
-                                <p>{course.total_number_of_videos}</p>
-                              </div>
-                              <div className="flex justify-center items-center gap-0.5">
-                                <IndianRupee className="scale-75" />
-                                <p>{course.price}</p>
-                              </div>
+                            {/* <div className="flex justify-center items-center gap-0.5">
+                              <SquarePlay className="scale-75" />
+                              <p>{course.total_number_of_videos}</p>
+                            </div> */}
+                            <div className="flex justify-center items-center gap-0.5">
+                              <IndianRupee className="scale-[60%]" />
+                              <p className="text-xs">{course.price}</p>
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="flex flex-col justify-between items-end gap-10 w-fit">
-                        <UpdateBtn
-                          handleClick={() => {
-                            setUpdateCourse(true);
-                            setUpdateCourseData(course.id);
-                          }}
-                        />
-                        <ConfirmDelete
-                          handleClick={() => handleDelete(course.id)}
-                        />
                       </div>
                     </div>
                   )
