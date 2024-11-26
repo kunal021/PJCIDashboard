@@ -1,24 +1,14 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { deleteTest, setTest } from "../../redux/tests/testSlice";
-// import { deleteTest } from "../../redux/tests/testSlice";
 import axios from "axios";
-// import LinkButton from "../../utils/LinkButton";
-// import UpdateTest from "./UpdateTest";
 import { API_URL } from "../../url";
 import Loader from "../../utils/Loader";
-// import UpdateBtn from "../../utils/UpdateBtn";
-// import ConfirmDelete from "../../utils/ConfirmDelete";
-// import toast from "react-hot-toast";
-// import LayoutAdjuster from "../../utils/LayoutAdjuster";
-// import parser from "html-react-parser";
 import { Avatar } from "antd";
 import { useLocation } from "react-router-dom";
 import { Card } from "../ui/card";
 import toast from "react-hot-toast";
 import ConfirmDelete from "@/utils/ConfirmDelete";
 
-const fetchTest = async (dispatch, setLoading, directory_id) => {
+const fetchTest = async (setMaterial, setLoading, directory_id) => {
   try {
     setLoading(true);
     const formData = new FormData();
@@ -30,7 +20,7 @@ const fetchTest = async (dispatch, setLoading, directory_id) => {
       { headers: "multipart/form-data" }
     );
     // console.log(response);
-    dispatch(setTest(response.data.data));
+    setMaterial(response.data.data);
   } catch (error) {
     console.error("Error fetching courses:", error);
   } finally {
@@ -41,17 +31,12 @@ const fetchTest = async (dispatch, setLoading, directory_id) => {
 function GetAllMaterialForSeries() {
   const location = useLocation();
   const { testData } = location.state || {};
-  //   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  //   const [updateTest, setUpdateTest] = useState(false);
-  //   const [updateTestData, setUpdateTestData] = useState({});
-
-  const dispatch = useDispatch();
-  const material = useSelector((state) => state.test.test);
+  const [material, setMaterial] = useState([]);
 
   useEffect(() => {
-    fetchTest(dispatch, setLoading, testData.directory_id);
-  }, [dispatch, testData.directory_id]);
+    fetchTest(setMaterial, setLoading, testData.directory_id);
+  }, [testData.directory_id]);
 
   console.log(material);
 
@@ -69,7 +54,9 @@ function GetAllMaterialForSeries() {
       // console.log(response);
 
       if (response.status === 201) {
-        dispatch(deleteTest(materialId));
+        setMaterial((prevTest) =>
+          prevTest.filter((t) => t.doc_id !== materialId)
+        );
         toast.success("Material Deleted Successfully");
       }
     } catch (error) {
@@ -110,44 +97,6 @@ function GetAllMaterialForSeries() {
     }
   };
 
-  //   const handleChangeStatus = useCallback(
-  //     async (materialId, flag) => {
-  //       const confirmAlert = window.confirm(
-  //         `${
-  //           flag === "1"
-  //             ? "Material will become Inactive. Do you want to proceed"
-  //             : "Material will become Active. Do you want to proceed"
-  //         }`
-  //       );
-  //       if (confirmAlert) {
-  //         try {
-  //           flag = flag === "1" ? "0" : "1";
-  //           const formData = new FormData();
-  //           formData.append("test_id", materialId);
-  //           formData.append("statuscode", flag);
-  //           await axios.post(
-  //             `${API_URL}/admin/material/updateteststatus.php`,
-  //             formData,
-  //             { headers: { "content-type": "multipart/form-data" } }
-  //           );
-  //           // console.log(res);
-
-  //           // Update local state instead of fetching users again
-  //           const updatedTest = material.map((material) =>
-  //             material.test_id === materialId ? { ...material, flag } : material
-  //           );
-  //           dispatch(setTest(updatedTest));
-  //         } catch (error) {
-  //           console.log("Error updating user status:", error);
-  //           // Handle error (e.g., show an error message)
-  //         }
-  //       }
-  //     },
-  //     [dispatch, material]
-  //   );
-
-  // console.log(material);
-
   return (
     <Card className="w-full border-gray-300">
       {loading ? (
@@ -156,10 +105,6 @@ function GetAllMaterialForSeries() {
         <div
           className={`${"w-full flex flex-col justify-center items-center my-5"} `}
         >
-          <div className="flex justify-center items-center gap-10">
-            {/* <h1 className="text-3xl font-bold text-center">Material List</h1>
-            <LinkButton to={"/add-material"}>Add Material</LinkButton> */}
-          </div>
           {material.length > 0 ? (
             <div className="flex flex-col justify-center items-center w-full">
               {material.map((material, idx) => (
@@ -181,23 +126,6 @@ function GetAllMaterialForSeries() {
                         >
                           {material.name}
                         </div>
-                        {/* <div className="w-[20%]">
-                          <button
-                            onClick={() => {
-                              handleChangeStatus(material.test_id, material.flag);
-                            }}
-                            className="toggle-switch scale-75 align-middle"
-                          >
-                            <input
-                              type="checkbox"
-                              checked={material.flag === "1"}
-                              readOnly
-                            />
-                            <div className="toggle-switch-background">
-                              <div className="toggle-switch-handle"></div>
-                            </div>
-                          </button>
-                        </div> */}
                       </div>
                       <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
                       <div className="flex justify-start items-center gap-1 w-full text-xs font-medium">
@@ -217,14 +145,8 @@ function GetAllMaterialForSeries() {
                     </div>
                   </div>
                   <div className="flex flex-col justify-center items-end gap-4 w-[10%]">
-                    {/* <UpdateBtn
-                      handleClick={() => {
-                        setUpdateTest((prev) => !prev);
-                        // setUpdateTestData(material);
-                      }}
-                    /> */}
                     <ConfirmDelete
-                      handleClick={() => handleDelete(material.test_id)}
+                      handleClick={() => handleDelete(material.doc_id)}
                     />
                   </div>
                 </div>

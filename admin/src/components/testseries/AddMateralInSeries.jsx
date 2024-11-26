@@ -10,14 +10,12 @@ import {
 import { Avatar } from "antd";
 import Loader from "@/utils/Loader";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "@/url";
-import { addTest } from "@/redux/tests/testSlice";
 import toast from "react-hot-toast";
 
-const fetchTest = async (setMaterial, setLoading, directory_id) => {
+const fetchTestToAdd = async (setMaterial, setLoading, directory_id) => {
   try {
     setLoading(true);
     const formData = new FormData();
@@ -41,13 +39,10 @@ function AddMaterialInSeries() {
   const location = useLocation();
   const { testData } = location.state || {};
   const [loading, setLoading] = useState(false);
-
-  const dispatch = useDispatch();
   const [material, setMaterial] = useState([]);
-  // console.log(material);
 
   useEffect(() => {
-    fetchTest(setMaterial, setLoading, testData.directory_id);
+    fetchTestToAdd(setMaterial, setLoading, testData.directory_id);
   }, [testData.directory_id]);
 
   const handleAddMaterial = async (materialId) => {
@@ -63,21 +58,7 @@ function AddMaterialInSeries() {
       );
       // console.log(response);
       if (response.status === 201) {
-        fetchTest(setMaterial, setLoading, testData.directory_id);
-        const addedMaterial = material.find((t) => t.id === materialId);
-        dispatch(
-          addTest({
-            id: materialId,
-            name: addedMaterial.name,
-            description: addedMaterial.description,
-            price: addedMaterial.price,
-            size: addedMaterial.size,
-            duration: addedMaterial.duration,
-          })
-        );
-        setMaterial((prevTest) =>
-          prevTest.filter((t) => t.test_id !== material)
-        );
+        fetchTestToAdd(setMaterial, setLoading, testData.directory_id);
         toast.success("Test Added Successfully");
       }
     } catch (error) {
@@ -101,10 +82,6 @@ function AddMaterialInSeries() {
             <div
               className={`${"w-full flex flex-col justify-center items-center my-5"} `}
             >
-              <div className="flex justify-center items-center gap-10">
-                {/* <h1 className="text-3xl font-bold text-center">Test List</h1>
-            <LinkButton to={"/add-material"}>Add Test</LinkButton> */}
-              </div>
               {material.length > 0 ? (
                 <div className="flex flex-col justify-center items-center w-full">
                   {material.map((material, idx) => (
@@ -121,23 +98,6 @@ function AddMaterialInSeries() {
                         <div className="flex flex-col justify-start items-center gap-2 w-full">
                           <div className="flex justify-start items-center font-bold w-full cursor-pointer">
                             <div className="w-full">{material.name}</div>
-                            {/* <div className="w-[20%]">
-                          <button
-                            onClick={() => {
-                              handleChangeStatus(material.test_id, material.flag);
-                            }}
-                            className="toggle-switch scale-75 align-middle"
-                          >
-                            <input
-                              type="checkbox"
-                              checked={material.flag === "1"}
-                              readOnly
-                            />
-                            <div className="toggle-switch-background">
-                              <div className="toggle-switch-handle"></div>
-                            </div>
-                          </button>
-                        </div> */}
                           </div>
                           <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
                           <div className="flex justify-start items-center gap-1 w-full text-xs font-medium">
