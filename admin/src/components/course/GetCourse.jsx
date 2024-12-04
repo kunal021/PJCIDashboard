@@ -17,6 +17,7 @@ import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import { useNavigate } from "react-router-dom";
 import { CalendarClock, IndianRupee } from "lucide-react";
 import { LatexParser } from "@/utils/LatexParser";
+import getPercentage from "@/utils/getPercentage";
 
 const fetchCourse = async (dispatch, setLoading) => {
   try {
@@ -144,7 +145,7 @@ function GetCourse() {
                   course && (
                     <div
                       key={idx}
-                      className="flex justify-center items-center font-medium w-52 border rounded-md border-zinc-300 ml-2 my-4 py-2 px-1"
+                      className="flex justify-center items-center font-medium w-56 border rounded-md border-zinc-300 ml-2 my-4 py-2 px-1"
                     >
                       <div className="flex flex-col justify-center items-start gap-2 w-full">
                         <div className="flex justify-between items-center w-full gap-2">
@@ -211,9 +212,21 @@ function GetCourse() {
                               <SquarePlay className="scale-75" />
                               <p>{course.total_number_of_videos}</p>
                             </div> */}
-                            <div className="flex justify-center items-center gap-0.5">
+                            <div className="flex justify-center items-center">
                               <IndianRupee className="scale-[60%]" />
                               <p className="text-xs">{course.price}</p>
+                              <p className="text-xs text-gray-500 ml-1 line-through">
+                                {course.original_price}
+                              </p>
+                              {course.price && course.original_price && (
+                                <p className="text-xs text-green-500 ml-1">
+                                  {getPercentage(
+                                    course.original_price,
+                                    course.price
+                                  )}
+                                  %
+                                </p>
+                              )}
                             </div>
                           </div>
                         </div>

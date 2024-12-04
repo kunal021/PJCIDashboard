@@ -16,6 +16,7 @@ function AddCourse() {
   const [course, setCourse] = useState({
     name: "",
     price: "",
+    originalprice: "",
     duration: "",
     imgurl: "",
   });
@@ -46,10 +47,15 @@ function AddCourse() {
       toast.error("All fields are required");
       return;
     }
+    if (Number(course.originalprice) < Number(course.price)) {
+      toast.error("Price must be smaller than original price");
+      return;
+    }
     try {
       const formData = new FormData();
       formData.append("name", course.name);
       formData.append("price", course.price);
+      formData.append("original_price", course.originalprice);
       formData.append("duration", `${course.duration} ${durationUnit}`);
       formData.append("description", courseDescription);
       formData.append("imgurl", course.imgurl);
@@ -70,6 +76,7 @@ function AddCourse() {
     setCourse({
       name: "",
       price: "",
+      originalprice: "",
       duration: "",
       imgurl: "",
     });
@@ -143,6 +150,17 @@ function AddCourse() {
                 onChange={handleChange}
               >
                 Price
+              </FormField>
+              <FormField
+                htmlFor={"originalprice"}
+                id={"originalprice"}
+                type={"number"}
+                placeholder={"Original Price"}
+                name={"originalprice"}
+                value={course.originalprice}
+                onChange={handleChange}
+              >
+                Original Price
               </FormField>
               <FormField
                 htmlFor={"duration"}

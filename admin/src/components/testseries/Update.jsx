@@ -13,6 +13,7 @@ function UpdateTestSeries({ updateTestData, setUpdateTest }) {
   const [formData, setFormData] = useState({
     name: updateTestData.name,
     price: updateTestData.price,
+    originalprice: updateTestData.original_price,
     duration: trim(updateTestData.duration)[0],
     totalQuestion: updateTestData.total_question,
     totalTest: updateTestData.total_test,
@@ -40,6 +41,22 @@ function UpdateTestSeries({ updateTestData, setUpdateTest }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (
+      !formData.name ||
+      !formData.price ||
+      !formData.originalprice ||
+      !formData.duration ||
+      !formData.totalQuestion ||
+      !formData.totalTest ||
+      !testDescription
+    ) {
+      toast.error("Please fill all fields");
+      return;
+    }
+    if (Number(formData.originalprice) < Number(formData.price)) {
+      toast.error("Price must be smaller than original price");
+      return;
+    }
     try {
       const formDataToSend = new FormData();
       const formDataObject = {
@@ -48,6 +65,7 @@ function UpdateTestSeries({ updateTestData, setUpdateTest }) {
         is_active: updateTestData.is_active,
         description: testDescription,
         price: formData.price,
+        original_price: formData.originalprice,
         duration: formData.duration + " " + durationUnit,
         total_question: formData.totalQuestion,
         total_test: formData.totalTest,
@@ -71,6 +89,7 @@ function UpdateTestSeries({ updateTestData, setUpdateTest }) {
             name: formData.name,
             description: testDescription,
             price: formData.price,
+            original_price: formData.originalprice,
             duration: formData.duration,
             total_question: formData.totalQuestion,
             total_test: formData.totalTest,
@@ -124,6 +143,17 @@ function UpdateTestSeries({ updateTestData, setUpdateTest }) {
               onChange={handleChange}
             >
               Price
+            </FormField>
+            <FormField
+              htmlFor="originalprice"
+              id="originalprice"
+              type={"number"}
+              placeholder="Original Price"
+              name="originalprice"
+              value={formData.originalprice}
+              onChange={handleChange}
+            >
+              Original Price
             </FormField>
             <FormField
               htmlFor="duration"

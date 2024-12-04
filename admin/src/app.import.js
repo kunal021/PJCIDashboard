@@ -36,6 +36,7 @@ import GetNews from "./components/news/Get";
 import GetNewsContent from "./components/news/GetContent";
 import BookOrders from "./components/books/orders/Get";
 import CreateNotification from "./components/notification/Create";
+import GetDemoBooks from "./components/books/demobooks/Get";
 
 export {
   GetCategory,
@@ -76,4 +77,5 @@ export {
   GetNewsContent,
   BookOrders,
   CreateNotification,
+  GetDemoBooks,
 };

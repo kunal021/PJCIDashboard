@@ -78,7 +78,7 @@ function Add({ setDoc }) {
       formData.append("image_url", newData.img_url);
       formData.append("name", newData.name);
       formData.append("description", description);
-      formData.append("type", "1");
+      formData.append("type", "3");
       formData.append("duration", `${newData.duration} ${durationUnit}`);
       formData.append("price", newData.price);
       formData.append("original_price", newData.original_price);
@@ -162,7 +162,7 @@ function Add({ setDoc }) {
       </SheetTrigger>
       <SheetContent className="z-[100] w-[70%] overflow-auto">
         <SheetHeader>
-          <SheetTitle>Add Document</SheetTitle>
+          <SheetTitle>Add Demo Book</SheetTitle>
         </SheetHeader>
 
         <FormField
@@ -179,7 +179,10 @@ function Add({ setDoc }) {
 
         <p className="block text-gray-700 text-sm font-bold">Description</p>
         <div className=" w-full my-2">
-          <Tiptap placeholder={"Category"} getHtmlData={getDescriptionData} />
+          <Tiptap
+            placeholder={"Description"}
+            getHtmlData={getDescriptionData}
+          />
         </div>
 
         <div className="my-4 gap-5 flex justify-between items-center">

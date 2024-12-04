@@ -11,24 +11,31 @@ import { API_URL } from "@/url";
 import FormField from "@/utils/FormField";
 import Tiptap from "@/utils/TextEditor";
 import axios from "axios";
-import { Loader, UploadCloud } from "lucide-react";
+import { Loader, SquarePen, UploadCloud } from "lucide-react";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 
-function Add({ setDoc }) {
+function Update({ data, setData }) {
   const closeRef = useRef(null);
+  const dur = data?.duration ? data?.duration.split(" ") : ["", ""];
   const [loading, setLoading] = useState(false);
   const [newData, setNewData] = useState({
-    name: "",
-    price: "",
-    original_price: "",
-    img_url: "",
-    duration: "",
+    id: data?.id,
+    name: data?.name,
+    price: data?.price,
+    original_price: data?.original_price,
+    type: data?.type,
+    img_url: data?.img_url,
+    duration: dur[0],
   });
 
-  const [file, setFile] = useState(null);
-  const [durationUnit, setDurationunit] = useState("Day");
-  const [description, setDescription] = useState("");
+  // console.log(data.duration[0]);
+
+  // console.log(dur[1]);
+
+  const [durationUnit, setDurationunit] = useState(dur[1]);
+
+  const [description, setDescription] = useState(data?.description);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,35 +45,20 @@ function Add({ setDoc }) {
     }));
   };
 
-  const handleFileChange = (e) => {
-    try {
-      setLoading(true);
-      const file = e.target.files[0];
-      setFile(file);
-      toast.success("File Selected");
-    } catch {
-      console.log("error");
-      toast.error("Error Uploading File");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleSubmit = async () => {
     if (
       !newData.img_url ||
+      !newData.type ||
       !newData.price ||
       !newData.original_price ||
-      !durationUnit ||
       !description ||
       !newData.name ||
       !newData.duration ||
-      !file
+      !durationUnit
     ) {
       toast.error("Please fill all fields");
       return;
     }
-
     if (Number(newData.original_price) < Number(newData.price)) {
       toast.error("Price must be smaller than original price");
       return;
@@ -74,55 +66,43 @@ function Add({ setDoc }) {
     try {
       setLoading(true);
       const formData = new FormData();
-
+      formData.append("id", newData.id);
       formData.append("image_url", newData.img_url);
       formData.append("name", newData.name);
       formData.append("description", description);
-      formData.append("type", "1");
+      formData.append("type", newData.type);
       formData.append("duration", `${newData.duration} ${durationUnit}`);
       formData.append("price", newData.price);
       formData.append("original_price", newData.original_price);
-      formData.append("file", file);
       const response = await axios.post(
-        `${API_URL}/admin/docs/uplodedoc.php`,
+        `${API_URL}/admin/docs/updatedoc.php`,
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );
-      // console.log(response);
+      // console.logs(response);
       if (response.status === 200) {
-        toast.success("Document Uploaded Successfully");
+        toast.success("Document Updated Successfully");
 
-        setDoc((prev) => [
-          ...prev,
-          {
-            id: response.data.id,
-            name: newData.name,
-            price: newData.price,
-            original_price: newData.original_price,
-            type: "1",
-            img_url: newData.img_url,
-            duration: newData.duration,
-          },
-        ]);
+        setData((prevData) => {
+          // Check if prevData is an array
+          if (!Array.isArray(prevData)) {
+            console.error("prevData is not an array");
+            return prevData; // Return unchanged if it's not an array
+          }
+
+          // Update the specific object with matching id
+          return prevData.map((item) =>
+            item.id === newData.id ? { ...item, ...newData } : item
+          );
+        });
 
         if (closeRef.current) {
           closeRef.current.click();
         }
-
-        setNewData({
-          name: "",
-          price: "",
-          original_price: "",
-          description: "",
-          img_url: "",
-          duration: "",
-        });
-
-        setDurationunit("");
       }
     } catch (error) {
       console.log(error);
-      toast.error(error?.response?.data?.message || "Error Uploading Document");
+      toast.error(error?.response?.data?.message || "Error updating Document");
     } finally {
       setLoading(false);
     }
@@ -157,13 +137,29 @@ function Add({ setDoc }) {
 
   return (
     <Sheet>
-      <SheetTrigger className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md ">
-        Add
+      <SheetTrigger className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-1 text-xs rounded group relative">
+        <SquarePen />
+        <p className="absolute -left-[20%] -top-full mt-1 hidden group-hover:block bg-white/50 text-black rounded p-1">
+          Update
+        </p>
       </SheetTrigger>
       <SheetContent className="z-[100] w-[70%] overflow-auto">
         <SheetHeader>
-          <SheetTitle>Add Document</SheetTitle>
+          <SheetTitle>Edit Demo Book</SheetTitle>
         </SheetHeader>
+        {/* <div>
+          <select
+            name="type"
+            value={data.type}
+            onChange={handleChange}
+            className="w-96 h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
+          >
+            <option value={"0"}>None</option>
+            <option value={"1"}>Course</option>
+            <option value={"2"}>Batch</option>
+            <option value={"3"}>Test</option>
+          </select>
+        </div> */}
 
         <FormField
           htmlFor={"name"}
@@ -216,7 +212,6 @@ function Add({ setDoc }) {
           >
             Duration
           </FormField>
-
           <select
             value={durationUnit}
             onChange={(e) => setDurationunit(e.target.value)}
@@ -275,32 +270,6 @@ function Add({ setDoc }) {
         >
           Image Url
         </FormField>
-        <div className="my-4 flex justify-between items-center">
-          <input
-            disabled={loading}
-            id="pdfinput"
-            type="file"
-            accept=".pdf"
-            onChange={handleFileChange}
-            className="hidden"
-          />
-          <label
-            htmlFor="pdfinput"
-            className="flex flex-col justify-center items-center w-40 h-16 cursor-pointer bg-gray-50 text-black px-4 py-2 rounded-lg border-2 border-gray-300 border-dashed hover:bg-blue-50"
-          >
-            {!loading ? (
-              <>
-                <UploadCloud />
-                <p>Upload File</p>
-              </>
-            ) : (
-              <>
-                <Loader className="animate-spin h-6 w-6" />
-                <p>Uploading...</p>
-              </>
-            )}
-          </label>
-        </div>
         <div className="mt-[25px] flex w-full gap-2.5">
           <SheetClose asChild>
             <button
@@ -317,7 +286,7 @@ function Add({ setDoc }) {
             onClick={handleSubmit}
             className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md w-1/2"
           >
-            Add
+            Update
           </button>
         </div>
       </SheetContent>
@@ -325,4 +294,4 @@ function Add({ setDoc }) {
   );
 }
 
-export default Add;
+export default Update;

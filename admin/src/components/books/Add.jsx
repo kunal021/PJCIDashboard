@@ -47,6 +47,7 @@ function Add({ setBook }) {
   const [newData, setNewData] = useState({
     name: "",
     price: "",
+    original_price: "",
     // type: "",
     img_url: "",
     author: "",
@@ -65,11 +66,16 @@ function Add({ setBook }) {
     if (
       !newData.img_url ||
       !newData.price ||
+      !newData.original_price ||
       !newData.name ||
       !newData.author ||
       !description
     ) {
       toast.error("Please fill all fields");
+      return;
+    }
+    if (Number(newData.original_price) < Number(newData.price)) {
+      toast.error("Price must be smaller than original price");
       return;
     }
     try {
@@ -81,6 +87,7 @@ function Add({ setBook }) {
       formData.append("type", "2");
       formData.append("author", newData.author);
       formData.append("price", newData.price);
+      formData.append("original_price", newData.original_price);
       formData.append("description", description);
       //   formData.append("file", file);
       const response = await axios.post(
@@ -170,6 +177,17 @@ function Add({ setBook }) {
             onChange={handleChange}
           >
             Price
+          </FormField>
+          <FormField
+            htmlFor={"original_price"}
+            id={"original_price"}
+            type={"number"}
+            placeholder={"Original Price"}
+            name={"original_price"}
+            value={newData.original_price}
+            onChange={handleChange}
+          >
+            Original Price
           </FormField>
           <FormField
             htmlFor={"author"}

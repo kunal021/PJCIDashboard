@@ -1,15 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { API_URL } from "../../url";
-import LayoutAdjuster from "../../utils/LayoutAdjuster";
-import Loader from "../../utils/Loader";
-import toast from "react-hot-toast";
-import ConfirmDelete from "../../utils/ConfirmDelete";
-import UpdateDoc from "./Update";
-import Add from "./Add";
 import { Clock, FileBox, IndianRupee } from "lucide-react";
 import { truncateData } from "@/utils/truncateData";
 import getPercentage from "@/utils/getPercentage";
+import { API_URL } from "@/url";
+import toast from "react-hot-toast";
+import LayoutAdjuster from "@/utils/LayoutAdjuster";
+import Loader from "@/utils/Loader";
+import ConfirmDelete from "@/utils/ConfirmDelete";
+import Add from "./Add";
+import Update from "./Update";
 
 const fetchData = async (
   setLoading,
@@ -22,7 +22,7 @@ const fetchData = async (
     const formData = new FormData();
     // formData.append("page", currentPage);
     // formData.append("limit", 10);
-    formData.append("type", 1);
+    formData.append("type", 3);
     const response = await axios.post(
       `${API_URL}/admin/docs/getdoc.php`,
       formData,
@@ -38,7 +38,7 @@ const fetchData = async (
   }
 };
 
-function GetDocuments() {
+function GetDemoBooks() {
   const [loading, setLoading] = useState(false);
   //   const [paginationData, setPaginationData] = useState({});
   //   const [currentPage, setCurrentPage] = useState(1);
@@ -151,51 +151,6 @@ function GetDocuments() {
     }
   };
 
-  // const handleToggleDocType = async (docId) => {
-  //   if (
-  //     !doc.img_url ||
-  //     !doc.type ||
-  //     !doc.price ||
-  //     !doc.name ||
-  //     !doc.duration ||
-  //     !docId
-  //   ) {
-  //     toast.error("Please fill all fields");
-  //     return;
-  //   }
-  //   try {
-  //     setLoading(true);
-  //     const formData = new FormData();
-  //     formData.append("id", docId);
-  //     formData.append("image_url", doc.img_url);
-  //     formData.append("name", doc.name);
-  //     formData.append("type", doc.type);
-  //     formData.append("duration", doc.duration);
-  //     formData.append("price", doc.price);
-  //     const response = await axios.post(
-  //       `${API_URL}/admin/docs/updatedoc.php`,
-  //       formData,
-  //       { headers: { "content-type": "multipart/form-data" } }
-  //     );
-  //     // console.log(response);
-  //     if (response.status === 200) {
-  //       toast.success("Document Updated Successfully");
-
-  //       const updatedDoc = doc.map((doc) =>
-  //         doc.id === docId ? { ...doc, is_active } : doc
-  //       );
-  //       setDoc(updatedDoc);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast.error(error?.response?.data?.message || "Error updating Document");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // console.log(doc);
-
   return (
     <LayoutAdjuster>
       {loading ? (
@@ -208,7 +163,7 @@ function GetDocuments() {
         >
           <div className="w-full flex flex-col justify-center items-center my-5">
             <div className="w-full flex justify-center items-center gap-5">
-              <h1 className="text-3xl font-bold text-center">Materilas List</h1>
+              <h1 className="text-3xl font-bold text-center">Demo Book List</h1>
               <Add doc={doc} setDoc={setDoc} />
             </div>
             <div className="w-full flex justify-center items-center">
@@ -251,7 +206,7 @@ function GetDocuments() {
 
                         {/* Actions */}
                         <div className="flex gap-2">
-                          <UpdateDoc data={item} setData={setDoc} />
+                          <Update data={item} setData={setDoc} />
                           <ConfirmDelete
                             handleClick={() => handleDelete(item.id)}
                           />
@@ -282,9 +237,9 @@ function GetDocuments() {
                           <span className="text-xs text-gray-500 line-through">
                             {item.original_price}
                           </span>
-                          {item.original_price && item.price && (
+                          {item.original_price && (
                             <span className="text-xs text-green-500">
-                              {getPercentage(item.original_price, item.price)}%
+                              {getPercentage(item.price, item.original_price)}%
                             </span>
                           )}
                         </div>
@@ -326,4 +281,4 @@ function GetDocuments() {
   );
 }
 
-export default GetDocuments;
+export default GetDemoBooks;

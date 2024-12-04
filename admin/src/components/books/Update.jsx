@@ -23,6 +23,7 @@ function Update({ data, setData }) {
     id: data?.id,
     name: data?.name,
     price: data?.price,
+    original_price: data?.original_price,
     img_url: data?.img_url,
     author: data?.author,
   });
@@ -40,6 +41,7 @@ function Update({ data, setData }) {
     if (
       !newData.img_url ||
       !newData.price ||
+      !newData.original_price ||
       !newData.name ||
       !newData.author ||
       !description
@@ -47,8 +49,11 @@ function Update({ data, setData }) {
       toast.error("Please fill all fields");
       return;
     }
+    if (Number(newData.original_price) < Number(newData.price)) {
+      toast.error("Price must be smaller than original price");
+      return;
+    }
     try {
-      console.log(newData);
       setLoading(true);
       const formData = new FormData();
       formData.append("id", id);
@@ -56,6 +61,7 @@ function Update({ data, setData }) {
       formData.append("name", newData.name);
       formData.append("author", newData.author);
       formData.append("price", newData.price);
+      formData.append("original_price", newData.original_price);
       formData.append("description", description);
       const response = await axios.post(
         `${API_URL}/admin/book/updatebook.php`,
@@ -175,6 +181,17 @@ function Update({ data, setData }) {
             onChange={handleChange}
           >
             Price
+          </FormField>
+          <FormField
+            htmlFor={"original_price"}
+            id={"original_price"}
+            type={"number"}
+            placeholder={"Original Price"}
+            name={"original_price"}
+            value={newData.original_price}
+            onChange={handleChange}
+          >
+            Original Price
           </FormField>
           <FormField
             htmlFor={"author"}

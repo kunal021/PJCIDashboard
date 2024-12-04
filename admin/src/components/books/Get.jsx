@@ -10,6 +10,7 @@ import Add from "./Add";
 import { truncateData } from "@/utils/truncateData";
 import { IndianRupee, UserRound } from "lucide-react";
 import { LatexParser } from "@/utils/LatexParser";
+import getPercentage from "@/utils/getPercentage";
 
 const fetchData = async (
   setLoading,
@@ -212,10 +213,18 @@ function GetBooks() {
                       </div>
 
                       {/* Footer Section */}
-                      <div className="flex justify-between items-center text-sm text-gray-700">
+                      <div className="flex justify-between items-center text-sm">
                         <div className="flex items-center gap-1">
                           <IndianRupee className="h-4 w-4 text-green-500" />
                           <span>{item.price}</span>
+                          <span className="line-through text-gray-500 text-sm">
+                            {item.original_price}
+                          </span>
+                          {item.original_price && item.price && (
+                            <span className="text-green-500 text-sm">
+                              {getPercentage(item.original_price, item.price)}%
+                            </span>
+                          )}
                         </div>
                         <div className="flex items-center gap-1">
                           <UserRound className="h-4 w-4 text-blue-500" />

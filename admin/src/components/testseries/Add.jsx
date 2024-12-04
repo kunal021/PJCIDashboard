@@ -15,6 +15,7 @@ function AddTestSeries() {
   const [formData, setFormData] = useState({
     name: "",
     price: "",
+    originalprice: "",
     duration: "",
     totalQuestion: "",
     totalTest: "",
@@ -46,6 +47,7 @@ function AddTestSeries() {
     if (
       !formData.name ||
       !formData.price ||
+      !formData.originalprice ||
       !formData.duration ||
       !formData.totalQuestion ||
       !formData.totalTest ||
@@ -54,12 +56,17 @@ function AddTestSeries() {
       toast.error("Please fill all fields");
       return;
     }
+    if (Number(formData.originalprice) < Number(formData.price)) {
+      toast.error("Price must be smaller than original price");
+      return;
+    }
     try {
       const formDataToSend = new FormData();
       const formDataObject = {
         name: formData.name,
         description: testDescription,
         price: formData.price,
+        original_price: formData.originalprice,
         duration: formData.duration + " " + durationUnit,
         total_question: formData.totalQuestion,
         total_test: formData.totalTest,
@@ -85,6 +92,7 @@ function AddTestSeries() {
     setFormData({
       name: "",
       price: "",
+      originalprice: "",
       duration: "",
       totalQuestion: "",
       totalTest: "",
@@ -134,6 +142,17 @@ function AddTestSeries() {
                 onChange={handleChange}
               >
                 Price
+              </FormField>
+              <FormField
+                htmlFor="originalprice"
+                id="originalprice"
+                type={"number"}
+                placeholder="Original Price"
+                name="originalprice"
+                value={formData.originalprice}
+                onChange={handleChange}
+              >
+                Original Price
               </FormField>
               <FormField
                 htmlFor="duration"

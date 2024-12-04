@@ -6,6 +6,8 @@ import MakeUserPurchase from "../setting/MakeUserPurchase";
 import { useState } from "react";
 import expiryDate from "@/utils/ExpiryDate";
 import MakeUserPurchaseResponse from "@/utils/MakeUserPurchaseResponse";
+import { IndianRupee } from "lucide-react";
+import getPercentage from "@/utils/getPercentage";
 
 function GetTestSeriesTests() {
   const location = useLocation();
@@ -74,12 +76,24 @@ function GetTestSeriesTests() {
                   </div>
                   <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
                   <div className="flex justify-between items-center gap-1 w-full">
-                    <div className="flex justify-start items-start gap-1 w-fit">
-                      <p>Price:</p>
+                    <div className="flex justify-center items-center gap-1 w-fit">
+                      <IndianRupee className="w-4 h-4" />
                       <p>{testData.price}</p>
+                      <p className="line-through text-gray-500 ml-1">
+                        {testData.original_price}
+                      </p>
+                      {testData.original_price && testData.price && (
+                        <p className="text-green-500 ml-1">
+                          {getPercentage(
+                            testData.original_price,
+                            testData.price
+                          )}
+                          %
+                        </p>
+                      )}
                     </div>
                     <div className="flex justify-start items-start gap-1 w-fit">
-                      <p>No. Of Qns:</p>
+                      <p>Total Qns:</p>
                       <p>{testData.total_question}</p>
                     </div>
                     <div className="flex justify-start items-start gap-1 w-fit">

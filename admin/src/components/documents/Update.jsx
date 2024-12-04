@@ -16,7 +16,6 @@ import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 function UpdateDoc({ data, setData }) {
-  const id = data?.id;
   const closeRef = useRef(null);
   const dur = data?.duration ? data?.duration.split(" ") : ["", ""];
   const [loading, setLoading] = useState(false);
@@ -24,6 +23,7 @@ function UpdateDoc({ data, setData }) {
     id: data?.id,
     name: data?.name,
     price: data?.price,
+    original_price: data?.original_price,
     type: data?.type,
     img_url: data?.img_url,
     duration: dur[0],
@@ -50,6 +50,8 @@ function UpdateDoc({ data, setData }) {
       !newData.img_url ||
       !newData.type ||
       !newData.price ||
+      !newData.original_price ||
+      !description ||
       !newData.name ||
       !newData.duration ||
       !durationUnit
@@ -57,22 +59,27 @@ function UpdateDoc({ data, setData }) {
       toast.error("Please fill all fields");
       return;
     }
+    if (Number(newData.original_price) < Number(newData.price)) {
+      toast.error("Price must be smaller than original price");
+      return;
+    }
     try {
       setLoading(true);
       const formData = new FormData();
-      formData.append("id", id);
+      formData.append("id", newData.id);
       formData.append("image_url", newData.img_url);
       formData.append("name", newData.name);
       formData.append("description", description);
       formData.append("type", newData.type);
       formData.append("duration", `${newData.duration} ${durationUnit}`);
       formData.append("price", newData.price);
+      formData.append("original_price", newData.original_price);
       const response = await axios.post(
         `${API_URL}/admin/docs/updatedoc.php`,
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );
-      // console.log(response);
+      // console.logs(response);
       if (response.status === 200) {
         toast.success("Document Updated Successfully");
 
@@ -85,7 +92,7 @@ function UpdateDoc({ data, setData }) {
 
           // Update the specific object with matching id
           return prevData.map((item) =>
-            item.id === id ? { ...item, ...newData } : item
+            item.id === newData.id ? { ...item, ...newData } : item
           );
         });
 
@@ -182,6 +189,17 @@ function UpdateDoc({ data, setData }) {
             onChange={handleChange}
           >
             Price
+          </FormField>
+          <FormField
+            htmlFor={"original_price"}
+            id={"original_price"}
+            type={"number"}
+            placeholder={"Original Price"}
+            name={"original_price"}
+            value={newData.original_price}
+            onChange={handleChange}
+          >
+            Original Price
           </FormField>
           <FormField
             htmlFor={"duration"}

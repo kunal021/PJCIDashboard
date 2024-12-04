@@ -68,11 +68,26 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (
+      !course.course_name ||
+      !course.price ||
+      !course.course_duration ||
+      !course.img_url ||
+      !course.original_price
+    ) {
+      toast.error("All fields are required");
+      return;
+    }
+    if (Number(course.original_price) < Number(course.price)) {
+      toast.error("Price must be smaller than original price");
+      return;
+    }
     try {
       const formData = new FormData();
       formData.append("courseid", course.id);
       formData.append("name", course.course_name);
       formData.append("price", course.price);
+      formData.append("original_price", course.original_price);
       formData.append("duration", `${course.course_duration} ${durationUnit}`);
       formData.append("description", courseDescription);
       formData.append("imgurl", course.img_url);
@@ -88,6 +103,7 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
             id: course.id,
             course_name: course.course_name,
             price: course.price,
+            original_price: course.original_price,
             course_duration: `${course.course_duration} ${durationUnit}`,
             course_description: courseDescription,
             img_url: course.img_url,
@@ -177,6 +193,17 @@ function UpdateCourse({ updateCourseData: id, setUpdateCourse }) {
               onChange={handleChange}
             >
               Price
+            </FormField>
+            <FormField
+              htmlFor={"original_price"}
+              id={"original_price"}
+              type={"number"}
+              placeholder={"Original Price"}
+              name={"original_price"}
+              value={course.original_price}
+              onChange={handleChange}
+            >
+              Original Price
             </FormField>
             <FormField
               htmlFor={"duration"}

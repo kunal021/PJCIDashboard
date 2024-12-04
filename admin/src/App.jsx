@@ -16,6 +16,7 @@ import {
   GetCategory,
   GetCourse,
   GetCourseCategoryWise,
+  GetDemoBooks,
   GetDocuments,
   GetFreeMaterial,
   GetFullCourse,
@@ -132,6 +133,10 @@ function App() {
           <Route
             path="/get-books"
             element={<PrivateRoute element={GetBooks} />}
+          />
+          <Route
+            path="/get-demo-books"
+            element={<PrivateRoute element={GetDemoBooks} />}
           />
           <Route
             path="/get-orders"
