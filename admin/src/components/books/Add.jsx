@@ -168,8 +168,6 @@ function Add({ setBook }) {
     setDescription(html);
   };
 
-  console.log(newData);
-
   return (
     <Sheet>
       <SheetTrigger className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md ">
