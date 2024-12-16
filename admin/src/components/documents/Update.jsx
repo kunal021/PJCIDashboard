@@ -79,7 +79,7 @@ function UpdateDoc({ data, setData }) {
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );
-      // console.logs(response);
+      // console.log(response);
       if (response.status === 200) {
         toast.success("Document Updated Successfully");
 

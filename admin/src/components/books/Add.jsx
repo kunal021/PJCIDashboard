@@ -12,7 +12,7 @@ import FormField from "@/utils/FormField";
 import Tiptap from "@/utils/TextEditor";
 import axios from "axios";
 import { Loader, UploadCloud } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 const fetchData = async (
@@ -41,6 +41,26 @@ const fetchData = async (
   }
 };
 
+const fetchDataDemoBook = async (setDoc) => {
+  try {
+    const formData = new FormData();
+    // formData.append("page", currentPage);
+    // formData.append("limit", 10);
+    formData.append("type", 3);
+    const response = await axios.post(
+      `${API_URL}/admin/docs/getdoc.php`,
+      formData,
+      { headers: "content-type/form-data" }
+    );
+    // console.log(response);
+    setDoc(response.data.data);
+    // setPaginationData(response.data.pagination);
+  } catch (error) {
+    console.log(error);
+    toast.error(error.response.data.message || "Error while fetching data");
+  }
+};
+
 function Add({ setBook }) {
   const closeRef = useRef(null);
   const [loading, setLoading] = useState(false);
@@ -51,9 +71,14 @@ function Add({ setBook }) {
     // type: "",
     img_url: "",
     author: "",
+    demo_book_id: "",
   });
   const [description, setDescription] = useState("");
+  const [demoBook, setDemoBook] = useState([]);
 
+  useEffect(() => {
+    fetchDataDemoBook(setDemoBook);
+  }, []);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNewData((prev) => ({
@@ -69,6 +94,7 @@ function Add({ setBook }) {
       !newData.original_price ||
       !newData.name ||
       !newData.author ||
+      !newData.demo_book_id ||
       !description
     ) {
       toast.error("Please fill all fields");
@@ -80,6 +106,7 @@ function Add({ setBook }) {
     }
     try {
       setLoading(true);
+      console.log(newData);
       const formData = new FormData();
 
       formData.append("imgurl", newData.img_url);
@@ -89,6 +116,7 @@ function Add({ setBook }) {
       formData.append("price", newData.price);
       formData.append("original_price", newData.original_price);
       formData.append("description", description);
+      formData.append("demo_book_id", newData.demo_book_id);
       //   formData.append("file", file);
       const response = await axios.post(
         `${API_URL}/admin/book/addbook.php`,
@@ -139,6 +167,8 @@ function Add({ setBook }) {
   const getDescriptionData = (html) => {
     setDescription(html);
   };
+
+  console.log(newData);
 
   return (
     <Sheet>
@@ -249,6 +279,20 @@ function Add({ setBook }) {
         >
           Image Url
         </FormField>
+        <select
+          value={newData.demo_book_id || ""}
+          onChange={(e) =>
+            setNewData({ ...newData, demo_book_id: e.target.value })
+          }
+          className="w-full h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
+        >
+          <option value={""}>Select Demo Book</option>
+          {demoBook?.map((item, idx) => (
+            <option key={idx} value={item.id}>
+              {item.name}
+            </option>
+          ))}
+        </select>
         <div className="mt-[25px] flex w-full gap-2.5">
           <SheetClose ref={closeRef} asChild>
             <button

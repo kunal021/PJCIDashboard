@@ -20,6 +20,7 @@ function AddTest() {
     startTime: "",
     endTime: "",
     type: "",
+    canReattempt: "",
   });
   // const [testName, setTestName] = useState("");
   const [testDescription, setTestDescription] = useState("");
@@ -51,7 +52,17 @@ function AddTest() {
       !formData.numberOfQuestion ||
       !formData.markPerQuestion ||
       !formData.negativeMark ||
-      !formData.totalMark
+      !formData.totalMark ||
+      !formData.type ||
+      !formData.canReattempt ||
+      !testDescription
+    ) {
+      toast.error("Please fill all fields");
+      return;
+    }
+    if (
+      formData.type == "1" &&
+      (!formData.testDate || !formData.startTime || !formData.endTime)
     ) {
       toast.error("Please fill all fields");
       return;
@@ -75,6 +86,7 @@ function AddTest() {
         start_time: formData.type == "2" ? "00:00:00" : formData.startTime,
         end_time: formData.type == "2" ? "00:00:00" : formData.endTime,
         type: formData.type,
+        is_reattempt: formData.canReattempt,
       };
 
       Object.entries(formDataObject).forEach(([key, value]) => {
@@ -85,7 +97,7 @@ function AddTest() {
         formDataToSend,
         { headers: { "content-type": "multipart/form-data" } }
       );
-      console.log(response);
+      // console.log(response);
       if (response.status == 201) {
         toast.success("Test Added Successfully");
         setFormData({
@@ -100,6 +112,7 @@ function AddTest() {
           startTime: "",
           endTime: "",
           type: "",
+          canReattempt: "",
         });
       }
     } catch (error) {
@@ -112,7 +125,7 @@ function AddTest() {
 
   return (
     <LayoutAdjuster>
-      <div className="w-[80%] flex flex-col justify-center items-center">
+      <div className="w-[85%] flex flex-col justify-center items-center">
         <div className="flex justify-center items-center my-5 space-x-10">
           <h1 className="text-3xl font-bold text-center">Add Test</h1>
           <select
@@ -165,6 +178,17 @@ function AddTest() {
               >
                 Price
               </FormField>
+              <select
+                value={formData.canReattempt}
+                onChange={(e) =>
+                  setFormData({ ...formData, canReattempt: e.target.value })
+                }
+                className="w-96 h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
+              >
+                <option value="">Reattempt</option>
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+              </select>
               <FormField
                 htmlFor="duration"
                 id="duration"

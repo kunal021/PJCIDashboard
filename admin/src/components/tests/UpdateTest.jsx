@@ -22,6 +22,7 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
     startTime: updateTestData.start_time,
     endTime: updateTestData.end_time,
     type: updateTestData.type,
+    canReattempt: updateTestData.is_reattempt,
   });
   const [testDescription, setTestDescription] = useState(
     updateTestData.description
@@ -43,8 +44,6 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
     }));
   };
 
-  // console.log(testDescription);
-
   const handleSubmit = async () => {
     if (
       !formData.name ||
@@ -56,12 +55,13 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
       !formData.totalMark ||
       !formData.testDate ||
       !formData.type ||
+      !formData.canReattempt ||
       !testDescription
     ) {
       toast.error("Please fill all fields");
       return;
     }
-    console.log(formData);
+
     if (
       formData.type == "1" &&
       (formData.testDate == "0000-00-00" ||
@@ -87,20 +87,20 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
         test_date: formData.type === "2" ? "0000-00-00" : formData.testDate,
         start_time: formData.type === "2" ? "00:00:00" : formData.startTime,
         end_time: formData.type === "2" ? "00:00:00" : formData.endTime,
-        type: formData.type, // Add this in submission
+        type: formData.type,
+        is_reattempt: formData.canReattempt,
       };
 
       Object.entries(formDataObject).forEach(([key, value]) => {
         formDataToSend.append(key, value);
       });
-
       const response = await axios.post(
         `${API_URL}/admin/test/updatetest.php`,
         formDataToSend,
         { headers: { "content-type": "multipart/form-data" } }
       );
 
-      console.log(response);
+      // console.log(response);
 
       if (response.status === 201) {
         dispatch(
@@ -118,7 +118,8 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
             test_date: formData.testDate,
             start_time: formData.startTime,
             end_time: formData.endTime,
-            type: formData.type, // Dispatch test type
+            type: formData.type,
+            is_reattempt: formData.canReattempt,
           })
         );
         toast.success("Test Updated Successfully");
@@ -182,6 +183,7 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
             >
               Price
             </FormField>
+
             <FormField
               htmlFor="duration"
               id="duration"
@@ -249,6 +251,19 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
             >
               Total Mark
             </FormField>
+          </div>
+          <div className="flex flex-col md:flex-row md:space-x-6 mb-2.5">
+            <p className="block text-gray-700 text-sm font-bold">Reattempt</p>
+            <select
+              value={formData.canReattempt}
+              onChange={(e) =>
+                setFormData({ ...formData, canReattempt: e.target.value })
+              }
+              className="w-96 h-fit py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
+            >
+              <option value="1">Yes</option>
+              <option value="0">No</option>
+            </select>
           </div>
           {formData.type === "1" && (
             <div className="flex flex-col md:flex-row md:space-x-6">

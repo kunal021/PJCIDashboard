@@ -12,6 +12,7 @@ import getPercentage from "@/utils/getPercentage";
 function GetTestSeriesTests() {
   const location = useLocation();
   const { testData } = location.state || {};
+  // console.log(testData);
 
   const [makePurchaseData, setMakePurchaseData] = useState(null);
   const [makePurchaseStatus, setMakePurchaseStatus] = useState(false);

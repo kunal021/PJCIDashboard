@@ -37,6 +37,7 @@ import GetNewsContent from "./components/news/GetContent";
 import BookOrders from "./components/books/orders/Get";
 import CreateNotification from "./components/notification/Create";
 import GetDemoBooks from "./components/books/demobooks/Get";
+import GetPayments from "./components/payments/Get";
 
 export {
   GetCategory,
@@ -78,4 +79,5 @@ export {
   BookOrders,
   CreateNotification,
   GetDemoBooks,
+  GetPayments,
 };

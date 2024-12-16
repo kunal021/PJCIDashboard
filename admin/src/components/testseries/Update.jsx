@@ -71,6 +71,8 @@ function UpdateTestSeries({ updateTestData, setUpdateTest }) {
         total_test: formData.totalTest,
       };
 
+      console.log(formDataObject);
+
       Object.entries(formDataObject).forEach(([key, value]) => {
         formDataToSend.append(key, value);
       });
@@ -80,6 +82,8 @@ function UpdateTestSeries({ updateTestData, setUpdateTest }) {
         formDataToSend,
         { headers: { "content-type": "multipart/form-data" } }
       );
+
+      console.log(response);
 
       if (response.status === 201) {
         dispatch(

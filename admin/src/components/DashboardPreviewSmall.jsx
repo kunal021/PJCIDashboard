@@ -11,6 +11,7 @@ import {
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  MoneyCollectOutlined,
   SettingOutlined,
   UserOutlined,
   VideoCameraOutlined,
@@ -158,6 +159,18 @@ const items = [
         key: "17",
         label: "All Users",
         link: "/get-users",
+      },
+    ],
+  },
+  {
+    key: "sub12",
+    label: "Payments",
+    icon: <MoneyCollectOutlined />,
+    children: [
+      {
+        key: "48",
+        label: "Payments",
+        link: "/get-payments",
       },
     ],
   },

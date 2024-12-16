@@ -25,6 +25,7 @@ import {
   GetNews,
   GetNewsContent,
   GetNotes,
+  GetPayments,
   GetQuestions,
   GetTest,
   GetTestData,
@@ -157,6 +158,10 @@ function App() {
           <Route
             path="/get-users"
             element={<PrivateRoute element={GetAllUsers} />}
+          />
+          <Route
+            path="/get-payments"
+            element={<PrivateRoute element={GetPayments} />}
           />
           <Route
             path="/notification"
