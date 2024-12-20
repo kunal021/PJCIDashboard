@@ -13,6 +13,11 @@ import LayoutAdjuster from "@/utils/LayoutAdjuster";
 import Pagination from "@/utils/Pagination";
 import Loader from "@/utils/Loader";
 import FormField from "@/utils/FormField";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 const getOrders = async (setData, setPaginationData, setLoading, filters) => {
   try {
@@ -32,7 +37,7 @@ const getOrders = async (setData, setPaginationData, setLoading, filters) => {
         params,
       }
     );
-    console.log(response);
+    // console.log(response);
     if (response.data.data.length > 0) {
       setData(response.data.data);
       setPaginationData(response.data.pagination);
@@ -60,7 +65,7 @@ function BookOrders() {
     from_date: "",
     to_date: "",
     page: 1,
-    limit: 10,
+    limit: 25,
   });
   const [appliedFilters, setAppliedFilters] = useState({
     status: "",
@@ -69,7 +74,7 @@ function BookOrders() {
     from_date: "",
     to_date: "",
     page: 1,
-    limit: 10,
+    limit: 25,
   });
 
   useEffect(() => {
@@ -104,7 +109,7 @@ function BookOrders() {
       from_date: "",
       to_date: "",
       page: 1,
-      limit: 10,
+      limit: 25,
     };
     setFilters(defaultFilters);
     setAppliedFilters(defaultFilters);
@@ -117,6 +122,33 @@ function BookOrders() {
       ...appliedFilters,
       page,
     });
+  };
+
+  const changeStatus = async (id, status, txn_id) => {
+    try {
+      const formData = new FormData();
+      formData.append("id", id);
+      formData.append("status", status);
+      formData.append("txn_id", txn_id);
+
+      // console.log(id, status, txn_id);
+
+      const response = await axios.post(
+        `${API_URL}/admin/book/updateorderstatus.php`,
+        formData,
+        { headers: { "content-type": "multipart/form-data" } }
+      );
+
+      // console.log(response);
+
+      if (response.status === 200) {
+        setData((prevData) =>
+          prevData.map((item) => (item.id === id ? { ...item, status } : item))
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const statusClassName = (status) => {
@@ -132,12 +164,14 @@ function BookOrders() {
     }
   };
 
+  const STATUS = ["pending", "completed", "processing"];
+
   return (
     <LayoutAdjuster>
       {loading ? (
         <Loader />
       ) : (
-        <div className="w-[80%] max-w-7xl flex flex-col justify-center items-center mx-auto">
+        <div className="w-[90%] max-w-7xl flex flex-col justify-center items-center mx-auto">
           <div className="flex justify-center items-center space-x-10">
             <h1 className="text-3xl font-bold text-center my-5">Book Orders</h1>
           </div>
@@ -222,12 +256,13 @@ function BookOrders() {
                     <TableRow className="divide-x divide-gray-200">
                       <TableHead className="w-[50px] text-center">Id</TableHead>
                       <TableHead className="text-center">Name</TableHead>
+                      <TableHead className="text-center">Address</TableHead>
                       <TableHead className="text-center">Mobile No.</TableHead>
                       <TableHead className="text-center">Book Name</TableHead>
                       <TableHead className="text-center">
                         Transition Id
                       </TableHead>
-                      <TableHead className="text-center">Status</TableHead>
+                      <TableHead className="w-56 text-center">Status</TableHead>
                       <TableHead className="text-center">Date</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -241,13 +276,31 @@ function BookOrders() {
                           {(currentPage - 1) * 10 + (idx + 1)}
                         </TableCell>
                         <TableCell>{user.student_name}</TableCell>
+                        <TableCell>{user.student_address}</TableCell>
                         <TableCell>{user.user_id}</TableCell>
                         <TableCell>{user.book_name}</TableCell>
                         <TableCell>{user.txn_id}</TableCell>
                         <TableCell className={statusClassName(user.status)}>
-                          {user.status}
+                          <Popover>
+                            <PopoverTrigger>{user.status}</PopoverTrigger>
+                            <PopoverContent className="w-40">
+                              {STATUS.map((item, idx) => (
+                                <div
+                                  key={idx}
+                                  onClick={() =>
+                                    changeStatus(user.id, item, user.txn_id)
+                                  }
+                                  className={`${statusClassName(
+                                    item
+                                  )} px-2 py-1 cursor-pointer`}
+                                >
+                                  {item}
+                                </div>
+                              ))}
+                            </PopoverContent>
+                          </Popover>
                         </TableCell>
-                        <TableCell>{user.created_at.slice(0, 10)}</TableCell>
+                        <TableCell>{user.created_at}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
