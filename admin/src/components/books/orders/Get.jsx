@@ -260,9 +260,9 @@ function BookOrders() {
                       <TableHead className="text-center">Mobile No.</TableHead>
                       <TableHead className="text-center">Book Name</TableHead>
                       <TableHead className="text-center">
-                        Transition Id
+                        Transaction Id
                       </TableHead>
-                      <TableHead className="w-56 text-center">Status</TableHead>
+                      <TableHead className="w-40 text-center">Status</TableHead>
                       <TableHead className="text-center">Date</TableHead>
                     </TableRow>
                   </TableHeader>
