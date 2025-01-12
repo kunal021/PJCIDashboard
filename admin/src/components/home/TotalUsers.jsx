@@ -16,7 +16,6 @@ function TotalUsers() {
         const res = await axios.get(
           `${API_URL}/admin/dashbord/getusercount.php`
         );
-        // console.log(res.data)
         setCount(res.data.total_users);
       } catch (error) {
         console.log(error);
@@ -29,9 +28,7 @@ function TotalUsers() {
   }, []);
   return (
     <div>
-      <div
-        className={`bg-blue-500 text-white flex flex-col justify-center items-center gap-3 text-center px-8 border border-gray-200 rounded-lg shadow-md w-[250px] h-[150px]`}
-      >
+      <div className="bg-blue-500 text-white flex flex-col justify-center items-center gap-3 text-center px-8 border border-gray-200 rounded-lg shadow-md w-[250px] h-[150px]">
         <p className="text-lg font-semibold">Total Users</p>
         {loading ? (
           <Loader2 className="h-6 w-6 animate-spin" />
@@ -40,7 +37,7 @@ function TotalUsers() {
         )}
 
         <div>
-          <LinkButton to={"/get-users"}>See All</LinkButton>
+          <LinkButton to={"/users"}>See All</LinkButton>
         </div>
       </div>
     </div>

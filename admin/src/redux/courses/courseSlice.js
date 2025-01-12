@@ -12,7 +12,7 @@ export const courseSlice = createSlice({
       state.courses = action.payload;
     },
     addCourse: (state, action) => {
-      state.courses.push(action.payload);
+      state.courses.unshift(action.payload);
     },
     updateCourse: (state, action) => {
       const index = state.courses.findIndex(

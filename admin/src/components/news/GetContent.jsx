@@ -1,6 +1,5 @@
 import { API_URL } from "@/url";
 import { LatexParser } from "@/utils/LatexParser";
-import LayoutAdjuster from "@/utils/LayoutAdjuster";
 import axios from "axios";
 import { Loader } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -44,7 +43,7 @@ function GetNewsContent() {
     return data;
   };
   return (
-    <LayoutAdjuster>
+    <>
       {loading ? (
         <>
           <Loader />
@@ -63,7 +62,7 @@ function GetNewsContent() {
           </div>
         </div>
       )}
-    </LayoutAdjuster>
+    </>
   );
 }
 

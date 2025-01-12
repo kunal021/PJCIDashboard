@@ -12,7 +12,7 @@ export const fullCourseSlice = createSlice({
       state.fullCourse = action.payload;
     },
     addFullCourse: (state, action) => {
-      state.fullCourse.push(action.payload);
+      state.fullCourse.unshift(action.payload);
     },
     updateFullCourse: (state, action) => {
       const index = state.fullCourse.findIndex(

@@ -6,7 +6,7 @@ import { Trash2 } from "lucide-react";
 const ConfirmDelete = ({ handleClick }) => (
   <AlertDialog.Root>
     <AlertDialog.Trigger asChild>
-      <button className="bg-red-500 hover:bg-red-700 text-white font-bold p-1 text-xs rounded group relative">
+      <button className="bg-red-500 hover:bg-red-700 text-white font-bold p-1 text-xs rounded group relative max-sm:scale-75">
         <Trash2 />
         <div className="absolute -left-[20%] -top-full mt-1 hidden group-hover:block bg-white text-black rounded p-1">
           Delete

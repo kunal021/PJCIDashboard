@@ -6,8 +6,17 @@ import { API_URL } from "../../url";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../../redux/users/userSlice";
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTrigger,
+} from "../ui/sheet";
+import UpdateBtn from "@/utils/UpdateBtn";
 
-function UpdateUser({ updateUserData, setUpdateUser }) {
+function UpdateUser({ updateUserData }) {
+  const [open, setOpen] = useState(false);
   const [user, setUser] = useState({
     first_name: updateUserData.firstname,
     last_name: updateUserData.lastname,
@@ -24,8 +33,6 @@ function UpdateUser({ updateUserData, setUpdateUser }) {
       [name]: value,
     }));
   };
-
-  // console.log(user);
 
   const handleSubmit = async () => {
     if (user.mobile.length !== 10 || !/^[6789]/.test(user.mobile)) {
@@ -50,7 +57,6 @@ function UpdateUser({ updateUserData, setUpdateUser }) {
         { headers: { "content-type": "multipart/form-data" } }
       );
 
-      // console.log(response);
       if (response.status === 201) {
         dispatch(
           updateUser({
@@ -63,7 +69,7 @@ function UpdateUser({ updateUserData, setUpdateUser }) {
           })
         );
         toast.success("User updated successfully");
-        setUpdateUser(false);
+        setOpen(false);
       }
     } catch (error) {
       console.log(error);
@@ -73,81 +79,100 @@ function UpdateUser({ updateUserData, setUpdateUser }) {
     }
   };
   return (
-    <div className="w-[80%] h-full flex flex-col justify-center items-center my-5 z-[150]">
-      <h1 className="text-center text-3xl font-bold">Update Student</h1>
-      <div className="flex flex-col justify-center items-center mt-5 w-full">
-        <div className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border border-gray-400 w-full">
-          <div className="flex flex-col items-center justify-between">
-            <div className="w-full my-2">
-              <FormField
-                htmlFor={"first_name"}
-                id={"first_name"}
-                type={"text"}
-                placeholder={"First Name"}
-                name={"first_name"}
-                value={user.first_name}
-                onChange={handleChange}
-              >
-                First Name
-              </FormField>
-              <FormField
-                htmlFor={"last_name"}
-                id={"last_name"}
-                type={"text"}
-                placeholder={"Last Name"}
-                name={"last_name"}
-                value={user.last_name}
-                onChange={handleChange}
-              >
-                Last Name
-              </FormField>
-              <FormField
-                htmlFor={"mobile"}
-                id={"mobile"}
-                type={"text"}
-                placeholder={"Mobile"}
-                name={"mobile"}
-                value={user.mobile}
-                onChange={handleChange}
-                maxLength={10}
-                minLength={10}
-              >
-                Mobile Number
-              </FormField>
-              {(user.mobile.length > 10 ||
-                user.mobile.length < 10 ||
-                !/^[6789]/.test(user.mobile)) && (
-                <p className="text-red-500">Invalid Mobile Number</p>
-              )}
-              <FormField
-                htmlFor={"email"}
-                id={"email"}
-                type={"text"}
-                placeholder={"Email"}
-                name={"email"}
-                value={user.email}
-                onChange={handleChange}
-              >
-                Email
-              </FormField>
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
+        <div onClick={() => setOpen(true)}>
+          <UpdateBtn />
+        </div>
+      </SheetTrigger>
+      <SheetContent className="z-[100] w-full sm:w-[70%] overflow-auto">
+        <SheetHeader className="text-2xl font-bold text-center lg:text-left">
+          Update Student
+        </SheetHeader>
+        <div className="w-full flex flex-col justify-center items-center">
+          <div className="flex flex-col justify-center items-center w-full max-w-lg">
+            <div className="w-full">
+              {/* Form Section */}
+              <div className="flex flex-col items-center justify-between">
+                <div className="w-full my-4">
+                  <FormField
+                    htmlFor="first_name"
+                    id="first_name"
+                    type="text"
+                    placeholder="First Name"
+                    name="first_name"
+                    value={user.first_name}
+                    onChange={handleChange}
+                  >
+                    First Name
+                  </FormField>
+                  <FormField
+                    htmlFor="last_name"
+                    id="last_name"
+                    type="text"
+                    placeholder="Last Name"
+                    name="last_name"
+                    value={user.last_name}
+                    onChange={handleChange}
+                  >
+                    Last Name
+                  </FormField>
+                  <FormField
+                    htmlFor="mobile"
+                    id="mobile"
+                    type="text"
+                    placeholder="Mobile"
+                    name="mobile"
+                    value={user.mobile}
+                    onChange={handleChange}
+                    maxLength={10}
+                    minLength={10}
+                  >
+                    Mobile Number
+                  </FormField>
+                  {(user.mobile.length > 10 ||
+                    user.mobile.length < 10 ||
+                    !/^[6789]/.test(user.mobile)) && (
+                    <p className="text-red-500 text-sm mt-1">
+                      Invalid Mobile Number
+                    </p>
+                  )}
+                  <FormField
+                    htmlFor="email"
+                    id="email"
+                    type="text"
+                    placeholder="Email"
+                    name="email"
+                    value={user.email}
+                    onChange={handleChange}
+                  >
+                    Email
+                  </FormField>
+                </div>
+              </div>
             </div>
-            <button
-              disabled={loading}
-              onClick={handleSubmit}
-              className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md"
-            >
-              {loading ? "Updating..." : "Update User"}
-            </button>
           </div>
         </div>
-        <button
-          onClick={() => setUpdateUser((perv) => !perv)}
-          className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md"
-        >
-          Close
-        </button>
-      </div>
-    </div>
+
+        <SheetFooter className="flex w-full gap-4 mt-4">
+          <button
+            disabled={loading}
+            onClick={() => setOpen(false)}
+            className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md w-full"
+          >
+            Close
+          </button>
+
+          <button
+            disabled={loading}
+            onClick={handleSubmit}
+            className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md w-full"
+          >
+            Update
+          </button>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   );
 }
 

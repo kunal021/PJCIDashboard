@@ -15,6 +15,18 @@ import Placeholder from "@tiptap/extension-placeholder";
 import { FontSize } from "./fontSizeExtension";
 import FileHandler from "@tiptap-pro/extension-file-handler";
 import { Mathematics } from "@tiptap-pro/extension-mathematics";
+import ImageResize from "tiptap-extension-resize-image";
+import { useEffect, useState } from "react";
+import { API_URL } from "../url";
+import axios from "axios";
+import MathEditor from "./MathsEditor";
+import MathModal from "./MathModel";
+import Table from "@tiptap/extension-table";
+import TableRow from "@tiptap/extension-table-row";
+import TableHeader from "@tiptap/extension-table-header";
+import TableActions from "./TableActions";
+import { CustomTableCell } from "./CustomTableCell";
+import toast from "react-hot-toast";
 import {
   Bold,
   Italic,
@@ -39,22 +51,30 @@ import {
   AlignLeft,
   AlignCenter,
   AlignRight,
+  AlignJustify,
 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { API_URL } from "../url";
-import axios from "axios";
-import MathEditor from "./MathsEditor";
-import MathModal from "./MathModel";
-import Gapcursor from "@tiptap/extension-gapcursor";
-import Table from "@tiptap/extension-table";
-import TableRow from "@tiptap/extension-table-row";
-import TableHeader from "@tiptap/extension-table-header";
-import TableCell from "@tiptap/extension-table-cell";
-import TableActions from "./TableActions";
-import { CustomTableCell } from "./CustomTableCell";
-import Paragraph from "@tiptap/extension-paragraph";
-import Document from "@tiptap/extension-document";
-import Text from "@tiptap/extension-text";
+
+const ResizableImage = Image.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      width: {
+        default: "auto",
+        parseHTML: (element) => element.getAttribute("width"),
+        renderHTML: (attributes) => {
+          return attributes.width ? { width: attributes.width } : {};
+        },
+      },
+      height: {
+        default: "auto",
+        parseHTML: (element) => element.getAttribute("height"),
+        renderHTML: (attributes) => {
+          return attributes.height ? { height: attributes.height } : {};
+        },
+      },
+    };
+  },
+});
 
 const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
   const [headingOptionOpen, setHeadingOptionOpen] = useState(false);
@@ -68,7 +88,6 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
       Placeholder.configure({ placeholder: placeholder || "Start typing..." }),
       StarterKit,
       Document,
-      Paragraph,
       Text,
       Underline,
       Link,
@@ -76,20 +95,22 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
       Superscript,
       Highlight.configure({ multicolor: true }),
       Image,
-      TextAlign.configure({ types: ["heading", "paragraph"] }),
+      TextAlign.configure({
+        types: ["heading", "paragraph", "table", "image"],
+      }),
       TextStyle,
       FontSize,
       FontFamily,
       MathEditor,
       Mathematics,
-      Gapcursor,
       Table.configure({
         resizable: true,
       }),
       TableRow,
       TableHeader,
-      TableCell,
       CustomTableCell,
+      ResizableImage,
+      ImageResize,
       FileHandler.configure({
         allowedMimeTypes: [
           "image/png",
@@ -98,27 +119,34 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
           "image/webp",
           "image/*",
         ],
+
         async onDrop(currentEditor, files, pos) {
           for (const file of files) {
-            const formData = new FormData();
-            formData.append("image", file);
-            const response = await axios.post(
-              `${API_URL}/admin/courses/uplodecourseimage.php`,
-              formData,
-              { headers: { "content-type": "multipart/form-data" } }
-            );
+            try {
+              const formData = new FormData();
+              formData.append("image", file);
+              const response = await axios.post(
+                `${API_URL}/admin/courses/uplodecourseimage.php`,
+                formData,
+                { headers: { "content-type": "multipart/form-data" } }
+              );
 
-            if (response?.data?.url) {
-              currentEditor
-                .chain()
-                .insertContentAt(pos, {
-                  type: "image",
-                  attrs: {
-                    src: response.data.url,
-                  },
-                })
-                .focus()
-                .run();
+              if (response?.data?.url) {
+                currentEditor
+                  .chain()
+                  .insertContentAt(pos, {
+                    type: "image",
+                    attrs: {
+                      src: response.data.url,
+                    },
+                  })
+                  .focus()
+                  .run();
+              }
+            } catch (error) {
+              console.log(error);
+              toast.error(error?.response?.data?.message || "Image Error");
+              alert(error?.response?.data?.message || "Image Error");
             }
           }
         },
@@ -128,25 +156,31 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
               return false;
             }
 
-            const formData = new FormData();
-            formData.append("image", file);
-            const response = await axios.post(
-              `${API_URL}/admin/courses/uplodecourseimage.php`,
-              formData,
-              { headers: { "content-type": "multipart/form-data" } }
-            );
+            try {
+              const formData = new FormData();
+              formData.append("image", file);
+              const response = await axios.post(
+                `${API_URL}/admin/courses/uplodecourseimage.php`,
+                formData,
+                { headers: { "content-type": "multipart/form-data" } }
+              );
 
-            if (response?.data?.url) {
-              currentEditor
-                .chain()
-                .insertContentAt(currentEditor.state.selection.anchor, {
-                  type: "image",
-                  attrs: {
-                    src: response.data.url,
-                  },
-                })
-                .focus()
-                .run();
+              if (response?.data?.url) {
+                currentEditor
+                  .chain()
+                  .insertContentAt(currentEditor.state.selection.anchor, {
+                    type: "image",
+                    attrs: {
+                      src: response.data.url,
+                    },
+                  })
+                  .focus()
+                  .run();
+              }
+            } catch (error) {
+              console.log(error);
+              toast.error(error?.response?.data?.message || "Image Error");
+              alert(error?.response?.data?.message || "Image Error");
             }
           }
         },
@@ -156,7 +190,6 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
 
     onUpdate({ editor }) {
       let html = editor.getHTML();
-      console.log(html);
 
       if (getHtmlData) {
         getHtmlData(html);
@@ -174,7 +207,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
   useEffect(() => {
     if (editor) {
       if (initialContent && !isInitialContentSet) {
-        const cleanText = initialContent; // Process if necessary
+        const cleanText = initialContent;
         editor.commands.setContent(cleanText, false, {
           preserveWhitespace: "full",
         });
@@ -264,33 +297,28 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
   };
   const handleInsertSymbol = (latex) => {
     if (latex && editor) {
-      // Insert an atomic equation node with the LaTeX content
       editor
         .chain()
         .focus()
         .insertContent({
           type: "equation",
           attrs: {
-            latex, // Set the LaTeX code as an attribute
+            latex,
           },
         })
         .run();
     }
 
-    // Close the modal after inserting the symbol
     setIsMathModalOpen(false);
   };
 
-  const removeTrailingSpaces = () => {
-    // Get the current content of the editor
-    let content = editor.getHTML();
+  // const removeTrailingSpaces = () => {
+  //   let content = editor.getHTML();
 
-    // Use a regular expression to remove trailing spaces at the end of each line
-    content = content.replace(/(\d+)\s+<\/p>/g, "$1</p>");
+  //   content = content.replace(/(\d+)\s+<\/p>/g, "$1</p>");
 
-    // Update the editor with the cleaned-up content
-    editor.commands.setContent(content);
-  };
+  //   editor.commands.setContent(content);
+  // };
 
   return (
     <div className="flex flex-col justify-center items-center h-full w-full border border-gray-300 rounded-md">
@@ -320,7 +348,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
             >
               <ULIcon className="h-4 md:h-5" />
             </button>
-            <div className="relative flex justify-between items-center space-y-1">
+            <div className="relative flex justify-between items-center">
               <button
                 onClick={handleToggleHeadingOptions}
                 className="flex border rounded-md border-gray-300 p-[1px] "
@@ -333,7 +361,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                 )}
               </button>
               {headingOptionOpen && (
-                <div className="absolute flex flex-col justify-between items-center top-7 left-[6px] border rounded-md border-gray-300 bg-gray-50 p-1">
+                <div className="absolute flex flex-col justify-between items-center top-7 z-10 border rounded-md border-gray-300 bg-gray-50 p-1">
                   <button
                     onClick={() => handleHeadingLevel(1)}
                     className={
@@ -400,7 +428,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
           </div>
           <hr className="hidden lg:block bg-gray-300 h-10 w-[1px]"></hr>
           <div className="flex justify-between items-center gap-[2px]">
-            <div className="relative flex justify-between items-center space-y-1">
+            <div className="relative flex justify-between items-center">
               <button
                 onClick={handleToggleFontSizeOptions}
                 className="flex border rounded-md border-gray-300 p-[1px] "
@@ -413,7 +441,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                 )}
               </button>
               {fontSizeOpen && (
-                <div className="absolute font-bold flex flex-col justify-between items-center top-7 -left-[5px] border rounded-md border-gray-300 bg-gray-50 p-1">
+                <div className="absolute font-bold flex flex-col justify-between items-center top-7 z-10 border rounded-md border-gray-300 bg-gray-50 p-1">
                   {[
                     "8",
                     "9",
@@ -516,7 +544,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
               >
                 <AlignRight className="h-4 md:h-5" />
               </button>
-              {/* <button
+              <button
                 onClick={() =>
                   editor.chain().focus().setTextAlign("justify").run()
                 }
@@ -524,9 +552,9 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
                   editor.isActive({ textAlign: "justify" }) ? "is-active" : ""
                 }
               >
-                Justify
-              </button> */}
-              <button onClick={removeTrailingSpaces}>Rmv</button>
+                <AlignJustify className="h-4 md:h-5" />
+              </button>
+              {/* <button onClick={removeTrailingSpaces}>Rmv</button> */}
               <button
                 onClick={() => editor.chain().focus().unsetTextAlign().run()}
               >

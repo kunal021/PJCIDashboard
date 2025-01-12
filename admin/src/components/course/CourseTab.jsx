@@ -1,5 +1,4 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import LayoutAdjuster from "@/utils/LayoutAdjuster";
 import GetDir from "../directory/GetDir";
 import { useEffect, useState } from "react";
 import Breadcrumbs from "../directory/BreadCrumbs";
@@ -45,7 +44,6 @@ const removeBreadCrumbChildren = (data, id) => {
 function CourseTab() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  // const courseId = searchParams.get("id");
   const [dirData, setDirData] = useState();
   const [activeTab, setActiveTab] = useState(
     localStorage.getItem("activeTab") || "Video"
@@ -93,9 +91,9 @@ function CourseTab() {
 
   useEffect(() => {
     const id = searchParams.get("id");
-    const name = "Current Directory"; // Replace with dynamic name if possible
-    const parentId = "ParentID"; // Set a dynamic parentId if possible
-    const subDir = "1"; // Set subDir as needed
+    const name = "Current Directory";
+    const parentId = "ParentID";
+    const subDir = "1";
 
     setBreadcrumbData((prevData) => {
       let updatedData;
@@ -109,7 +107,7 @@ function CourseTab() {
   }, [searchParams]);
 
   const handleNavigate = (id, name, parentId, subDir) => {
-    navigate(`/get-course-content?id=${id}`, {
+    navigate(`/course/get-content?id=${id}`, {
       state: { dirId: id, subDir: subDir },
     });
 
@@ -127,21 +125,18 @@ function CourseTab() {
   const handleTabChange = (value) => {
     setActiveTab(value);
     localStorage.setItem("activeTab", value);
-
-    // Reset directory to initial state when changing tabs
     const initialId = localStorage.getItem("initialId");
-    navigate(`/get-course-content?id=${initialId}`, {
+    navigate(`/course/get-content?id=${initialId}`, {
       state: { dirId: initialId, subDir: "1" },
     });
     setBreadcrumbData(initialBreadcrumbs[value]);
 
-    // Reset dirData state
     setDirData(null);
   };
 
   return (
-    <LayoutAdjuster>
-      <div className="w-[80%] mx-auto my-10">
+    <>
+      <div className="w-[95%] md:w-[80%] mx-auto my-10">
         <GetCourseById id={courseId} />
         <Tabs
           value={activeTab}
@@ -217,7 +212,7 @@ function CourseTab() {
           </div>
         </Tabs>
       </div>
-    </LayoutAdjuster>
+    </>
   );
 }
 

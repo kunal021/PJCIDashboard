@@ -12,7 +12,7 @@ export const addVideoInCourseSlice = createSlice({
       state.addVideoInCourse = [...state.addVideoInCourse, ...action.payload];
     },
     addAddVideoInCourse: (state, action) => {
-      state.addVideoInCourse.push(action.payload);
+      state.addVideoInCourse.unshift(action.payload);
     },
     updateAddVideoInCourse: (state, action) => {
       const index = state.addVideoInCourse.findIndex(

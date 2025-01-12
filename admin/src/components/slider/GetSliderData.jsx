@@ -65,7 +65,7 @@ function GetSliderData({ type, handleChange, value, setValue, useType }) {
           name="type_id"
           value={value}
           onChange={handleChange}
-          className="w-96 h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
+          className="w-full sm:w-96 mt-2.5 py-2 px-3 flex justify-center items-center border rounded-md border-gray-300 text-sm"
         >
           {!value && (
             <option value="" disabled>

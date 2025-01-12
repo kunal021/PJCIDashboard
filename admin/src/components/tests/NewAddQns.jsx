@@ -1,21 +1,26 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { addQuestion } from "../../redux/questions/questionSlice";
 import "../../utils/addQns.css";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useSearchParams } from "react-router-dom";
-// import LinkButton from "../../utils/LinkButton";
 import { API_URL } from "../../url";
-import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import Tiptap from "../../utils/TextEditor";
 import AddSubject from "./AddSubject";
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTrigger,
+} from "../ui/sheet";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Plus } from "lucide-react";
 
-function NewAddQns() {
-  const [searchParams] = useSearchParams();
-  const id = searchParams.get("id");
+function NewAddQns({ id, fetchData }) {
   const dispatch = useDispatch();
-
+  const [open, setOpen] = useState(false);
   const initialFormData = {
     question: "",
     a: "",
@@ -30,6 +35,7 @@ function NewAddQns() {
   const [questions, setQuestions] = useState([initialFormData]);
   const [subjects, setSubjects] = useState([]);
   const [currentSubject, setCurrentSubject] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   const handleAddQuestion = () => {
     const lastQuestion = questions[questions.length - 1];
@@ -66,6 +72,7 @@ function NewAddQns() {
     }
 
     try {
+      setLoading(true);
       const dataToSend = {
         test_id: id,
         questions: questions.map((question) => ({
@@ -84,18 +91,21 @@ function NewAddQns() {
         `${API_URL}/admin/test/addqnsintest.php`,
         dataToSend
       );
-      // console.log(response);
-      dispatch(addQuestion(response.data.data));
+
       if (response.status === 201) {
+        dispatch(addQuestion(response.data.data));
+        fetchData();
         toast.success("Question Added Successfully");
+        setOpen(false);
       }
-      console.log(response);
     } catch (error) {
       console.error("Error fetching courses:", error);
       toast.error(
         error.response?.data?.message ||
           "An error occurred while adding the question."
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -109,7 +119,6 @@ function NewAddQns() {
           formData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
-        // console.log(response);
         if (response.status === 200) {
           setSubjects(response.data.data);
         }
@@ -125,135 +134,145 @@ function NewAddQns() {
     getSubject();
   }, [id]);
 
-  // console.log(questions);
-  // console.log(questions);
-
   return (
-    <LayoutAdjuster>
-      <div className="w-[80%] flex flex-col justify-center items-center">
-        <div className="flex justify-center items-center w-full gap-6">
-          <h1 className="text-center my-5 text-3xl font-bold">Add Question</h1>
-          <AddSubject setSubjects={setSubjects} subjects={subjects} />
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger
+        asChild
+        className="cursor-pointer border rounded-md bg-blue-50 p-2 text-sm font-semibold text-black hover:bg-blue-100 border-blue-200 md:w-auto"
+      >
+        <div onClick={() => setOpen(true)}>
+          {useIsMobile() ? <Plus className="h-5 w-5" /> : "Add Question"}
         </div>
-        <div className="flex flex-col justify-center items-center mt-5 w-full">
-          {questions.map((formData, index) => (
-            <div
-              key={index}
-              className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border border-gray-400 w-full"
-            >
-              <div className="mb-4 flex justify-center items-center gap-2">
-                <div className="w-full">
-                  <label className="block text-gray-700 text-sm font-bold mb-2">
-                    Question {index + 1}
-                  </label>
-                  <Tiptap
-                    initialContent={formData.question}
-                    getHtmlData={(content) =>
-                      handleChange(content, index, "question")
-                    }
-                    placeholder="Write the question here..."
-                  />
-                </div>
-              </div>
-
-              {["a", "b", "c", "d", "e"].map((option) => (
-                <div
-                  key={option}
-                  className="flex flex-col justify-center items-center md:flex-row md:space-x-24"
-                >
-                  <div className="flex flex-col justify-start items-start w-full">
-                    <label className="block text-gray-700 text-sm font-bold my-2">
-                      Option {option.toUpperCase()}
+      </SheetTrigger>
+      <SheetContent className="overflow-auto w-full sm:w-[70%] px-4">
+        <SheetHeader>
+          <div className="flex justify-center items-center w-full gap-6">
+            <h1 className="text-center my-5 text-3xl font-bold">
+              Add Question
+            </h1>
+            <AddSubject setSubjects={setSubjects} subjects={subjects} />
+          </div>
+        </SheetHeader>
+        <div className="w-full flex flex-col justify-center items-center">
+          <div className="flex flex-col justify-center items-center w-full gap-6">
+            {questions.map((formData, index) => (
+              <div key={index} className="w-full">
+                {/* Question Section */}
+                <div className="mb-4 flex flex-col md:flex-row justify-center items-start md:gap-4">
+                  <div className="w-full">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                      Question {index + 1}
                     </label>
                     <Tiptap
-                      initialContent={formData[option]}
+                      initialContent={formData.question}
                       getHtmlData={(content) =>
-                        handleChange(content, index, option)
+                        handleChange(content, index, "question")
                       }
-                      placeholder={`Option ${option.toUpperCase()}`}
+                      placeholder="Write the question here..."
                     />
                   </div>
-                  <input
-                    type="radio"
-                    id={`ans_${option}${index}`}
-                    name={`answer${index}`}
-                    value={option}
-                    className="hidden"
-                    onChange={(e) =>
-                      handleChange(e.target.value, index, "answer")
-                    }
-                  />
-                  <label
-                    htmlFor={`ans_${option}${index}`}
-                    className="checkbox-label"
-                  >
-                    {option.toUpperCase()}
-                  </label>
                 </div>
-              ))}
 
-              <div className="w-full mt-4">
-                <select
-                  onChange={(e) => {
-                    handleChange(e.target.value, index, "subject_id");
-                    if (index === questions.length - 1) {
-                      setCurrentSubject(e.target.value);
-                    }
-                  }}
-                  value={formData.subject_id}
-                  // defaultValue={""}
-                  className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md w-2/4"
-                >
-                  {/* <option value="" disabled>
-                    Select Subject
-                  </option> */}
-                  {subjects.map((subject) => (
-                    <option key={subject.id} value={subject.id}>
-                      {subject.subject_name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {index === questions.length - 1 && (
-                <div className="flex items-center justify-between mt-5">
-                  <button
-                    type="button"
-                    onClick={handleAddQuestion}
-                    className="bg-blue-50 hover:bg-blue-100 text-black border font-semibold py-2 px-4 rounded-md border-blue-200"
+                {/* Options Section */}
+                {["a", "b", "c", "d", "e"].map((option) => (
+                  <div
+                    key={option}
+                    className="flex justify-between items-end gap-4 mb-4"
                   >
-                    Add Another Question
-                  </button>
-                  {index !== 0 && (
-                    <button
-                      onClick={() => handleDeleteQuestion(index)}
-                      className="bg-red-50 hover:bg-red-100 text-black border font-semibold py-2 px-4 rounded-md  border-red-200"
+                    <div className="flex flex-col justify-start items-start w-full">
+                      <label className="block text-gray-700 text-sm font-bold my-2">
+                        Option {option.toUpperCase()}
+                      </label>
+                      <Tiptap
+                        initialContent={formData[option]}
+                        getHtmlData={(content) =>
+                          handleChange(content, index, option)
+                        }
+                        placeholder={`Option ${option.toUpperCase()}`}
+                      />
+                    </div>
+                    <input
+                      type="radio"
+                      id={`ans_${option}${index}`}
+                      name={`answer${index}`}
+                      value={option}
+                      className="hidden"
+                      onChange={(e) =>
+                        handleChange(e.target.value, index, "answer")
+                      }
+                    />
+                    <label
+                      htmlFor={`ans_${option}${index}`}
+                      className="checkbox-label"
                     >
-                      Delete Question
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
-          ))}
+                      {option.toUpperCase()}
+                    </label>
+                  </div>
+                ))}
 
-          <div className="flex justify-center items-center mb-5 space-x-16 ">
-            <button
-              className="bg-blue-50 hover:bg-blue-100 text-black font-semibold py-2 px-4 rounded-md border border-blue-200"
-              onClick={handleSubmit}
-            >
-              Submit
-            </button>
-            <button
-              onClick={() => window.history.back()}
-              className="text-black font-semibold py-2 px-4 rounded-md bg-red-50 hover:bg-red-100 border border-red-200"
-            >
-              Close
-            </button>
+                {/* Subject Dropdown */}
+                <div className="w-full mt-4">
+                  <select
+                    onChange={(e) => {
+                      handleChange(e.target.value, index, "subject_id");
+                      if (index === questions.length - 1) {
+                        setCurrentSubject(e.target.value);
+                      }
+                    }}
+                    value={formData.subject_id}
+                    className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md w-full md:w-2/4"
+                  >
+                    {subjects.map((subject) => (
+                      <option key={subject.id} value={subject.id}>
+                        {subject.subject_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Add/Delete Question Buttons */}
+                {index === questions.length - 1 && (
+                  <div className="flex flex-col md:flex-row justify-between items-center mt-5 gap-4">
+                    <button
+                      type="button"
+                      onClick={handleAddQuestion}
+                      className="bg-blue-50 hover:bg-blue-100 text-black border font-semibold py-2 px-4 rounded-md border-blue-200 w-full md:w-auto"
+                    >
+                      Add Another Question
+                    </button>
+                    {index !== 0 && (
+                      <button
+                        onClick={() => handleDeleteQuestion(index)}
+                        className="bg-red-50 hover:bg-red-100 text-black border font-semibold py-2 px-4 rounded-md border-red-200 w-full md:w-auto"
+                      >
+                        Delete Question
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
-      </div>
-    </LayoutAdjuster>
+
+        <SheetFooter className="flex flex-col gap-4 mt-5">
+          <button
+            disabled={loading}
+            onClick={() => !loading && setOpen(false)}
+            className="border rounded-md bg-red-50 py-2 px-4 text-sm font-semibold hover:bg-red-100 border-red-200 text-black w-full disabled:opacity-50"
+          >
+            Close
+          </button>
+          <button
+            disabled={loading}
+            onClick={handleSubmit}
+            className="rounded-md bg-blue-50 py-2 px-4 text-sm font-semibold hover:bg-blue-100 border border-blue-200 text-black w-full"
+          >
+            Add Questions
+          </button>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   );
 }
 

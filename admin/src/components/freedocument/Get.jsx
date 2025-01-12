@@ -1,19 +1,17 @@
-import LayoutAdjuster from "@/utils/LayoutAdjuster";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import Breadcrumbs from "./BreadCrumbs";
 import GetDir from "./GetDir";
+import { useHeading } from "@/hooks/use-heading";
 
 const insertBreadcrumb = (data, id, name, parentId, subDir) => {
   const updateData = data.map((item) => {
     if (item.id === parentId) {
-      // console.log(data, id, name, parentId);
       return {
         ...item,
         children: [{ id, name, parentId, subDir }],
       };
     } else if (item.children) {
-      // console.log(data, id, name, parentId);
       return {
         ...item,
         children: insertBreadcrumb(item.children, id, name, parentId, subDir),
@@ -43,6 +41,7 @@ const removeBreadCrumbChildren = (data, id) => {
 };
 
 function GetFreeMaterial() {
+  const { setHeading } = useHeading();
   const navigate = useNavigate();
   const location = useLocation();
   const [dirData, setDirData] = useState();
@@ -52,15 +51,13 @@ function GetFreeMaterial() {
     { name: "Home", id: docId, parentId: docId, subDir: "1" },
   ]);
 
-  // Update breadcrumbData when URL changes
   useEffect(() => {
     const id = searchParams.get("id") || "49";
-    const name = "Current Directory"; // Replace with dynamic name if possible
-    const parentId = "ParentID"; // Set a dynamic parentId if possible
-    const subDir = "1"; // Set subDir as needed
+    const name = "Current Directory";
+    const parentId = "ParentID";
+    const subDir = "1";
 
     setBreadcrumbData((prevData) => {
-      // Update breadcrumbs by adding or removing based on the new URL
       let updatedData;
       if (parentId) {
         updatedData = insertBreadcrumb(prevData, id, name, parentId, subDir);
@@ -71,7 +68,7 @@ function GetFreeMaterial() {
     });
   }, [location, searchParams]);
   const handleNavigate = (id, name, parentId, subDir) => {
-    navigate(`/get-free-materials?id=${id}`, {
+    navigate(`/doc/free-materials?id=${id}`, {
       state: { dirId: id, subDir: subDir },
     });
 
@@ -86,9 +83,19 @@ function GetFreeMaterial() {
     });
   };
 
+  useEffect(() => {
+    setHeading(
+      <div className="w-full flex justify-center items-center gap-6">
+        <h1 className="text-xl sm:text-3xl font-bold text-center">
+          Free Materilas List
+        </h1>
+      </div>
+    );
+  }, [setHeading]);
+
   return (
-    <LayoutAdjuster>
-      <div className="flex flex-col justify-start items-center w-full gap-5 m-5 mt-16">
+    <>
+      <div className="flex flex-col justify-start items-center w-full gap-5 px-3 mt-10">
         <div className="w-full pt-2 pl-5">
           <Breadcrumbs data={breadcrumbData} handleNavigate={handleNavigate} />
         </div>
@@ -103,7 +110,7 @@ function GetFreeMaterial() {
           />
         </div>
       </div>
-    </LayoutAdjuster>
+    </>
   );
 }
 

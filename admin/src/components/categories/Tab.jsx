@@ -13,7 +13,6 @@ const fetchData = async (
   setLoading,
   coursetype,
   categoryid,
-  // setError,
   setPaginationData,
   setCourse,
   setFullCourse
@@ -41,7 +40,6 @@ const fetchData = async (
     }
   } catch (error) {
     console.log(error);
-    // setError(error.response.data.message);
   } finally {
     setLoading(false);
   }

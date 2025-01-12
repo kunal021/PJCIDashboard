@@ -3,16 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { setTest } from "../../redux/tests/testSlice";
 import { deleteTest } from "../../redux/tests/testSlice";
 import axios from "axios";
-import LinkButton from "../../utils/LinkButton";
 import { API_URL } from "../../url";
 import Loader from "../../utils/Loader";
-import UpdateBtn from "../../utils/UpdateBtn";
 import ConfirmDelete from "../../utils/ConfirmDelete";
 import toast from "react-hot-toast";
-import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import { Avatar } from "antd";
 import { useNavigate } from "react-router-dom";
 import UpdateTestSeries from "./Update";
+import { useHeading } from "@/hooks/use-heading";
+import AddTestSeries from "./Add";
 
 const fetchTest = async (dispatch, setLoading) => {
   try {
@@ -20,9 +19,7 @@ const fetchTest = async (dispatch, setLoading) => {
     const response = await axios.post(
       `${API_URL}/admin/testseries/getalltestseries.php`
     );
-
     dispatch(setTest(response.data.data));
-    // console.log(response);
   } catch (error) {
     console.error("Error fetching courses:", error);
   } finally {
@@ -31,17 +28,25 @@ const fetchTest = async (dispatch, setLoading) => {
 };
 
 function GetTestSeries() {
+  const { setHeading } = useHeading();
+
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [updateTest, setUpdateTest] = useState(false);
-  const [updateTestData, setUpdateTestData] = useState({});
 
   const dispatch = useDispatch();
   const test = useSelector((state) => state.test.test);
 
   useEffect(() => {
+    setHeading(
+      <div className="w-full flex justify-center items-center gap-6">
+        <h1 className="text-xl sm:text-3xl font-bold text-center">
+          Test Series
+        </h1>
+        <AddTestSeries fetchData={() => fetchTest(dispatch, setLoading)} />
+      </div>
+    );
     fetchTest(dispatch, setLoading);
-  }, [dispatch]);
+  }, [dispatch, setHeading]);
 
   const handleDelete = async (testId) => {
     try {
@@ -52,7 +57,6 @@ function GetTestSeries() {
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );
-      //   console.log(response);
 
       if (response.status == 201) {
         dispatch(deleteTest(testId));
@@ -60,7 +64,6 @@ function GetTestSeries() {
       }
     } catch (error) {
       toast.error(error.response.data.massage || "Error deleting test");
-      // console.error("Error fetching category:", error);
     }
   };
 
@@ -84,73 +87,71 @@ function GetTestSeries() {
             formData,
             { headers: { "content-type": "multipart/form-data" } }
           );
-
-          // Update local state instead of fetching users again
           const updatedTest = test.map((test) =>
             test.id === testId ? { ...test, is_active: flag } : test
           );
           dispatch(setTest(updatedTest));
         } catch (error) {
-          console.log("Error updating user status:", error);
-          // Handle error (e.g., show an error message)
+          console.log("Error updating status:", error);
         }
       }
     },
     [dispatch, test]
   );
 
-  // console.log(test);
-
   return (
-    <LayoutAdjuster>
+    <>
       {loading ? (
         <Loader />
       ) : (
-        <div
-          className={`${
-            updateTest
-              ? "hidden"
-              : "w-[80%] flex flex-col justify-center items-center mx-auto"
-          } `}
-        >
-          <div className="flex justify-center items-center my-5 space-x-10">
-            <h1 className="text-3xl font-bold text-center">Test Series</h1>
-            <LinkButton to={"/add-testseries"}>Add</LinkButton>
-          </div>
+        <div className="w-[95%] sm:w-[80%] flex flex-col justify-center items-center mx-auto">
           {test.length > 0 ? (
-            <div className="flex flex-col justify-center items-center w-full">
+            <div className="max-w-5xl mx-auto w-full px-4 py-6 space-y-4">
               {test.map((test, idx) => (
                 <div
                   key={idx}
-                  className="flex justify-center items-center w-[80%] border rounded-md border-gray-300 m-2 p-3"
+                  className="bg-white border border-gray-200 rounded-lg shadow-sm"
                 >
-                  <div className="flex justify-start items-center gap-4 w-full">
-                    <div className="flex justify-center items-center w-[10%] text-">
-                      <Avatar className="bg-gray-500 text-white">
+                  <div className="p-4">
+                    <div className="flex flex-col md:flex-row gap-4">
+                      <Avatar className="h-8 w-8 shrink-0 bg-gray-500 text-white text-sm">
                         {idx + 1}
                       </Avatar>
-                    </div>
-                    <div className="flex flex-col justify-start items-center gap-2 w-full">
-                      <div className="flex justify-start items-center font-bold w-full cursor-pointer">
+
+                      <div className="flex-1 space-y-3">
                         <div
                           onClick={() =>
-                            navigate(`/get-testseries-tests?id=${test.id}`, {
+                            navigate(`/testseries/tests?id=${test.id}`, {
                               state: { testData: test },
                             })
                           }
-                          className="w-full"
+                          className="text-base font-semibold cursor-pointer hover:text-blue-600 transition-colors"
                         >
                           {test.name}
                         </div>
-                        <div className="w-[20%] flex flex-col justify-center items-center">
-                          <p className="text-xs font-bold">
+
+                        <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-600">
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-medium">Tests:</span>
+                            <span>{test.total_test}</span>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-medium">Questions:</span>
+                            <span>{test.total_question}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-between md:justify-end items-center gap-4 pt-3 md:pt-0">
+                        <div className="flex flex-col items-center gap-2">
+                          <p className="text-xs font-medium text-gray-600 whitespace-nowrap max-sm:hidden">
                             {test.is_active === "1" ? "Public" : "Private"}
                           </p>
                           <button
-                            onClick={() => {
-                              handleChangeStatus(test.id, test.is_active);
-                            }}
-                            className="toggle-switch scale-75 align-middle"
+                            onClick={() =>
+                              handleChangeStatus(test.id, test.is_active)
+                            }
+                            className="toggle-switch scale-[60%] sm:scale-75"
                           >
                             <input
                               type="checkbox"
@@ -162,28 +163,15 @@ function GetTestSeries() {
                             </div>
                           </button>
                         </div>
-                      </div>
-                      <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                      <div className="flex justify-start items-center gap-1 w-full text-xs font-medium">
-                        <div className="flex justify-start items-start gap-1 w-full">
-                          <p>Total Tests:</p>
-                          <p>{test.total_test}</p>
-                        </div>
-                        <div className="flex justify-start items-start gap-1 w-full">
-                          <p>Total Questions:</p>
-                          <p>{test.total_question}</p>
+
+                        <div className="flex items-center gap-2 shrink-0">
+                          <UpdateTestSeries updateTestData={test} />
+                          <ConfirmDelete
+                            handleClick={() => handleDelete(test.id)}
+                          />
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex flex-col justify-center items-end gap-4 w-[10%]">
-                    <UpdateBtn
-                      handleClick={() => {
-                        setUpdateTest((prev) => !prev);
-                        setUpdateTestData(test);
-                      }}
-                    />
-                    <ConfirmDelete handleClick={() => handleDelete(test.id)} />
                   </div>
                 </div>
               ))}
@@ -195,13 +183,7 @@ function GetTestSeries() {
           )}
         </div>
       )}
-      {updateTest && (
-        <UpdateTestSeries
-          setUpdateTest={setUpdateTest}
-          updateTestData={updateTestData}
-        />
-      )}
-    </LayoutAdjuster>
+    </>
   );
 }
 

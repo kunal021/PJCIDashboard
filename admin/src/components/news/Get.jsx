@@ -1,4 +1,3 @@
-import LayoutAdjuster from "@/utils/LayoutAdjuster";
 import Loader from "@/utils/Loader";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -9,6 +8,8 @@ import { truncateData } from "@/utils/truncateData";
 import Actions from "./Actions";
 import Add from "./Add";
 import toast from "react-hot-toast";
+import { useHeading } from "@/hooks/use-heading";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const fetchData = async (
   setLoading,
@@ -37,18 +38,21 @@ const fetchData = async (
 };
 
 function GetNews() {
+  const { setHeading } = useHeading();
+  const isMobile = useIsMobile();
   const navigate = useNavigate();
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchData(
-      setLoading,
-      //  currentPage,
-      setNews
-      //  setPaginationData
+    setHeading(
+      <div className="w-full flex justify-center items-center gap-6">
+        <h1 className="text-xl sm:text-3xl font-bold text-center">News List</h1>
+        <Add setNews={setNews} />
+      </div>
     );
-  }, []);
+    fetchData(setLoading, setNews);
+  }, [setHeading]);
 
   const handleChangeStatus = async (imageId, is_active) => {
     const confirmAlert = window.confirm(
@@ -70,8 +74,6 @@ function GetNews() {
           { headers: { "content-type": "multipart/form-data" } }
         );
 
-        console.log(res);
-
         if (res.status === 200) {
           const updatedNews = news.map((news) =>
             news.id === imageId ? { ...news, is_active } : news
@@ -81,8 +83,7 @@ function GetNews() {
         }
       } catch (error) {
         console.log("Error updating user status:", error);
-        toast.error("Error updating user status");
-        // Handle error (e.g., show an error message)
+        toast.error(error?.response?.data?.message || "Error updating status");
       }
     }
   };
@@ -95,25 +96,21 @@ function GetNews() {
   };
 
   return (
-    <LayoutAdjuster>
+    <>
       {loading ? (
         <>
           <Loader />
         </>
       ) : (
-        <div className="w-[90%] flex flex-col justify-center items-center mx-auto">
+        <div className="w-full sm:w-[90%] flex flex-col justify-center items-center mx-auto">
           <div className="w-full flex flex-col justify-center items-center my-5">
-            <div className="w-full flex justify-center items-center gap-5">
-              <h1 className="text-3xl font-bold text-center">News List</h1>
-              <Add setNews={setNews} />
-            </div>
             <div className="w-full flex flex-col justify-center items-center">
               {news.length > 0 ? (
                 <div className="flex flex-wrap gap-4 justify-center items-center w-full ">
                   {news.map((item, idx) => (
                     <div
                       key={idx}
-                      className="flex flex-col font-medium w-64 border rounded-md border-zinc-300 ml-2 my-5 p-3 gap-3"
+                      className="flex flex-col font-medium w-40 sm:w-64 border rounded-md border-zinc-300 my-5 p-3 gap-3"
                     >
                       <Actions
                         id={item.id}
@@ -124,7 +121,7 @@ function GetNews() {
                       >
                         <div
                           onClick={() =>
-                            navigate(`/get-news-content?id=${item.id}`, {
+                            navigate(`/news/content?id=${item.id}`, {
                               state: { title: renderData(item.title) },
                             })
                           }
@@ -132,20 +129,27 @@ function GetNews() {
                         >
                           <img
                             src={item.img_url}
-                            className="rounded-lg border-transparent w-full h-64"
+                            className="rounded-lg border-transparent w-full h-40 sm:h-64"
                             alt="News thumbnail"
                           />
 
                           <p className="text-sm font-bold text-center">
-                            {truncateData(renderData(item.title), 5)}
+                            {isMobile
+                              ? truncateData(renderData(item.title), 2)
+                              : truncateData(renderData(item.title), 5)}
                           </p>
 
                           <div className="text-center text-sm flex justify-between items-center w-full gap-2">
                             <p className="font-medium">
-                              By: {truncateData(item.author, 3)}
+                              By:{" "}
+                              {isMobile
+                                ? truncateData(item.author, 1)
+                                : truncateData(item.author, 3)}
                             </p>
                             <p className="font-medium bg-gray-200 rounded p-0.5">
-                              {truncateData(item.category, 3)}
+                              {isMobile
+                                ? truncateData(item.category, 1)
+                                : truncateData(item.category, 3)}
                             </p>
                           </div>
                         </div>
@@ -162,7 +166,7 @@ function GetNews() {
           </div>
         </div>
       )}
-    </LayoutAdjuster>
+    </>
   );
 }
 

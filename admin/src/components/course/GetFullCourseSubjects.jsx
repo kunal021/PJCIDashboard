@@ -5,7 +5,6 @@ import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { API_URL } from "../../url";
 import Loader from "../../utils/Loader";
-import LayoutAdjuster from "../../utils/LayoutAdjuster";
 // import parser from "html-react-parser";
 import { Avatar } from "antd";
 import { CalendarClock, IndianRupee, SquarePlay } from "lucide-react";
@@ -82,7 +81,7 @@ const GetFullCourseSubjects = () => {
   };
 
   return (
-    <LayoutAdjuster>
+    <>
       {loading ? (
         <Loader />
       ) : (
@@ -189,7 +188,7 @@ const GetFullCourseSubjects = () => {
           )}
         </div>
       )}
-    </LayoutAdjuster>
+    </>
   );
 };
 

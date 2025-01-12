@@ -4,12 +4,9 @@ import axios from "axios";
 import { API_URL } from "../../url";
 import Loader from "../../utils/Loader";
 import { Avatar } from "antd";
-// import MakeUserPurchase from "../setting/MakeUserPurchase";
-// import expiryDate from "../../utils/ExpiryDate";
-// import MakeUserPurchaseResponse from "../../utils/MakeUserPurchaseResponse";
 import * as XLSX from "xlsx";
 import { LatexParser } from "@/utils/LatexParser";
-// import parser from "html-react-parser";
+import { useHeading } from "@/hooks/use-heading";
 
 const fetchTest = async (setTest, setLoading, testId) => {
   try {
@@ -33,14 +30,20 @@ const fetchTest = async (setTest, setLoading, testId) => {
 };
 
 function GetTestById({ testId }) {
+  const { setHeading } = useHeading();
   const [loading, setLoading] = useState(false);
   const [test, setTest] = useState([]);
-  // const [makePurchaseStatus, setMakePurchaseStatus] = useState(false);
-  // const [makePurchaseData, setMakePurchaseData] = useState(null);
 
   useEffect(() => {
+    setHeading(
+      <div className="w-full flex justify-center items-center gap-6">
+        <h1 className="text-xl sm:text-3xl font-bold text-center my-2">
+          Test Details
+        </h1>
+      </div>
+    );
     fetchTest(setTest, setLoading, testId);
-  }, [testId]);
+  }, [setHeading, testId]);
 
   const handleDownload = async () => {
     try {
@@ -54,7 +57,6 @@ function GetTestById({ testId }) {
         }
       );
 
-      // console.log(response.data.data);
       if (response.status === 200) {
         const data = response.data.data;
 
@@ -87,103 +89,83 @@ function GetTestById({ testId }) {
       console.log(error);
     }
   };
-  // console.log(test);
+
   return (
-    <div className="w-full">
+    <>
       {loading ? (
         <Loader />
       ) : (
-        <div
-          className={`w-full flex flex-col justify-center items-center mx-auto`}
-        >
+        <div className="w-full flex flex-col justify-center items-center mx-auto">
           {test ? (
             <div className="flex flex-col justify-center items-center w-full">
-              <div className="flex justify-center items-center gap-5">
-                <h1 className="text-3xl font-bold text-center my-2">
-                  Test Details
-                </h1>
-                {/* {test.test_date != "0000-00-00" && test.test_date && (
-                  <MakeUserPurchase
-                    id={test.id}
-                    amount={test.price}
-                    expiryDate={expiryDate(test?.test_date, 7)}
-                    productInfo={test.test_name}
-                    type={"3"}
-                    setMakePurchaseStatus={setMakePurchaseStatus}
-                    setMakePurchaseData={setMakePurchaseData}
-                  />
-                )} */}
-                {test.id && (
-                  <button
-                    onClick={handleDownload}
-                    className="px-4 py-2 bg-red-50 border border-red-200 rounded-md hover:bg-red-100"
-                  >
-                    Report
-                  </button>
-                )}
-              </div>
-              {/* {makePurchaseStatus && (
-                <MakeUserPurchaseResponse
-                  data={makePurchaseData}
-                  onClose={() => setMakePurchaseStatus(false)}
-                />
-              )} */}
-              <div className="flex justify-center items-center w-full border rounded-md border-gray-300 m-2 p-3">
-                <div className="flex justify-start items-center gap-4 w-full">
-                  <div className="flex flex-col justify-start items-center gap-2 w-full">
-                    <div className="flex justify-between items-center w-full">
-                      <Avatar className="bg-gray-500 text-white">
-                        {test.id}
-                      </Avatar>
-                      <div className="flex justify-start items-start gap-1 w-fit">
-                        <p>Start Date:</p>
+              <div className="flex flex-col justify-center items-center w-full border rounded-md border-gray-300 m-2 p-3">
+                <div className="flex flex-col justify-start items-center gap-4 w-full">
+                  {/* Header Section */}
+                  <div className="flex flex-wrap justify-between items-center w-full gap-4">
+                    <Avatar className="bg-gray-500 text-white">
+                      {test.id}
+                    </Avatar>
+                    {test.id && (
+                      <button
+                        onClick={handleDownload}
+                        className="px-4 py-2 bg-red-50 border border-red-200 rounded-md hover:bg-red-100"
+                      >
+                        Report
+                      </button>
+                    )}
+                    <div className="flex flex-wrap justify-between items-start gap-2 w-full">
+                      <div className="flex items-center gap-1 w-fit">
+                        <p className="font-semibold">Start Date:</p>
                         <p>{test.test_date}</p>
                       </div>
-                      <div className="flex justify-start items-start gap-1 w-fit">
-                        <p>Start Time:</p>
+                      <div className="flex items-center gap-1 w-fit">
+                        <p className="font-semibold">Start Time:</p>
                         <p>{test.start_time}</p>
                       </div>
-                      <div className="flex justify-start items-start gap-1 w-fit">
-                        <p>End Time:</p>
+                      <div className="flex items-center gap-1 w-fit">
+                        <p className="font-semibold">End Time:</p>
                         <p>{test.end_time}</p>
                       </div>
-                      <div className="flex justify-start items-start gap-1 w-fit">
-                        <p>Duration:</p>
+                      <div className="flex items-center gap-1 w-fit">
+                        <p className="font-semibold">Duration:</p>
                         <p>{test.duration}</p>
                       </div>
                     </div>
-                    <div className="flex justify-start items-center font-bold w-full">
-                      <div>{test.test_name}</div>
+                  </div>
+                  <hr className="w-full text-bg-slate-400 bg-slate-300 border-slate-300" />
+                  {/* Test Name & Report Button */}
+                  <div className="flex flex-wrap justify-between items-center w-full">
+                    <div className="font-bold">{test.test_name}</div>
+                  </div>
+                  <hr className="w-full text-bg-slate-400 bg-slate-300 border-slate-300" />
+                  {/* Description */}
+                  <div className="flex justify-start items-center w-full font-bold whitespace-pre-wrap">
+                    {typeof test.description === "string"
+                      ? LatexParser(test.description)
+                      : null}
+                  </div>
+                  <hr className="w-full text-bg-slate-400 bg-slate-300 border-slate-300" />
+                  {/* Additional Details */}
+                  <div className="flex flex-wrap justify-between items-start gap-4 w-full">
+                    <div className="flex items-center gap-1 w-fit">
+                      <p className="font-semibold">Price:</p>
+                      <p>{test.price}</p>
                     </div>
-                    <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                    <div className="flex justify-start items-center font-bold w-full whitespace-pre-wrap">
-                      {/* {console.log(test.description)} */}
-                      {typeof test.description === "string"
-                        ? LatexParser(test.description)
-                        : null}
+                    <div className="flex items-center gap-1 w-fit">
+                      <p className="font-semibold">No. Of Qns:</p>
+                      <p>{test.number_of_questions}</p>
                     </div>
-                    <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                    <div className="flex justify-between items-center gap-1 w-full">
-                      <div className="flex justify-start items-start gap-1 w-fit">
-                        <p>Price:</p>
-                        <p>{test.price}</p>
-                      </div>
-                      <div className="flex justify-start items-start gap-1 w-fit">
-                        <p>No. Of Qns:</p>
-                        <p>{test.number_of_questions}</p>
-                      </div>
-                      <div className="flex justify-start items-start gap-1 w-fit">
-                        <p>Mark per Qns:</p>
-                        <p>{test.mark_per_qns}</p>
-                      </div>
-                      <div className="flex justify-start items-start gap-1 w-fit">
-                        <p>Total Marks:</p>
-                        <p>{test.total_mark}</p>
-                      </div>
-                      <div className="flex justify-start items-start gap-1 w-fit">
-                        <p>Negative Mark:</p>
-                        <p>{test.negative_mark}</p>
-                      </div>
+                    <div className="flex items-center gap-1 w-fit">
+                      <p className="font-semibold">Mark per Qns:</p>
+                      <p>{test.mark_per_qns}</p>
+                    </div>
+                    <div className="flex items-center gap-1 w-fit">
+                      <p className="font-semibold">Total Marks:</p>
+                      <p>{test.total_mark}</p>
+                    </div>
+                    <div className="flex items-center gap-1 w-fit">
+                      <p className="font-semibold">Negative Mark:</p>
+                      <p>{test.negative_mark}</p>
                     </div>
                   </div>
                 </div>
@@ -196,7 +178,7 @@ function GetTestById({ testId }) {
           )}
         </div>
       )}
-    </div>
+    </>
   );
 }
 

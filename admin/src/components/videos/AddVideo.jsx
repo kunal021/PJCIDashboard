@@ -1,23 +1,28 @@
+/* eslint-disable react/prop-types */
 import axios from "axios";
 import { useState } from "react";
 import { API_URL } from "../../url";
 import FormField from "../../utils/FormField";
-import LayoutAdjuster from "../../utils/LayoutAdjuster";
-// import Loader from "../../utils/Loader";
-// import Tiptap from "../../utils/TextEditor";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTrigger,
+} from "../ui/dialog";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Plus } from "lucide-react";
+import TimePicker from "@/utils/TimePicker";
 
-function AddVideo() {
-  const navigate = useNavigate();
+function AddVideo({ fetchData }) {
+  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
     videoid: "",
     video_title: "",
     video_duration: "",
   });
-
-  // const [videoTitle, setVideoTitle] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,7 +31,7 @@ function AddVideo() {
       [name]: value,
     }));
   };
-  const handleAddVideo = async () => {
+  const handleSubmit = async () => {
     if (!data.videoid || !data.video_title || !data.video_duration) {
       toast.error("Please fill all fields");
       return;
@@ -45,7 +50,13 @@ function AddVideo() {
 
       if (response.status === 201) {
         toast.success("Video Added Successfully");
-        navigate("/get-videos");
+        fetchData();
+        setData({
+          videoid: "",
+          video_title: "",
+          video_duration: "",
+        });
+        setOpen(false);
       }
     } catch (error) {
       console.log(error);
@@ -53,85 +64,80 @@ function AddVideo() {
     } finally {
       setLoading(false);
     }
-    setData({
-      videoid: "",
-      video_title: "",
-      video_duration: "",
-    });
-    // setVideoTitle("");
   };
 
-  // const getVideoData = (html) => {
-  //   setVideoTitle(html);
-  // };
   return (
-    <LayoutAdjuster>
-      <div className="flex flex-col justify-center items-center w-full">
-        <h3 className="text-3xl font-bold my-5">Add Video</h3>
-        <div className="w-[80%] flex flex-col justify-center items-center p-5 border rounded-lg border-gray-500 my-10">
-          <div className="w-full flex justify-between items-center gap-3">
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger
+        asChild
+        className="cursor-pointer border rounded-md bg-blue-50 p-2 text-sm font-semibold text-black hover:bg-blue-100 border-blue-200 md:w-auto"
+      >
+        <div onClick={() => setOpen(true)}>
+          {useIsMobile() ? <Plus className="h-5 w-5" /> : "Add Video"}
+        </div>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader className="text-2xl font-bold">Add Video</DialogHeader>
+        <div className="flex flex-col justify-center items-center w-full">
+          <div className="w-full flex flex-col justify-center items-center">
+            <div className="w-full flex justify-between items-center gap-3">
+              <FormField
+                id={"videoid"}
+                type={"text"}
+                placeholder={"Enter Video Id"}
+                htmlFor={"videoid"}
+                name={"videoid"}
+                value={data.videoid}
+                onChange={handleChange}
+              >
+                Video Id
+              </FormField>
+            </div>
+            <div className="w-full flex flex-col gap-2 mb-3">
+              <label className="text-sm font-bold text-gray-700">
+                Video Duration
+              </label>
+              <TimePicker
+                value={data.video_duration}
+                onChange={(time) => {
+                  setData((prev) => ({
+                    ...prev,
+                    video_duration: time,
+                  }));
+                }}
+              />
+            </div>
             <FormField
-              id={"videoid"}
+              id={"video_title"}
               type={"text"}
-              placeholder={"Enter Video Id"}
-              htmlFor={"videoid"}
-              name={"videoid"}
-              value={data.videoid}
+              placeholder={"Enter Video Title"}
+              htmlFor={"video_title"}
+              name={"video_title"}
+              value={data.video_title}
               onChange={handleChange}
             >
-              Video Id
+              Video Tile
             </FormField>
-            <FormField
-              id={"video_duration"}
-              type={"time"}
-              placeholder={"Enter Video Duration"}
-              htmlFor={"video_duration"}
-              name={"video_duration"}
-              value={data.video_duration}
-              onChange={handleChange}
-            >
-              Video Duration
-            </FormField>
-          </div>
-          <FormField
-            id={"video_title"}
-            type={"text"}
-            placeholder={"Enter Video Title"}
-            htmlFor={"video_title"}
-            name={"video_title"}
-            value={data.video_title}
-            onChange={handleChange}
-          >
-            Video Tile
-          </FormField>
-
-          {/* <div className="w-full flex flex-col justify-center items-start m-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Video Title:
-            </label>
-            <Tiptap
-              // initialContent={data}
-              getHtmlData={getVideoData}
-              placeholder="Write the question here..."
-            />
-          </div> */}
-          <div className="flex justify-between items-center gap-5 w-full">
-            <button
-              onClick={() => navigate("/get-videos")}
-              className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleAddVideo}
-              className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md"
-            >
-              {loading ? "Adding..." : "Add Video"}
-            </button>
           </div>
         </div>
-      </div>
-    </LayoutAdjuster>
+        <DialogFooter className="flex flex-col gap-4 mt-5">
+          <button
+            disabled={loading}
+            onClick={() => !loading && setOpen(false)}
+            className="border rounded-md bg-red-50 py-2 px-4 text-sm font-semibold hover:bg-red-100 border-red-200 text-black w-full disabled:opacity-50"
+          >
+            Close
+          </button>
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            className="rounded-md bg-blue-50 p-2 text-sm font-semibold hover:bg-blue-100 border-blue-200 text-black border w-full"
+          >
+            Add Video
+          </button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 

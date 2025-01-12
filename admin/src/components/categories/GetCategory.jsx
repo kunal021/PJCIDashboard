@@ -11,11 +11,18 @@ import { API_URL } from "../../url";
 import Loader from "../../utils/Loader";
 import toast from "react-hot-toast";
 import ConfirmDelete from "../../utils/ConfirmDelete";
-import UpdateBtn from "../../utils/UpdateBtn";
-import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import SeeAll from "../../utils/SeeAll";
 import AddCourseInCategory from "./AddCourseInCategory";
-// import parser from "html-react-parser";
+import { useHeading } from "@/hooks/use-heading";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
+import UpdateCategory from "./UpdateCategory";
 
 const fetchCategory = async (dispatch, setLoading) => {
   try {
@@ -30,22 +37,29 @@ const fetchCategory = async (dispatch, setLoading) => {
 };
 
 function GetCategory() {
+  const { setHeading } = useHeading();
   const [loading, setLoading] = useState(false);
-  const [addNewCategory, setAddNewCategory] = useState(false);
 
   const dispatch = useDispatch();
   const category = useSelector((state) => state.category.category);
 
   useEffect(() => {
+    setHeading(
+      <div className="w-full flex justify-center items-center gap-6">
+        <h1 className="text-center text-xl md:text-3xl font-bold">Category</h1>
+        <AddCategory
+          fetchCategory={() => fetchCategory(dispatch, setLoading)}
+        />
+      </div>
+    );
     fetchCategory(dispatch, setLoading);
-  }, [dispatch]);
+  }, [dispatch, setHeading]);
 
   const handleDelete = async (categoryId) => {
     try {
       const response = await axios.delete(
         `${API_URL}/admin/category/delcategory.php?id=${categoryId}`
       );
-      // console.log(response);
       if (categoryId && response.data.success) {
         dispatch(deleteCategory(categoryId));
       }
@@ -80,14 +94,12 @@ function GetCategory() {
             { headers: { "content-type": "multipart/form-data" } }
           );
 
-          // Update local state instead of fetching users again
           const updatedCategory = category.map((category) =>
             category.id === categoryId ? { ...category, isactive } : category
           );
           dispatch(setCategory(updatedCategory));
         } catch (error) {
           console.log("Error updating user status:", error);
-          // Handle error (e.g., show an error message)
         }
       }
     },
@@ -95,90 +107,99 @@ function GetCategory() {
   );
 
   return (
-    <LayoutAdjuster>
+    <>
       {loading ? (
         <Loader />
       ) : (
-        <div
-          className={`${
-            addNewCategory
-              ? "hidden"
-              : "w-fit flex flex-col justify-center items-center mx-auto"
-          } `}
-        >
-          <div className="flex justify-center items-center space-x-10">
-            <h1 className="text-center text-3xl font-bold my-5">
-              Category List
-            </h1>
-            <button
-              onClick={() => setAddNewCategory((prev) => !prev)}
-              className="border rounded-md bg-blue-50 p-2 text-sm font-semibold text-black hover:bg-blue-100 border-blue-200 md:w-auto"
-            >
-              Add Category
-            </button>
-          </div>
+        <div className="w-[90%] mx-auto flex justify-center items-center my-5">
           {category.length > 0 ? (
-            <table className="table-auto w-full m-5 border-2">
-              <thead>
-                <tr className="bg-gray-200">
-                  <th className="p-2 text-sm">Id</th>
-                  <th className="p-2 text-sm">Name</th>
-                  <th className="p-2 text-sm">Update</th>
-                  <th className="p-2 text-sm">Delete</th>
-                  <th className="p-2 text-sm">Status</th>
-                  <th className="p-2 text-sm">Add Course</th>
-                  <th className="p-2 text-sm">All Course</th>
-                </tr>
-              </thead>
-              <tbody className="text-center">
-                {category.map((item, idx) => (
-                  <tr key={item.id} className="bg-gray-100">
-                    <td className="border p-2 text-sm">{idx + 1}</td>
-                    <td className="border p-2 text-sm">{item.name}</td>
-                    <td className="border p-2 text-sm">
-                      <Link
-                        to={`/update-category?id=${item.id}&name=${item.name}`}
+            <div className="w-full relative">
+              <div className="w-full absolute">
+                <Table className="border border-gray-200 rounded text-sm md:text-base">
+                  <TableHeader>
+                    <TableRow className="divide-x divide-gray-200">
+                      <TableHead className="w-[40px] md:w-[50px] text-center text-xs md:text-sm">
+                        Id
+                      </TableHead>
+                      <TableHead className="text-center text-xs md:text-sm">
+                        Name
+                      </TableHead>
+                      <TableHead className="text-center text-xs md:text-sm">
+                        Update
+                      </TableHead>
+                      <TableHead className="text-center text-xs md:text-sm">
+                        Delete
+                      </TableHead>
+                      <TableHead className="text-center text-xs md:text-sm">
+                        Status
+                      </TableHead>
+                      <TableHead className="text-center text-xs md:text-sm">
+                        Add Course
+                      </TableHead>
+                      <TableHead className="text-center text-xs md:text-sm">
+                        All Course
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody className="divide-y divide-gray-200">
+                    {category.map((item, idx) => (
+                      <TableRow
+                        key={item.id}
+                        className="divide-x divide-gray-200 text-center"
                       >
-                        <UpdateBtn />
-                      </Link>
-                    </td>
-                    <td className="border p-2 text-sm">
-                      <ConfirmDelete
-                        handleClick={() => handleDelete(item.id)}
-                      />
-                    </td>
-                    <td className="border p-1 text-sm flex flex-col justify-center items-center">
-                      <p className="text-xs font-bold">
-                        {item.isactive === "1" ? "Public" : "Private"}
-                      </p>
-                      <button
-                        onClick={() => {
-                          handleChangeStatus(item.id, item.isactive);
-                        }}
-                        className="toggle-switch scale-75"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={item.isactive === "1"}
-                          readOnly
-                        />
-                        <div className="toggle-switch-background">
-                          <div className="toggle-switch-handle"></div>
-                        </div>
-                      </button>
-                    </td>
-                    <td className="border p-2 text-sm">
-                      <AddCourseInCategory categoryId={item.id} />
-                    </td>
-                    <td className="border p-2 text-sm">
-                      <Link to={`/get-course-category-wise?id=${item.id}`}>
-                        <SeeAll childern={"Courses"} />
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                        <TableCell className="text-xs md:text-sm p-2 md:p-4">
+                          {idx + 1}
+                        </TableCell>
+                        <TableCell className="text-xs md:text-sm p-2 md:p-4">
+                          {item.name}
+                        </TableCell>
+                        <TableCell className="p-2 md:p-4">
+                          <UpdateCategory id={item.id} name={item.name} />
+                        </TableCell>
+                        <TableCell className="p-2 md:p-4">
+                          <ConfirmDelete
+                            handleClick={() => handleDelete(item.id)}
+                          />
+                        </TableCell>
+                        <TableCell className="p-2 md:p-4">
+                          <div className="flex flex-col items-center gap-0.5">
+                            <span className="text-[10px] md:text-xs font-medium">
+                              {item.isactive === "1" ? "Public" : "Private"}
+                            </span>
+                            <button
+                              onClick={() =>
+                                handleChangeStatus(item.id, item.isactive)
+                              }
+                              className="toggle-switch scale-[0.65] md:scale-75"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={item.isactive === "1"}
+                                readOnly
+                              />
+                              <div className="toggle-switch-background">
+                                <div className="toggle-switch-handle"></div>
+                              </div>
+                            </button>
+                          </div>
+                        </TableCell>
+                        <TableCell className="p-2 md:p-4">
+                          <AddCourseInCategory categoryId={item.id} />
+                        </TableCell>
+                        <TableCell className="p-2 md:p-4">
+                          <Link
+                            to={`/course/get-category-wise?id=${item.id}`}
+                            className="text-blue-500 hover:underline text-xs md:text-sm"
+                          >
+                            <SeeAll childern={"Courses"} />
+                          </Link>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
           ) : (
             <div className="text-2xl font-bold text-center mt-20">
               No Data Available
@@ -186,13 +207,7 @@ function GetCategory() {
           )}
         </div>
       )}
-      {addNewCategory && (
-        <AddCategory
-          fetchCategory={() => fetchCategory(dispatch, setLoading)}
-          setAddNewCategory={setAddNewCategory}
-        />
-      )}
-    </LayoutAdjuster>
+    </>
   );
 }
 

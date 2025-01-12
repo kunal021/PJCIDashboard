@@ -5,7 +5,6 @@ import axios from "axios";
 import { API_URL } from "../../url";
 import { useSearchParams } from "react-router-dom";
 import Loader from "../../utils/Loader";
-import LayoutAdjuster from "../../utils/LayoutAdjuster";
 // import parser from "html-react-parser";
 import { Avatar } from "antd";
 import { CalendarClock, IndianRupee, SquarePlay } from "lucide-react";
@@ -91,7 +90,7 @@ const GetCourseCategoryWise = () => {
   };
 
   return (
-    <LayoutAdjuster>
+    <>
       <div className="flex flex-col justify-center items-center gap-6 w-[80%] absolute top-10">
         <h1 className="text-3xl font-bold ">Courses</h1>
         <Tabs defaultValue="course" className="w-full">
@@ -255,7 +254,7 @@ const GetCourseCategoryWise = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </LayoutAdjuster>
+    </>
   );
 };
 

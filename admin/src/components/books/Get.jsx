@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { API_URL } from "../../url";
-import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import Loader from "../../utils/Loader";
 import toast from "react-hot-toast";
 import ConfirmDelete from "../../utils/ConfirmDelete";
@@ -9,28 +8,17 @@ import Update from "./Update";
 import Add from "./Add";
 import { truncateData } from "@/utils/truncateData";
 import { IndianRupee, UserRound } from "lucide-react";
-import { LatexParser } from "@/utils/LatexParser";
 import getPercentage from "@/utils/getPercentage";
+import { useHeading } from "@/hooks/use-heading";
+import { useIsMobile } from "@/hooks/use-mobile";
 
-const fetchData = async (
-  setLoading,
-  //   currentPage,
-  setBook
-  //   setPaginationData
-) => {
+const fetchData = async (setLoading, setBook) => {
   try {
     setLoading(true);
-    // const formData = new FormData();
-    // formData.append("page", currentPage);
-    // formData.append("limit", 10);
-    // formData.append("type", 2);
-    const response = await axios.post(
-      `${API_URL}/admin/book/getallbook.php`
-      //   formData,
-      //   { headers: "content-type/form-data" }
-    );
-    setBook(response.data.data);
-    // setPaginationData(response.data.pagination);
+    const response = await axios.post(`${API_URL}/admin/book/getallbook.php`);
+    if (response.status === 200) {
+      setBook(response.data.data);
+    }
   } catch (error) {
     console.log(error);
   } finally {
@@ -39,26 +27,24 @@ const fetchData = async (
 };
 
 function GetBooks() {
+  const { setHeading } = useHeading();
+  const isMobile = useIsMobile();
   const [loading, setLoading] = useState(false);
-  //   const [paginationData, setPaginationData] = useState({});
-  //   const [currentPage, setCurrentPage] = useState(1);
-  //   const [updateVideo, setUpdateVideo] = useState(false);
-  //   const [updateVideoData, setUpdateVideoData] = useState({});
 
   const [book, setBook] = useState([]);
 
   useEffect(() => {
-    fetchData(
-      setLoading,
-      //  currentPage,
-      setBook
-      //  setPaginationData
+    setHeading(
+      <div className="w-full flex justify-center items-center gap-6">
+        <h1 className="text-xl sm:text-3xl font-bold text-center">Books</h1>
+        <Add setBook={setBook} />
+      </div>
     );
-  }, []);
+    fetchData(setLoading, setBook);
+  }, [setHeading]);
 
   const handleDelete = async (id) => {
     try {
-      // setLoading(true);
       const formData = new FormData();
       formData.append("id", id);
       const response = await axios.post(
@@ -70,7 +56,6 @@ function GetBooks() {
       );
 
       if (response.status === 200) {
-        // dispatch(deleteVideo(id));
         const newBook = book.filter((book) => book.id !== id);
         setBook(newBook);
         toast.success("Document Deleted Successfully");
@@ -81,9 +66,6 @@ function GetBooks() {
         error.response.data.message || "Error while deleting document"
       );
     }
-    // finally {
-    //   setLoading(false);
-    // }
   };
 
   const handleChangeStatus = async (bookId, is_active) => {
@@ -106,53 +88,43 @@ function GetBooks() {
           { headers: { "content-type": "multipart/form-data" } }
         );
 
-        // console.log(res);
-        // Update local state instead of fetching users again
         const updatedBook = book.map((book) =>
           book.id === bookId ? { ...book, is_active } : book
         );
         setBook(updatedBook);
       } catch (error) {
-        console.log("Error updating user status:", error);
-        // Handle error (e.g., show an error message)
+        console.log("Error updating Book status:", error);
+
         toast.error(
-          error?.response?.data?.message || "Error updating user status"
+          error?.response?.data?.message || "Error updating Book status"
         );
       }
     }
   };
 
-  // console.log(book);
-
-  const renderData = (data) => {
-    if (typeof data === "string") {
-      return LatexParser(data);
-    }
-    return data;
-  };
+  // const renderData = (data) => {
+  //   if (typeof data === "string") {
+  //     return LatexParser(data);
+  //   }
+  //   return data;
+  // };
 
   return (
-    <LayoutAdjuster>
+    <>
       {loading ? (
         <>
           <Loader />
         </>
       ) : (
-        <div
-          className={`${"w-[90%] flex flex-col justify-center items-center mx-auto"} `}
-        >
+        <div className="w-full sm:w-[90%] flex flex-col justify-center items-center mx-auto">
           <div className="w-full flex flex-col justify-center items-center my-5">
-            <div className="w-full flex justify-center items-center gap-5">
-              <h1 className="text-3xl font-bold text-center">Books List</h1>
-              <Add book={book} setBook={setBook} />
-            </div>
             <div className="w-full flex justify-center items-center">
-              {book.length > 0 ? (
-                <div className="flex flex-wrap justify-center items-center w-full">
+              {book && book.length > 0 ? (
+                <div className="flex flex-wrap justify-center items-center gap-4 w-full">
                   {book.map((item, idx) => (
                     <div
                       key={idx}
-                      className="flex flex-col w-64 border rounded-lg border-gray-300 shadow-md ml-2 my-5 p-3 gap-4 bg-white"
+                      className="flex flex-col w-44 sm:w-64 border rounded-lg border-gray-300 shadow-md my-5 p-3 gap-4 bg-white"
                     >
                       {/* Header Section */}
                       <div className="flex justify-between items-center w-full">
@@ -171,7 +143,7 @@ function GetBooks() {
                             onClick={() => {
                               handleChangeStatus(item.id, item.is_active);
                             }}
-                            className="toggle-switch scale-75"
+                            className="toggle-switch scale-[60%] sm:scale-75"
                           >
                             <input
                               type="checkbox"
@@ -198,22 +170,26 @@ function GetBooks() {
                         <img
                           src={item.img_url}
                           alt="Book Cover"
-                          className="rounded-md border border-gray-200 h-64 w-full"
+                          className="rounded-md border border-gray-200 h-40 sm:h-64 w-full"
                         />
                       </div>
 
                       {/* Content Section */}
                       <div className="flex flex-col gap-2">
                         <h3 className="text-sm font-semibold text-gray-800 truncate">
-                          {truncateData(item.name, 5)}
+                          {isMobile
+                            ? truncateData(item.name, 3)
+                            : truncateData(item.name, 5)}
                         </h3>
-                        <p className="text-xs text-gray-600 truncate">
-                          {truncateData(renderData(item.description), 5)}
-                        </p>
+                        {/* <p className="text-xs text-gray-600 truncate">
+                          {isMobile
+                            ? truncateData(renderData(item.description), 3)
+                            : truncateData(renderData(item.description), 5)}
+                        </p> */}
                       </div>
 
                       {/* Footer Section */}
-                      <div className="flex justify-between items-center text-sm">
+                      <div className="flex flex-wrap justify-between items-center text-sm">
                         <div className="flex items-center gap-1">
                           <IndianRupee className="h-4 w-4 text-green-500" />
                           <span>{item.price}</span>
@@ -233,13 +209,6 @@ function GetBooks() {
                       </div>
                     </div>
                   ))}
-                  {/* <div>
-                    <Pagination
-                      totalPage={paginationData.total_pages}
-                      currPage={currentPage}
-                      setCurrPage={setCurrentPage}
-                    />
-                  </div> */}
                 </div>
               ) : (
                 <div className="text-2xl font-bold text-center mt-20">
@@ -250,7 +219,7 @@ function GetBooks() {
           </div>
         </div>
       )}
-    </LayoutAdjuster>
+    </>
   );
 }
 

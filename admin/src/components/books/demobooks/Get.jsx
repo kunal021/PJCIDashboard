@@ -5,32 +5,24 @@ import { truncateData } from "@/utils/truncateData";
 import getPercentage from "@/utils/getPercentage";
 import { API_URL } from "@/url";
 import toast from "react-hot-toast";
-import LayoutAdjuster from "@/utils/LayoutAdjuster";
 import Loader from "@/utils/Loader";
 import ConfirmDelete from "@/utils/ConfirmDelete";
 import Add from "./Add";
 import Update from "./Update";
+import { useHeading } from "@/hooks/use-heading";
+import { useIsMobile } from "@/hooks/use-mobile";
 
-const fetchData = async (
-  setLoading,
-  //   currentPage,
-  setDoc
-  //   setPaginationData
-) => {
+const fetchData = async (setLoading, setDoc) => {
   try {
     setLoading(true);
     const formData = new FormData();
-    // formData.append("page", currentPage);
-    // formData.append("limit", 10);
     formData.append("type", 3);
     const response = await axios.post(
       `${API_URL}/admin/docs/getdoc.php`,
       formData,
       { headers: "content-type/form-data" }
     );
-    // console.log(response);
     setDoc(response.data.data);
-    // setPaginationData(response.data.pagination);
   } catch (error) {
     console.log(error);
   } finally {
@@ -39,26 +31,25 @@ const fetchData = async (
 };
 
 function GetDemoBooks() {
+  const { setHeading } = useHeading();
+  const isMobile = useIsMobile();
   const [loading, setLoading] = useState(false);
-  //   const [paginationData, setPaginationData] = useState({});
-  //   const [currentPage, setCurrentPage] = useState(1);
-  //   const [updateVideo, setUpdateVideo] = useState(false);
-  //   const [updateVideoData, setUpdateVideoData] = useState({});
-
   const [doc, setDoc] = useState([]);
 
   useEffect(() => {
-    fetchData(
-      setLoading,
-      //  currentPage,
-      setDoc
-      //  setPaginationData
+    setHeading(
+      <div className="w-full flex justify-center items-center gap-6">
+        <h1 className="text-xl sm:text-3xl font-bold text-center">
+          Demo Books
+        </h1>
+        <Add setDoc={setDoc} />
+      </div>
     );
-  }, []);
+    fetchData(setLoading, setDoc);
+  }, [setHeading]);
 
   const handleDelete = async (id) => {
     try {
-      // setLoading(true);
       const formData = new FormData();
       formData.append("id", id);
       const response = await axios.post(
@@ -70,7 +61,6 @@ function GetDemoBooks() {
       );
 
       if (response.status === 200) {
-        // dispatch(deleteVideo(id));
         const newdoc = doc.filter((doc) => doc.id !== id);
         setDoc(newdoc);
         toast.success("Material Deleted Successfully");
@@ -81,9 +71,6 @@ function GetDemoBooks() {
         error.response.data.message || "Error while deleting document"
       );
     }
-    // finally {
-    //   setLoading(false);
-    // }
   };
 
   const handleChangeStatus = async (docId, is_active) => {
@@ -106,15 +93,12 @@ function GetDemoBooks() {
           { headers: { "content-type": "multipart/form-data" } }
         );
 
-        // console.log(res);
-        // Update local state instead of fetching users again
         const updatedDoc = doc.map((doc) =>
           doc.id === docId ? { ...doc, is_active } : doc
         );
         setDoc(updatedDoc);
       } catch (error) {
         console.log("Error updating Doc status:", error);
-        // Handle error (e.g., show an error message)
       }
     }
   };
@@ -127,8 +111,6 @@ function GetDemoBooks() {
     try {
       const formData = new FormData();
       formData.append("doc_id", id);
-      // formData.append("start_range", 0);
-      // formData.append("end_range", 524287);
 
       const response = await axios.post(
         `${API_URL}/admin/docs/getdocurl.php`,
@@ -152,27 +134,21 @@ function GetDemoBooks() {
   };
 
   return (
-    <LayoutAdjuster>
+    <>
       {loading ? (
         <>
           <Loader />
         </>
       ) : (
-        <div
-          className={`${"w-[90%] flex flex-col justify-center items-center mx-auto"} `}
-        >
+        <div className="w-full sm:w-[90%] flex flex-col justify-center items-center mx-auto">
           <div className="w-full flex flex-col justify-center items-center my-5">
-            <div className="w-full flex justify-center items-center gap-5">
-              <h1 className="text-3xl font-bold text-center">Demo Book List</h1>
-              <Add doc={doc} setDoc={setDoc} />
-            </div>
             <div className="w-full flex justify-center items-center">
               {doc.length > 0 ? (
-                <div className="flex flex-wrap justify-center items-center w-full">
+                <div className="flex flex-wrap justify-center items-center gap-4 w-full">
                   {doc.map((item, idx) => (
                     <div
                       key={idx}
-                      className="flex flex-col w-64 border rounded-lg border-gray-300 shadow-md ml-2 my-5 p-3 gap-4 bg-white"
+                      className="flex flex-col w-44 sm:w-64 border rounded-lg border-gray-300 shadow-md my-5 p-3 gap-4 bg-white"
                     >
                       {/* Header Section */}
                       <div className="flex justify-between items-center">
@@ -191,7 +167,7 @@ function GetDemoBooks() {
                             onClick={() =>
                               handleChangeStatus(item.id, item.is_active)
                             }
-                            className="toggle-switch scale-75"
+                            className="toggle-switch scale-[60%] sm:scale-75"
                           >
                             <input
                               type="checkbox"
@@ -221,16 +197,18 @@ function GetDemoBooks() {
                         <img
                           src={item.img_url}
                           alt="Document Thumbnail"
-                          className="rounded-lg border border-gray-200 w-full h-64"
+                          className="rounded-md border border-gray-200 h-40 sm:h-64 w-full"
                         />
                         <h3 className="text-sm font-semibold text-gray-800 truncate">
-                          {truncateData(item.name, 5)}
+                          {isMobile
+                            ? truncateData(item.name, 3)
+                            : truncateData(item.name, 5)}
                         </h3>
                       </div>
 
-                      {/* Content Section */}
+                      {/* Footer Section */}
 
-                      <div className="flex justify-between items-center gap-2">
+                      <div className="flex flex-wrap justify-between items-center text-sm">
                         <div className="flex items-center gap-1 text-sm text-gray-700">
                           <IndianRupee className="h-4 w-4 text-gray-500" />
                           <span>{item.price}</span>
@@ -254,13 +232,6 @@ function GetDemoBooks() {
                       </div>
                     </div>
                   ))}
-                  {/* <div>
-                    <Pagination
-                      totalPage={paginationData.total_pages}
-                      currPage={currentPage}
-                      setCurrPage={setCurrentPage}
-                    />
-                  </div> */}
                 </div>
               ) : (
                 <div className="text-2xl font-bold text-center mt-20">
@@ -271,13 +242,7 @@ function GetDemoBooks() {
           </div>
         </div>
       )}
-      {/* {updateVideo && (
-        <UpdateVideo
-          setUpdateVideo={setUpdateVideo}
-          updateVideoData={updateVideoData}
-        />
-      )} */}
-    </LayoutAdjuster>
+    </>
   );
 }
 

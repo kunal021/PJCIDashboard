@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { API_URL } from "../../url";
-import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import Loader from "../../utils/Loader";
 import { Avatar } from "antd";
 import Pagination from "../../utils/Pagination";
@@ -97,7 +96,7 @@ function GetVideoInCourse() {
   };
 
   return (
-    <LayoutAdjuster>
+    <>
       {loading ? (
         <>
           <Loader />
@@ -168,7 +167,7 @@ function GetVideoInCourse() {
           </div>
         </div>
       )}
-    </LayoutAdjuster>
+    </>
   );
 }
 

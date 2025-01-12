@@ -2,14 +2,21 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../../url";
 import Tiptap from "../../utils/TextEditor";
-import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import Loader from "../../utils/Loader";
+import { useHeading } from "@/hooks/use-heading";
 
 function AboutUs() {
+  const { setHeading } = useHeading();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState("");
 
   useEffect(() => {
+    setHeading(
+      <div className="w-full flex justify-center items-center gap-6">
+        <h1 className="text-xl sm:text-3xl font-bold text-center">About Us</h1>
+      </div>
+    );
+
     const fetchData = async () => {
       try {
         setLoading(true);
@@ -20,7 +27,6 @@ function AboutUs() {
           formData,
           { headers: { "content-type": "multipart/form-data" } }
         );
-        // console.log(response);
         setData(response.data.data.content);
       } catch (error) {
         console.log(error);
@@ -29,7 +35,7 @@ function AboutUs() {
       }
     };
     fetchData();
-  }, []);
+  }, [setHeading]);
 
   const handlleUpdate = async () => {
     try {
@@ -51,25 +57,25 @@ function AboutUs() {
     setData(html);
   };
   return (
-    <LayoutAdjuster>
+    <>
       {loading ? (
         <>
           <Loader />
         </>
       ) : (
-        <div className="w-[80%] flex flex-col justify-center items-center">
+        <div className="w-[90%] flex flex-col justify-center items-center mx-auto">
           <div className="w-full my-2">
             <Tiptap getHtmlData={getData} initialContent={data} />
           </div>
           <button
             onClick={handlleUpdate}
-            className="bg-blue-50 hover:bg-blue-100 border-blue-200 border text-black w-[20%] font-bold py-2 px-4 rounded-md"
+            className="bg-blue-50 hover:bg-blue-100 border-blue-200 border text-black font-bold py-2 px-4 rounded-md w-full"
           >
             Update
           </button>
         </div>
       )}
-    </LayoutAdjuster>
+    </>
   );
 }
 

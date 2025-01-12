@@ -19,7 +19,6 @@ const fetchTest = async (setTest, setLoading, directory_id) => {
       formData,
       { headers: "multipart/form-data" }
     );
-    // console.log(response);
     setTest(response.data.data);
   } catch (error) {
     console.error("Error fetching courses:", error);
@@ -39,8 +38,6 @@ function GetAllTestForSeries() {
     fetchTest(setTest, setLoading, testData.directory_id);
   }, [testData.directory_id]);
 
-  // console.log(test);
-
   const handleDelete = async (testId) => {
     try {
       const formData = new FormData();
@@ -52,7 +49,6 @@ function GetAllTestForSeries() {
         formData,
         { headers: "multipart/form-data" }
       );
-      // console.log(response);
 
       if (response.status == 201) {
         setTest((prevTest) => prevTest.filter((t) => t.test_id !== testId));
@@ -60,7 +56,6 @@ function GetAllTestForSeries() {
       }
     } catch (error) {
       toast.error(error.response.data.massage || "Error deleting test");
-      // console.error("Error fetching category:", error);
     }
   };
 
@@ -72,16 +67,15 @@ function GetAllTestForSeries() {
         <div
           className={`${"w-full flex flex-col justify-center items-center my-5"} `}
         >
-          <div className="flex justify-center items-center gap-10"></div>
           {test.length > 0 ? (
             <div className="flex flex-col justify-center items-center w-full">
               {test.map((test, idx) => (
                 <div
                   key={idx}
-                  className="flex justify-center items-center w-[90%] border rounded-md border-gray-300 m-2 p-3"
+                  className="flex justify-center items-center w-[98%] border rounded-md border-gray-300 my-2 py-3 px-1"
                 >
                   <div className="flex justify-start items-center gap-4 w-full">
-                    <div className="flex justify-center items-center w-[10%] text-">
+                    <div className="flex justify-center items-center w-fit text-">
                       <Avatar className="bg-gray-500 text-white">
                         {idx + 1}
                       </Avatar>
@@ -98,19 +92,19 @@ function GetAllTestForSeries() {
                         </div>
                       </div>
                       <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                      <div className="flex justify-start items-center gap-1 w-full text-xs font-medium">
-                        <div className="flex justify-start items-start gap-1 w-full">
+                      <div className="flex flex-wrap justify-between items-center gap-1 w-full text-xs font-medium">
+                        <div className="flex justify-start items-start gap-1 w-fit">
                           <p>Start Date:</p>
                           <p>{test.test_date}</p>
                         </div>
-                        <div className="flex justify-start items-start gap-1 w-full">
+                        <div className="flex justify-start items-start gap-1 w-fit">
                           <p>Start Time:</p>
                           <p>{test.start_time}</p>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-col justify-center items-end gap-4 w-[10%]">
+                  <div className="flex flex-col justify-center items-end gap-4 w-fit">
                     <ConfirmDelete
                       handleClick={() => handleDelete(test.test_id)}
                     />

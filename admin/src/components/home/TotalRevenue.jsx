@@ -1,11 +1,8 @@
-// import { TrendingUp } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
-
 import {
   Card,
   CardContent,
   CardDescription,
-  // CardFooter,
   CardHeader,
   CardTitle,
 } from "../ui/card";
@@ -34,7 +31,6 @@ function TotalRevenue() {
         const response = await axios.post(
           `${API_URL}/admin/dashbord/getrevenue.php`
         );
-        // console.log(response);
         if (response.status === 200) {
           setCount(response.data.data);
         }
@@ -56,10 +52,10 @@ function TotalRevenue() {
       desktop: item?.total_revenue,
     }));
   return (
-    <Card className="w-[33rem]">
+    <Card className="w-[90%] max-w-[33rem] mx-auto">
       <CardHeader>
-        <CardTitle>Revenue</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-center sm:text-left">Revenue</CardTitle>
+        <CardDescription className="text-center sm:text-left">
           Last {chartData.length} Months Revenue in INR
         </CardDescription>
       </CardHeader>
@@ -70,7 +66,7 @@ function TotalRevenue() {
       ) : (
         <CardContent>
           {!count || count.length < 2 ? (
-            <div>No Data Found</div>
+            <div className="text-center">No Data Found</div>
           ) : (
             <ChartContainer config={chartConfig}>
               <BarChart
@@ -110,14 +106,6 @@ function TotalRevenue() {
           )}
         </CardContent>
       )}
-      {/* <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
-        </div>
-      </CardFooter> */}
     </Card>
   );
 }

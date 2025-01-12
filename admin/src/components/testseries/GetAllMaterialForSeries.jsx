@@ -19,7 +19,6 @@ const fetchTest = async (setMaterial, setLoading, directory_id) => {
       formData,
       { headers: "multipart/form-data" }
     );
-    // console.log(response);
     setMaterial(response.data.data);
   } catch (error) {
     console.error("Error fetching courses:", error);
@@ -51,7 +50,6 @@ function GetAllMaterialForSeries() {
         formData,
         { headers: "multipart/form-data" }
       );
-      // console.log(response);
 
       if (response.status === 201) {
         setMaterial((prevTest) =>
@@ -61,7 +59,6 @@ function GetAllMaterialForSeries() {
       }
     } catch (error) {
       toast.error(error.response.data.massage || "Error deleting material");
-      // console.error("Error fetching category:", error);
     }
   };
 
@@ -73,9 +70,6 @@ function GetAllMaterialForSeries() {
     try {
       const formData = new FormData();
       formData.append("doc_id", id);
-      // formData.append("start_range", 0);
-      // formData.append("end_range", 524287);
-
       const response = await axios.post(
         `${API_URL}/admin/docs/getdocurl.php`,
         formData,
@@ -110,10 +104,10 @@ function GetAllMaterialForSeries() {
               {material.map((material, idx) => (
                 <div
                   key={idx}
-                  className="flex justify-center items-center w-[90%] border rounded-md border-gray-300 m-2 p-3"
+                  className="flex justify-center items-center w-[98%] border rounded-md border-gray-300 my-2 py-3 px-1"
                 >
                   <div className="flex justify-start items-center gap-4 w-full">
-                    <div className="flex justify-center items-center w-[10%] text-">
+                    <div className="flex justify-center items-center w-fit text-">
                       <Avatar className="bg-gray-500 text-white">
                         {idx + 1}
                       </Avatar>
@@ -128,23 +122,23 @@ function GetAllMaterialForSeries() {
                         </div>
                       </div>
                       <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                      <div className="flex justify-start items-center gap-1 w-full text-xs font-medium">
-                        <div className="flex justify-start items-start gap-1 w-full">
+                      <div className="flex flex-wrap justify-between items-center gap-1 w-full text-xs font-medium">
+                        <div className="flex justify-start items-start gap-1 w-fit">
                           <p>Price:</p>
                           <p>{material.price}</p>
                         </div>
-                        <div className="flex justify-start items-start gap-1 w-full">
+                        <div className="flex justify-start items-start gap-1 w-fit">
                           <p>Size:</p>
                           <p>{material.size}</p>
                         </div>
-                        <div className="flex justify-start items-start gap-1 w-full">
+                        <div className="flex justify-start items-start gap-1 w-fit">
                           <p>Duration:</p>
                           <p>{material.duration}</p>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-col justify-center items-end gap-4 w-[10%]">
+                  <div className="flex flex-col justify-center items-end gap-4 w-fit">
                     <ConfirmDelete
                       handleClick={() => handleDelete(material.doc_id)}
                     />

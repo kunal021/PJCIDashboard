@@ -11,6 +11,8 @@ import videoReducer from "./videos/videoSlice";
 import addVideoInCourseReducer from "./addvideoincourse/addVideoInCourseSlice";
 import sliderReducer from "./slider/sliderSlice";
 import directoryReducer from "./directory/directorySlice";
+import imageReducer from "./image/imageSlice";
+import imageURLReducer from "./image/imageURLSlice";
 
 export default configureStore({
   reducer: {
@@ -25,5 +27,7 @@ export default configureStore({
     addVideoInCourse: addVideoInCourseReducer,
     slider: sliderReducer,
     directory: directoryReducer,
+    image: imageReducer,
+    imageURL: imageURLReducer,
   },
 });

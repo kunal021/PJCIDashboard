@@ -25,7 +25,7 @@ function GetDir({
   const docId = searchParams.get("id") ? searchParams.get("id") : 49;
   const [loading, setLoading] = useState(false);
   const [getDataContent, setGetDataContent] = useState();
-  const [showFolders, setShowFolders] = useState(true); // Track folder/content view
+  const [showFolders, setShowFolders] = useState(true);
   const [contentDirId, setContentDirId] = useState();
 
   const refreshDirContent = async (dirId) => {
@@ -101,14 +101,6 @@ function GetDir({
     await refreshDirContent(dirId);
   };
 
-  // const handleContentUpdate = (newContent) => {
-  //   // Ensure we're always working with an array
-  //   setGetDataContent((prevContent) => {
-  //     const currentContent = Array.isArray(prevContent) ? prevContent : [];
-  //     return [...currentContent, newContent];
-  //   });
-  // };
-
   const handleViewDoc = async (id) => {
     if (!id) {
       toast.error("Please select a document");
@@ -152,10 +144,7 @@ function GetDir({
         }
       );
 
-      //   console.log(response);
-
       if (response.status === 201) {
-        // dispatch(deleteVideo(id));
         const newdoc = getDataContent.filter((doc) => doc.doc_id !== cid);
         setGetDataContent(newdoc);
         toast.success("Material Deleted Successfully");
@@ -166,12 +155,7 @@ function GetDir({
         error.response.data.message || "Error while deleting document"
       );
     }
-    // finally {
-    //   setLoading(false);
-    // }
   };
-
-  //   console.log(showFolders);
 
   if (loading) {
     return <p className="text-center m-auto h-full">Loading...</p>;
@@ -200,9 +184,9 @@ function GetDir({
                         data.directory_name,
                         data.parent_id,
                         data.has_subdirectories
-                      ); // Navigate to subdirectory
+                      );
                       if (data?.has_subdirectories == 0) {
-                        getDirDataContent(data.id); // Fetch content if no subdirectories
+                        getDirDataContent(data.id);
                       }
                     }}
                     className="flex flex-col justify-center items-center w-full"
@@ -218,11 +202,6 @@ function GetDir({
                 </div>
               </Actions>
             </div>
-            {/* {data?.has_subdirectories == 0 && (
-              <div className="flex justify-center items-center w-20 pb-8 ">
-                <GetDataToAdd directory_id={contentDirId} />
-              </div>
-            )} */}
           </div>
         ))}
 
@@ -239,7 +218,7 @@ function GetDir({
       )}
 
       {subDir != "1" && (
-        <div className="flex justify-center items-center w-20 pb-8 ">
+        <div className="flex justify-center items-center w-20 ">
           <GetDataToAdd
             directory_id={docId}
             contentType={contentType}
@@ -250,34 +229,12 @@ function GetDir({
 
       {/* Render content if has_subdirectories == 0 */}
       {!showFolders && getDataContent && subDir == "0" && (
-        <div className="flex flex-wrap justify-center items-center w-full">
+        <div className="flex flex-wrap justify-center items-center w-full gap-5">
           {getDataContent?.map((item, idx) => (
             <div
               key={idx}
-              className="flex flex-col w-64 border rounded-lg border-gray-300 shadow-md ml-2 my-5 p-3 gap-4 bg-white"
+              className="flex flex-col w-full md:w-64 border rounded-lg border-gray-300 shadow-md my-5 p-3 gap-4 bg-white"
             >
-              {/* <div className="flex justify-between items-center">
-                Status and Actions
-                Actions
-                <div className="flex gap-2">
-                  <UpdateDoc data={item} setData={setDoc} />
-                  <ConfirmDelete
-                    handleClick={() =>
-                      handleDelete(contentDirId, 5, item.doc_id)
-                    }
-                  />
-                </div>
-              </div> */}
-              {/* <div
-                onClick={() => handleViewDoc(item.doc_id)}
-                className="flex justify-center items-center"
-              >
-                <img
-                  src={item.img_url}
-                  alt="Document Thumbnail"
-                  className="rounded-lg border border-gray-200 object-cover w-full h-64"
-                />
-              </div> */}
               <div className="flex flex-col gap-3">
                 <h3
                   onClick={() => handleViewDoc(item.doc_id)}
@@ -305,11 +262,6 @@ function GetDir({
               </div>
             </div>
           ))}
-          {/* <GetDataToAdd
-            directory_id={contentDirId}
-            data={getDataContent}
-            setData={setGetDataContent}
-          /> */}
         </div>
       )}
     </div>

@@ -8,8 +8,17 @@ import FormField from "../../utils/FormField";
 import { API_URL } from "../../url";
 import Tiptap from "../../utils/TextEditor";
 import { trim } from "../../utils/trim";
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTrigger,
+} from "../ui/sheet";
+import UpdateBtn from "@/utils/UpdateBtn";
 
-function UpdateTest({ updateTestData, setUpdateTest }) {
+function UpdateTest({ updateTestData }) {
+  const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: updateTestData.test_name,
     price: updateTestData.price,
@@ -30,6 +39,8 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
   const [durationUnit, setDurationUnit] = useState(
     trim(updateTestData.duration)[1]
   );
+
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   const getDescriptionData = (html) => {
@@ -72,6 +83,7 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
       return;
     }
     try {
+      setLoading(true);
       const formDataToSend = new FormData();
       const formDataObject = {
         testid: updateTestData.test_id,
@@ -100,8 +112,6 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
         { headers: { "content-type": "multipart/form-data" } }
       );
 
-      // console.log(response);
-
       if (response.status === 201) {
         dispatch(
           updateTest({
@@ -123,205 +133,237 @@ function UpdateTest({ updateTestData, setUpdateTest }) {
           })
         );
         toast.success("Test Updated Successfully");
+        setOpen(false);
       }
-      setUpdateTest((prev) => !prev);
     } catch (error) {
       console.error("Error updating test:", error);
-      toast.error("Failed to update test");
+      toast.error(error.response?.data?.message || "Error updating test");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // console.log(testDescription);
-
   return (
-    <div className="w-[80%] h-full flex flex-col justify-center items-center my-5">
-      <h1 className="text-center text-3xl font-bold">Update Test</h1>
-      <div className="flex justify-center items-center my-5 space-x-10">
-        <select
-          onChange={(e) =>
-            setFormData((prevTest) => ({ ...prevTest, type: e.target.value }))
-          }
-          value={formData.type}
-          className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md"
-        >
-          <option value="1">Schedule Test</option>
-          <option value="2">Stored Test</option>
-        </select>
-      </div>
-      <div className="flex flex-col justify-center items-center mt-5 w-full">
-        <div className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border border-gray-400 w-full">
-          <div className="w-full my-2">
-            <FormField
-              htmlFor="name"
-              id="name"
-              type="text"
-              placeholder="Name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-            >
-              Name
-            </FormField>
-          </div>
-          <p className="block text-gray-700 text-sm font-bold">Description</p>
-          <div className="w-full my-2">
-            <Tiptap
-              placeholder={"Category"}
-              getHtmlData={getDescriptionData}
-              initialContent={testDescription}
-            />
-          </div>
-          <div className="flex flex-col justify-center items-center md:flex-row md:space-x-6">
-            <FormField
-              htmlFor="price"
-              id="price"
-              type={"number"}
-              placeholder="Price"
-              name="price"
-              value={formData.price}
-              onChange={handleChange}
-            >
-              Price
-            </FormField>
-
-            <FormField
-              htmlFor="duration"
-              id="duration"
-              type={"number"}
-              placeholder="Duration"
-              name="duration"
-              value={formData.duration}
-              onChange={handleChange}
-            >
-              Duration
-            </FormField>
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
+        <div onClick={() => setOpen(true)}>
+          <UpdateBtn />
+        </div>
+      </SheetTrigger>
+      <SheetContent className="overflow-auto w-full sm:w-[70%] px-4">
+        <SheetHeader className="font-bold text-center sm:text-left">
+          <h1 className="text-center text-xl md:text-3xl font-bold">
+            Update Test
+          </h1>
+          <div className="flex justify-center items-center my-5 space-x-10">
             <select
-              value={durationUnit}
-              onChange={(e) => setDurationUnit(e.target.value)}
-              className="w-96 h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
-            >
-              <option value="Minute">Minute</option>
-              <option value="Hour">Hour</option>
-            </select>
-          </div>
-          <div className="flex flex-col md:flex-row md:space-x-6">
-            <FormField
-              htmlFor="numberOfQuestion"
-              id="numberOfQuestion"
-              type={"number"}
-              placeholder="Number Of Questions"
-              name="numberOfQuestion"
-              value={formData.numberOfQuestion}
-              onChange={handleChange}
-            >
-              Number Of Questions
-            </FormField>
-            <FormField
-              htmlFor="markPerQuestion"
-              id="markPerQuestion"
-              type={"number"}
-              placeholder="Mark Per Question"
-              name="markPerQuestion"
-              value={formData.markPerQuestion}
-              onChange={handleChange}
-            >
-              Mark Per Question
-            </FormField>
-          </div>
-          <div className="flex flex-col md:flex-row md:space-x-6">
-            <FormField
-              htmlFor="negativeMark"
-              id="negativeMark"
-              type={"number"}
-              placeholder="Negative Mark"
-              name="negativeMark"
-              value={formData.negativeMark}
-              onChange={handleChange}
-            >
-              Negative Mark
-            </FormField>
-            <FormField
-              htmlFor="totalMark"
-              id="totalMark"
-              type={"number"}
-              placeholder="Total Mark"
-              name="totalMark"
-              value={formData.totalMark}
-              onChange={handleChange}
-            >
-              Total Mark
-            </FormField>
-          </div>
-          <div className="flex flex-col md:flex-row md:space-x-6 mb-2.5">
-            <p className="block text-gray-700 text-sm font-bold">Reattempt</p>
-            <select
-              value={formData.canReattempt}
               onChange={(e) =>
-                setFormData({ ...formData, canReattempt: e.target.value })
+                setFormData((prevTest) => ({
+                  ...prevTest,
+                  type: e.target.value,
+                }))
               }
-              className="w-96 h-fit py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
+              value={formData.type}
+              className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md"
             >
-              <option value="1">Yes</option>
-              <option value="0">No</option>
+              <option value="1">Schedule Test</option>
+              <option value="2">Stored Test</option>
             </select>
           </div>
-          {formData.type === "1" && (
-            <div className="flex flex-col md:flex-row md:space-x-6">
-              <FormField
-                htmlFor="testDate"
-                id="testDate"
-                type="date"
-                placeholder="Test Date"
-                name="testDate"
-                value={formData.testDate}
-                onChange={handleChange}
-              >
-                Test Date
-              </FormField>
-              <FormField
-                htmlFor="startTime"
-                id="startTime"
-                type="time"
-                placeholder="Start Time"
-                name="startTime"
-                value={formData.startTime}
-                onChange={handleChange}
-              >
-                Start Time
-              </FormField>
-              <FormField
-                htmlFor="endTime"
-                id="endTime"
-                type="time"
-                placeholder="End Time"
-                name="endTime"
-                value={formData.endTime}
-                onChange={handleChange}
-              >
-                End Time
-              </FormField>
-            </div>
-          )}
+        </SheetHeader>
+        <div className="w-full flex flex-col justify-center items-center my-5">
+          <div className="flex flex-col justify-center items-center w-full">
+            <div className="w-full">
+              {/* Name Field */}
+              <div className="w-full my-2">
+                <FormField
+                  htmlFor="name"
+                  id="name"
+                  type="text"
+                  placeholder="Name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                >
+                  Name
+                </FormField>
+              </div>
 
-          <div className="flex items-center justify-between">
-            <button
-              className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md"
-              onClick={handleSubmit}
-            >
-              Update Test
-            </button>
+              {/* Description */}
+              <p className="block text-gray-700 text-sm font-bold">
+                Description
+              </p>
+              <div className="w-full my-2">
+                <Tiptap
+                  placeholder={"Category"}
+                  getHtmlData={getDescriptionData}
+                  initialContent={testDescription}
+                />
+              </div>
+
+              {/* Price, Duration, and Duration Unit */}
+              <div className="flex flex-col md:flex-row md:gap-6 gap-4 w-full">
+                <FormField
+                  htmlFor="price"
+                  id="price"
+                  type="number"
+                  placeholder="Price"
+                  name="price"
+                  value={formData.price}
+                  onChange={handleChange}
+                >
+                  Price
+                </FormField>
+                <FormField
+                  htmlFor="duration"
+                  id="duration"
+                  type="number"
+                  placeholder="Duration"
+                  name="duration"
+                  value={formData.duration}
+                  onChange={handleChange}
+                >
+                  Duration
+                </FormField>
+                <select
+                  value={durationUnit}
+                  onChange={(e) => setDurationUnit(e.target.value)}
+                  className="w-full md:w-48 py-1.5 px-2 border rounded-md border-gray-300"
+                >
+                  <option value="Minute">Minute</option>
+                  <option value="Hour">Hour</option>
+                </select>
+              </div>
+
+              {/* Number of Questions and Marks */}
+              <div className="flex flex-col md:flex-row md:gap-6 gap-4 w-full mt-4">
+                <FormField
+                  htmlFor="numberOfQuestion"
+                  id="numberOfQuestion"
+                  type="number"
+                  placeholder="Number Of Questions"
+                  name="numberOfQuestion"
+                  value={formData.numberOfQuestion}
+                  onChange={handleChange}
+                >
+                  Number Of Questions
+                </FormField>
+                <FormField
+                  htmlFor="markPerQuestion"
+                  id="markPerQuestion"
+                  type="number"
+                  placeholder="Mark Per Question"
+                  name="markPerQuestion"
+                  value={formData.markPerQuestion}
+                  onChange={handleChange}
+                >
+                  Mark Per Question
+                </FormField>
+              </div>
+
+              {/* Negative Mark and Total Marks */}
+              <div className="flex flex-col md:flex-row md:gap-6 gap-4 w-full mt-4">
+                <FormField
+                  htmlFor="negativeMark"
+                  id="negativeMark"
+                  type="number"
+                  placeholder="Negative Mark"
+                  name="negativeMark"
+                  value={formData.negativeMark}
+                  onChange={handleChange}
+                >
+                  Negative Mark
+                </FormField>
+                <FormField
+                  htmlFor="totalMark"
+                  id="totalMark"
+                  type="number"
+                  placeholder="Total Mark"
+                  name="totalMark"
+                  value={formData.totalMark}
+                  onChange={handleChange}
+                >
+                  Total Mark
+                </FormField>
+              </div>
+
+              {/* Reattempt */}
+              <div className="flex flex-col md:flex-row md:gap-6 gap-4 w-full mt-4">
+                <p className="block text-gray-700 text-sm font-bold">
+                  Reattempt
+                </p>
+                <select
+                  value={formData.canReattempt}
+                  onChange={(e) =>
+                    setFormData({ ...formData, canReattempt: e.target.value })
+                  }
+                  className="w-full md:w-48 py-1.5 px-2 border rounded-md border-gray-300"
+                >
+                  <option value="1">Yes</option>
+                  <option value="0">No</option>
+                </select>
+              </div>
+
+              {/* Test Date and Time */}
+              {formData.type === "1" && (
+                <div className="flex flex-col md:flex-row md:gap-6 gap-4 w-full mt-4">
+                  <FormField
+                    htmlFor="testDate"
+                    id="testDate"
+                    type="date"
+                    placeholder="Test Date"
+                    name="testDate"
+                    value={formData.testDate}
+                    onChange={handleChange}
+                  >
+                    Test Date
+                  </FormField>
+                  <FormField
+                    htmlFor="startTime"
+                    id="startTime"
+                    type="time"
+                    placeholder="Start Time"
+                    name="startTime"
+                    value={formData.startTime}
+                    onChange={handleChange}
+                  >
+                    Start Time
+                  </FormField>
+                  <FormField
+                    htmlFor="endTime"
+                    id="endTime"
+                    type="time"
+                    placeholder="End Time"
+                    name="endTime"
+                    value={formData.endTime}
+                    onChange={handleChange}
+                  >
+                    End Time
+                  </FormField>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-      <div className="my-5">
-        <button
-          onClick={() => setUpdateTest((prev) => !prev)}
-          className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md"
-        >
-          Close
-        </button>
-      </div>
-    </div>
+
+        <SheetFooter className="flex flex-col gap-4 mt-5">
+          <button
+            disabled={loading}
+            onClick={() => !loading && setOpen(false)}
+            className="border rounded-md bg-red-50 py-2 px-4 text-sm font-semibold hover:bg-red-100 border-red-200 text-black w-full disabled:opacity-50"
+          >
+            Close
+          </button>
+          <button
+            disabled={loading}
+            onClick={handleSubmit}
+            className="rounded-md bg-blue-50 py-2 px-4 text-sm font-semibold hover:bg-blue-100 border border-blue-200 text-black w-full"
+          >
+            Update Test
+          </button>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   );
 }
 

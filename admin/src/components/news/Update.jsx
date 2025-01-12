@@ -1,10 +1,9 @@
 /* eslint-disable react/prop-types */
 import {
   Sheet,
-  SheetClose,
   SheetContent,
+  SheetFooter,
   SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { API_URL } from "@/url";
@@ -15,25 +14,11 @@ import { Loader, SquarePen, UploadCloud } from "lucide-react";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 
-const fetchData = async (
-  setLoading,
-  //   currentPage,
-  setNews
-  //   setPaginationData
-) => {
+const fetchData = async (setLoading, setNews) => {
   try {
     setLoading(true);
-    // const formData = new FormData();
-    // formData.append("page", currentPage);
-    // formData.append("limit", 10);
-    // formData.append("type", 2);
-    const response = await axios.post(
-      `${API_URL}/admin/news/getallnews.php`
-      //   formData,
-      //   { headers: "content-type/form-data" }
-    );
+    const response = await axios.post(`${API_URL}/admin/news/getallnews.php`);
     setNews(response.data.data);
-    // setPaginationData(response.data.pagination);
   } catch (error) {
     console.log(error);
   } finally {
@@ -116,7 +101,6 @@ function Update({ data, setData, onClose }) {
         { headers: { "content-type": "multipart/form-data" } }
       );
 
-      // console.log(response.data);
       if (response.status === 200) {
         setNewData((prev) => ({ ...prev, img_url: response.data.url }));
         toast.success("Image Uploaded Successfully");
@@ -139,122 +123,133 @@ function Update({ data, setData, onClose }) {
           Update
         </p>
       </SheetTrigger>
-      <SheetContent className="z-[100] w-[70%] overflow-auto">
-        <SheetHeader>
-          <SheetTitle>Edit News</SheetTitle>
+      <SheetContent className="z-[100] w-full sm:w-[70%] overflow-auto">
+        <SheetHeader className="text-2xl font-bold text-center lg:text-left">
+          Edit News
         </SheetHeader>
 
-        <div className="my-4 gap-5 flex justify-between items-center">
-          <FormField
-            htmlFor={"title"}
-            id={"title"}
-            type={"text"}
-            placeholder={"Title"}
-            name={"title"}
-            value={newData.title}
-            onChange={handleChange}
-          >
-            Title
-          </FormField>
-        </div>
-        <p className="block text-gray-700 text-sm font-bold">Content</p>
-        <div className=" w-full my-2">
-          <Tiptap
-            placeholder={"Content"}
-            getHtmlData={getContentData}
-            initialContent={content}
-          />
-        </div>
-        <div className="my-4 gap-5 flex justify-between items-center">
-          <FormField
-            htmlFor={"author"}
-            id={"author"}
-            type={"text"}
-            placeholder={"Author"}
-            name={"author"}
-            value={newData.author}
-            onChange={handleChange}
-          >
-            Author
-          </FormField>
-          <FormField
-            htmlFor={"category"}
-            id={"category"}
-            type={"text"}
-            placeholder={"Category"}
-            name={"category"}
-            value={newData.category}
-            onChange={handleChange}
-          >
-            Category
-          </FormField>
-        </div>
-        <div className="my-4 flex justify-between items-center">
-          <input
-            disabled={loading}
-            id="fileinput"
-            type="file"
-            accept="image/*"
-            onChange={handleUploadImage}
-            className="hidden"
-          />
-          <label
-            htmlFor="fileinput"
-            className="flex flex-col justify-center items-center w-60 h-36 cursor-pointer bg-gray-50 text-black px-4 py-2 rounded-lg border-2 border-gray-300 border-dashed hover:bg-blue-50"
-          >
-            {!loading ? (
-              <>
-                <UploadCloud />
-                <p>Upload Image</p>
-              </>
-            ) : (
-              <>
-                <Loader className="animate-spin h-6 w-6" />
-                <p>Uploading...</p>
-              </>
-            )}
-          </label>
-          {newData.img_url ? (
-            <img
-              src={newData.img_url}
-              alt="image"
-              className="w-60 h-36 rounded-lg m-auto"
-            />
-          ) : (
-            <div className="rounded-lg border-2 border-gray-300 border-dashed h-36 w-60 text-center items-center m-auto">
-              Preview
-            </div>
-          )}
-        </div>
-        <FormField
-          htmlFor={"img_url"}
-          id={"img_url"}
-          type={"text"}
-          placeholder={"Image Url"}
-          name={"img_url"}
-          value={newData.img_url}
-          onChange={handleChange}
-        >
-          Image Url
-        </FormField>
-        <div className="mt-[25px] flex w-full gap-2.5">
-          <SheetClose ref={closeRef} asChild>
-            <button
-              disabled={loading}
-              className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md w-1/2"
+        <div className="w-full flex flex-col gap-4">
+          {/* Title Field */}
+          <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
+            <FormField
+              htmlFor="title"
+              id="title"
+              type="text"
+              placeholder="Title"
+              name="title"
+              value={newData.title}
+              onChange={handleChange}
             >
-              Close
-            </button>
-          </SheetClose>
+              Title
+            </FormField>
+          </div>
+
+          {/* Content Field */}
+          <p className="block text-gray-700 text-sm font-bold">Content</p>
+          <div className="w-full my-2">
+            <Tiptap
+              placeholder="Content"
+              getHtmlData={getContentData}
+              initialContent={content}
+            />
+          </div>
+
+          {/* Author and Category Fields */}
+          <div className="my-4 flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
+            <FormField
+              htmlFor="author"
+              id="author"
+              type="text"
+              placeholder="Author"
+              name="author"
+              value={newData.author}
+              onChange={handleChange}
+            >
+              Author
+            </FormField>
+            <FormField
+              htmlFor="category"
+              id="category"
+              type="text"
+              placeholder="Category"
+              name="category"
+              value={newData.category}
+              onChange={handleChange}
+            >
+              Category
+            </FormField>
+          </div>
+
+          {/* File Upload Section */}
+          <div className="my-4 flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
+            <input
+              disabled={loading}
+              id="fileinput"
+              type="file"
+              accept="image/*"
+              onChange={handleUploadImage}
+              className="hidden"
+            />
+            <label
+              htmlFor="fileinput"
+              className="flex flex-col justify-center items-center w-full sm:w-60 h-36 cursor-pointer bg-gray-50 text-black px-4 py-2 rounded-lg border-2 border-gray-300 border-dashed hover:bg-blue-50"
+            >
+              {!loading ? (
+                <>
+                  <UploadCloud />
+                  <p>Upload Image</p>
+                </>
+              ) : (
+                <>
+                  <Loader className="animate-spin h-6 w-6" />
+                  <p>Uploading...</p>
+                </>
+              )}
+            </label>
+            {newData.img_url ? (
+              <img
+                src={newData.img_url}
+                alt="image"
+                className="w-full sm:w-60 h-36 rounded-lg"
+              />
+            ) : (
+              <div className="w-full sm:w-60 h-36 rounded-lg border-2 border-gray-300 border-dashed flex justify-center items-center">
+                Preview
+              </div>
+            )}
+          </div>
+
+          {/* Image URL Field */}
+          <FormField
+            htmlFor="img_url"
+            id="img_url"
+            type="text"
+            placeholder="Image Url"
+            name="img_url"
+            value={newData.img_url}
+            onChange={handleChange}
+          >
+            Image Url
+          </FormField>
+        </div>
+
+        <SheetFooter className="flex w-full gap-4 mt-4">
+          <button
+            ref={closeRef}
+            disabled={loading}
+            className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md w-full"
+          >
+            Close
+          </button>
 
           <button
             disabled={loading}
             onClick={handleSubmit}
-            className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md w-1/2"
+            className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md w-full"
           >
             Update
           </button>
-        </div>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   );

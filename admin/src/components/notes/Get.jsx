@@ -1,25 +1,18 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { API_URL } from "../../url";
-import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import Loader from "../../utils/Loader";
 import { Avatar } from "antd";
 import toast from "react-hot-toast";
 import ConfirmDelete from "../../utils/ConfirmDelete";
 import UpdateDoc from "./Update";
 import Add from "./Add";
+import { useHeading } from "@/hooks/use-heading";
 
-const fetchData = async (
-  setLoading,
-  //   currentPage,
-  setDoc
-  //   setPaginationData
-) => {
+const fetchData = async (setLoading, setDoc) => {
   try {
     setLoading(true);
     const formData = new FormData();
-    // formData.append("page", currentPage);
-    // formData.append("limit", 10);
     formData.append("type", 2);
     const response = await axios.post(
       `${API_URL}/admin/docs/getdoc.php`,
@@ -27,7 +20,6 @@ const fetchData = async (
       { headers: "content-type/form-data" }
     );
     setDoc(response.data.data);
-    // setPaginationData(response.data.pagination);
   } catch (error) {
     console.log(error);
   } finally {
@@ -36,26 +28,22 @@ const fetchData = async (
 };
 
 function GetNotes() {
+  const { setHeading } = useHeading();
   const [loading, setLoading] = useState(false);
-  //   const [paginationData, setPaginationData] = useState({});
-  //   const [currentPage, setCurrentPage] = useState(1);
-  //   const [updateVideo, setUpdateVideo] = useState(false);
-  //   const [updateVideoData, setUpdateVideoData] = useState({});
-
   const [doc, setDoc] = useState([]);
 
   useEffect(() => {
-    fetchData(
-      setLoading,
-      //  currentPage,
-      setDoc
-      //  setPaginationData
+    setHeading(
+      <div className="w-full flex justify-center items-center gap-6">
+        <h1 className="text-3xl font-bold text-center">Notes List</h1>
+        <Add setDoc={setDoc} />
+      </div>
     );
-  }, []);
+    fetchData(setLoading, setDoc);
+  }, [setHeading]);
 
   const handleDelete = async (id) => {
     try {
-      // setLoading(true);
       const formData = new FormData();
       formData.append("id", id);
       const response = await axios.post(
@@ -67,7 +55,6 @@ function GetNotes() {
       );
       console.log(response);
       if (response.status === 200) {
-        // dispatch(deleteVideo(id));
         const newdoc = doc.filter((doc) => doc.id !== id);
         setDoc(newdoc);
         toast.success("Document Deleted Successfully");
@@ -78,9 +65,6 @@ function GetNotes() {
         error.response.data.message || "Error while deleting document"
       );
     }
-    // finally {
-    //   setLoading(false);
-    // }
   };
 
   const handleChangeStatus = async (docId, is_active) => {
@@ -103,15 +87,12 @@ function GetNotes() {
           { headers: { "content-type": "multipart/form-data" } }
         );
 
-        // console.log(res);
-        // Update local state instead of fetching users again
         const updatedVideo = doc.map((doc) =>
           doc.id === docId ? { ...doc, is_active } : doc
         );
         setDoc(updatedVideo);
       } catch (error) {
         console.log("Error updating Doc status:", error);
-        // Handle error (e.g., show an error message)
       }
     }
   };
@@ -124,8 +105,6 @@ function GetNotes() {
     try {
       const formData = new FormData();
       formData.append("doc_id", id);
-      // formData.append("start_range", 0);
-      // formData.append("end_range", 524287);
 
       const response = await axios.post(
         `${API_URL}/admin/docs/getdocurl.php`,
@@ -148,10 +127,8 @@ function GetNotes() {
     }
   };
 
-  // console.log(doc);
-
   return (
-    <LayoutAdjuster>
+    <>
       {loading ? (
         <>
           <Loader />
@@ -161,10 +138,6 @@ function GetNotes() {
           className={`${"w-[80%] flex flex-col justify-center items-center mx-auto"} `}
         >
           <div className="w-full flex flex-col justify-center items-center my-5">
-            <div className="w-full flex justify-center items-center gap-5">
-              <h1 className="text-3xl font-bold text-center">Notes List</h1>
-              <Add doc={doc} setDoc={setDoc} />
-            </div>
             <div className="w-full flex flex-col justify-center items-center">
               {doc.length > 0 ? (
                 <div className="flex flex-col justify-center items-center w-full">
@@ -176,19 +149,8 @@ function GetNotes() {
                       <div className="flex flex-col justify-center items-start gap-4 w-full">
                         <div className="flex justify-between items-center w-full gap-4">
                           <Avatar className="bg-gray-500 text-white">
-                            {/* {(currentPage - 1) * 10 + (idx + 1)} */}
                             {idx + 1}
                           </Avatar>
-                          {/* <div>Doc ID: {item.video_id}</div> */}
-                          {/* <div>
-                            <select
-                              defaultValue={item.type}
-                              className="border rounded-md border-lime-100 hover:border-lime-200 bg-lime-50 p-2"
-                            >
-                              <option value="0">Real</option>
-                              <option value="1">Demo</option>
-                            </select>
-                          </div> */}
                           <div className="flex flex-col justify-center items-center">
                             <p className="text-xs font-bold">
                               {item.is_active === "1" ? "Public" : "Private"}
@@ -243,13 +205,6 @@ function GetNotes() {
                       </div>
                     </div>
                   ))}
-                  {/* <div>
-                    <Pagination
-                      totalPage={paginationData.total_pages}
-                      currPage={currentPage}
-                      setCurrPage={setCurrentPage}
-                    />
-                  </div> */}
                 </div>
               ) : (
                 <div className="text-2xl font-bold text-center mt-20">
@@ -260,13 +215,7 @@ function GetNotes() {
           </div>
         </div>
       )}
-      {/* {updateVideo && (
-        <UpdateVideo
-          setUpdateVideo={setUpdateVideo}
-          updateVideoData={updateVideoData}
-        />
-      )} */}
-    </LayoutAdjuster>
+    </>
   );
 }
 

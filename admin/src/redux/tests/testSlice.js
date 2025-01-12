@@ -12,7 +12,7 @@ export const testSlice = createSlice({
       state.test = action.payload;
     },
     addTest: (state, action) => {
-      state.test.push(action.payload);
+      state.test.unshift(action.payload);
     },
     updateTest: (state, action) => {
       const index = state.test.findIndex((test) => {

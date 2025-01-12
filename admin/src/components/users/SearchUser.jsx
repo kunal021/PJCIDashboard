@@ -67,7 +67,7 @@ function SearchUser() {
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );
-      // console.log(response);
+
       setData(response.data.data);
       searchQuery({
         firstname: "",
@@ -104,7 +104,6 @@ function SearchUser() {
             { headers: { "content-type": "multipart/form-data" } }
           );
 
-          // Update local state instead of fetching users again
           const updatedUsers = users.map((user) =>
             user.id === userId ? { ...user, isactive } : user
           );
@@ -117,7 +116,6 @@ function SearchUser() {
           dispatch(setUser(updatedUsers));
         } catch (error) {
           console.log("Error updating user status:", error);
-          // Handle error (e.g., show an error message)
         }
       }
     },
@@ -143,7 +141,7 @@ function SearchUser() {
             <Dialog.Title className="text-mauve12 m-0 text-[17px] font-medium">
               Search User Using
             </Dialog.Title>
-            <div className="flex justify-center items-center gap-1.5">
+            <div className="flex md:flex-row flex-col justify-center items-center gap-1.5">
               <FormField
                 value={searchQuery.firstname}
                 onChange={handleChnage}
@@ -178,7 +176,7 @@ function SearchUser() {
               />
               <button
                 onClick={getUsers}
-                className="h-fit bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 mb-1.5 px-4 rounded-md"
+                className="h-fit w-full bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 mb-1.5 px-4 rounded-md"
               >
                 Search
               </button>

@@ -2,22 +2,17 @@ import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCourse, deleteCourse } from "../../redux/courses/courseSlice";
 import axios from "axios";
-import LinkButton from "../../utils/LinkButton";
 import UpdateCourse from "./UpdateCourse";
 import ConfirmDelete from "../../utils/ConfirmDelete";
 import { API_URL } from "../../url";
 import Loader from "../../utils/Loader";
 import toast from "react-hot-toast";
-import UpdateBtn from "../../utils/UpdateBtn";
-// import parser from "html-react-parser";
-import LayoutAdjuster from "../../utils/LayoutAdjuster";
-// import { Avatar } from "antd";
-// import AddVideoInCourse from "./AddVideoInCourse";
-// import SeeAll from "../../utils/SeeAll";
 import { useNavigate } from "react-router-dom";
 import { CalendarClock, IndianRupee } from "lucide-react";
 import { LatexParser } from "@/utils/LatexParser";
 import getPercentage from "@/utils/getPercentage";
+import { useHeading } from "@/hooks/use-heading";
+import AddCourse from "./AddCourse";
 
 const fetchCourse = async (dispatch, setLoading) => {
   try {
@@ -29,7 +24,6 @@ const fetchCourse = async (dispatch, setLoading) => {
       formData,
       { headers: { "content-type": "multipart/form-data" } }
     );
-    // console.log(response);
     dispatch(setCourse(response.data.data));
   } catch (error) {
     console.error("Error fetching courses:", error);
@@ -41,16 +35,21 @@ const fetchCourse = async (dispatch, setLoading) => {
 
 function GetCourse() {
   const navigate = useNavigate();
+  const { setHeading } = useHeading();
   const [loading, setLoading] = useState(false);
-  const [updateCourse, setUpdateCourse] = useState(false);
-  const [updateCourseData, setUpdateCourseData] = useState({});
 
   const dispatch = useDispatch();
   const courses = useSelector((state) => state.courses.courses);
 
   useEffect(() => {
+    setHeading(
+      <div className="w-full flex justify-center items-center gap-6">
+        <h1 className="text-xl sm:text-3xl font-bold text-center">Course</h1>
+        <AddCourse />
+      </div>
+    );
     fetchCourse(dispatch, setLoading);
-  }, [dispatch]);
+  }, [dispatch, setHeading]);
 
   const handleDelete = useCallback(
     async (courseId) => {
@@ -59,7 +58,6 @@ function GetCourse() {
           `${API_URL}/admin/courses/deletecourse.php?courseid=${courseId}`
         );
 
-        // console.log(response);
         if (response.status === 200) {
           dispatch(deleteCourse(courseId));
           toast.success("Course Deleted Successfully");
@@ -93,7 +91,6 @@ function GetCourse() {
             { headers: { "content-type": "multipart/form-data" } }
           );
 
-          // Update local state instead of fetching users again
           const updatedCourse = courses.map((course) =>
             course.id === courseId ? { ...course, isactive } : course
           );
@@ -114,7 +111,7 @@ function GetCourse() {
   };
 
   const handleNavigate = (id, directory_id) => {
-    navigate(`/get-course-content?id=${directory_id}`, {
+    navigate(`/course/get-content?id=${directory_id}`, {
       state: { dirId: directory_id, subDir: "1" },
     });
 
@@ -123,21 +120,11 @@ function GetCourse() {
   };
 
   return (
-    <LayoutAdjuster>
+    <>
       {loading ? (
         <Loader />
       ) : (
-        <div
-          className={`${
-            updateCourse
-              ? "hidden"
-              : "w-[90%] flex flex-col justify-center items-center mx-auto"
-          }`}
-        >
-          <div className="flex justify-center items-center gap-10 my-5">
-            <h1 className="text-3xl font-bold text-center">Course List</h1>
-            <LinkButton to="/add-course">Add Course</LinkButton>
-          </div>
+        <div className="w-full sm:w-[90%] flex flex-col justify-center items-center mx-auto">
           {courses.length > 0 ? (
             <div className="flex flex-wrap justify-center items-center w-full gap-4">
               {courses.map(
@@ -145,7 +132,7 @@ function GetCourse() {
                   course && (
                     <div
                       key={idx}
-                      className="flex justify-center items-center font-medium w-56 border rounded-md border-zinc-300 ml-2 my-4 py-2 px-1"
+                      className="flex justify-center items-center font-medium w-44 sm:w-56 border rounded-md border-zinc-300 my-4 py-2 px-1"
                     >
                       <div className="flex flex-col justify-center items-start gap-2 w-full">
                         <div className="flex justify-between items-center w-full gap-2">
@@ -172,13 +159,8 @@ function GetCourse() {
                               </div>
                             </button>
                           </div>
-                          <div className="flex scale-75 justify-between items-end gap-2 w-fit">
-                            <UpdateBtn
-                              handleClick={() => {
-                                setUpdateCourse(true);
-                                setUpdateCourseData(course.id);
-                              }}
-                            />
+                          <div className="flex justify-between items-end gap-2 w-fit">
+                            <UpdateCourse id={course.id} />
                             <ConfirmDelete
                               handleClick={() => handleDelete(course.id)}
                             />
@@ -191,17 +173,17 @@ function GetCourse() {
                           }
                           className="flex flex-col justify-center items-center gap-2 w-full cursor-pointer"
                         >
-                          <div className="flex justify-center items-center w-44">
+                          <div className="flex justify-center items-center w-full">
                             <img
                               src={course.img_url}
                               alt={"image"}
-                              className="rounded-lg border-transparent w-full h-28"
+                              className="rounded-lg border-transparent w-full h-48 sm:h-28"
                             />
                           </div>
                           <div className="text-center text-sm w-full whitespace-pre-wrap">
                             {renderCourseData(course.course_name)}
                           </div>
-                          <div className="flex justify-between items-center w-full gap-2">
+                          <div className="flex flex-col sm:flex-row justify-between items-center w-full gap-2">
                             <div className="flex justify-center items-center gap-0.5">
                               <CalendarClock className="scale-[60%]" />
                               <p className="text-xs">
@@ -242,13 +224,7 @@ function GetCourse() {
           )}
         </div>
       )}
-      {updateCourse && (
-        <UpdateCourse
-          setUpdateCourse={setUpdateCourse}
-          updateCourseData={updateCourseData}
-        />
-      )}
-    </LayoutAdjuster>
+    </>
   );
 }
 

@@ -9,7 +9,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { API_URL } from "@/url";
-import LayoutAdjuster from "@/utils/LayoutAdjuster";
 import Pagination from "@/utils/Pagination";
 import Loader from "@/utils/Loader";
 import FormField from "@/utils/FormField";
@@ -18,6 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useHeading } from "@/hooks/use-heading";
 
 const getOrders = async (setData, setPaginationData, setLoading, filters) => {
   try {
@@ -37,23 +37,23 @@ const getOrders = async (setData, setPaginationData, setLoading, filters) => {
         params,
       }
     );
-    // console.log(response);
     if (response.data.data.length > 0) {
       setData(response.data.data);
       setPaginationData(response.data.pagination);
     } else {
-      setData([]); // Clear the table if no data is found
-      setPaginationData({ total_pages: 0 }); // Reset pagination data
+      setData([]);
+      setPaginationData({ total_pages: 0 });
     }
   } catch (error) {
     console.log("Error fetching orders:", error);
-    setData([]); // Clear data on error as well
+    setData([]);
   } finally {
     setLoading(false);
   }
 };
 
 function BookOrders() {
+  const { setHeading } = useHeading();
   const [loading, setLoading] = useState(false);
   const [paginationData, setPaginationData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
@@ -76,6 +76,16 @@ function BookOrders() {
     page: 1,
     limit: 25,
   });
+
+  useEffect(() => {
+    setHeading(
+      <div className="w-full flex justify-center items-center gap-6">
+        <h1 className="text-xl sm:text-3xl font-bold text-center ">
+          Book Orders
+        </h1>
+      </div>
+    );
+  }, [setHeading]);
 
   useEffect(() => {
     getOrders(setData, setPaginationData, setLoading, filters);
@@ -131,15 +141,11 @@ function BookOrders() {
       formData.append("status", status);
       formData.append("txn_id", txn_id);
 
-      // console.log(id, status, txn_id);
-
       const response = await axios.post(
         `${API_URL}/admin/book/updateorderstatus.php`,
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );
-
-      // console.log(response);
 
       if (response.status === 200) {
         setData((prevData) =>
@@ -167,17 +173,14 @@ function BookOrders() {
   const STATUS = ["pending", "completed", "processing"];
 
   return (
-    <LayoutAdjuster>
+    <>
       {loading ? (
         <Loader />
       ) : (
-        <div className="w-[90%] max-w-7xl flex flex-col justify-center items-center mx-auto">
-          <div className="flex justify-center items-center space-x-10">
-            <h1 className="text-3xl font-bold text-center my-5">Book Orders</h1>
-          </div>
-
-          <div className="w-full flex flex-col justify-between mb-5 gap-4">
-            <div className="flex justify-between items-center gap-4">
+        <div className="w-[90%] flex flex-col justify-center items-center mx-auto">
+          <div className="w-full flex flex-col gap-4 mb-5">
+            {/* First Row */}
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
               <FormField
                 htmlFor="user_id"
                 id="user_id"
@@ -204,7 +207,7 @@ function BookOrders() {
                 name="status"
                 value={filters.status}
                 onChange={handleChange}
-                className="border p-2 mt-2 rounded"
+                className="w-full sm:w-auto border p-2 rounded"
               >
                 <option value="">All Status</option>
                 <option value="pending">Pending</option>
@@ -212,7 +215,9 @@ function BookOrders() {
                 <option value="processing">Processing</option>
               </select>
             </div>
-            <div className="flex justify-between items-center gap-4">
+
+            {/* Second Row */}
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
               <FormField
                 htmlFor="from_date"
                 id="from_date"
@@ -233,24 +238,24 @@ function BookOrders() {
               >
                 To Date
               </FormField>
-
               <button
                 onClick={applyFilters}
-                className="bg-blue-500 text-white px-4 py-1.5 mt-2 rounded w-full"
+                className="w-full sm:w-auto bg-blue-500 text-white px-4 py-2 rounded"
               >
                 Apply Filters
               </button>
               <button
                 onClick={clearFilters}
-                className="bg-red-500 text-white px-4 py-1.5 mt-2 rounded w-full"
+                className="w-full sm:w-auto bg-red-500 text-white px-4 py-2 rounded"
               >
                 Clear Filters
               </button>
             </div>
           </div>
+
           {data.length > 0 ? (
-            <>
-              <div className="w-full overflow-auto mt-4">
+            <div className="w-full relative">
+              <div className="w-full absolute">
                 <Table className="border border-gray-200 rounded">
                   <TableHeader className="bg-gray-100">
                     <TableRow className="divide-x divide-gray-200">
@@ -305,15 +310,15 @@ function BookOrders() {
                     ))}
                   </TableBody>
                 </Table>
+                <div className="my-4 w-full flex justify-center items-center ">
+                  <Pagination
+                    totalPage={paginationData.total_pages}
+                    currPage={currentPage}
+                    setCurrPage={handlePageChange}
+                  />
+                </div>
               </div>
-              <div className="my-4 w-full flex justify-center items-center ">
-                <Pagination
-                  totalPage={paginationData.total_pages}
-                  currPage={currentPage}
-                  setCurrPage={handlePageChange}
-                />
-              </div>
-            </>
+            </div>
           ) : (
             <div className="text-2xl font-bold text-center mt-20">
               No Data Available
@@ -321,7 +326,7 @@ function BookOrders() {
           )}
         </div>
       )}
-    </LayoutAdjuster>
+    </>
   );
 }
 

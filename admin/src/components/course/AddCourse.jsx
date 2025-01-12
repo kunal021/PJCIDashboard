@@ -1,35 +1,39 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
-// import { useDispatch } from "react-redux";
-// import { addCourse } from "../../redux/courses/courseSlice";
 import axios from "axios";
 import FormField from "../../utils/FormField";
-import LinkButton from "../../utils/LinkButton";
 import { API_URL } from "../../url";
 import toast from "react-hot-toast";
 import Tiptap from "../../utils/TextEditor";
-import LayoutAdjuster from "../../utils/LayoutAdjuster";
-import { Loader, UploadCloud } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Loader, Plus, UploadCloud } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTrigger,
+} from "../ui/sheet";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { useDispatch, useSelector } from "react-redux";
+import GetImageToUpload from "../images/GetImageToUpload";
+import { setImageURL } from "@/redux/image/imageURLSlice";
+import { addCourse } from "@/redux/courses/courseSlice";
 
 function AddCourse() {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
   const [course, setCourse] = useState({
     name: "",
     price: "",
     originalprice: "",
     duration: "",
-    imgurl: "",
   });
-  // const [imageData, setImagedata] = useState(null);
+  const imageURL = useSelector((state) => state.imageURL.imageURL);
   const [loading, setLoading] = useState(false);
-  // const [courseName, setCourseName] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
   const [durationUnit, setDurationunit] = useState("Day");
-  // const dispatch = useDispatch();
+  const [isUploadImageOpen, setIsUploadImageOpen] = useState(false);
 
-  // const getNameData = (html) => {
-  //   setCourseName(html);
-  // };
   const getDescriptionData = (html) => {
     setCourseDescription(html);
   };
@@ -43,7 +47,7 @@ function AddCourse() {
   };
 
   const handleSubmit = async () => {
-    if (!course.name || !course.price || !course.duration || !course.imgurl) {
+    if (!course.name || !course.price || !course.duration || !imageURL) {
       toast.error("All fields are required");
       return;
     }
@@ -52,74 +56,69 @@ function AddCourse() {
       return;
     }
     try {
+      setLoading(true);
       const formData = new FormData();
       formData.append("name", course.name);
       formData.append("price", course.price);
       formData.append("original_price", course.originalprice);
       formData.append("duration", `${course.duration} ${durationUnit}`);
       formData.append("description", courseDescription);
-      formData.append("imgurl", course.imgurl);
+      formData.append("imgurl", imageURL);
       const response = await axios.post(
         `${API_URL}/admin/courses/addcourse.php`,
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );
-      // console.log(response);
-      // dispatch(addCourse(response.data));
+
       if (response.status == 201) {
         toast.success("Course Added Sucessfully");
-        navigate("/get-course");
+        dispatch(
+          addCourse({
+            id: response.data.id,
+            course_name: course.name,
+            price: course.price,
+            original_price: course.originalprice,
+            course_duration: course.duration,
+            img_url: imageURL,
+            directory_id: response.data.directory_id,
+          })
+        );
+        setCourse({
+          name: "",
+          price: "",
+          originalprice: "",
+          duration: "",
+        });
+        setCourseDescription("");
+        setDurationunit("");
+        dispatch(setImageURL(""));
+        setOpen(false);
       }
     } catch (error) {
       console.error("Error fetching courses:", error);
-    }
-    setCourse({
-      name: "",
-      price: "",
-      originalprice: "",
-      duration: "",
-      imgurl: "",
-    });
-    // setCourseName("");
-    setCourseDescription("");
-    setDurationunit("");
-  };
-
-  const handleUploadImage = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    try {
-      setLoading(true);
-      const formData = new FormData();
-      formData.append("image", file);
-      const response = await axios.post(
-        `${API_URL}/admin/courses/uplodecourseimage.php`,
-        formData,
-        { headers: { "content-type": "multipart/form-data" } }
-      );
-
-      // console.log(response.data);
-      if (response.status === 200) {
-        setCourse((prev) => ({ ...prev, imgurl: response.data.url }));
-        toast.success("Image Uploaded Successfully");
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Error Uploading Image");
+      toast.error(error.response?.data?.message || "Error adding course");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <LayoutAdjuster>
-      <div className="w-[80%] flex flex-col justify-center items-center mx-auto">
-        <h1 className="text-center my-5 text-3xl font-bold">Add Course</h1>
-        <div className="flex flex-col justify-center items-center mt-5 w-full">
-          <div className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border border-gray-400 w-full">
-            {/* <p className="block text-gray-700 text-sm font-bold">Name</p> */}
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger
+        asChild
+        className="cursor-pointer border rounded-md bg-blue-50 p-2 text-sm font-semibold text-black hover:bg-blue-100 border-blue-200 md:w-auto"
+      >
+        <div onClick={() => setOpen(true)}>
+          {useIsMobile() ? <Plus className="h-5 w-5" /> : "Add Course"}
+        </div>
+      </SheetTrigger>
+      <SheetContent className="overflow-auto w-full md:w-[50%] px-4">
+        <SheetHeader className="text-2xl font-bold text-center sm:text-left">
+          Add Course
+        </SheetHeader>
+        <div className="flex flex-col justify-center items-center space-y-4">
+          <div className="w-full flex flex-col space-y-4">
             <div className="w-full my-2">
-              {/* <Tiptap placeholder="Category" getHtmlData={getNameData} /> */}
               <FormField
                 htmlFor={"name"}
                 id={"name"}
@@ -133,9 +132,9 @@ function AddCourse() {
               </FormField>
             </div>
             <p className="block text-gray-700 text-sm font-bold">Description</p>
-            <div className=" w-full my-2">
+            <div className="w-full my-2">
               <Tiptap
-                placeholder={"Category"}
+                placeholder={"Description"}
                 getHtmlData={getDescriptionData}
               />
             </div>
@@ -148,6 +147,7 @@ function AddCourse() {
                 name={"price"}
                 value={course.price}
                 onChange={handleChange}
+                className="w-full"
               >
                 Price
               </FormField>
@@ -159,6 +159,7 @@ function AddCourse() {
                 name={"originalprice"}
                 value={course.originalprice}
                 onChange={handleChange}
+                className="w-full"
               >
                 Original Price
               </FormField>
@@ -170,30 +171,24 @@ function AddCourse() {
                 name={"duration"}
                 value={`${course.duration}`}
                 onChange={handleChange}
+                className="w-full"
               >
                 Duration
               </FormField>
               <select
                 value={durationUnit}
                 onChange={(e) => setDurationunit(e.target.value)}
-                className="w-96 h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
+                className="w-full mt-2.5 py-1.5 px-2 border rounded-md border-gray-300"
               >
                 <option value={"Day"}>Day</option>
                 <option value={"Month"}>Month</option>
                 <option value={"Year"}>Year</option>
               </select>
             </div>
-            <div className="my-4 flex justify-between items-center">
-              <input
-                id="fileinput"
-                type="file"
-                accept="image/*"
-                onChange={handleUploadImage}
-                className="hidden"
-              />
+            <div className="my-4 flex flex-col items-center space-y-4 md:flex-row md:space-y-0 md:space-x-6">
               <label
-                htmlFor="fileinput"
-                className="flex flex-col justify-center items-center w-60 h-36 cursor-pointer bg-gray-50 text-black px-4 py-2 rounded-lg border-2 border-gray-300 border-dashed hover:bg-blue-50"
+                onClick={() => setIsUploadImageOpen(true)}
+                className="flex flex-col justify-center items-center w-full max-w-xs h-36 cursor-pointer bg-gray-50 text-black px-4 py-2 rounded-lg border-2 border-gray-300 border-dashed hover:bg-blue-50"
               >
                 {!loading ? (
                   <>
@@ -207,46 +202,43 @@ function AddCourse() {
                   </>
                 )}
               </label>
-              {course.imgurl ? (
+              {imageURL ? (
                 <img
-                  src={course.imgurl}
+                  src={imageURL}
                   alt="image"
-                  className="w-60 h-36 rounded-lg m-auto"
+                  className="w-full max-w-xs h-36 rounded-lg"
                 />
               ) : (
-                <div className="rounded-lg border-2 border-gray-300 border-dashed h-36 w-60 text-center items-center m-auto">
+                <div className="rounded-lg border-2 border-gray-300 border-dashed h-36 w-full max-w-xs flex justify-center items-center">
                   Preview
                 </div>
               )}
             </div>
-            <FormField
-              htmlFor={"imgurl"}
-              id={"imgurl"}
-              type={"text"}
-              placeholder={"Image Url"}
-              name={"imgurl"}
-              value={course.imgurl}
-              onChange={handleChange}
-            >
-              Image Url
-            </FormField>
-            <div className="flex items-center justify-between">
-              <button
-                className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md"
-                onClick={handleSubmit}
-              >
-                Create Course
-              </button>
-            </div>
-          </div>
-          <div className="flex items-center justify-between mb-4">
-            <LinkButton to={"/get-course"} use={"close"}>
-              Close
-            </LinkButton>
+
+            <GetImageToUpload
+              isOpen={isUploadImageOpen}
+              onClose={() => setIsUploadImageOpen(false)}
+            />
           </div>
         </div>
-      </div>
-    </LayoutAdjuster>
+        <SheetFooter className="flex flex-col gap-4 mt-5">
+          <button
+            disabled={loading}
+            onClick={handleSubmit}
+            className="rounded-md bg-blue-50 py-2 px-4 text-sm font-semibold hover:bg-blue-100 border border-blue-200 text-black w-full"
+          >
+            Add Course
+          </button>
+          <button
+            disabled={loading}
+            onClick={() => !loading && setOpen(false)}
+            className="border rounded-md bg-red-50 py-2 px-4 text-sm font-semibold hover:bg-red-100 border-red-200 text-black w-full disabled:opacity-50"
+          >
+            Close
+          </button>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   );
 }
 

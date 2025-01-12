@@ -12,7 +12,7 @@ export const sliderSlice = createSlice({
       state.slider = action.payload;
     },
     addSlider: (state, action) => {
-      state.slider.push(action.payload);
+      state.slider.unshift(action.payload);
     },
 
     updateSlider: (state, action) => {

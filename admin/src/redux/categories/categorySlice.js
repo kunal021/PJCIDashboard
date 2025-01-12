@@ -12,7 +12,7 @@ export const categorySlice = createSlice({
       state.category = action.payload;
     },
     addCategory: (state, action) => {
-      state.category.push(action.payload);
+      state.category.unshift(action.payload);
     },
     updateCategory: (state, action) => {
       const index = state.category.findIndex(

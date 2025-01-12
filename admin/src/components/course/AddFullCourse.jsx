@@ -7,7 +7,6 @@ import FormField from "../../utils/FormField";
 import LinkButton from "../../utils/LinkButton";
 import { API_URL } from "../../url";
 import Tiptap from "../../utils/TextEditor";
-import LayoutAdjuster from "../../utils/LayoutAdjuster";
 import { Loader, UploadCloud } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -103,7 +102,7 @@ function AddFullCourse() {
   };
 
   return (
-    <LayoutAdjuster>
+    <>
       <div className="w-[80%] flex flex-col justify-center items-center mx-auto">
         <h1 className="text-center my-5 text-3xl font-bold">Add Full Course</h1>
         <div className="flex flex-col justify-center items-center mt-5 w-full">
@@ -226,7 +225,7 @@ function AddFullCourse() {
           </div>
         </div>
       </div>
-    </LayoutAdjuster>
+    </>
   );
 }
 

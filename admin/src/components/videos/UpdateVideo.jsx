@@ -3,20 +3,27 @@ import axios from "axios";
 import { useState } from "react";
 import { API_URL } from "../../url";
 import FormField from "../../utils/FormField";
-// import Tiptap from "../../utils/TextEditor";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { updateVideo } from "../../redux/videos/videoSlice";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTrigger,
+} from "../ui/dialog";
+import UpdateBtn from "@/utils/UpdateBtn";
+import TimePicker from "@/utils/TimePicker";
 
-function UpdateVideo({ setUpdateVideo, updateVideoData }) {
+function UpdateVideo({ updateVideoData }) {
+  const [open, setOpen] = useState(false);
   const [data, setData] = useState({
     videoid: updateVideoData.video_id,
     video_duration: updateVideoData.video_duration,
     video_title: updateVideoData.video_title,
   });
   const [loading, setLoading] = useState(false);
-  // const [videoTitle, setVideoTitle] = useState(updateVideoData.video_title);
-
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
@@ -26,7 +33,7 @@ function UpdateVideo({ setUpdateVideo, updateVideoData }) {
       [name]: value,
     }));
   };
-  const handleUpdateVideo = async () => {
+  const handleSubmit = async () => {
     try {
       setLoading(true);
       const formData = new FormData();
@@ -52,85 +59,85 @@ function UpdateVideo({ setUpdateVideo, updateVideoData }) {
           })
         );
         toast.success("Video Updated Successfully");
-        setUpdateVideo((prev) => !prev);
+        setOpen(false);
       }
     } catch (error) {
       console.log(error);
+      toast.error(error.response.data.message || "Error updating video");
     } finally {
       setLoading(false);
     }
   };
 
-  // const getVideoData = (html) => {
-  //   setVideoTitle(html);
-  // };
   return (
-    <div className="w-[80%] h-full flex flex-col justify-center items-center my-5">
-      <div className="flex flex-col justify-center items-center w-full">
-        <h1 className="text-center text-3xl font-bold">Update Video</h1>
-        <div className="w-full flex flex-col justify-center items-center ml-2">
-          <FormField
-            id={"videoid"}
-            type={"text"}
-            placeholder={"Enter Video Id"}
-            htmlFor={"videoid"}
-            name={"videoid"}
-            value={data.videoid}
-            onChange={handleChange}
-          >
-            Video Id
-          </FormField>
-          <FormField
-            id={"video_duration"}
-            type={"text"}
-            placeholder={"Enter Video Duration"}
-            htmlFor={"video_duration"}
-            name={"video_duration"}
-            value={data.video_duration}
-            onChange={handleChange}
-          >
-            Video Duration
-          </FormField>
-          <FormField
-            id={"video_title"}
-            type={"text"}
-            placeholder={"Enter Video Title"}
-            htmlFor={"video_title"}
-            name={"video_title"}
-            value={data.video_title}
-            onChange={handleChange}
-          >
-            Video Tile
-          </FormField>
-          {/* <div className="w-full flex flex-col justify-center items-start m-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Video Title:
-            </label>
-            <Tiptap
-              initialContent={videoTitle}
-              getHtmlData={getVideoData}
-              placeholder="Write the question here..."
-            />
-          </div> */}
-          <div className="flex justify-between items-center gap-5 w-full">
-            <button
-              disabled={loading}
-              onClick={() => setUpdateVideo((prev) => !prev)}
-              className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md w-1/2"
-            >
-              Cancel
-            </button>
-            <button
-              disabled={loading}
-              onClick={handleUpdateVideo}
-              className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md w-1/2"
-            >
-              {loading ? "Updating..." : "Update"}
-            </button>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <div onClick={() => setOpen(true)}>
+          <UpdateBtn />
+        </div>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader className="text-2xl font-bold">Update Video</DialogHeader>
+        <div className="w-full flex flex-col justify-center items-center my-5">
+          <div className="flex flex-col justify-center items-center w-full">
+            <div className="w-full flex flex-col justify-center items-center ml-2">
+              <FormField
+                id={"videoid"}
+                type={"text"}
+                placeholder={"Enter Video Id"}
+                htmlFor={"videoid"}
+                name={"videoid"}
+                value={data.videoid}
+                onChange={handleChange}
+              >
+                Video Id
+              </FormField>
+              <div className="w-full flex flex-col gap-2 mb-3">
+                <label className="text-sm font-bold text-gray-700">
+                  Video Duration
+                </label>
+                <TimePicker
+                  value={data.video_duration}
+                  onChange={(time) => {
+                    setData((prev) => ({
+                      ...prev,
+                      video_duration: time,
+                    }));
+                  }}
+                />
+              </div>
+              <FormField
+                id={"video_title"}
+                type={"text"}
+                placeholder={"Enter Video Title"}
+                htmlFor={"video_title"}
+                name={"video_title"}
+                value={data.video_title}
+                onChange={handleChange}
+              >
+                Video Tile
+              </FormField>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+        <DialogFooter className="flex flex-col gap-4 mt-5">
+          <button
+            disabled={loading}
+            onClick={() => !loading && setOpen(false)}
+            className="border rounded-md bg-red-50 py-2 px-4 text-sm font-semibold hover:bg-red-100 border-red-200 text-black w-full disabled:opacity-50"
+          >
+            Close
+          </button>
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            className="rounded-md bg-blue-50 p-2 text-sm font-semibold hover:bg-blue-100 border-blue-200 text-black border w-full"
+          >
+            Add Video
+          </button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 

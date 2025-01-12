@@ -1,22 +1,24 @@
+/* eslint-disable react/prop-types */
 import { updateCategory } from "../../redux/categories/categorySlice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useSearchParams } from "react-router-dom";
-import LinkButton from "../../utils/LinkButton";
 import { API_URL } from "../../url";
-import LayoutAdjuster from "../../utils/LayoutAdjuster";
-// import Tiptap from "../../utils/TextEditor";
 import FormField from "../../utils/FormField";
-// import parser from "html-react-parser";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTrigger,
+} from "../ui/dialog";
+import UpdateBtn from "@/utils/UpdateBtn";
 
-function UpdateCategory() {
-  const [searchParams] = useSearchParams();
-  const id = searchParams.get("id");
-  const name = searchParams.get("name");
-
+function UpdateCategory({ id, name }) {
+  const [open, setOpen] = useState(false);
   const [categoryName, setCategoryName] = useState(name);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   const handleSubmit = async () => {
@@ -25,71 +27,74 @@ function UpdateCategory() {
       return;
     }
     try {
+      setLoading(true);
       const response = await axios.post(
         `${API_URL}/admin/category/updatecategory.php`,
         { id, name: categoryName },
         { headers: { "content-type": "multipart/form-data" } }
       );
-      dispatch(updateCategory(response.data));
-      // fetchCategory();
+
       if (response.status == 200) {
+        dispatch(updateCategory({ id, name: categoryName }));
         toast.success("Category Updated Successfully");
+        setOpen(false);
       }
     } catch (error) {
       console.error("Error fetching courses:", error);
+      toast.error(error.response?.data?.message || "Error updating category");
+    } finally {
+      setLoading(false);
     }
-    setCategoryName("");
   };
 
-  // const handleContentData = (html) => {
-  //   setCategoryName(html);
-  // };
-
   return (
-    <LayoutAdjuster>
-      <div className="w-[80%] flex flex-col justify-center items-center">
-        <h1 className="text-center text-3xl font-bold">Update Category</h1>
-        <div className="flex flex-col justify-between items-center border rounded-xl border-gray-400 p-5 w-full my-10">
-          {/* <div className="w-full my-2">
-            <Tiptap
-              placeholder="Category"
-              getHtmlData={handleContentData}
-              initialContent={categoryName}
-            />
-          </div> */}
-          <FormField
-            name="category"
-            value={categoryName}
-            htmlFor={"category"}
-            onChange={(e) => setCategoryName(e.target.value)}
-            id={"category"}
-            type={"text"}
-          >
-            Category Name
-          </FormField>
-          {categoryName.length > 255 && (
-            <p className="text-red-500">
-              Category name should be less than 255 characters
-            </p>
-          )}
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <div onClick={() => setOpen(true)}>
+          <UpdateBtn />
+        </div>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader className="text-2xl font-bold">
+          Update Category
+        </DialogHeader>
+        <div className="flex flex-col justify-center items-center">
+          <div className="flex flex-col justify-between items-center w-full">
+            <FormField
+              name="category"
+              value={categoryName}
+              htmlFor={"category"}
+              onChange={(e) => setCategoryName(e.target.value)}
+              id={"category"}
+              type={"text"}
+            >
+              Category Name
+            </FormField>
+            {categoryName.length > 255 && (
+              <p className="text-red-500">
+                Category name should be less than 255 characters
+              </p>
+            )}
+          </div>
+        </div>
+        <DialogFooter className="flex flex-col gap-4 mt-5">
           <button
+            disabled={loading}
+            onClick={() => !loading && setOpen(false)}
+            className="border rounded-md bg-red-50 py-2 px-4 text-sm font-semibold hover:bg-red-100 border-red-200 text-black w-full disabled:opacity-50"
+          >
+            Close
+          </button>
+          <button
+            disabled={loading}
             onClick={handleSubmit}
-            className="border rounded-md bg-blue-50 p-2 text-sm font-semibold border-blue-200 hover:bg-blue-100 text-black w-full md:w-auto"
+            className="rounded-md bg-blue-50 p-2 text-sm font-semibold hover:bg-blue-100 border-blue-200 text-black border w-full"
           >
             Update Category
           </button>
-        </div>
-        {/* <button
-                onClick={() => setAddNewCategory((perv) => !perv)}
-                className="border-2 rounded-lg border-transparent bg-red-500 py-2 px-4 text-sm font-semibold hover:bg-red-700 text-white transition-all duration-500 w-full md:w-auto"
-            >
-                Close
-            </button> */}
-        <LinkButton to={"/category"} use={"close"}>
-          Close
-        </LinkButton>
-      </div>
-    </LayoutAdjuster>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 

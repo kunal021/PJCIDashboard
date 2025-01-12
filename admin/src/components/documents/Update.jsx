@@ -1,41 +1,58 @@
 /* eslint-disable react/prop-types */
 import {
   Sheet,
-  SheetClose,
   SheetContent,
+  SheetFooter,
   SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { setImageURL } from "@/redux/image/imageURLSlice";
 import { API_URL } from "@/url";
 import FormField from "@/utils/FormField";
 import Tiptap from "@/utils/TextEditor";
+import UpdateBtn from "@/utils/UpdateBtn";
 import axios from "axios";
-import { Loader, SquarePen, UploadCloud } from "lucide-react";
-import { useRef, useState } from "react";
+import { Loader, UploadCloud } from "lucide-react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import GetImageToUpload from "../images/GetImageToUpload";
 
 function UpdateDoc({ data, setData }) {
-  const closeRef = useRef(null);
-  const dur = data?.duration ? data?.duration.split(" ") : ["", ""];
+  const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [newData, setNewData] = useState({
-    id: data?.id,
-    name: data?.name,
-    price: data?.price,
-    original_price: data?.original_price,
-    type: data?.type,
-    img_url: data?.img_url,
-    duration: dur[0],
-  });
+  const [newData, setNewData] = useState({});
+  const [durationUnit, setDurationunit] = useState("");
+  const [description, setDescription] = useState("");
+  const [isUploadImageOpen, setIsUploadImageOpen] = useState(false);
+  const imageURL = useSelector((state) => state.imageURL.imageURL);
 
-  // console.log(data.duration[0]);
+  useEffect(() => {
+    if (open) {
+      const dur = data?.duration ? data?.duration.split(" ") : ["", ""];
+      setNewData({
+        id: data?.id,
+        name: data?.name,
+        price: data?.price,
+        original_price: data?.original_price,
+        type: data?.type,
+        img_url: data?.img_url,
+        duration: dur[0],
+      });
+      setDescription(data?.description);
+      setDurationunit(dur[1]);
+      dispatch(setImageURL(data?.img_url));
+    }
+  }, [data, dispatch, open]);
 
-  // console.log(dur[1]);
-
-  const [durationUnit, setDurationunit] = useState(dur[1]);
-
-  const [description, setDescription] = useState(data?.description);
+  useEffect(() => {
+    if (!open) {
+      setNewData({});
+      setDescription("");
+      dispatch(setImageURL(""));
+    }
+  }, [dispatch, open]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,7 +64,7 @@ function UpdateDoc({ data, setData }) {
 
   const handleSubmit = async () => {
     if (
-      !newData.img_url ||
+      !imageURL ||
       !newData.type ||
       !newData.price ||
       !newData.original_price ||
@@ -67,7 +84,7 @@ function UpdateDoc({ data, setData }) {
       setLoading(true);
       const formData = new FormData();
       formData.append("id", newData.id);
-      formData.append("image_url", newData.img_url);
+      formData.append("image_url", imageURL);
       formData.append("name", newData.name);
       formData.append("description", description);
       formData.append("type", newData.type);
@@ -79,26 +96,21 @@ function UpdateDoc({ data, setData }) {
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );
-      // console.log(response);
       if (response.status === 200) {
         toast.success("Document Updated Successfully");
 
         setData((prevData) => {
-          // Check if prevData is an array
           if (!Array.isArray(prevData)) {
             console.error("prevData is not an array");
-            return prevData; // Return unchanged if it's not an array
+            return prevData;
           }
 
-          // Update the specific object with matching id
           return prevData.map((item) =>
             item.id === newData.id ? { ...item, ...newData } : item
           );
         });
 
-        if (closeRef.current) {
-          closeRef.current.click();
-        }
+        setOpen(false);
       }
     } catch (error) {
       console.log(error);
@@ -108,187 +120,150 @@ function UpdateDoc({ data, setData }) {
     }
   };
 
-  const handleUploadImage = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    try {
-      const formData = new FormData();
-      formData.append("image", file);
-      const response = await axios.post(
-        `${API_URL}/admin/courses/uplodecourseimage.php`,
-        formData,
-        { headers: { "content-type": "multipart/form-data" } }
-      );
-
-      // console.log(response.data);
-      if (response.status === 200) {
-        setNewData((prev) => ({ ...prev, img_url: response.data.url }));
-        toast.success("Image Uploaded Successfully");
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Error Uploading Image");
-    }
-  };
-
   const getDescriptionData = (html) => {
     setDescription(html);
   };
 
   return (
-    <Sheet>
-      <SheetTrigger className="bg-blue-500 hover:bg-blue-700 text-white font-bold p-1 text-xs rounded group relative">
-        <SquarePen />
-        <p className="absolute -left-[20%] -top-full mt-1 hidden group-hover:block bg-white/50 text-black rounded p-1">
-          Update
-        </p>
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
+        <div onClick={() => setOpen(true)}>
+          <UpdateBtn />
+        </div>
       </SheetTrigger>
-      <SheetContent className="z-[100] w-[70%] overflow-auto">
-        <SheetHeader>
-          <SheetTitle>Edit Document</SheetTitle>
+      <SheetContent className="z-[100] w-full sm:w-[70%] overflow-auto">
+        <SheetHeader className="text-2xl font-bold text-center sm:text-left">
+          Edit Document
         </SheetHeader>
-        {/* <div>
-          <select
-            name="type"
-            value={data.type}
-            onChange={handleChange}
-            className="w-96 h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
-          >
-            <option value={"0"}>None</option>
-            <option value={"1"}>Course</option>
-            <option value={"2"}>Batch</option>
-            <option value={"3"}>Test</option>
-          </select>
-        </div> */}
 
-        <FormField
-          htmlFor={"name"}
-          id={"name"}
-          type={"text"}
-          placeholder={"Name"}
-          name={"name"}
-          value={newData.name}
-          onChange={handleChange}
-        >
-          Name
-        </FormField>
-
-        <p className="block text-gray-700 text-sm font-bold">Description</p>
-        <div className=" w-full my-2">
-          <Tiptap placeholder={"Category"} getHtmlData={getDescriptionData} />
-        </div>
-
-        <div className="my-4 gap-5 flex justify-between items-center">
-          <FormField
-            htmlFor={"price"}
-            id={"price"}
-            type={"number"}
-            placeholder={"Price"}
-            name={"price"}
-            value={newData.price}
-            onChange={handleChange}
-          >
-            Price
-          </FormField>
-          <FormField
-            htmlFor={"original_price"}
-            id={"original_price"}
-            type={"number"}
-            placeholder={"Original Price"}
-            name={"original_price"}
-            value={newData.original_price}
-            onChange={handleChange}
-          >
-            Original Price
-          </FormField>
-          <FormField
-            htmlFor={"duration"}
-            id={"duration"}
-            type={"number"}
-            placeholder={"Duration"}
-            name={"duration"}
-            value={newData.duration}
-            onChange={handleChange}
-          >
-            Duration
-          </FormField>
-          <select
-            value={durationUnit}
-            onChange={(e) => setDurationunit(e.target.value)}
-            className="w-96 h-fit mt-2.5 py-1.5 px-1 flex justify-center items-center border rounded-md border-gray-300"
-          >
-            <option value={"Day"}>Day</option>
-            <option value={"Month"}>Month</option>
-            <option value={"Year"}>Year</option>
-          </select>
-        </div>
-        <div className="my-4 flex justify-between items-center">
-          <input
-            disabled={loading}
-            id="fileinput"
-            type="file"
-            accept="image/*"
-            onChange={handleUploadImage}
-            className="hidden"
-          />
-          <label
-            htmlFor="fileinput"
-            className="flex flex-col justify-center items-center w-60 h-36 cursor-pointer bg-gray-50 text-black px-4 py-2 rounded-lg border-2 border-gray-300 border-dashed hover:bg-blue-50"
-          >
-            {!loading ? (
-              <>
-                <UploadCloud />
-                <p>Upload Image</p>
-              </>
-            ) : (
-              <>
-                <Loader className="animate-spin h-6 w-6" />
-                <p>Uploading...</p>
-              </>
-            )}
-          </label>
-          {newData.img_url ? (
-            <img
-              src={newData.img_url}
-              alt="image"
-              className="w-60 h-36 rounded-lg m-auto"
-            />
-          ) : (
-            <div className="rounded-lg border-2 border-gray-300 border-dashed h-36 w-60 text-center items-center m-auto">
-              Preview
-            </div>
-          )}
-        </div>
-        <FormField
-          htmlFor={"img_url"}
-          id={"img_url"}
-          type={"text"}
-          placeholder={"Image Url"}
-          name={"img_url"}
-          value={newData.img_url}
-          onChange={handleChange}
-        >
-          Image Url
-        </FormField>
-        <div className="mt-[25px] flex w-full gap-2.5">
-          <SheetClose asChild>
-            <button
-              ref={closeRef}
-              disabled={loading}
-              className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md w-1/2"
+        <div className="w-full space-y-6 md:space-y-8">
+          {/* Name Field */}
+          <div>
+            <FormField
+              htmlFor={"name"}
+              id={"name"}
+              type={"text"}
+              placeholder={"Name"}
+              name={"name"}
+              value={newData.name}
+              onChange={handleChange}
             >
-              Close
-            </button>
-          </SheetClose>
+              Name
+            </FormField>
+          </div>
 
+          {/* Description Field */}
+          <div>
+            <p className="block text-gray-700 text-sm font-bold">Description</p>
+            <div className="w-full my-2">
+              <Tiptap
+                placeholder={"Category"}
+                getHtmlData={getDescriptionData}
+                initialContent={description}
+              />
+            </div>
+          </div>
+
+          {/* Pricing and Duration Fields */}
+          <div className="flex flex-col justify-center items-center md:flex-row md:space-x-6">
+            <FormField
+              htmlFor={"price"}
+              id={"price"}
+              type={"number"}
+              placeholder={"Price"}
+              name={"price"}
+              value={newData.price}
+              onChange={handleChange}
+            >
+              Price
+            </FormField>
+            <FormField
+              htmlFor={"original_price"}
+              id={"original_price"}
+              type={"number"}
+              placeholder={"Original Price"}
+              name={"original_price"}
+              value={newData.original_price}
+              onChange={handleChange}
+            >
+              Original Price
+            </FormField>
+            <FormField
+              htmlFor={"duration"}
+              id={"duration"}
+              type={"number"}
+              placeholder={"Duration"}
+              name={"duration"}
+              value={newData.duration}
+              onChange={handleChange}
+            >
+              Duration
+            </FormField>
+            <select
+              value={durationUnit}
+              onChange={(e) => setDurationunit(e.target.value)}
+              className="w-full py-2 px-3 border rounded-md border-gray-300"
+            >
+              <option value={"Day"}>Day</option>
+              <option value={"Month"}>Month</option>
+              <option value={"Year"}>Year</option>
+            </select>
+          </div>
+
+          {/* Image Upload */}
+          <div className="w-full md:max-w-2xl">
+            <div className="w-full my-4 flex  gap-4">
+              <div
+                onClick={() => setIsUploadImageOpen(true)}
+                className="flex flex-col justify-center items-center w-1/2 h-48 cursor-pointer bg-gray-50 text-black px-4 py-2 rounded-lg border-2 border-gray-300 border-dashed hover:bg-blue-50"
+              >
+                {!loading ? (
+                  <>
+                    <UploadCloud />
+                    <p>Upload Image</p>
+                  </>
+                ) : (
+                  <>
+                    <Loader className="animate-spin h-6 w-6" />
+                    <p>Uploading...</p>
+                  </>
+                )}
+              </div>
+            </div>
+            {imageURL ? (
+              <img
+                src={imageURL}
+                alt="image"
+                className="w-1/2 h-48 rounded-lg"
+              />
+            ) : (
+              <div className="rounded-lg border-2 border-gray-300 border-dashed h-48 w-1/2 text-center flex justify-center items-center">
+                Preview
+              </div>
+            )}
+          </div>
+        </div>
+
+        <GetImageToUpload
+          isOpen={isUploadImageOpen}
+          onClose={() => setIsUploadImageOpen(false)}
+        />
+        <SheetFooter className="flex w-full gap-4 mt-4">
           <button
             disabled={loading}
             onClick={handleSubmit}
-            className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md w-1/2"
+            className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md w-full"
           >
             Update
           </button>
-        </div>
+          <button
+            onClick={() => setOpen(false)}
+            disabled={loading}
+            className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md w-full"
+          >
+            Close
+          </button>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   );

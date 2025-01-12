@@ -6,9 +6,18 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { API_URL } from "../../url";
 import Tiptap from "../../utils/TextEditor";
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTrigger,
+} from "../ui/sheet";
+import UpdateBtn from "@/utils/UpdateBtn";
 
-function UpdateQns({ setUpdateQuestion, updatedQuestionData, testId }) {
+function UpdateQns({ updatedQuestionData, testId }) {
   const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
 
   const [question, setQuestion] = useState(updatedQuestionData.question_text);
   const [optionA, setOptionA] = useState(updatedQuestionData.a);
@@ -26,7 +35,6 @@ function UpdateQns({ setUpdateQuestion, updatedQuestionData, testId }) {
   };
   const getOptionAData = (html) => {
     setOptionA(html);
-    // console.log(html);
   };
   const getOptionBData = (html) => {
     setOptionB(html);
@@ -83,8 +91,6 @@ function UpdateQns({ setUpdateQuestion, updatedQuestionData, testId }) {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
-      // console.log(response);
-
       if (response.status === 201) {
         dispatch(
           updateQuestion({
@@ -100,7 +106,7 @@ function UpdateQns({ setUpdateQuestion, updatedQuestionData, testId }) {
           })
         );
         toast.success("Question Updated Successfully");
-        setUpdateQuestion((prev) => !prev);
+        setOpen(false);
       }
     } catch (error) {
       console.error("Error fetching Question:", error);
@@ -121,7 +127,7 @@ function UpdateQns({ setUpdateQuestion, updatedQuestionData, testId }) {
           formData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
-        // console.log(response);
+
         if (response.status === 200) {
           setSubjects(response.data.data);
         }
@@ -139,184 +145,193 @@ function UpdateQns({ setUpdateQuestion, updatedQuestionData, testId }) {
     getSubject();
   }, [testId]);
 
-  // console.log(question);
-  // console.log(subjectId);
-
   return (
-    <div className="w-[80%] flex flex-col justify-center items-center">
-      <h1 className="text-center my-5 text-3xl font-bold">Update Question</h1>
-      <div className="flex flex-col justify-center items-center mt-5 w-full">
-        <div className="bg-white shadow-md px-8 py-4 mb-4 gap-5 text-sm rounded-xl border border-gray-400 w-full">
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold my-2">
-              Question
-            </label>
-            <Tiptap
-              initialContent={question}
-              getHtmlData={getQuestionData}
-              placeholder="Write the question here..."
-            />
-          </div>
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
+        <div onClick={() => setOpen(true)}>
+          <UpdateBtn />
+        </div>
+      </SheetTrigger>
+      <SheetContent className="overflow-auto w-full sm:w-[70%] px-4">
+        <SheetHeader>
+          <h1 className="text-center text-xl sm:text-3xl font-bold">
+            Update Question
+          </h1>
+        </SheetHeader>
+        <div className="w-full flex flex-col justify-center items-center">
+          <div className="flex flex-col justify-center items-center w-full">
+            <div className="w-full">
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold my-2">
+                  Question
+                </label>
+                <Tiptap
+                  initialContent={question}
+                  getHtmlData={getQuestionData}
+                  placeholder="Write the question here..."
+                />
+              </div>
 
-          <div className="flex flex-col justify-center items-center md:flex-row md:space-x-24">
-            <div className="flex flex-col justify-start items-start w-full">
-              <label className="block text-gray-700 text-sm font-bold my-2">
-                Option A
-              </label>
-              <Tiptap
-                initialContent={optionA}
-                getHtmlData={getOptionAData}
-                placeholder={`Option A`}
-              />
-            </div>
-            <input
-              type="radio"
-              id={`ans_a`}
-              name={`answera`}
-              value={"a"}
-              className="hidden"
-              onChange={handleChange}
-              checked={answer === "a"}
-            />
-            <label htmlFor={`ans_a`} className="checkbox-label">
-              A
-            </label>
-          </div>
-          <div className="flex flex-col justify-center items-center md:flex-row md:space-x-24">
-            <div className="flex flex-col justify-start items-start w-full">
-              <label className="block text-gray-700 text-sm font-bold my-2">
-                Option B
-              </label>
-              <Tiptap
-                initialContent={optionB}
-                getHtmlData={getOptionBData}
-                placeholder={`Option B`}
-              />
-            </div>
-            <input
-              type="radio"
-              id={`ans_b`}
-              name={`answerb`}
-              value={"b"}
-              className="hidden"
-              onChange={handleChange}
-              checked={answer === "b"}
-            />
-            <label htmlFor={`ans_b`} className="checkbox-label">
-              B
-            </label>
-          </div>
-          <div className="flex flex-col justify-center items-center md:flex-row md:space-x-24">
-            <div className="flex flex-col justify-start items-start w-full">
-              <label className="block text-gray-700 text-sm font-bold my-2">
-                Option C
-              </label>
-              <Tiptap
-                initialContent={optionC}
-                getHtmlData={getOptionCData}
-                placeholder={`Option C`}
-              />
-            </div>
-            <input
-              type="radio"
-              id={`ans_c`}
-              name={`answera`}
-              value={"c"}
-              className="hidden"
-              onChange={handleChange}
-              checked={answer === "c"}
-            />
-            <label htmlFor={`ans_c`} className="checkbox-label">
-              C
-            </label>
-          </div>
-          <div className="flex flex-col justify-center items-center md:flex-row md:space-x-24">
-            <div className="flex flex-col justify-start items-start w-full">
-              <label className="block text-gray-700 text-sm font-bold my-2">
-                Option D
-              </label>
-              <Tiptap
-                initialContent={optionD}
-                getHtmlData={getOptionDData}
-                placeholder={`Option D`}
-              />
-            </div>
-            <input
-              type="radio"
-              id={`ans_d`}
-              name={`answerd`}
-              value={"d"}
-              className="hidden"
-              onChange={handleChange}
-              checked={answer === "d"}
-            />
-            <label htmlFor={`ans_d`} className="checkbox-label">
-              D
-            </label>
-          </div>
-          <div className="flex flex-col justify-center items-center md:flex-row md:space-x-24">
-            <div className="flex flex-col justify-start items-start w-full">
-              <label className="block text-gray-700 text-sm font-bold my-2">
-                Option E
-              </label>
-              <Tiptap
-                initialContent={optionE}
-                getHtmlData={getOptionEData}
-                placeholder={`Option E`}
-              />
-            </div>
-            <input
-              type="radio"
-              id={`ans_e`}
-              name={`answere`}
-              value={"e"}
-              className="hidden"
-              onChange={handleChange}
-              checked={answer === "e"}
-            />
-            <label htmlFor={`ans_e`} className="checkbox-label">
-              E
-            </label>
-          </div>
-          <div className="w-full mt-4">
-            <select
-              onChange={(e) => setSubjectId(e.target.value)}
-              value={subjectId}
-              className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md w-2/4"
-            >
-              {/* <option value="" disabled>
-                    Select Subject
-                  </option> */}
-              {subjects.map((subject) => (
-                <option key={subject.id} value={subject.id}>
-                  {subject.subject_name}
-                </option>
-              ))}
-            </select>
-          </div>
+              <div className="flex justify-between items-end gap-4 mb-4">
+                <div className="flex flex-col justify-start items-start w-full">
+                  <label className="block text-gray-700 text-sm font-bold my-2">
+                    Option A
+                  </label>
+                  <Tiptap
+                    initialContent={optionA}
+                    getHtmlData={getOptionAData}
+                    placeholder={`Option A`}
+                  />
+                </div>
+                <input
+                  type="radio"
+                  id={`ans_a`}
+                  name={`answera`}
+                  value={"a"}
+                  className="hidden"
+                  onChange={handleChange}
+                  checked={answer === "a"}
+                />
+                <label htmlFor={`ans_a`} className="checkbox-label">
+                  A
+                </label>
+              </div>
 
-          <div className="flex items-center justify-between mt-4">
-            <button
-              disabled={loading}
-              className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md"
-              onClick={handleSubmit}
-            >
-              {loading ? "Updating..." : "Update"}
-            </button>
+              <div className="flex justify-between items-end gap-4 mb-4">
+                <div className="flex flex-col justify-start items-start w-full">
+                  <label className="block text-gray-700 text-sm font-bold my-2">
+                    Option B
+                  </label>
+                  <Tiptap
+                    initialContent={optionB}
+                    getHtmlData={getOptionBData}
+                    placeholder={`Option B`}
+                  />
+                </div>
+                <input
+                  type="radio"
+                  id={`ans_b`}
+                  name={`answerb`}
+                  value={"b"}
+                  className="hidden"
+                  onChange={handleChange}
+                  checked={answer === "b"}
+                />
+                <label htmlFor={`ans_b`} className="checkbox-label">
+                  B
+                </label>
+              </div>
+
+              <div className="flex justify-between items-end gap-4 mb-4">
+                <div className="flex flex-col justify-start items-start w-full">
+                  <label className="block text-gray-700 text-sm font-bold my-2">
+                    Option C
+                  </label>
+                  <Tiptap
+                    initialContent={optionC}
+                    getHtmlData={getOptionCData}
+                    placeholder={`Option C`}
+                  />
+                </div>
+                <input
+                  type="radio"
+                  id={`ans_c`}
+                  name={`answera`}
+                  value={"c"}
+                  className="hidden"
+                  onChange={handleChange}
+                  checked={answer === "c"}
+                />
+                <label htmlFor={`ans_c`} className="checkbox-label">
+                  C
+                </label>
+              </div>
+
+              <div className="flex justify-between items-end gap-4 mb-4">
+                <div className="flex flex-col justify-start items-start w-full">
+                  <label className="block text-gray-700 text-sm font-bold my-2">
+                    Option D
+                  </label>
+                  <Tiptap
+                    initialContent={optionD}
+                    getHtmlData={getOptionDData}
+                    placeholder={`Option D`}
+                  />
+                </div>
+                <input
+                  type="radio"
+                  id={`ans_d`}
+                  name={`answerd`}
+                  value={"d"}
+                  className="hidden"
+                  onChange={handleChange}
+                  checked={answer === "d"}
+                />
+                <label htmlFor={`ans_d`} className="checkbox-label">
+                  D
+                </label>
+              </div>
+
+              <div className="flex justify-between items-end gap-4 mb-4">
+                <div className="flex flex-col justify-start items-start w-full">
+                  <label className="block text-gray-700 text-sm font-bold my-2">
+                    Option E
+                  </label>
+                  <Tiptap
+                    initialContent={optionE}
+                    getHtmlData={getOptionEData}
+                    placeholder={`Option E`}
+                  />
+                </div>
+                <input
+                  type="radio"
+                  id={`ans_e`}
+                  name={`answere`}
+                  value={"e"}
+                  className="hidden"
+                  onChange={handleChange}
+                  checked={answer === "e"}
+                />
+                <label htmlFor={`ans_e`} className="checkbox-label">
+                  E
+                </label>
+              </div>
+
+              <div className="w-full mt-4">
+                <select
+                  onChange={(e) => setSubjectId(e.target.value)}
+                  value={subjectId}
+                  className="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md w-full md:w-2/4 lg:w-1/4"
+                >
+                  {subjects.map((subject) => (
+                    <option key={subject.id} value={subject.id}>
+                      {subject.subject_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="flex justify-center items-center mb-5 space-x-16 ">
+        <SheetFooter className="flex flex-col gap-4 mt-5">
           <button
             disabled={loading}
-            onClick={() => setUpdateQuestion((perv) => !perv)}
-            className="bg-red-50 hover:bg-red-100 border border-red-200 text-black font-semibold py-2 px-4 rounded-md"
+            onClick={() => !loading && setOpen(false)}
+            className="border rounded-md bg-red-50 py-2 px-4 text-sm font-semibold hover:bg-red-100 border-red-200 text-black w-full disabled:opacity-50"
           >
             Close
           </button>
-        </div>
-      </div>
-    </div>
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            className="rounded-md bg-blue-50 py-2 px-4 text-sm font-semibold hover:bg-blue-100 border border-blue-200 text-black w-full"
+          >
+            Update Question
+          </button>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   );
 }
 

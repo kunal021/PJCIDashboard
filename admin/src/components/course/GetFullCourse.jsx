@@ -11,7 +11,6 @@ import toast from "react-hot-toast";
 import Loader from "../../utils/Loader";
 import ConfirmDelete from "../../utils/ConfirmDelete";
 import UpdateBtn from "../../utils/UpdateBtn";
-import LayoutAdjuster from "../../utils/LayoutAdjuster";
 // import parser from "html-react-parser";
 import { Avatar } from "antd";
 // import SeeAll from "../../utils/SeeAll";
@@ -120,7 +119,7 @@ function GetFullCourse() {
   // console.log(fullCourse);
 
   return (
-    <LayoutAdjuster>
+    <>
       {loading ? (
         <Loader />
       ) : (
@@ -240,7 +239,7 @@ function GetFullCourse() {
           updateCourseData={updateCourseData}
         />
       )}
-    </LayoutAdjuster>
+    </>
   );
 }
 

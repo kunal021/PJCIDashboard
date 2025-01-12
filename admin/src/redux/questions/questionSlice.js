@@ -12,7 +12,7 @@ export const questionSlice = createSlice({
       state.question = action.payload;
     },
     addQuestion: (state, action) => {
-      state.question.push(action.payload);
+      state.question.unshift(action.payload);
     },
     updateQuestion: (state, action) => {
       const index = state.question.findIndex(

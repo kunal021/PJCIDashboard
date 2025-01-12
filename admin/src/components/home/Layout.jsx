@@ -1,15 +1,22 @@
-/* eslint-disable react/prop-types */
-import { useLocation } from "react-router-dom";
-import Dashboard from "../Dashboard";
+import { useLocation, Outlet } from "react-router-dom";
+import SideBar from "../sidebar/Sidebar";
+import { HeadingProvider } from "@/context/HeadingProvider";
 
-const Layout = ({ children }) => {
+const Layout = () => {
   const location = useLocation();
 
+  if (location.pathname === "/login") {
+    return <Outlet />;
+  }
+
   return (
-    <div className="flex">
-      {location.pathname !== "/login" && <Dashboard />}
-      {children}
-    </div>
+    <HeadingProvider>
+      <div>
+        <SideBar>
+          <Outlet />
+        </SideBar>
+      </div>
+    </HeadingProvider>
   );
 };
 

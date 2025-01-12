@@ -12,7 +12,7 @@ const directorySlice = createSlice({
       state.directory = action.payload;
     },
     addDirectory: (state, action) => {
-      state.directory.push(action.payload);
+      state.directory.unshift(action.payload);
     },
     updateDirectory: (state, action) => {
       const index = state.directory.findIndex(

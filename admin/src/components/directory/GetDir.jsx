@@ -81,7 +81,7 @@ function GetDir({
           headers: { "content-type": "multipart/form-data" },
         }
       );
-      // console.log(response);
+
       if (response.status === 201) {
         setGetDataContent(response.data.data || []);
         setShowFolders(false);
@@ -161,10 +161,7 @@ function GetDir({
         }
       );
 
-      //   console.log(response);
-
       if (response.status === 201) {
-        // dispatch(deleteVideo(id));
         if (!getDataContent || getDataContent.length <= 1) {
           setSubDir("-1");
         }
@@ -177,17 +174,11 @@ function GetDir({
         error.response.data.message || "Error while deleting document"
       );
     }
-    // finally {
-    //   setLoading(false);
-    // }
   };
-
-  // console.log(subDir);
-  // console.log(location.state.subDir);
 
   const handleContentAdded = () => {
     setSubDir("0");
-    refreshDirContent(docId); // Refresh the content of the directory
+    refreshDirContent(docId);
   };
 
   if (loading) {
@@ -217,9 +208,9 @@ function GetDir({
                         data.directory_name,
                         data.parent_id,
                         data.has_subdirectories
-                      ); // Navigate to subdirectory
+                      );
                       if (data?.has_subdirectories == 0) {
-                        getDirDataContent(data.id); // Fetch content if no subdirectories
+                        getDirDataContent(data.id);
                       }
                     }}
                     className="flex flex-col justify-center items-center w-full"
@@ -284,12 +275,6 @@ function GetDir({
                     onClick={() => handleViewDoc(item.doc_id)}
                     className="cursor-pointer flex justify-between items-center w-full gap-6"
                   >
-                    {/* <div className="flex justify-center items-center w-48">
-                    <img
-                      src={item.img_url}
-                      className="rounded-lg border-transparent h-24 w-full"
-                    />
-                  </div> */}
                     <div className="flex flex-wrap text-wrap w-full">
                       {item.name}
                     </div>
@@ -336,21 +321,12 @@ function GetDir({
                   onClick={() => handleViewDoc(item.doc_id)}
                   className="cursor-pointer flex justify-between items-center w-full gap-6"
                 >
-                  {/* <div className="flex justify-center items-center w-48">
-                    <img
-                      src={item.img_url}
-                      className="rounded-lg border-transparent h-24 w-full"
-                    />
-                  </div> */}
                   <div className="flex flex-wrap text-wrap w-full">
                     {item.name}
                   </div>
                 </div>
                 <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
                 <div className=" cursor-pointer flex justify-between items-center w-full gap-6">
-                  {/* <div className="flex justify-center items-center">
-                    Price: {item.price}
-                  </div> */}
                   <div className="flex justify-center items-center">
                     Duration: {item.duration}
                   </div>
@@ -370,7 +346,6 @@ function GetDir({
           ))}
         </div>
       )}
-      {/* {console.log(getDataContent, value, subDir)} */}
 
       {/* Video */}
       {!showFolders && getDataContent && subDir == "0" && value == "Video" && (
@@ -418,20 +393,17 @@ function GetDir({
               className="flex justify-center items-center font-medium w-full border rounded-md border-zinc-300 ml-2 my-5 p-3 gap-3"
             >
               <div className="flex flex-col justify-center items-start gap-4 w-full">
-                {/* Test Name and ID */}
                 <div className="flex justify-between items-center w-full gap-4">
                   <Avatar className="bg-blue-500 text-white">
-                    {item.test_id} {/* Display the test ID */}
+                    {item.test_id}
                   </Avatar>
                   <div className="flex flex-wrap text-wrap w-full">
-                    <h2 className="text-lg font-bold">{item.test_name}</h2>{" "}
-                    {/* Display test name */}
+                    <h2 className="text-lg font-bold">{item.test_name}</h2>
                   </div>
                 </div>
 
                 <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
 
-                {/* Description */}
                 <div className="flex flex-col gap-2 w-full">
                   <div
                     className="text-gray-700"
@@ -441,7 +413,6 @@ function GetDir({
 
                 <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
 
-                {/* Test Details */}
                 <div className="cursor-pointer flex justify-between items-center gap-4 w-full">
                   <div className="flex justify-center gap-2 items-center">
                     <span className="font-semibold">Duration:</span>
@@ -451,45 +422,13 @@ function GetDir({
                     <span className="font-semibold">Price:</span>
                     <span>{item.price === "0" ? "Free" : `${item.price}`}</span>
                   </div>
-                  {/* <div className="flex justify-between items-center">
-                    <span className="font-semibold">Number of Questions:</span>
-                    <span>{item.number_of_questions}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="font-semibold">Total Marks:</span>
-                    <span>{item.total_mark}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="font-semibold">Marks Per Question:</span>
-                    <span>{item.mark_per_qns}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="font-semibold">Negative Mark:</span>
-                    <span>{item.negative_mark}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="font-semibold">Test Date:</span>
-                    <span>
-                      {item.test_date === "0000-00-00"
-                        ? "Not Scheduled"
-                        : item.test_date}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="font-semibold">Start Time:</span>
-                    <span>{item.start_time}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="font-semibold">End Time:</span>
-                    <span>{item.end_time}</span>
-                  </div> */}
                 </div>
               </div>
 
               <div className="flex flex-col justify-between items-end gap-10 w-fit">
                 <ConfirmDelete
-                  handleClick={
-                    () => handleDelete(item.test_id, contentType, item.id) // Adjusted to use test_id and id
+                  handleClick={() =>
+                    handleDelete(item.test_id, contentType, item.id)
                   }
                 />
               </div>
