@@ -136,9 +136,7 @@ function GetAllUsers() {
                           <TableCell>
                             <div
                               onClick={() =>
-                                navigate(`/users/${user.mo_number}`, {
-                                  state: { data: user },
-                                })
+                                navigate(`/users/${user.mo_number}`)
                               }
                               className="cursor-pointer"
                             >
