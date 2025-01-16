@@ -227,6 +227,7 @@ function SearchUser() {
                                   onClick={() =>
                                     navigate(`/users/${user.mo_number}`)
                                   }
+                                  className="cursor-pointer"
                                 >
                                   {user.firstname} {user.lastname}
                                 </TableCell>

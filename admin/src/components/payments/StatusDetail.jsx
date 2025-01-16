@@ -10,34 +10,34 @@ import { API_URL } from "@/url";
 import Loader from "@/utils/Loader";
 import axios from "axios";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 function StatusDetail({ status, txn_id, userid, purchase_id, purchase_type }) {
-  const [transaction, setTransaction] = useState(null);
+  const [transaction, setTransaction] = useState({});
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const getPayments = async () => {
     try {
       setLoading(true);
       const formData = new FormData();
-      formData.append("txn_id", txn_id);
-      formData.append("userid", userid);
+      formData.append("txnid", txn_id);
+      formData.append("user_id", userid);
       formData.append("purchase_id", purchase_id);
       formData.append("purchase_type", purchase_type);
 
       const response = await axios.post(
-        `${API_URL}/admin/payment/checkforupdatetopg.php`,
+        `${API_URL}/admin/payment/updatepaymentstatus.php`,
         formData,
         { headers: { "content-type": "multipart/form-data" } }
       );
 
-      if (response.data.status == true) {
-        setTransaction(response.data.msg[0]);
-      } else {
-        setTransaction([]);
+      if (response.data.status === 200) {
+        setTransaction(response.data.data);
+        toast.success(response.data.message);
       }
     } catch (error) {
       console.log("Error fetching orders:", error);
-      setTransaction([]);
+      toast.error(error?.response?.data?.message || "Error fetching orders");
     } finally {
       setLoading(false);
     }
@@ -92,6 +92,10 @@ function StatusDetail({ status, txn_id, userid, purchase_id, purchase_type }) {
                         </p>
                       </div>
                       <div>
+                        <p className="text-sm text-muted-foreground">Mode</p>
+                        <p className="font-medium">{transaction.mode}</p>
+                      </div>
+                      <div>
                         <p className="text-sm text-muted-foreground">Status</p>
                         <div className="flex items-center gap-2">
                           <p className="font-medium capitalize">
@@ -99,22 +103,18 @@ function StatusDetail({ status, txn_id, userid, purchase_id, purchase_type }) {
                           </p>
                         </div>
                       </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">
+                          Error Status
+                        </p>
+                        <p className="font-medium">{transaction.error}</p>
+                      </div>
                     </div>
                     <div className="space-y-4">
                       <div>
                         <p className="text-sm text-muted-foreground">Amount</p>
                         <p className="font-medium">
                           ₹{parseFloat(transaction.amount).toFixed(2)}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground">
-                          Card Category
-                        </p>
-                        <p className="font-medium">
-                          {transaction.cardCategory !== "NA"
-                            ? transaction.cardCategory
-                            : "Not Applicable"}
                         </p>
                       </div>
                       <div>
@@ -134,6 +134,26 @@ function StatusDetail({ status, txn_id, userid, purchase_id, purchase_type }) {
                             ? transaction.bank_name
                             : "Not Applicable"}
                         </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">
+                          Bank Reference Number
+                        </p>
+                        <p className="font-medium">
+                          {transaction.bank_ref_num}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">
+                          Easepay ID
+                        </p>
+                        <p className="font-medium">{transaction.easepayid}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">
+                          Card Type
+                        </p>
+                        <p className="font-medium">{transaction.card_type}</p>
                       </div>
                     </div>
                   </div>
@@ -157,6 +177,12 @@ function StatusDetail({ status, txn_id, userid, purchase_id, purchase_type }) {
                         </p>
                         <p className="font-medium">{transaction.phone}</p>
                       </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">UPI ID</p>
+                        <p className="font-medium">
+                          {transaction.upi_va || "Not Applicable"}
+                        </p>
+                      </div>
                     </div>
                     <div className="space-y-4">
                       <div>
@@ -171,11 +197,17 @@ function StatusDetail({ status, txn_id, userid, purchase_id, purchase_type }) {
                         </p>
                         <p className="font-medium">{transaction.productinfo}</p>
                       </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">
+                          Merchant Key
+                        </p>
+                        <p className="font-medium">{transaction.key}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-6 border-t">
+                {/* <div className="pt-6 border-t">
                   <h3 className="text-lg font-semibold mb-4">
                     Additional Details
                   </h3>
@@ -189,6 +221,24 @@ function StatusDetail({ status, txn_id, userid, purchase_id, purchase_type }) {
                           {transaction.cash_back_percentage}%
                         </p>
                       </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">PG Type</p>
+                        <p className="font-medium">
+                          {transaction.PG_TYPE !== "NA"
+                            ? transaction.PG_TYPE
+                            : "Not Applicable"}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">
+                          Bank Code
+                        </p>
+                        <p className="font-medium">
+                          {transaction.bankcode !== "NA"
+                            ? transaction.bankcode
+                            : "Not Applicable"}
+                        </p>
+                      </div>
                     </div>
                     <div className="space-y-4">
                       <div>
@@ -199,9 +249,29 @@ function StatusDetail({ status, txn_id, userid, purchase_id, purchase_type }) {
                           {transaction.deduction_percentage}%
                         </p>
                       </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">
+                          Name on Card
+                        </p>
+                        <p className="font-medium">
+                          {transaction.name_on_card !== "NA"
+                            ? transaction.name_on_card
+                            : "Not Applicable"}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">
+                          Card Number
+                        </p>
+                        <p className="font-medium">
+                          {transaction.cardnum !== "NA"
+                            ? transaction.cardnum
+                            : "Not Applicable"}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             ) : (
               <div className="text-center text-2xl font-bold">
