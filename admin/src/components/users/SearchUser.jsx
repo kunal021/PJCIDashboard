@@ -19,8 +19,10 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
+import { useNavigate } from "react-router-dom";
 
 function SearchUser() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const addCloseRef = useRef();
 
@@ -221,7 +223,11 @@ function SearchUser() {
                                 className="divide-x divide-gray-200"
                               >
                                 <TableCell>{idx + 1}</TableCell>
-                                <TableCell>
+                                <TableCell
+                                  onClick={() =>
+                                    navigate(`/users/${user.mo_number}`)
+                                  }
+                                >
                                   {user.firstname} {user.lastname}
                                 </TableCell>
                                 <TableCell>{user.mo_number}</TableCell>

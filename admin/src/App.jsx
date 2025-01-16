@@ -24,6 +24,7 @@ import {
   GetQuestions,
   GetTest,
   GetTestData,
+  GetTestReport,
   GetTestSeries,
   GetVideo,
   Home,
@@ -83,6 +84,10 @@ function App() {
         {
           path: "/test/question",
           element: <PrivateRoute element={GetQuestions} />,
+        },
+        {
+          path: "/test/report/:id",
+          element: <PrivateRoute element={GetTestReport} />,
         },
         {
           path: "/testseries",

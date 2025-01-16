@@ -31,6 +31,7 @@ import CreateNotification from "./components/notification/Create";
 import GetDemoBooks from "./components/books/demobooks/Get";
 import GetPayments from "./components/payments/Get";
 import UserInfo from "./components/users/UserInfo";
+import GetTestReport from "./components/tests/GetTestReport";
 
 export {
   GetCategory,
@@ -66,4 +67,5 @@ export {
   GetDemoBooks,
   GetPayments,
   UserInfo,
+  GetTestReport,
 };

@@ -4,9 +4,9 @@ import axios from "axios";
 import { API_URL } from "../../url";
 import Loader from "../../utils/Loader";
 import { Avatar } from "antd";
-import * as XLSX from "xlsx";
 import { LatexParser } from "@/utils/LatexParser";
 import { useHeading } from "@/hooks/use-heading";
+import { useNavigate } from "react-router-dom";
 
 const fetchTest = async (setTest, setLoading, testId) => {
   try {
@@ -30,6 +30,7 @@ const fetchTest = async (setTest, setLoading, testId) => {
 };
 
 function GetTestById({ testId }) {
+  const navigate = useNavigate();
   const { setHeading } = useHeading();
   const [loading, setLoading] = useState(false);
   const [test, setTest] = useState([]);
@@ -44,51 +45,6 @@ function GetTestById({ testId }) {
     );
     fetchTest(setTest, setLoading, testId);
   }, [setHeading, testId]);
-
-  const handleDownload = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("testid", test.id);
-      const response = await axios.post(
-        `${API_URL}/admin/test/gettestreport.php`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
-
-      if (response.status === 200) {
-        const data = response.data.data;
-
-        if (data && data.length > 0) {
-          const worksheet = XLSX.utils.json_to_sheet(data);
-          const workbook = XLSX.utils.book_new();
-          const columnWidths = [
-            { wpx: 120 },
-            { wpx: 120 },
-            { wpx: 100 },
-            { wpx: 100 },
-            { wpx: 100 },
-            { wpx: 100 },
-            { wpx: 100 },
-            { wpx: 100 },
-            { wpx: 100 },
-            { wpx: 100 },
-            { wpx: 100 },
-            { wpx: 100 },
-          ];
-
-          worksheet["!cols"] = columnWidths;
-          XLSX.utils.book_append_sheet(workbook, worksheet, "Test Results");
-          XLSX.writeFile(workbook, `${test.test_name}.xlsx`);
-        } else {
-          console.log("No data available for export.");
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   return (
     <>
@@ -107,7 +63,8 @@ function GetTestById({ testId }) {
                     </Avatar>
                     {test.id && (
                       <button
-                        onClick={handleDownload}
+                        onClick={() => navigate(`/test/report/${test.id}`)}
+                        // onClick={handleDownload}
                         className="px-4 py-2 bg-red-50 border border-red-200 rounded-md hover:bg-red-100"
                       >
                         Report
