@@ -65,12 +65,12 @@ export default function GetTestAnalysis({ testId }) {
               icon={<Users className="h-4 w-4 text-muted-foreground" />}
             />
             <StatCard
-              title="Average Time"
-              value={`${(parseFloat(test?.average_time) / 60).toFixed(2)} Min`}
+              title="Avg Time"
+              value={`${(parseFloat(test?.average_time) / 60).toFixed(0)} Min`}
               icon={<Clock className="h-4 w-4 text-muted-foreground" />}
             />
             <StatCard
-              title="Total Questions"
+              title="Total Qns"
               value={test?.total_questions}
               icon={<FileQuestion className="h-4 w-4 text-muted-foreground" />}
             />
@@ -119,12 +119,14 @@ export default function GetTestAnalysis({ testId }) {
 function StatCard({ title, value, icon }) {
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between gap-5 pb-2">
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+      <CardHeader className="flex flex-row items-center justify-between gap-2 sm:gap-5 pb-2">
+        <CardTitle className="text-xs sm:text-sm font-medium">
+          {title}
+        </CardTitle>
         {icon}
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
+        <div className="text-lg sm:text-2xl font-bold">{value}</div>
       </CardContent>
     </Card>
   );
