@@ -37,6 +37,27 @@ import { Link, useLocation } from "react-router-dom";
 import Logout from "../setting/Logout";
 import UpdateServerStatus from "../setting/UpdateServerStatus";
 import { Separator } from "../ui/separator";
+import { useAuth } from "@/hooks/use-auth";
+
+const permissionMapping = {
+  dashboard: "Dashboard",
+  category: "Category",
+  courses: "Courses",
+  test_series: "Test",
+  videos: "Video",
+  documents: "Docs",
+  books: "Books",
+  news: "News",
+  users: "User",
+  payments: "Payments",
+  gallery: "Gallery",
+  app_slider: "App Slider",
+  send_notification: "Send Notification",
+  aboutus: "About Us",
+  tandc: "Terms & Conditions",
+  privacy_policy: "Privacy Policy",
+  server_status: "Server Status",
+};
 
 // This is sample data.
 const data = {
@@ -221,7 +242,63 @@ const data = {
   ],
 };
 
+const filteredNavMain = (newData, accessPermission, permissionMapping) => {
+  return newData.filter((item) => {
+    const itemKey = Object.entries(permissionMapping).find(
+      // eslint-disable-next-line no-unused-vars
+      ([_, value]) => value === item.title
+    )?.[0];
+
+    if (item.title === "Logout") {
+      return true;
+    }
+
+    if (item.title === "Settings") {
+      // Check if any child items have permissions
+      const hasPermittedChildren = item.items?.some((subItem) => {
+        const subItemKey = Object.entries(permissionMapping).find(
+          // eslint-disable-next-line no-unused-vars
+          ([_, value]) => value === subItem.title
+        )?.[0];
+        return subItemKey && accessPermission.includes(subItemKey);
+      });
+
+      if (hasPermittedChildren) {
+        // Filter the items array to only include permitted items
+        item.items = item.items.filter((subItem) => {
+          const subItemKey = Object.entries(permissionMapping).find(
+            // eslint-disable-next-line no-unused-vars
+            ([_, value]) => value === subItem.title
+          )?.[0];
+          return subItemKey && accessPermission.includes(subItemKey);
+        });
+        return true;
+      }
+      return false;
+    }
+
+    if (!itemKey) {
+      return false;
+    }
+
+    const hasPermission = accessPermission.includes(itemKey);
+
+    if (item.items && item.items.length > 0) {
+      const filteredItems = item.items.filter(() => {
+        return hasPermission;
+      });
+
+      item.items = filteredItems;
+
+      return hasPermission && filteredItems.length > 0;
+    }
+
+    return hasPermission;
+  });
+};
+
 export function AppSidebar({ ...props }) {
+  const { authToken } = useAuth();
   const location = useLocation();
   const isActive = (url) => {
     return location.pathname === url;
@@ -230,6 +307,31 @@ export function AppSidebar({ ...props }) {
   const hasActiveChild = (items) => {
     return items.some((item) => isActive(item.url));
   };
+
+  const getFilteredNavData = () => {
+    try {
+      if (!data?.navMain || !Array.isArray(data.navMain)) {
+        console.error("Navigation data is invalid or missing");
+        return [];
+      }
+
+      if (!authToken?.accesses || !Array.isArray(authToken.accesses)) {
+        console.error("Access permissions are invalid or missing");
+        return [];
+      }
+
+      return filteredNavMain(
+        data.navMain, // Pass data.navMain instead of data
+        authToken.accesses,
+        permissionMapping
+      );
+    } catch (error) {
+      console.error("Error filtering navigation:", error);
+      return [];
+    }
+  };
+
+  const filteredNavData = getFilteredNavData();
 
   return (
     <Sidebar {...props}>
@@ -248,7 +350,7 @@ export function AppSidebar({ ...props }) {
       <SidebarContent className="bg-sidebar">
         <SidebarGroup>
           <SidebarMenu>
-            {data.navMain.map((item) => (
+            {filteredNavData.map((item) => (
               <Collapsible
                 key={item.title}
                 defaultOpen={hasActiveChild(item.items)}

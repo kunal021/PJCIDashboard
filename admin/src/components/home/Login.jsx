@@ -14,10 +14,10 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { API_URL } from "@/url";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function LoginForm() {
-  const navigate = useNavigate();
+  const { handleLogin } = useAuth();
   const [number, setNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [IP, setIP] = useState("");
@@ -38,10 +38,13 @@ export default function LoginForm() {
     };
     getDeviceData();
 
-    if (typeof window !== "undefined" && localStorage.getItem("authToken")) {
-      navigate("/");
-    }
-  }, [navigate]);
+    // if (typeof window !== "undefined") {
+    //   const authToken = JSON.parse(localStorage.getItem("authToken")); // Parse JSON to object
+    //   if (authToken?.jwt_token) {
+    //     navigate("/");
+    //   }
+    // }
+  }, []);
 
   useEffect(() => {
     if (countdown > 0) {
@@ -83,36 +86,36 @@ export default function LoginForm() {
     }
   };
 
-  const handleLogin = async () => {
-    if (otp.length < 6) {
-      toast.error("Please enter a valid 6-digit OTP");
-      return;
-    }
-    try {
-      setLoading(true);
-      const formData = new FormData();
-      formData.append("number", number);
-      formData.append("otp", otp);
-      const response = await axios.post(
-        `${API_URL}/admin/user/loginotp.php`,
-        formData,
-        {
-          headers: { "content-type": "multipart/form-data" },
-        }
-      );
+  // const handleLogin = async () => {
+  //   if (otp.length < 6) {
+  //     toast.error("Please enter a valid 6-digit OTP");
+  //     return;
+  //   }
+  //   try {
+  //     setLoading(true);
+  //     const formData = new FormData();
+  //     formData.append("number", number);
+  //     formData.append("otp", otp);
+  //     const response = await axios.post(
+  //       `${API_URL}/admin/user/loginotp.php`,
+  //       formData,
+  //       {
+  //         headers: { "content-type": "multipart/form-data" },
+  //       }
+  //     );
 
-      if (response.status === 200) {
-        toast.success("Login Successful");
-        localStorage.setItem("authToken", JSON.stringify(response.data));
-        navigate("/");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error(error.response?.data?.message || "An error occurred");
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     if (response.status === 200) {
+  //       toast.success("Login Successful");
+  //       localStorage.setItem("authToken", JSON.stringify(response.data));
+  //       navigate("/");
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     toast.error(error.response?.data?.message || "An error occurred");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleResendOTP = async () => {
     if (countdown > 0) {
@@ -179,7 +182,7 @@ export default function LoginForm() {
         </CardContent>
         <CardFooter className="flex flex-col space-y-2">
           <Button
-            onClick={otpStatus ? handleLogin : handleGetOTP}
+            onClick={otpStatus ? () => handleLogin(number, otp) : handleGetOTP}
             disabled={
               loading || (otpStatus ? otp.length < 6 : number.length < 10)
             }
