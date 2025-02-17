@@ -30,7 +30,7 @@ function Add({ setDoc }) {
   const imageURL = useSelector((state) => state.imageURL.imageURL);
 
   const [file, setFile] = useState(null);
-  const [durationUnit, setDurationunit] = useState("Day");
+  const [durationUnit, setDurationUnit] = useState("Day");
   const [description, setDescription] = useState("");
 
   const [isUploadImageOpen, setIsUploadImageOpen] = useState(false);
@@ -118,7 +118,7 @@ function Add({ setDoc }) {
           duration: "",
         });
 
-        setDurationunit("");
+        setDurationUnit("");
       }
     } catch (error) {
       console.log(error);
@@ -138,9 +138,9 @@ function Add({ setDoc }) {
         asChild
         className="cursor-pointer bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 px-4 rounded-md "
       >
-        <div onClick={() => setOpen(true)}>
+        <button type="button" onClick={() => setOpen(true)}>
           {useIsMobile() ? <Plus className="w-5 h-5" /> : "Add"}
-        </div>
+        </button>
       </SheetTrigger>
       <SheetContent className="z-[100] w-full sm:w-[70%] overflow-auto">
         <SheetHeader className="text-2xl font-bold text-center sm:text-left">
@@ -204,7 +204,7 @@ function Add({ setDoc }) {
 
             <select
               value={durationUnit}
-              onChange={(e) => setDurationunit(e.target.value)}
+              onChange={(e) => setDurationUnit(e.target.value)}
               className="w-full md:w-1/4 py-2 px-3 border rounded-md border-gray-300"
             >
               <option value={"Day"}>Day</option>
@@ -215,7 +215,8 @@ function Add({ setDoc }) {
 
           <div className="w-full md:max-w-2xl">
             <div className="my-4 flex flex-col md:flex-row gap-4">
-              <div
+              <button
+                type="button"
                 onClick={() => setIsUploadImageOpen(true)}
                 className="flex flex-col justify-center items-center w-full h-48 cursor-pointer bg-gray-50 text-black px-4 py-2 rounded-lg border-2 border-gray-300 border-dashed hover:bg-blue-50"
               >
@@ -230,11 +231,11 @@ function Add({ setDoc }) {
                     <p>Uploading...</p>
                   </>
                 )}
-              </div>
+              </button>
               {imageURL ? (
                 <img
                   src={imageURL}
-                  alt="image"
+                  alt="Document preview"
                   className="w-full h-48 rounded-lg mt-2"
                 />
               ) : (

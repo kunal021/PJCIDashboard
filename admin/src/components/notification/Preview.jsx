@@ -4,11 +4,7 @@ function Preview({ imgUrl, title, body }) {
     <div className="w-[375px] border rounded-lg p-4 shadow-sm font-sans bg-white">
       {/* Header Section */}
       <div className="flex items-center mb-3">
-        <img
-          src={"../../../public/fav.jpg"}
-          alt="Icon"
-          className="w-4 h-4 bg-gray-300 mr-2"
-        />
+        <img src={"/fav.jpg"} alt="Icon" className="w-4 h-4 bg-gray-300 mr-2" />
         <span className="text-sm">Pankaj Joshi e-Classes</span>
       </div>
 

@@ -313,6 +313,14 @@ function GetPayments() {
                               txn_id={user.txnid}
                               userid={user.user_id}
                               purchase_type={user.purchase_type}
+                              refetch={() =>
+                                getPayments(
+                                  setData,
+                                  setPaginationData,
+                                  setLoading,
+                                  filters
+                                )
+                              }
                             />
                           </TableCell>
                           <TableCell>{user.payment_date}</TableCell>

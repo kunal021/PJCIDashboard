@@ -8,6 +8,8 @@ import { Card, CardContent, CardFooter } from "../ui/card";
 import GetData from "./GetData";
 import Preview from "./Preview";
 import { useHeading } from "@/hooks/use-heading";
+import { useSelector } from "react-redux";
+import GetImageToUpload from "../images/GetImageToUpload";
 
 function CreateNotification() {
   const { setHeading } = useHeading();
@@ -15,10 +17,11 @@ function CreateNotification() {
   const [data, setData] = useState({
     title: "",
     body: "",
-    image_url: "",
     type: "0",
     type_id: "0",
   });
+  const [isUploadImageOpen, setIsUploadImageOpen] = useState(false);
+  const imageURL = useSelector((state) => state.imageURL.imageURL);
 
   useEffect(() => {
     setHeading(
@@ -50,7 +53,7 @@ function CreateNotification() {
     try {
       setLoading(true);
       const formData = new FormData();
-      formData.append("image_url", data.image_url);
+      formData.append("image_url", imageURL);
       formData.append("type", data.type);
       formData.append("type_id", data.type_id);
       formData.append("body", data.body);
@@ -65,7 +68,6 @@ function CreateNotification() {
         setData({
           title: "",
           body: "",
-          image_url: "",
           type: "0",
           type_id: "",
         });
@@ -78,36 +80,10 @@ function CreateNotification() {
     }
   };
 
-  const handleUploadImage = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    try {
-      setLoading(true);
-      const formData = new FormData();
-      formData.append("image", file);
-      const response = await axios.post(
-        `${API_URL}/admin/courses/uplodecourseimage.php`,
-        formData,
-        { headers: { "content-type": "multipart/form-data" } }
-      );
-
-      console.log(response);
-      if (response.status === 200) {
-        setData((prev) => ({ ...prev, image_url: response.data.url }));
-        toast.success("Image Uploaded Successfully");
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Error Uploading Image");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="w-full flex flex-col lg:flex-row-reverse justify-center items-start gap-6 px-4 my-10">
       <div className="w-full flex flex-col justify-center items-center gap-6 relative">
-        <Preview body={data.body} imgUrl={data.image_url} title={data.title} />
+        <Preview body={data.body} imgUrl={imageURL} title={data.title} />
       </div>
       <Card className="w-full lg:w-1/2">
         <CardContent className="w-full flex flex-col justify-center items-center gap-4 mt-4">
@@ -163,17 +139,9 @@ function CreateNotification() {
 
           {/* Image Upload Section */}
           <div className="my-4 flex flex-col sm:flex-row justify-between items-center w-full gap-4">
-            <input
-              disabled={loading}
-              id="fileinput"
-              type="file"
-              accept="image/*"
-              onChange={handleUploadImage}
-              className="hidden"
-            />
-            <label
-              htmlFor="fileinput"
-              className="flex flex-col justify-center items-center w-full sm:w-60 h-36 cursor-pointer bg-gray-50 text-black px-4 py-2 rounded-lg border-2 border-gray-300 border-dashed hover:bg-blue-50"
+            <div
+              onClick={() => setIsUploadImageOpen(true)}
+              className="flex flex-col justify-center items-center w-full h-36 cursor-pointer bg-gray-50 text-black px-4 py-2 rounded-lg border-2 border-gray-300 border-dashed hover:bg-blue-50"
             >
               {!loading ? (
                 <>
@@ -186,21 +154,13 @@ function CreateNotification() {
                   <p>Uploading...</p>
                 </>
               )}
-            </label>
+            </div>
           </div>
 
-          {/* Image URL Field */}
-          <FormField
-            htmlFor={"image_url"}
-            id={"image_url"}
-            type={"text"}
-            placeholder={"Image Url"}
-            name={"image_url"}
-            value={data.image_url}
-            onChange={handleChange}
-          >
-            Image Url
-          </FormField>
+          <GetImageToUpload
+            isOpen={isUploadImageOpen}
+            onClose={() => setIsUploadImageOpen(false)}
+          />
         </CardContent>
 
         {/* Footer Button */}

@@ -41,6 +41,12 @@ const getUsers = async (dispatch, setPaginationData, page, setLoading) => {
   }
 };
 
+const roles = [
+  { value: 3, label: "Admin" },
+  { value: 5, label: "Teacher" },
+  { value: 6, label: "Super Admin" },
+];
+
 function GetAllUsers() {
   const navigate = useNavigate();
   const { setHeading } = useHeading();
@@ -102,95 +108,89 @@ function GetAllUsers() {
             <SearchUser />
           </div>
           {users.length > 0 ? (
-            <>
-              <div className="w-full relative">
-                <div className="w-full absolute">
-                  <Table className="border border-gray-200 rounded">
-                    <TableHeader>
-                      <TableRow className="divide-x divide-gray-200">
-                        <TableHead className="w-[50px]  text-center">
-                          Id
-                        </TableHead>
-                        <TableHead className="text-center">Name</TableHead>
-                        <TableHead className="text-center">
-                          Mobile No.
-                        </TableHead>
-                        <TableHead className="text-center">Email</TableHead>
-                        <TableHead className="text-center">
-                          Resgister Date
-                        </TableHead>
-                        <TableHead className="text-center">Status</TableHead>
-                        <TableHead className="text-center">Update</TableHead>
-                        <TableHead className="text-center">More</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody className="divide-y divide-gray-200">
-                      {users.map((user, idx) => (
-                        <TableRow
-                          key={user.id}
-                          className="divide-x divide-gray-200 text-center"
-                        >
-                          <TableCell>
-                            {(currentPage - 1) * 10 + (idx + 1)}
-                          </TableCell>
-                          <TableCell>
-                            <div
-                              onClick={() =>
-                                navigate(`/users/${user.mo_number}`)
-                              }
-                              className="cursor-pointer"
-                            >
-                              {user.firstname} {user.lastname}
-                            </div>
-                          </TableCell>
-                          <TableCell>{user.mo_number}</TableCell>
-                          <TableCell>{user.email}</TableCell>
-                          <TableCell>
-                            {user.registration_date.slice(0, 10)}
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex flex-col items-center gap-0.5">
-                              <span className="text-xs font-medium">
-                                {user.isactive === "1" ? "Public" : "Private"}
-                              </span>
+            <div className="w-full relative">
+              <div className="w-full absolute">
+                <Table className="border border-gray-200 rounded">
+                  <TableHeader>
+                    <TableRow className="divide-x divide-gray-200">
+                      <TableHead className="w-[50px]  text-center">
+                        Id
+                      </TableHead>
+                      <TableHead className="text-center">Name</TableHead>
+                      <TableHead className="text-center">Mobile No.</TableHead>
+                      <TableHead className="text-center">Email</TableHead>
+                      <TableHead className="text-center">
+                        Resgister Date
+                      </TableHead>
+                      <TableHead className="text-center">Status</TableHead>
+                      <TableHead className="text-center">Update</TableHead>
+                      <TableHead className="text-center">More</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody className="divide-y divide-gray-200">
+                    {users.map((user, idx) => (
+                      <TableRow
+                        key={user.id}
+                        className="divide-x divide-gray-200 text-center"
+                      >
+                        <TableCell>
+                          {(currentPage - 1) * 10 + (idx + 1)}
+                        </TableCell>
+                        <TableCell>
+                          <button
+                            onClick={() => navigate(`/users/${user.mo_number}`)}
+                            className="cursor-pointer"
+                          >
+                            {user.firstname} {user.lastname}
+                          </button>
+                        </TableCell>
+                        <TableCell>{user.mo_number}</TableCell>
+                        <TableCell>{user.email}</TableCell>
+                        <TableCell>
+                          {user.registration_date.slice(0, 10)}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-col items-center gap-0.5">
+                            <span className="text-xs font-medium">
+                              {user.isactive === "1" ? "Public" : "Private"}
+                            </span>
 
-                              <button
-                                onClick={() => {
-                                  handleChangeStatus(user.id, user.isactive);
-                                }}
-                                className="toggle-switch scale-75"
-                              >
-                                <input
-                                  type="checkbox"
-                                  checked={user.isactive === "1"}
-                                  readOnly
-                                />
-                                <div className="toggle-switch-background">
-                                  <div className="toggle-switch-handle"></div>
-                                </div>
-                              </button>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <UpdateUser updateUserData={user} />
-                          </TableCell>
-                          <TableCell>
-                            <More user={user} />
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                  <div className="my-4 w-full flex justify-center items-center ">
-                    <Pagination
-                      totalPage={paginationData.total_pages}
-                      currPage={currentPage}
-                      setCurrPage={setCurrentPage}
-                    />
-                  </div>
+                            <button
+                              onClick={() => {
+                                handleChangeStatus(user.id, user.isactive);
+                              }}
+                              className="toggle-switch scale-75"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={user.isactive === "1"}
+                                readOnly
+                              />
+                              <div className="toggle-switch-background">
+                                <div className="toggle-switch-handle"></div>
+                              </div>
+                            </button>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <UpdateUser updateUserData={user} />
+                        </TableCell>
+                        <TableCell>
+                          <More user={user} roles={roles} />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+                <div className="my-4 w-full flex justify-center items-center ">
+                  <Pagination
+                    totalPage={paginationData.total_pages}
+                    currPage={currentPage}
+                    setCurrPage={setCurrentPage}
+                  />
                 </div>
               </div>
-            </>
+            </div>
           ) : (
             <div className="text-2xl font-bold text-center mt-20">
               No Data Available

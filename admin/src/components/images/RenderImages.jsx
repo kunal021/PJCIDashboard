@@ -3,8 +3,7 @@ import { setImageURL } from "@/redux/image/imageURLSlice";
 import ConfirmDelete from "@/utils/ConfirmDelete";
 import FormField from "@/utils/FormField";
 import Pagination from "@/utils/Pagination";
-import { Avatar } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 function RenderImages({
   image,
@@ -17,8 +16,6 @@ function RenderImages({
   handleTagChange,
 }) {
   const dispatch = useDispatch();
-  const imageURL = useSelector((state) => state.imageURL.imageURL);
-  const imageURLClassname = "bg-blue-200";
 
   const handleSelectImage = (url) => {
     dispatch(setImageURL(url));
@@ -31,6 +28,7 @@ function RenderImages({
 
   return (
     <div className="w-[90%] flex flex-col justify-center items-center mx-auto">
+      {/* Search Box */}
       <div className="w-full flex flex-col sm:flex-row justify-center items-center gap-5">
         <FormField
           htmlFor={"tag"}
@@ -48,59 +46,43 @@ function RenderImages({
           Search
         </button>
       </div>
-      <div className="w-full flex flex-col justify-center items-center my-4">
-        <div className="w-full flex flex-col justify-center items-center">
-          {image.length > 0 ? (
-            <div className="flex flex-wrap gap-2 justify-center items-center w-full">
-              {image.map((item, idx) => (
-                <div
-                  key={idx}
-                  className={`${
-                    imageURL === item.img_url ? imageURLClassname : ""
-                  } flex justify-center items-center font-medium w-48 border rounded-md border-zinc-300 mb-4 p-1 sm:p-2 gap-3`}
-                >
-                  <div className="flex flex-col justify-center items-start gap-2 w-full">
-                    <div className="flex justify-between items-center w-full gap-4">
-                      <Avatar className="bg-gray-500 text-white max-sm:scale-90">
-                        {(currentPage - 1) * 10 + (idx + 1)}
-                      </Avatar>
 
-                      <ConfirmDelete
-                        handleClick={() => handleDeleteImage(item.id)}
-                      />
-                    </div>
-                    <hr className="w-full text-center m-auto text-bg-slate-400 bg-slate-300 border-slate-300" />
-                    <div
-                      // onClick={() => window.open(item.img_url, "_blank")}
-                      onClick={() => handleSelectImage(item.img_url)}
-                      className="cursor-pointer flex justify-between items-center w-full gap-6"
-                    >
-                      <div className="flex justify-center items-center w-full">
-                        <img
-                          src={item.img_url}
-                          className="h-48 w-48 rounded-md"
-                        />
-                      </div>
-                    </div>
-                  </div>
+      {/* Image Gallery */}
+      <div className="w-full my-4 flex flex-col justify-center items-center gap-2">
+        {image.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-1 border border-gray-400">
+            {image.map((item, idx) => (
+              <div key={idx} className="group relative border border-gray-400">
+                {/* Confirm Delete - Appears on Hover */}
+                <div className="absolute top-2 right-2 hidden group-hover:flex">
+                  <ConfirmDelete
+                    handleClick={() => handleDeleteImage(item.id)}
+                  />
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-2xl font-bold text-center mt-20">
-              No Data Available
-            </div>
-          )}
-          <div>
-            {image.length > 0 && (
-              <Pagination
-                totalPage={paginationData.total_pages}
-                currPage={currentPage}
-                setCurrPage={setCurrentPage}
-              />
-            )}
+
+                {/* Image Preview */}
+                <img
+                  src={item.img_url}
+                  onClick={() => handleSelectImage(item.img_url)}
+                  className="w-full h-full object-cover cursor-pointer"
+                />
+              </div>
+            ))}
           </div>
-        </div>
+        ) : (
+          <div className="text-2xl font-bold text-center mt-20">
+            No Data Available
+          </div>
+        )}
+
+        {/* Pagination */}
+        {image.length > 0 && (
+          <Pagination
+            totalPage={paginationData.total_pages}
+            currPage={currentPage}
+            setCurrPage={setCurrentPage}
+          />
+        )}
       </div>
     </div>
   );

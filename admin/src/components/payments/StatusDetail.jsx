@@ -9,14 +9,21 @@ import {
 import { API_URL } from "@/url";
 import Loader from "@/utils/Loader";
 import axios from "axios";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import toast from "react-hot-toast";
 
-function StatusDetail({ status, txn_id, userid, purchase_id, purchase_type }) {
+function StatusDetail({
+  status,
+  txn_id,
+  userid,
+  purchase_id,
+  purchase_type,
+  refetch,
+}) {
   const [transaction, setTransaction] = useState({});
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const getPayments = async () => {
+  const getPayments = useCallback(async () => {
     try {
       setLoading(true);
       const formData = new FormData();
@@ -33,6 +40,8 @@ function StatusDetail({ status, txn_id, userid, purchase_id, purchase_type }) {
 
       if (response.data.status === 200) {
         setTransaction(response.data.data);
+        // Call refetch after successful API call
+        // await refetch();
         toast.success(response.data.message);
       }
     } catch (error) {
@@ -41,14 +50,19 @@ function StatusDetail({ status, txn_id, userid, purchase_id, purchase_type }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [txn_id, userid, purchase_id, purchase_type]);
 
-  const handleOpenChange = (open) => {
-    setIsOpen(open);
-    if (open) {
-      getPayments();
-    }
-  };
+  const handleOpenChange = useCallback(
+    (open) => {
+      setIsOpen(open);
+      if (open) {
+        getPayments();
+      } else {
+        refetch();
+      }
+    },
+    [getPayments, refetch]
+  );
 
   return (
     <Sheet open={isOpen} onOpenChange={handleOpenChange}>
