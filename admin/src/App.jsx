@@ -38,7 +38,7 @@ import {
 import Get from "./components/slider/Get";
 import MakeUserPurchase from "./components/setting/MakeUserPurchase";
 import CourseTab from "./components/course/CourseTab";
-import Demo from "./components/chat/Demo";
+import ChatInterface from "./components/chat/ChatInterface";
 
 function App() {
   const router = createBrowserRouter([
@@ -174,7 +174,7 @@ function App() {
           path: "/setting/user-purchase",
           element: <PrivateRoute element={MakeUserPurchase} />,
         },
-        { path: "/demo", element: <PrivateRoute element={Demo} /> },
+        { path: "/chat", element: <PrivateRoute element={ChatInterface} /> },
       ],
     },
   ]);

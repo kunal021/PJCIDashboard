@@ -15,7 +15,7 @@ export function AuthProvider({ children }) {
     const storedToken = JSON.parse(localStorage.getItem("authToken"));
     if (storedToken?.jwt_token) {
       setAuthToken(storedToken);
-      navigate("/");
+      // navigate("/");
     }
   }, [navigate]);
 

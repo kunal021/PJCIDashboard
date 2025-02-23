@@ -244,14 +244,15 @@ const data = {
 
 const filteredNavMain = (newData, accessPermission, permissionMapping) => {
   return newData.filter((item) => {
+    // Always show Logout and Server Status
+    if (item.title === "Logout" || item.title === "Server Status") {
+      return true;
+    }
+
     const itemKey = Object.entries(permissionMapping).find(
       // eslint-disable-next-line no-unused-vars
       ([_, value]) => value === item.title
     )?.[0];
-
-    if (item.title === "Logout") {
-      return true;
-    }
 
     if (item.title === "Settings") {
       // Check if any child items have permissions
@@ -311,17 +312,25 @@ export function AppSidebar({ ...props }) {
   const getFilteredNavData = () => {
     try {
       if (!data?.navMain || !Array.isArray(data.navMain)) {
-        console.error("Navigation data is invalid or missing");
+        console.log("Navigation data is invalid or missing", data.navMain);
         return [];
       }
 
-      if (!authToken?.accesses || !Array.isArray(authToken.accesses)) {
-        console.error("Access permissions are invalid or missing");
+      // Check if authToken is null or undefined
+      if (
+        !authToken ||
+        !authToken.accesses ||
+        !Array.isArray(authToken.accesses)
+      ) {
+        console.log(
+          "Access permissions are invalid or missing",
+          authToken?.accesses
+        );
         return [];
       }
 
       return filteredNavMain(
-        data.navMain, // Pass data.navMain instead of data
+        data.navMain,
         authToken.accesses,
         permissionMapping
       );
