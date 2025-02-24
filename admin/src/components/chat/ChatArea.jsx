@@ -10,7 +10,8 @@ export default function ChatArea({
   onSendMessage,
   onBackToList,
   isMobileView,
-  currentUserId, // Pass the current user's ID
+  currentUserId,
+  sendLoading,
 }) {
   const [newMessage, setNewMessage] = useState("");
 
@@ -59,6 +60,13 @@ export default function ChatArea({
 
       {/* Messages Section */}
       <div className="flex-1 overflow-y-auto p-4 bg-gray-50 h-screen flex flex-col-reverse">
+        {sendLoading && (
+          <div className="mb-4 flex justify-end">
+            <div className="max-w-xs p-3 rounded-lg shadow-sm border bg-gray-100 text-black border-gray-300">
+              <div className="text-xs text-gray-400">Sending...</div>
+            </div>
+          </div>
+        )}
         {messages?.reverse().map((message) => {
           const isCurrentUser = message.sender_id === currentUserId;
 
@@ -114,10 +122,12 @@ export default function ChatArea({
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
             className="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            disabled={sendLoading}
           />
           <button
             onClick={handleSendMessage}
             className="p-2 rounded-full bg-indigo-600 text-white"
+            disabled={sendLoading}
           >
             <Send size={20} />
           </button>

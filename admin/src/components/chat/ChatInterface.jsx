@@ -15,6 +15,7 @@ export default function ChatInterface() {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showChatList, setShowChatList] = useState(true);
+  const [sendLoading, setSendLoading] = useState(false);
 
   useEffect(() => {
     loadChats();
@@ -84,6 +85,7 @@ export default function ChatInterface() {
 
   const handleSendMessage = async (content) => {
     try {
+      setSendLoading(true);
       const formData = new FormData();
       formData.append("action", "send_message");
       formData.append("chat_id", selectedChat.chat_id);
@@ -106,6 +108,9 @@ export default function ChatInterface() {
       }
     } catch (error) {
       console.error("Error sending message:", error);
+      setSendLoading(false);
+    } finally {
+      setSendLoading(false);
     }
   };
 
@@ -155,6 +160,7 @@ export default function ChatInterface() {
         onBackToList={() => setShowChatList(true)}
         isMobileView={isMobileView}
         currentUserId={authToken?.number}
+        sendLoading={sendLoading}
       />
       {isMobileView && showChatList && (
         <MobileChatList

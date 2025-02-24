@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Search } from "lucide-react";
+import { RefreshCcw } from "lucide-react";
 import { formatTime, getInitials } from "@/lib/utils";
 import { SidebarTrigger } from "../ui/sidebar";
 
@@ -19,11 +19,15 @@ export default function ChatList({
           onClick={onRefresh}
           className="p-1 rounded-md bg-indigo-100 text-indigo-600 hover:bg-indigo-200"
         >
-          {loading ? "Loading..." : "Refresh"}
+          {loading ? (
+            <RefreshCcw className="animate-spin h-6 w-6" />
+          ) : (
+            <RefreshCcw className="h-6 w-6" />
+          )}
         </button>
       </div>
 
-      <div className="p-4 border-b border-gray-200">
+      {/* <div className="p-4 border-b border-gray-200">
         <div className="relative">
           <input
             type="text"
@@ -32,7 +36,7 @@ export default function ChatList({
           />
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
         </div>
-      </div>
+      </div> */}
 
       <div className="overflow-y-auto h-full pb-16">
         {chats.length > 0 ? (
