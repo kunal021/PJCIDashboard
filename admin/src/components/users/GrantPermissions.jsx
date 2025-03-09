@@ -57,6 +57,7 @@ function GrantPermission({ userId, defaultPermissions }) {
               <Switch
                 checked={permissions[key] === "1"}
                 onCheckedChange={() => handleToggle(key)}
+                className="data-[state=checked]:bg-green-500"
               />
             </div>
           ))}

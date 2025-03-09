@@ -10,12 +10,37 @@ import GrantPermission from "./GrantPermissions";
 function More({ user, roles, isSpecialUser = false }) {
   const [loading, setLoading] = useState(false);
   const [authRole, setAuthRole] = useState(null);
+  const [userPermissions, setUserPermissions] = useState(null);
   const [selectedRole, setSelectedRole] = useState(roles[0]?.value);
 
   useEffect(() => {
     const role = JSON.parse(localStorage.getItem("authToken"));
     setAuthRole(role?.role);
   }, []);
+
+  useEffect(() => {
+    const getUserPermissions = async () => {
+      try {
+        const formData = new FormData();
+        formData.append("user_id", user.mo_number);
+        formData.append("role", authRole);
+
+        const response = await axios.post(
+          `${API_URL}/admin/user/getuserpermissions.php`,
+          formData,
+          { headers: { "content-type": "multipart/form-data" } }
+        );
+
+        console.log(response);
+
+        setUserPermissions(response.data.data[0]);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getUserPermissions();
+  }, [authRole, user.mo_number]);
 
   const handleGrantUserLogin = async () => {
     try {
@@ -101,25 +126,26 @@ function More({ user, roles, isSpecialUser = false }) {
                     </button>
                   </div>
                   <GrantPermission
-                    userId={"9998021218"}
+                    userId={user.mo_number}
                     defaultPermissions={{
-                      courses: "0",
-                      dashboard: "0",
-                      category: "0",
-                      test_series: "0",
-                      videos: "0",
-                      documents: "0",
-                      books: "0",
-                      news: "0",
-                      users: "0",
-                      payments: "0",
-                      gallery: "0",
-                      app_slider: "0",
-                      send_notification: "0",
-                      aboutus: "0",
-                      tandc: "0",
-                      privacy_policy: "0",
-                      server_status: "0",
+                      courses: userPermissions?.courses || "0",
+                      dashboard: userPermissions?.dashboard || "0",
+                      category: userPermissions?.category || "0",
+                      test_series: userPermissions?.test_series || "0",
+                      videos: userPermissions?.videos || "0",
+                      documents: userPermissions?.documents || "0",
+                      books: userPermissions?.books || "0",
+                      news: userPermissions?.news || "0",
+                      users: userPermissions?.users || "0",
+                      payments: userPermissions?.payments || "0",
+                      gallery: userPermissions?.gallery || "0",
+                      app_slider: userPermissions?.app_slider || "0",
+                      send_notification:
+                        userPermissions?.send_notification || "0",
+                      aboutus: userPermissions?.aboutus || "0",
+                      tandc: userPermissions?.tandc || "0",
+                      privacy_policy: userPermissions?.privacy_policy || "0",
+                      server_status: userPermissions?.server_status || "0",
                     }}
                   />
                 </>
