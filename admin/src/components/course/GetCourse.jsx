@@ -132,7 +132,7 @@ function GetCourse() {
                   course && (
                     <div
                       key={idx}
-                      className="flex justify-center items-center font-medium w-44 sm:w-56 border rounded-md border-zinc-300 my-4 py-2 px-1"
+                      className="flex justify-center items-center font-medium w-52 sm:w-64 border rounded-md shadow-md border-zinc-300 my-4 py-2 px-1"
                     >
                       <div className="flex flex-col justify-center items-start gap-2 w-full">
                         <div className="flex justify-between items-center w-full gap-2">
@@ -177,7 +177,7 @@ function GetCourse() {
                             <img
                               src={course.img_url}
                               alt={"image"}
-                              className="rounded-lg border-transparent w-full h-48 sm:h-28"
+                              className="rounded-lg border-transparent w-full h-48 sm:h-56"
                             />
                           </div>
                           <div className="text-center text-sm w-full whitespace-pre-wrap">

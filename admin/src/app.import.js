@@ -32,6 +32,7 @@ import GetDemoBooks from "./components/books/demobooks/Get";
 import GetPayments from "./components/payments/Get";
 import UserInfo from "./components/users/UserInfo";
 import GetTestReport from "./components/tests/GetTestReport";
+import SpecialUsers from "./components/users/SpecialUsers";
 
 export {
   GetCategory,
@@ -68,4 +69,5 @@ export {
   GetPayments,
   UserInfo,
   GetTestReport,
+  SpecialUsers,
 };

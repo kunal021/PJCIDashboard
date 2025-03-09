@@ -173,6 +173,10 @@ const data = {
           title: "All Users",
           url: "/users",
         },
+        {
+          title: "Special Users",
+          url: "/users/special",
+        },
       ],
     },
     {

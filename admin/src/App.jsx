@@ -32,6 +32,7 @@ import {
   Login,
   PrivacyPolicy,
   PrivateRoute,
+  SpecialUsers,
   TermsAndConditions,
   UserInfo,
 } from "./app.import";
@@ -137,6 +138,10 @@ function App() {
 
         // Users
         { path: "/users", element: <PrivateRoute element={GetAllUsers} /> },
+        {
+          path: "/users/special",
+          element: <PrivateRoute element={SpecialUsers} />,
+        },
         {
           path: "/users/:id",
           element: <PrivateRoute element={UserInfo} />,
