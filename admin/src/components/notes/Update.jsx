@@ -27,6 +27,7 @@ function UpdateDoc({ data, setData }) {
     type: data?.type,
     // img_url: data?.img_url,
     duration: dur[0],
+    download: data?.download,
   });
 
   const [durationUnit, setDurationunit] = useState(dur[1]);
@@ -47,7 +48,8 @@ function UpdateDoc({ data, setData }) {
       !newData.type ||
       // !newData.price ||
       !newData.name ||
-      !newData.duration
+      !newData.duration ||
+      !newData.download
     ) {
       toast.error("Please fill all fields");
       return;
@@ -62,6 +64,7 @@ function UpdateDoc({ data, setData }) {
       // formData.append("description", description);
       formData.append("duration", `${newData.duration} ${durationUnit}`);
       // formData.append("price", newData.price);
+      formData.append("download", newData.download);
       const response = await axios.post(
         `${API_URL}/admin/docs/updatedoc.php`,
         formData,
@@ -201,54 +204,22 @@ function UpdateDoc({ data, setData }) {
             <option value={"Year"}>Year</option>
           </select>
         </div>
-        {/* <div className="my-4 flex justify-between items-center">
-          <input
-            disabled={loading}
-            id="fileinput"
-            type="file"
-            accept="image/*"
-            onChange={handleUploadImage}
-            className="hidden"
-          />
-          <label
-            htmlFor="fileinput"
-            className="flex flex-col justify-center items-center w-60 h-36 cursor-pointer bg-gray-50 text-black px-4 py-2 rounded-lg border-2 border-gray-300 border-dashed hover:bg-blue-50"
-          >
-            {!loading ? (
-              <>
-                <UploadCloud />
-                <p>Upload Image</p>
-              </>
-            ) : (
-              <>
-                <Loader className="animate-spin h-6 w-6" />
-                <p>Uploading...</p>
-              </>
-            )}
-          </label>
-          {newData.img_url ? (
-            <img
-              src={newData.img_url}
-              alt="image"
-              className="w-60 h-36 rounded-lg m-auto"
-            />
-          ) : (
-            <div className="rounded-lg border-2 border-gray-300 border-dashed h-36 w-60 text-center items-center m-auto">
-              Preview
-            </div>
-          )}
-        </div>
-        <FormField
-          htmlFor={"img_url"}
-          id={"img_url"}
-          type={"text"}
-          placeholder={"Image Url"}
-          name={"img_url"}
-          value={newData.img_url}
-          onChange={handleChange}
+        <label
+          htmlFor="download"
+          className="block text-sm font-medium text-gray-700"
         >
-          Image Url
-        </FormField> */}
+          Downloadable
+        </label>
+        <select
+          value={newData.download}
+          id="download"
+          name="download"
+          onChange={handleChange}
+          className="w-full md:w-1/4 py-2 px-3 border rounded-md border-gray-300"
+        >
+          <option value="0">NO</option>
+          <option value="1">YES</option>
+        </select>
         <div className="mt-[25px] flex w-full gap-2.5">
           <SheetClose ref={closeRef} asChild>
             <button

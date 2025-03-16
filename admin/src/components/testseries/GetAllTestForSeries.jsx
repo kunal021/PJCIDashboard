@@ -84,7 +84,7 @@ function GetAllTestForSeries() {
                       <div className="flex justify-start items-center font-bold w-full cursor-pointer">
                         <div
                           onClick={() =>
-                            navigate(`/get-test-question?id=${test.test_id}`)
+                            navigate(`/test/question?id=${test.test_id}`)
                           }
                           className="w-full"
                         >

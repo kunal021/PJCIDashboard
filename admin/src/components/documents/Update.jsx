@@ -39,6 +39,7 @@ function UpdateDoc({ data, setData }) {
         type: data?.type,
         img_url: data?.img_url,
         duration: dur[0],
+        download: data?.download,
       });
       setDescription(data?.description);
       setDurationunit(dur[1]);
@@ -71,7 +72,8 @@ function UpdateDoc({ data, setData }) {
       !description ||
       !newData.name ||
       !newData.duration ||
-      !durationUnit
+      !durationUnit ||
+      !newData.download
     ) {
       toast.error("Please fill all fields");
       return;
@@ -91,6 +93,7 @@ function UpdateDoc({ data, setData }) {
       formData.append("duration", `${newData.duration} ${durationUnit}`);
       formData.append("price", newData.price);
       formData.append("original_price", newData.original_price);
+      formData.append("download", newData.download);
       const response = await axios.post(
         `${API_URL}/admin/docs/updatedoc.php`,
         formData,
@@ -209,6 +212,23 @@ function UpdateDoc({ data, setData }) {
               <option value={"Year"}>Year</option>
             </select>
           </div>
+
+          <label
+            htmlFor="download"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Downloadable
+          </label>
+          <select
+            value={newData.download}
+            id="download"
+            name="download"
+            onChange={handleChange}
+            className="w-full md:w-1/4 py-2 px-3 border rounded-md border-gray-300"
+          >
+            <option value="0">NO</option>
+            <option value="1">YES</option>
+          </select>
 
           {/* Image Upload */}
           <div className="w-full md:max-w-2xl">

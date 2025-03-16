@@ -124,6 +124,63 @@ function SearchUser() {
     [data, dispatch, users]
   );
 
+  const downloadUsers = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("firstname", searchQuery.firstname);
+      formData.append("lastname", searchQuery.lastname);
+      formData.append("mo_number", searchQuery.mo_number);
+      formData.append("email", searchQuery.email);
+
+      const response = await axios.post(
+        `${API_URL}/admin/user/searchuser.php`,
+        formData,
+        { headers: { "content-type": "multipart/form-data" } }
+      );
+
+      const users = response.data.data;
+      if (!users || users.length === 0) {
+        console.warn("No user data available to download.");
+        return;
+      }
+
+      // Convert JSON to CSV
+      const headers = [
+        "Id",
+        "Name",
+        "Mobile No.",
+        "Email",
+        // "Register Date",
+        "Status",
+      ];
+      const csvRows = [headers.join(",")];
+
+      users.forEach((user, idx) => {
+        const row = [
+          idx + 1,
+          `"${user.firstname} ${user.lastname}"`,
+          user.mo_number,
+          user.email,
+          // user.registration_date.slice(0, 10),
+          user.isactive === "1" ? "Active" : "Inactive",
+        ];
+        csvRows.push(row.join(","));
+      });
+
+      const csvContent = csvRows.join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "users.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error downloading users:", error);
+    }
+  };
+
   const handleInputFocus = () => {
     setIsDialogOpen(true);
   };
@@ -181,6 +238,12 @@ function SearchUser() {
                 className="h-fit w-full bg-blue-50 hover:bg-blue-100 border border-blue-200 text-black font-semibold py-2 mb-1.5 px-4 rounded-md"
               >
                 Search
+              </button>
+              <button
+                onClick={downloadUsers}
+                className="bg-green-500 text-white px-4 py-1.5 rounded w-full"
+              >
+                Download
               </button>
             </div>
             <div>

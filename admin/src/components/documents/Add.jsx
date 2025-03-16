@@ -26,6 +26,7 @@ function Add({ setDoc }) {
     original_price: "",
     img_url: "",
     duration: "",
+    download: "",
   });
   const imageURL = useSelector((state) => state.imageURL.imageURL);
 
@@ -66,7 +67,8 @@ function Add({ setDoc }) {
       !description ||
       !newData.name ||
       !newData.duration ||
-      !file
+      !file ||
+      !newData.download
     ) {
       toast.error("Please fill all fields");
       return;
@@ -88,6 +90,7 @@ function Add({ setDoc }) {
       formData.append("price", newData.price);
       formData.append("original_price", newData.original_price);
       formData.append("file", file);
+      formData.append("download", newData.download);
       const response = await axios.post(
         `${API_URL}/admin/docs/uplodedoc.php`,
         formData,
@@ -105,6 +108,7 @@ function Add({ setDoc }) {
             type: "1",
             img_url: imageURL,
             duration: newData.duration,
+            download: newData.download,
           },
           ...prev,
         ]);
@@ -116,6 +120,7 @@ function Add({ setDoc }) {
           original_price: "",
           description: "",
           duration: "",
+          download: "",
         });
 
         setDurationUnit("");
@@ -281,6 +286,22 @@ function Add({ setDoc }) {
               </label>
             )}
           </div>
+          <label
+            htmlFor="download"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Downloadable
+          </label>
+          <select
+            value={newData.download}
+            id="download"
+            name="download"
+            onChange={handleChange}
+            className="w-full md:w-1/4 py-2 px-3 border rounded-md border-gray-300"
+          >
+            <option value="0">NO</option>
+            <option value="1">YES</option>
+          </select>
         </div>
 
         <SheetFooter className="flex w-full gap-4 mt-4">

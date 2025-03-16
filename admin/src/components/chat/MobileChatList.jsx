@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { formatTime, getInitials } from "@/lib/utils";
+import { RefreshCcw } from "lucide-react";
 
 export default function MobileChatList({
   chats,
@@ -15,7 +16,11 @@ export default function MobileChatList({
           onClick={onRefresh}
           className="p-1 rounded-md bg-indigo-100 text-indigo-600 hover:bg-indigo-200"
         >
-          {loading ? "Loading..." : "Refresh"}
+          {loading ? (
+            <RefreshCcw className="animate-spin h-6 w-6" />
+          ) : (
+            <RefreshCcw className="h-6 w-6" />
+          )}
         </button>
       </div>
 

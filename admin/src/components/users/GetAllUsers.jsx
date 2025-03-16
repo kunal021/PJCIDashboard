@@ -41,12 +41,6 @@ const getUsers = async (dispatch, setPaginationData, page, setLoading) => {
   }
 };
 
-const roles = [
-  { value: 3, label: "Admin" },
-  { value: 5, label: "Teacher" },
-  { value: 6, label: "Super Admin" },
-];
-
 function GetAllUsers() {
   const navigate = useNavigate();
   const { setHeading } = useHeading();
@@ -98,14 +92,75 @@ function GetAllUsers() {
     [dispatch, users]
   );
 
+  const downloadUsers = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("page", 1);
+      formData.append("limit", paginationData.total_students);
+
+      const response = await axios.post(
+        `${API_URL}/admin/user/getallstudentlist.php`,
+        formData,
+        { headers: { "content-type": "multipart/form-data" } }
+      );
+
+      const users = response.data.data;
+      if (!users || users.length === 0) {
+        console.warn("No user data available to download.");
+        return;
+      }
+
+      // Convert JSON to CSV
+      const headers = [
+        "Id",
+        "Name",
+        "Mobile No.",
+        "Email",
+        "Register Date",
+        "Status",
+      ];
+      const csvRows = [headers.join(",")];
+
+      users.forEach((user, idx) => {
+        const row = [
+          idx + 1,
+          `"${user.firstname} ${user.lastname}"`,
+          user.mo_number,
+          user.email,
+          user.registration_date.slice(0, 10),
+          user.isactive === "1" ? "Active" : "Inactive",
+        ];
+        csvRows.push(row.join(","));
+      });
+
+      const csvContent = csvRows.join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "users.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error downloading users:", error);
+    }
+  };
+
   return (
     <>
       {loading ? (
         <Loader />
       ) : (
         <div className="w-[90%] flex flex-col justify-center items-center mx-auto">
-          <div className="my-5 w-full">
+          <div className="flex flex-col md:flex-row my-5 w-full gap-5">
             <SearchUser />
+            <button
+              onClick={downloadUsers}
+              className="bg-green-500 text-white px-4 py-1.5 rounded w-full sm:w-auto"
+            >
+              Download
+            </button>
           </div>
           {users.length > 0 ? (
             <div className="w-full relative">
@@ -176,7 +231,7 @@ function GetAllUsers() {
                           <UpdateUser updateUserData={user} />
                         </TableCell>
                         <TableCell>
-                          <More user={user} roles={roles} />
+                          <More user={user} />
                         </TableCell>
                       </TableRow>
                     ))}

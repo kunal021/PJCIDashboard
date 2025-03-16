@@ -170,6 +170,54 @@ function GetPayments() {
     },
   ];
 
+  const downloadPayments = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("status", appliedFilters.status || "");
+      formData.append("user_id", appliedFilters.user_id || "");
+      formData.append("txnid", appliedFilters.txn_id || "");
+      formData.append("from_date", appliedFilters.from_date || "");
+      formData.append("to_date", appliedFilters.to_date || "");
+      formData.append("page", 1);
+      formData.append("limit", paginationData.total_records);
+
+      // Fetch JSON data from the same API endpoint as getPayments
+
+      const response = await axios.post(
+        `${API_URL}/admin/payment/getallpayments.php`,
+        formData,
+        { headers: { "content-type": "multipart/form-data" } }
+      );
+
+      const payments = response.data.data;
+
+      if (!payments || payments.length === 0) {
+        console.warn("No payments found.");
+        return;
+      }
+
+      // Convert JSON data to CSV format
+      const csvHeader = Object.keys(payments[0]).join(",") + "\n";
+      const csvRows = payments.map((payment) =>
+        Object.values(payment)
+          .map((value) => `"${value}"`)
+          .join(",")
+      );
+
+      const csvContent = csvHeader + csvRows.join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "payments.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error downloading payments:", error);
+    }
+  };
+
   return (
     <>
       {loading ? (
@@ -208,9 +256,39 @@ function GetPayments() {
                 className="border p-2 mt-2 rounded w-full sm:w-auto"
               >
                 <option value="">All Status</option>
-                <option value="pending">Pending</option>
-                <option value="completed">Completed</option>
-                <option value="processing">Processing</option>
+                <option
+                  value="initiated"
+                  className={statusClassName("initiated")}
+                >
+                  Initiated
+                </option>
+                <option value="pending" className={statusClassName("pending")}>
+                  Pending
+                </option>
+                <option value="success" className={statusClassName("success")}>
+                  Success
+                </option>
+                <option
+                  value="processing"
+                  className={statusClassName("processing")}
+                >
+                  Processing
+                </option>
+                <option value="failure" className={statusClassName("failure")}>
+                  Failure
+                </option>
+                <option
+                  value="userCancelled"
+                  className={statusClassName("userCancelled")}
+                >
+                  User Cancelled
+                </option>
+                <option value="dropped" className={statusClassName("dropped")}>
+                  Dropped
+                </option>
+                <option value="bounced" className={statusClassName("bounced")}>
+                  Bounced
+                </option>
               </select>
             </div>
 
@@ -248,6 +326,13 @@ function GetPayments() {
                 className="bg-red-500 text-white px-4 py-1.5 mt-2 rounded w-full sm:w-auto"
               >
                 Clear Filters
+              </button>
+
+              <button
+                onClick={downloadPayments}
+                className="bg-green-500 text-white px-4 py-1.5 mt-2 rounded w-full sm:w-auto"
+              >
+                Download Payments
               </button>
             </div>
           </div>

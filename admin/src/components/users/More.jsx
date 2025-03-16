@@ -7,7 +7,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import GrantPermission from "./GrantPermissions";
 
-function More({ user, roles, isSpecialUser = false }) {
+function More({ user, roles = [], isSpecialUser = false }) {
   const [loading, setLoading] = useState(false);
   const [authRole, setAuthRole] = useState(null);
   const [userPermissions, setUserPermissions] = useState(null);
@@ -39,8 +39,8 @@ function More({ user, roles, isSpecialUser = false }) {
       }
     };
 
-    getUserPermissions();
-  }, [authRole, user.mo_number]);
+    isSpecialUser && getUserPermissions();
+  }, [authRole, user.mo_number, isSpecialUser]);
 
   const handleGrantUserLogin = async () => {
     try {
