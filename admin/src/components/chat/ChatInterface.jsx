@@ -49,12 +49,42 @@ export default function ChatInterface() {
       const response = await axios.post(
         `${API_URL}/doubt/getchatlist.php`,
         data,
-        {
-          headers: { "content-type": "multipart/form-data" },
-        }
+        { headers: { "content-type": "multipart/form-data" } }
       );
 
-      return response.data.data;
+      // Retrieve last read times from localStorage
+      let storedLastMessageTime =
+        JSON.parse(localStorage.getItem("lastMessageTime")) || {};
+
+      const chatsWithUnreadCount = response.data.data.map((chat) => {
+        const chatId = chat.chat_id;
+        const lastStoredTime = storedLastMessageTime[chatId] || 0;
+
+        // Find messages sent after the last seen time
+        const unreadMessages =
+          chat.latest_messages?.filter((message) => {
+            return parseInt(message.time) > lastStoredTime;
+          }) || [];
+
+        // Update the last message time
+        if (chat.latest_messages?.length > 0) {
+          storedLastMessageTime[chatId] = parseInt(
+            chat.latest_messages[chat.latest_messages.length - 1].time
+          );
+        }
+
+        return { ...chat, unreadCount: unreadMessages.length };
+      });
+
+      // Save updated last seen message time
+      localStorage.setItem(
+        "lastMessageTime",
+        JSON.stringify(storedLastMessageTime)
+      );
+
+      // console.log("Chats with Unread Count:", chatsWithUnreadCount); // Debugging output
+
+      return chatsWithUnreadCount;
     } catch (error) {
       console.error("Error fetching chat list:", error);
       return [];

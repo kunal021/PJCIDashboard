@@ -67,6 +67,11 @@ export default function ChatList({
                   <span className="text-xs text-gray-400">
                     {chat.chat_title?.split("_")[0]}
                   </span>
+                  {chat.unreadCount > 0 && (
+                    <span className="text-xs text-red-500">
+                      {chat.unreadCount} unread
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

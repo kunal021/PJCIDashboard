@@ -67,7 +67,7 @@ export default function ChatArea({
             </div>
           </div>
         )}
-        {messages?.reverse().map((message) => {
+        {messages?.map((message) => {
           const isCurrentUser = message.sender_id === currentUserId;
 
           return (

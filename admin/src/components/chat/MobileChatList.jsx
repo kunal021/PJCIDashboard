@@ -33,17 +33,22 @@ export default function MobileChatList({
           >
             <div className="flex items-start space-x-3">
               <div className="flex-shrink-0 w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-white font-semibold">
-                {getInitials(chat.chat_title)}
+                {getInitials(chat.chat_title.split("_")[1])}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-gray-900 truncate">
-                  {chat.chat_title}
+                  {chat.chat_title?.split("_")[1]}
                 </p>
                 <p className="text-sm text-gray-500 truncate">{chat.content}</p>
               </div>
               <span className="text-xs text-gray-400">
                 {formatTime(chat.time)}
               </span>
+              {chat.unreadCount > 0 && (
+                <span className="text-xs text-red-500">
+                  {chat.unreadCount} unread
+                </span>
+              )}
             </div>
           </div>
         ))}
