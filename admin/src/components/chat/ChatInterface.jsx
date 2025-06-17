@@ -16,10 +16,15 @@ export default function ChatInterface() {
   const [loading, setLoading] = useState(false);
   const [showChatList, setShowChatList] = useState(true);
   const [sendLoading, setSendLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [paginationData, setPaginationData] = useState({});
+  const [limit] = useState(20);
 
   useEffect(() => {
-    loadChats();
-  }, []);
+    if (authToken?.number && authToken?.role) {
+      loadChats();
+    }
+  }, [authToken]);
 
   useEffect(() => {
     const handleVisibilityChange = () => {
@@ -38,13 +43,35 @@ export default function ChatInterface() {
     };
   }, [selectedChat]);
 
-  const fetchChats = async () => {
+  const markChatAsRead = (chatId) => {
+    try {
+      // Get current timestamps
+      let storedLastMessageTime =
+        JSON.parse(localStorage.getItem("lastMessageTime")) || {};
+
+      // Update with current timestamp
+      const currentTime = Date.now(); // Current timestamp
+      storedLastMessageTime[chatId] = currentTime;
+
+      // Save back to localStorage
+      localStorage.setItem(
+        "lastMessageTime",
+        JSON.stringify(storedLastMessageTime)
+      );
+
+      console.log(`Chat ${chatId} marked as read at ${currentTime}`);
+    } catch (error) {
+      console.error("Error marking chat as read:", error);
+    }
+  };
+
+  const fetchChats = async (pageNumber = 1, pageLimit = 20) => {
     try {
       const data = new FormData();
       data.append("userid", authToken?.number);
       data.append("role", authToken?.role);
-      data.append("page", "1");
-      data.append("limit", "20");
+      data.append("page", pageNumber.toString());
+      data.append("limit", pageLimit.toString());
 
       const response = await axios.post(
         `${API_URL}/doubt/getchatlist.php`,
@@ -52,7 +79,6 @@ export default function ChatInterface() {
         { headers: { "content-type": "multipart/form-data" } }
       );
 
-      // Retrieve last read times from localStorage
       let storedLastMessageTime =
         JSON.parse(localStorage.getItem("lastMessageTime")) || {};
 
@@ -60,29 +86,20 @@ export default function ChatInterface() {
         const chatId = chat.chat_id;
         const lastStoredTime = storedLastMessageTime[chatId] || 0;
 
-        // Find messages sent after the last seen time
-        const unreadMessages =
-          chat.latest_messages?.filter((message) => {
-            return parseInt(message.time) > lastStoredTime;
-          }) || [];
+        const unreadMessages = (chat.latest_messages || []).filter(
+          (message) => {
+            const messageTime = parseInt(message.time);
+            return messageTime > lastStoredTime;
+          }
+        );
 
-        // Update the last message time
-        if (chat.latest_messages?.length > 0) {
-          storedLastMessageTime[chatId] = parseInt(
-            chat.latest_messages[chat.latest_messages.length - 1].time
-          );
-        }
+        setPaginationData(response.data.pagination);
 
-        return { ...chat, unreadCount: unreadMessages.length };
+        return {
+          ...chat,
+          unreadCount: unreadMessages.length,
+        };
       });
-
-      // Save updated last seen message time
-      localStorage.setItem(
-        "lastMessageTime",
-        JSON.stringify(storedLastMessageTime)
-      );
-
-      // console.log("Chats with Unread Count:", chatsWithUnreadCount); // Debugging output
 
       return chatsWithUnreadCount;
     } catch (error) {
@@ -144,11 +161,12 @@ export default function ChatInterface() {
     }
   };
 
-  const loadChats = async () => {
+  const loadChats = async (pageNumber = 1) => {
     setLoading(true);
     try {
-      const fetchedChats = await fetchChats();
+      const fetchedChats = await fetchChats(pageNumber, limit);
       setChats(fetchedChats);
+      setPage(pageNumber); // update current page
     } catch (error) {
       console.error("Error fetching chats:", error);
     } finally {
@@ -158,6 +176,15 @@ export default function ChatInterface() {
 
   const handleChatSelect = async (chat) => {
     setSelectedChat(chat);
+    markChatAsRead(chat.chat_id);
+
+    // Update the unread count in the chats array
+    setChats((prevChats) =>
+      prevChats.map((c) =>
+        c.chat_id === chat.chat_id ? { ...c, unreadCount: 0 } : c
+      )
+    );
+
     setLoading(true);
     try {
       const fetchedMessages = await fetchMessages(chat.chat_id);
@@ -179,8 +206,12 @@ export default function ChatInterface() {
           chats={chats}
           selectedChat={selectedChat}
           onChatSelect={handleChatSelect}
-          onRefresh={loadChats}
+          onRefresh={() => loadChats(page)}
           loading={loading}
+          onNextPage={() => loadChats(page + 1)}
+          onPrevPage={() => loadChats(Math.max(1, page - 1))}
+          currentPage={page}
+          paginationData={paginationData}
         />
       )}
       <ChatArea
@@ -196,8 +227,12 @@ export default function ChatInterface() {
         <MobileChatList
           chats={chats}
           onChatSelect={handleChatSelect}
-          onRefresh={loadChats}
+          onRefresh={() => loadChats(page)}
           loading={loading}
+          onNextPage={() => loadChats(page + 1)}
+          onPrevPage={() => loadChats(Math.max(1, page - 1))}
+          currentPage={page}
+          paginationData={paginationData}
         />
       )}
     </div>

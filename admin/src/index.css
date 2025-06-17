@@ -114,6 +114,7 @@
 
 *::-webkit-scrollbar-thumb {
   background: rgba(17, 24, 39, 0.7);
+  border-radius: 20px;
 }
 
 .is-active {
@@ -137,7 +138,7 @@
 }
 
 .tiptap {
-  > * + * {
+  >*+* {
     margin-top: 0.75em;
   }
 
