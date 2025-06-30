@@ -196,7 +196,7 @@ function NewAddQns({ id, fetchData }) {
                       id={`ans_${option}${index}`}
                       name={`answer${index}`}
                       value={option}
-                      className="hidden"
+                      className="visually-hidden"
                       onChange={(e) =>
                         handleChange(e.target.value, index, "answer")
                       }

@@ -161,7 +161,7 @@ function AddQns() {
               id="ans_a"
               name="a"
               value="a"
-              className="hidden"
+              className="visually-hidden"
               //  checked={checked.a}
               onChange={(e) => {
                 // handleCheckbox(e);
@@ -189,7 +189,7 @@ function AddQns() {
               id="ans_b"
               name="b"
               value="b"
-              className="hidden"
+              className="visually-hidden"
               // checked={checked.b}
               onChange={(e) => {
                 // handleCheckbox(e);
@@ -217,7 +217,7 @@ function AddQns() {
               id="ans_c"
               name="c"
               value="c"
-              className="hidden"
+              className="visually-hidden"
               // checked={checked.c}
               onChange={(e) => {
                 // handleCheckbox(e);
@@ -245,7 +245,7 @@ function AddQns() {
               id="ans_d"
               name="d"
               value="d"
-              className="hidden"
+              className="visually-hidden"
               //  checked={checked.d}
               onChange={(e) => {
                 // handleCheckbox(e);
@@ -273,7 +273,7 @@ function AddQns() {
               id="ans_e"
               name="e"
               value="e"
-              className="hidden"
+              className="visually-hidden"
               //  checked={checked.e}
               onChange={(e) => {
                 // handleCheckbox(e);

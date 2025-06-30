@@ -63,6 +63,7 @@
     "html-react-parser": "^5.1.10",
     "katex": "^0.16.11",
     "lucide-react": "^0.379.0",
+    "mathlive": "^0.105.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",

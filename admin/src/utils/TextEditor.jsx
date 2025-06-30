@@ -199,6 +199,35 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
       attributes: {
         class: `p-2 focus:outline-none whitespace-pre-wrap`,
       },
+      // Add custom paste handler
+      handlePaste: (view, event, slice) => {
+        const { state, dispatch } = view;
+        const { tr } = state;
+        const { from, to } = state.selection;
+
+        // Get the pasted content
+        const content = slice.content;
+
+        // Create a new transaction to insert the content with formatting
+        const newTr = tr.replaceWith(from, to, content);
+
+        // Apply bold and font size formatting to the pasted content
+        const pastedFrom = from;
+        const pastedTo = from + content.size;
+
+        // Apply bold formatting
+        newTr.addMark(pastedFrom, pastedTo, state.schema.marks.bold.create());
+
+        // Apply font size formatting (16px as default)
+        newTr.addMark(
+          pastedFrom,
+          pastedTo,
+          state.schema.marks.textStyle.create({ fontSize: "16px" })
+        );
+
+        dispatch(newTr);
+        return true;
+      },
     },
 
     injectCSS: false,
@@ -215,10 +244,43 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
       }
 
       const handleFocus = () => setIsFocused(true);
+
+      // Enhanced blur handler to prevent closing when math modal is open
       const handleBlur = (event) => {
-        if (!event.relatedTarget?.closest(".toolbar")) {
-          setIsFocused(false);
+        // Don't handle blur if math modal is open
+        if (isMathModalOpen) {
+          return;
         }
+
+        // Check if the blur is happening because focus moved to:
+        // 1. Toolbar elements
+        // 2. Math modal elements
+        // 3. MathLive virtual keyboard elements
+        const relatedTarget = event.relatedTarget;
+
+        if (
+          relatedTarget &&
+          (relatedTarget.closest(".toolbar") ||
+            relatedTarget.closest(".math-modal") ||
+            relatedTarget.closest("math-field") ||
+            relatedTarget.closest(".ML__keyboard") ||
+            relatedTarget.closest(".ML__virtual-keyboard") ||
+            relatedTarget.tagName === "MATH-FIELD")
+        ) {
+          return;
+        }
+
+        // Additional check for MathLive elements that might not have proper class names
+        if (
+          relatedTarget &&
+          (relatedTarget.getAttribute("role") === "button" ||
+            relatedTarget.closest('[class*="ML__"]') ||
+            relatedTarget.closest('[class*="mathlive"]'))
+        ) {
+          return;
+        }
+
+        setIsFocused(false);
       };
 
       editor.on("focus", handleFocus);
@@ -236,7 +298,13 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
         editor.off("update", updateContent);
       };
     }
-  }, [editor, getHtmlData, initialContent, isInitialContentSet]);
+  }, [
+    editor,
+    getHtmlData,
+    initialContent,
+    isInitialContentSet,
+    isMathModalOpen,
+  ]);
 
   if (!editor) return null;
 
@@ -295,8 +363,15 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
       .setLink({ href: url, target: "_blank" })
       .run();
   };
+
   const handleInsertSymbol = (latex) => {
-    if (latex && editor) {
+    if (!editor) return;
+
+    if (editor.isActive("equation")) {
+      // Update existing equation
+      editor.chain().focus().updateAttributes("equation", { latex }).run();
+    } else {
+      // Insert new equation
       editor
         .chain()
         .focus()
@@ -312,20 +387,23 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
     setIsMathModalOpen(false);
   };
 
-  // const removeTrailingSpaces = () => {
-  //   let content = editor.getHTML();
-
-  //   content = content.replace(/(\d+)\s+<\/p>/g, "$1</p>");
-
-  //   editor.commands.setContent(content);
-  // };
+  // Enhanced modal close handler
+  const handleMathModalClose = () => {
+    setIsMathModalOpen(false);
+    // Re-focus the editor after modal closes
+    setTimeout(() => {
+      if (editor) {
+        editor.commands.focus();
+      }
+    }, 100);
+  };
 
   return (
     <div className="flex flex-col justify-center items-center h-full w-full border border-gray-300 rounded-md">
       {isFocused && (
         <div
           onMouseDown={(e) => e.preventDefault()}
-          className="sticky top-0 bg-gray-50 z-50 flex flex-wrap justify-center items-center gap-2 px-2 py-1 border-b border-b-gray-200 w-full"
+          className="toolbar sticky top-0 bg-gray-50 z-50 flex flex-wrap justify-center items-center gap-2 px-2 py-1 border-b border-b-gray-200 w-full"
         >
           <div className="flex justify-between items-center gap-[2px]">
             <button
@@ -554,7 +632,6 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
               >
                 <AlignJustify className="h-4 md:h-5" />
               </button>
-              {/* <button onClick={removeTrailingSpaces}>Rmv</button> */}
               <button
                 onClick={() => editor.chain().focus().unsetTextAlign().run()}
               >
@@ -606,7 +683,7 @@ const Tiptap = ({ placeholder, getHtmlData, initialContent }) => {
       </div>
       <MathModal
         isOpen={isMathModalOpen}
-        onClose={() => setIsMathModalOpen(false)}
+        onClose={handleMathModalClose}
         onInsertSymbol={handleInsertSymbol}
       />
     </div>

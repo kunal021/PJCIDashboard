@@ -188,7 +188,7 @@ function UpdateQns({ updatedQuestionData, testId }) {
                   id={`ans_a`}
                   name={`answera`}
                   value={"a"}
-                  className="hidden"
+                  className="visually-hidden"
                   onChange={handleChange}
                   checked={answer === "a"}
                 />
@@ -213,7 +213,7 @@ function UpdateQns({ updatedQuestionData, testId }) {
                   id={`ans_b`}
                   name={`answerb`}
                   value={"b"}
-                  className="hidden"
+                  className="visually-hidden"
                   onChange={handleChange}
                   checked={answer === "b"}
                 />
@@ -238,7 +238,7 @@ function UpdateQns({ updatedQuestionData, testId }) {
                   id={`ans_c`}
                   name={`answera`}
                   value={"c"}
-                  className="hidden"
+                  className="visually-hidden"
                   onChange={handleChange}
                   checked={answer === "c"}
                 />
@@ -263,7 +263,7 @@ function UpdateQns({ updatedQuestionData, testId }) {
                   id={`ans_d`}
                   name={`answerd`}
                   value={"d"}
-                  className="hidden"
+                  className="visually-hidden"
                   onChange={handleChange}
                   checked={answer === "d"}
                 />
@@ -288,7 +288,7 @@ function UpdateQns({ updatedQuestionData, testId }) {
                   id={`ans_e`}
                   name={`answere`}
                   value={"e"}
-                  className="hidden"
+                  className="visually-hidden"
                   onChange={handleChange}
                   checked={answer === "e"}
                 />
